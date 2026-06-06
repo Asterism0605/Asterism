@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  /* 色彩 */
+  --color-void: #060608;
+  --color-deep: #0e0e12;
+  --color-elevated: #17171d;
+  --color-overlay: #222228;
+  --color-text-primary: #f0ede6;
+  --color-text-secondary: #8a8880;
+  --color-stellar-red: #c45c3a;
+  --color-gold-dim: #a8893a;
+
+  /* 字體族群 */
+  --font-family-title: 'Fustat', 'Noto Sans TC', sans-serif;
+  --font-family-body: 'Inter', 'Noto Sans TC', sans-serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
+
+  /* 排版階層 (使用 clamp 提升響應性) */
+  --text-display: clamp(3.5rem, 8vw, 8rem); /* 56px → 128px */
+  --text-h1: clamp(2rem, 5vw, 2.75rem); /* 32px → 44px */
+  --text-h2: clamp(1.5rem, 4vw, 2.25rem); /* 24px → 36px */
+  --text-body: 1rem; /* 16px */
+  --text-caption: 0.875rem; /* 14px */
+  --text-mono: 0.75rem; /* 12px */
+
+  --leading-tight: 1.1;
+  --leading-normal: 1.5;
+}
+
+@layer base {
+  html,
+  body {
+    background: linear-gradient(135deg, #060608 0%, #0e0e12 50%, #17171d 100%);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  /* 自訂深色系滾動條 */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-void);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-elevated);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-overlay);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-family-title);
+    color: var(--color-text-primary);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+  }
+}
+
+@layer components {
+  /* ========== 字體系統 ========== */
+  .text-display {
+    font-size: var(--text-display);
+    font-family: var(--font-family-title);
+    font-weight: 100;
+    line-height: var(--leading-tight);
+  }
+
+  .text-h1 {
+    font-size: var(--text-h1);
+    font-family: var(--font-family-title);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+  }
+
+  .text-h2 {
+    font-size: var(--text-h2);
+    font-family: var(--font-family-title);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+  }
+
+  .text-body {
+    font-size: var(--text-body);
+  }
+  .text-caption {
+    font-size: var(--text-caption);
+  }
+  .text-mono {
+    font-size: var(--text-mono);
+  }
+
+  /* ========== 背景與容器 ========== */
+  .bg-img {
+    background-image: url('../assets/background.jpg');
+    background-color: rgba(52, 52, 52, 0.8);
+    background-blend-mode: hue;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* ========== 毛玻璃面板 ========== */
+  .glass-panel {
+    background: radial-gradient(
+      circle at top left,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.08) 30%,
+      rgba(255, 255, 255, 0.02) 60%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(21px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+      inset 1px 1px 1px rgba(255, 255, 255, 0.2),
+      inset -5px -5px 250px rgba(255, 255, 255, 0.02),
+      0 8px 32px rgba(0, 0, 0, 0.25);
+    border-radius: 50px;
+  }
+
+  /* 小螢幕玻璃面板 */
+  @media (max-width: 640px) {
+    .glass-panel {
+      border-radius: 32px;
+      box-shadow:
+        inset 1px 1px 1px rgba(255, 255, 255, 0.2),
+        0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  /* ========== 卡片懸浮效果 ========== */
+  .card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 20px 25px -5px rgb(0 0 0 / 0.1),
+      0 8px 10px -6px rgb(0 0 0 / 0.1);
+    border-color: rgba(240, 237, 230, 0.2);
+  }
+
+  /* 行動裝置輕量化懸浮 */
+  @media (max-width: 768px) {
+    .card-hover:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
