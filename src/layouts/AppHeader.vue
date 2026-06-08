@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppButton from '@/components/Button.vue'
+import Button from '@/components/ui/Button.vue'
 </script>
 
 <template>
@@ -12,8 +12,8 @@ import AppButton from '@/components/Button.vue'
     </div>
 
     <div class="flex items-center gap-3">
-      <AppButton variant="ghost">Log in</AppButton>
-      <AppButton variant="primary">Sign Up</AppButton>
+      <Button variant="ghost">Log in</Button>
+      <Button variant="primary">Sign Up</Button>
     </div>
   </header>
 </template>
