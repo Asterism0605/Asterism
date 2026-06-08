@@ -28,15 +28,15 @@ const NETWORK_NODES = [
   { x: 65, y: 20 }, { x: 85, y: 5  }, { x: 90, y: 35 },
   { x: 75, y: 65 }, { x: 55, y: 80 }, { x: 35, y: 75 },
   { x: 10, y: 85 }, { x: 5,  y: 55 }, { x: 30, y: 40 },
-]
+] as const
 
-const NETWORK_LINES: [number, number][] = [
+const NETWORK_LINES: readonly [number, number][] = [
   [0, 1], [1, 2], [2, 3], [3, 4], [4, 5],
   [5, 6], [6, 7], [7, 8], [8, 9], [9, 10],
   [10, 11], [11, 0], [1, 11], [3, 8], [2, 10],
 ]
 
-const visibleImages = computed(() => props.images.slice(0, 6))
+const visibleImages = computed(() => props.images.slice(0, IMAGE_POSITIONS.length))
 </script>
 
 <template>
@@ -76,7 +76,7 @@ const visibleImages = computed(() => props.images.slice(0, 6))
     -->
     <div
       v-for="(image, i) in visibleImages"
-      :key="i"
+      :key="image.src"
       data-testid="image-card"
       class="image-card absolute cursor-pointer"
       :style="{
