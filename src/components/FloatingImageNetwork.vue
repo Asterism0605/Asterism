@@ -8,6 +8,7 @@ interface ImageItem {
 
 const props = defineProps<{
   images: ImageItem[]
+  height?: string
 }>()
 
 const emit = defineEmits<{
@@ -40,7 +41,7 @@ const visibleImages = computed(() => props.images.slice(0, IMAGE_POSITIONS.lengt
 </script>
 
 <template>
-  <div class="relative w-full overflow-hidden" style="height: 600px;">
+  <div class="relative w-full overflow-hidden" :style="{ height: props.height ?? '600px' }">
     <!-- SVG network layer -->
     <svg
       class="absolute inset-0 w-full h-full"
@@ -76,7 +77,7 @@ const visibleImages = computed(() => props.images.slice(0, IMAGE_POSITIONS.lengt
     -->
     <div
       v-for="(image, i) in visibleImages"
-      :key="image.src"
+      :key="`${i}-${image.src}`"
       data-testid="image-card"
       class="image-card absolute cursor-pointer"
       :style="{

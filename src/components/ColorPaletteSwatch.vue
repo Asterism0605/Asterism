@@ -10,7 +10,7 @@ defineProps<{
     <div v-if="colors.length" class="flex h-16 rounded overflow-hidden">
       <div
         v-for="(color, i) in colors"
-        :key="i"
+        :key="`${i}-${color}`"
         data-testid="color-block"
         class="flex-1"
         :style="{ backgroundColor: color }"

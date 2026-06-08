@@ -38,9 +38,12 @@ describe('FloatingImageNetwork', () => {
 
   it('emits click event with image index when image card is clicked', async () => {
     const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } })
+
+    await wrapper.findAll('[data-testid="image-card"]')[0].trigger('click')
+    expect(wrapper.emitted('click')![0]).toEqual([0])
+
     await wrapper.findAll('[data-testid="image-card"]')[1].trigger('click')
-    expect(wrapper.emitted('click')).toBeTruthy()
-    expect(wrapper.emitted('click')![0]).toEqual([1])
+    expect(wrapper.emitted('click')![1]).toEqual([1])
   })
 
   it('renders an SVG element for the network', () => {
