@@ -15,6 +15,8 @@ const demoImages = [
   { src: '/images/image4.png', alt: 'group 3' },
   { src: '/images/image5.png', alt: 'art' }
 ];
+  { src: '/images/image5.png', alt: 'art' }
+];
 
 const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608'];
 const demoThemeTags = ['Label', 'Editorial', 'Monochrome', 'Avant-garde', 'Industrial'];
@@ -31,25 +33,20 @@ const demoThemeTags = ['Label', 'Editorial', 'Monochrome', 'Avant-garde', 'Indus
           <h2 class="text-h2 font-bold tracking-tight">Profile</h2>
         </div>
         <div class="max-w-3xl">
-          <ProfileCard
-            name="Zhenya Rukhlov"
-            subtitle="Photographer / Image detail"
-            show-follow
-          />
+          <ProfileCard name="Zhenya Rukhlov" subtitle="Photographer / Image detail" show-follow />
         </div>
       </section>
     </div>
     <div class="mb-8">
-      <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">FloatingImageNetwork Preview</p>
-      <FloatingImageNetwork
-        :images="demoImages"
-        :line-width="1.55"
-        :line-opacity="0.78"
-      />
+      <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">
+        FloatingImageNetwork Preview
+      </p>
+      <FloatingImageNetwork :images="demoImages" :line-width="1.55" :line-opacity="0.78" />
     </div>
     <div class="mb-8 max-w-lg">
       <ColorPaletteSwatch :colors="demoColors" />
     </div>
     <TokenShowcase />
   </PageContainer>
+  <SignUpOverlay />
 </template>
