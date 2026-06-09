@@ -11,10 +11,10 @@ const demoImages = [
   { src: '/images/image1.png', alt: 'group 2' },
   { src: '/images/image3.png', alt: 'chair' },
   { src: '/images/image4.png', alt: 'group 3' },
-  { src: '/images/image5.png', alt: 'art' },
-]
+  { src: '/images/image5.png', alt: 'art' }
+];
 
-const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608']
+const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608'];
 </script>
 
 <template>
@@ -22,7 +22,9 @@ const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608']
   <Playground />
   <PageContainer>
     <div class="mb-8">
-      <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">FloatingImageNetwork Preview</p>
+      <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">
+        FloatingImageNetwork Preview
+      </p>
       <FloatingImageNetwork :images="demoImages" />
     </div>
     <div class="mb-8 max-w-lg">
