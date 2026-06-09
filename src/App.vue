@@ -29,17 +29,8 @@ const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608'];
         <div class="flex items-baseline gap-3">
           <h2 class="text-h2 font-bold tracking-tight">Profile</h2>
         </div>
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Profile
-            name="Zhenya Rukhlov"
-            subtitle="Photographer / Image detail"
-            show-follow
-          />
-          <Profile
-            name="Mira Chen"
-            subtitle="mira@asterism.studio"
-            avatar-url="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
-          />
+        <div class="max-w-3xl">
+          <Profile name="Zhenya Rukhlov" subtitle="Photographer / Image detail" showFollow />
         </div>
       </section>
     </div>
