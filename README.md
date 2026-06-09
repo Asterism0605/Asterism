@@ -58,6 +58,15 @@ graph TD
 
 ---
 
+## 📚 文件導覽
+
+| 文件 | 說明 |
+|------|------|
+| [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) | 專案架構、目錄結構、設計系統、API 分層與開發規範 |
+| [`.github/PULL_REQUEST_TEMPLATE.md`](./.github/PULL_REQUEST_TEMPLATE.md) | Pull Request 提交範本 |
+
+---
+
 ## 🛠️ 技術棧 (Tech Stack)
 
 | 類別 | 技術選型 |

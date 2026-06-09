@@ -65,14 +65,6 @@ const radiusSamples = [
 
 <template>
   <main class="min-h-screen bg-img text-text-primary pb-24">
-    <!-- 頂部 Header -->
-    <header class="flex items-center justify-between px-8 py-6 border-b border-white/5">
-      <div class="flex items-center gap-2">
-        <img class="w-8" src="../../public/sitelogo.png" alt="">
-      </div>
-      <span class="text-xs bg-stellar-red/20 text-stellar-red px-2 py-0.5 rounded-full  tracking-wider">DESIGN SYSTEM</span>
-    </header>
-
     <div class="max-w-6xl mx-auto px-8 pt-12 flex flex-col gap-16">
 
       <!-- Section 1: 色彩系統 -->
