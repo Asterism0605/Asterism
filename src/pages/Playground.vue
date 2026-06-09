@@ -60,8 +60,11 @@ const inspirationItems = [
             :active="hoveredItemId === item.id"
             :size="460"
             :line-length="250"
-            :node-size="3"
-            :spacing="40"
+            :line-width="1.6"
+            :line-opacity="0.82"
+            :glow-opacity="0.16"
+            :node-size="3.5"
+            :spacing="50"
           />
 
           <button

@@ -3,7 +3,6 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 interface Props {
   size?: number | string;
-  nodeCount?: number;
   lineLength?: number;
   centerSize?: number;
   nodeSize?: number;
@@ -11,6 +10,13 @@ interface Props {
   className?: string;
   spacing?: number;
   intensity?: number;
+  lineWidth?: number;
+  lineOpacity?: number;
+  inactiveNodeOpacity?: number;
+  activeNodeOpacity?: number;
+  glowOpacity?: number;
+  lineColor?: string;
+  nodeColor?: string;
 }
 
 interface GridNode {
@@ -23,14 +29,20 @@ interface GridNode {
 
 const props = withDefaults(defineProps<Props>(), {
   size: 220,
-  nodeCount: 10,
   lineLength: 150,
   centerSize: 4,
   nodeSize: 2,
   active: false,
   className: '',
   spacing: 36,
-  intensity: 1
+  intensity: 1,
+  lineWidth: 1.4,
+  lineOpacity: 0.72,
+  inactiveNodeOpacity: 0.12,
+  activeNodeOpacity: 0.72,
+  glowOpacity: 0.12,
+  lineColor: '',
+  nodeColor: ''
 });
 
 const containerRef = ref<HTMLDivElement | null>(null);
@@ -82,6 +94,47 @@ function getCssColor(variableName: string, fallback: string) {
   return value ? normalizeCanvasColor(value, fallback) : fallback;
 }
 
+function clampOpacity(value: number) {
+  return Math.min(1, Math.max(0, value));
+}
+
+function buildConstellationNodes({
+  width,
+  height,
+  spacing,
+  influenceRadius,
+  focalPoint
+}: {
+  width: number;
+  height: number;
+  spacing: number;
+  influenceRadius: number;
+  focalPoint: { x: number; y: number };
+}) {
+  const nodes: GridNode[] = [];
+  const offsetX = (width % spacing) / 2;
+  const offsetY = (height % spacing) / 2;
+
+  for (let x = offsetX; x <= width + 1; x += spacing) {
+    for (let y = offsetY; y <= height + 1; y += spacing) {
+      const dx = x - focalPoint.x;
+      const dy = y - focalPoint.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const strength = Math.max(0, 1 - distance / influenceRadius);
+
+      nodes.push({
+        x,
+        y,
+        distance,
+        strength,
+        active: strength > 0
+      });
+    }
+  }
+
+  return nodes;
+}
+
 function drawNetwork() {
   const canvas = canvasRef.value;
   const container = containerRef.value;
@@ -109,37 +162,23 @@ function drawNetwork() {
   ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
   ctx.clearRect(0, 0, width, height);
 
-  const textColor = getCssColor('--color-text-primary', '240 237 230');
-  const goldColor = getCssColor('--color-gold-dim', '168 137 58');
+  const nodeColor = props.nodeColor || getCssColor('--color-text-primary', '240 237 230');
+  const lineColor = props.lineColor || getCssColor('--color-gold-dim', '168 137 58');
   const spacing = Math.max(18, props.spacing);
   const influenceRadius = Math.max(spacing * 2, props.lineLength);
   const focalPoint = {
     x: width / 2,
     y: height / 2
   };
-  const nodes: GridNode[] = [];
-  const offsetX = (width % spacing) / 2;
-  const offsetY = (height % spacing) / 2;
+  const nodes = buildConstellationNodes({
+    width,
+    height,
+    spacing,
+    influenceRadius,
+    focalPoint
+  });
 
-  for (let x = offsetX; x <= width + 1; x += spacing) {
-    for (let y = offsetY; y <= height + 1; y += spacing) {
-      const dx = x - focalPoint.x;
-      const dy = y - focalPoint.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const strength = Math.max(0, 1 - distance / influenceRadius);
-      const node = {
-        x,
-        y,
-        distance,
-        strength,
-        active: strength > 0
-      };
-
-      nodes.push(node);
-    }
-  }
-
-  ctx.fillStyle = `rgb(${textColor} / 0.12)`;
+  ctx.fillStyle = `rgb(${nodeColor} / ${clampOpacity(props.inactiveNodeOpacity)})`;
   nodes.forEach((node) => {
     if (node.active) {
       return;
@@ -155,9 +194,9 @@ function drawNetwork() {
       return;
     }
 
-    const alpha = node.strength * 0.46 * props.intensity;
-    ctx.strokeStyle = `rgb(${goldColor} / ${alpha})`;
-    ctx.lineWidth = 0.65;
+    const alpha = clampOpacity(node.strength * props.lineOpacity * props.intensity);
+    ctx.strokeStyle = `rgb(${lineColor} / ${alpha})`;
+    ctx.lineWidth = props.lineWidth;
     ctx.beginPath();
     ctx.moveTo(node.x, node.y);
     ctx.lineTo(focalPoint.x, focalPoint.y);
@@ -169,10 +208,10 @@ function drawNetwork() {
       ? Math.max(1, props.nodeSize * 0.52) + node.strength * props.nodeSize
       : Math.max(0.8, props.nodeSize * 0.42);
     const alpha = node.active
-      ? Math.min(0.9, (0.16 + node.strength * 0.72) * props.intensity)
-      : 0.12;
+      ? clampOpacity((props.activeNodeOpacity + node.strength * 0.18) * props.intensity)
+      : clampOpacity(props.inactiveNodeOpacity);
 
-    ctx.fillStyle = `rgb(${textColor} / ${alpha})`;
+    ctx.fillStyle = `rgb(${nodeColor} / ${alpha})`;
     ctx.beginPath();
     ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
     ctx.fill();
@@ -187,14 +226,20 @@ function drawNetwork() {
     influenceRadius
   );
 
-  radialGradient.addColorStop(0, `rgb(${goldColor} / ${0.12 * props.intensity})`);
-  radialGradient.addColorStop(0.45, `rgb(${goldColor} / ${0.04 * props.intensity})`);
-  radialGradient.addColorStop(1, `rgb(${goldColor} / 0)`);
+  radialGradient.addColorStop(
+    0,
+    `rgb(${lineColor} / ${clampOpacity(props.glowOpacity * props.intensity)})`
+  );
+  radialGradient.addColorStop(
+    0.45,
+    `rgb(${lineColor} / ${clampOpacity(props.glowOpacity * 0.35 * props.intensity)})`
+  );
+  radialGradient.addColorStop(1, `rgb(${lineColor} / 0)`);
 
   ctx.fillStyle = radialGradient;
   ctx.fillRect(0, 0, width, height);
 
-  ctx.fillStyle = `rgb(${textColor} / ${Math.min(1, 0.82 * props.intensity)})`;
+  ctx.fillStyle = `rgb(${nodeColor} / ${clampOpacity(0.82 * props.intensity)})`;
   ctx.beginPath();
   ctx.arc(focalPoint.x, focalPoint.y, props.centerSize, 0, Math.PI * 2);
   ctx.fill();
@@ -222,12 +267,18 @@ onBeforeUnmount(() => {
 watch(
   () => [
     props.size,
-    props.nodeCount,
     props.lineLength,
     props.centerSize,
     props.nodeSize,
     props.spacing,
-    props.intensity
+    props.intensity,
+    props.lineWidth,
+    props.lineOpacity,
+    props.inactiveNodeOpacity,
+    props.activeNodeOpacity,
+    props.glowOpacity,
+    props.lineColor,
+    props.nodeColor
   ],
   scheduleDraw
 );

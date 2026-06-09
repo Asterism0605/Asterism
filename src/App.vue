@@ -35,10 +35,12 @@ const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608'];
       </section>
     </div>
     <div class="mb-8">
-      <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">
-        FloatingImageNetwork Preview
-      </p>
-      <FloatingImageNetwork :images="demoImages" />
+      <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">FloatingImageNetwork Preview</p>
+      <FloatingImageNetwork
+        :images="demoImages"
+        :line-width="1.55"
+        :line-opacity="0.78"
+      />
     </div>
     <div class="mb-8 max-w-lg">
       <ColorPaletteSwatch :colors="demoColors" />
