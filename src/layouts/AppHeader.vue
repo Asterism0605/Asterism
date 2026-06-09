@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import Button from '@/components/ui/Button.vue'
+import Button from '@/components/ui/Button.vue';
+
+const siteLogoSrc = '/sitelogo.png';
 </script>
 
 <template>
@@ -7,7 +9,7 @@ import Button from '@/components/ui/Button.vue'
     class="fixed w-full top-0 z-50 flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl"
   >
     <div class="flex items-center gap-2">
-      <img class="w-8 h-8" src="/sitelogo.png" alt="Asterism" />
+      <img class="w-8 h-8" :src="siteLogoSrc" alt="Asterism" />
       <span class="text-sm font-semibold text-text-primary tracking-wide">Asterism</span>
     </div>
 

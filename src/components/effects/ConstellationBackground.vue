@@ -49,7 +49,9 @@ const containerRef = ref<HTMLDivElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 let resizeObserver: ResizeObserver | null = null;
 
-const normalizedSize = computed(() => (typeof props.size === 'number' ? `${props.size}px` : props.size));
+const normalizedSize = computed(() =>
+  typeof props.size === 'number' ? `${props.size}px` : props.size
+);
 
 const containerStyle = computed(() => ({
   width: normalizedSize.value,
@@ -254,7 +256,7 @@ function scheduleDraw() {
 onMounted(() => {
   scheduleDraw();
 
-  if (containerRef.value) {
+  if (containerRef.value && typeof ResizeObserver !== 'undefined') {
     resizeObserver = new ResizeObserver(scheduleDraw);
     resizeObserver.observe(containerRef.value);
   }
@@ -303,7 +305,8 @@ watch(
 }
 
 .constellation-background.is-active,
-:global(.group:hover) .constellation-background {
+:global(.group:hover) .constellation-background,
+:global(.group:focus-within) .constellation-background {
   opacity: 1;
 }
 
@@ -318,7 +321,8 @@ watch(
 }
 
 .constellation-background.is-active .constellation-background__canvas,
-:global(.group:hover) .constellation-background .constellation-background__canvas {
+:global(.group:hover) .constellation-background .constellation-background__canvas,
+:global(.group:focus-within) .constellation-background .constellation-background__canvas {
   transform: scale(1);
 }
 
