@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 
 interface ImageItem {
   src: string
@@ -15,6 +15,8 @@ const emit = defineEmits<{
   click: [index: number]
 }>()
 
+const hoveredIndex = ref<number | null>(null)
+
 const IMAGE_POSITIONS = [
   { left: '3%',  top: '25%', width: '160px' },
   { left: '55%', top: '8%',  width: '140px' },
@@ -24,56 +26,66 @@ const IMAGE_POSITIONS = [
   { left: '80%', top: '18%', width: '135px' },
 ] as const
 
-const NETWORK_NODES = [
-  { x: 5,  y: 15 }, { x: 20, y: 5  }, { x: 45, y: 10 },
-  { x: 65, y: 20 }, { x: 85, y: 5  }, { x: 90, y: 35 },
-  { x: 75, y: 65 }, { x: 55, y: 80 }, { x: 35, y: 75 },
-  { x: 10, y: 85 }, { x: 5,  y: 55 }, { x: 30, y: 40 },
+// Burst lines originate from card center (0,0), radiate outward
+// SVG viewBox is -250 -250 500 500 (500×500px centered on card)
+const BURST_LINES = [
+  { dx: -120, dy: -165, r: 8  },  // 左上
+  { dx: -68,  dy: -190, r: 6  },  // 正上偏左
+  { dx: -180, dy: -78,  r: 7  },  // 左偏上
+  { dx: -195, dy: 38,   r: 9  },  // 正左
+  { dx: -155, dy: 148,  r: 7  },  // 左下
+  { dx: -82,  dy: 200,  r: 8  },  // 左偏下
+  { dx: 38,   dy: 210,  r: 7  },  // 正下
+  { dx: 155,  dy: 145,  r: 8  },  // 右下
+  { dx: 200,  dy: 55,   r: 7  },  // 右偏下
+  { dx: 135,  dy: -95,  r: 6  },  // 右偏上
+  { dx: 62,   dy: -195, r: 8  },  // 正上偏右
 ] as const
 
-const NETWORK_LINES: readonly [number, number][] = [
-  [0, 1], [1, 2], [2, 3], [3, 4], [4, 5],
-  [5, 6], [6, 7], [7, 8], [8, 9], [9, 10],
-  [10, 11], [11, 0], [1, 11], [3, 8], [2, 10],
-]
+// Small ambient dots scattered across canvas (always visible)
+const AMBIENT_DOTS = [
+  { left: '35%', top: '8%'  },
+  { left: '49%', top: '13%' },
+  { left: '62%', top: '6%'  },
+  { left: '75%', top: '2%'  },
+  { left: '87%', top: '9%'  },
+  { left: '94%', top: '3%'  },
+  { left: '43%', top: '33%' },
+  { left: '50%', top: '58%' },
+  { left: '85%', top: '58%' },
+  { left: '90%', top: '80%' },
+  { left: '20%', top: '83%' },
+  { left: '32%', top: '80%' },
+  { left: '65%', top: '25%' },
+  { left: '82%', top: '33%' },
+] as const
 
 const visibleImages = computed(() => props.images.slice(0, IMAGE_POSITIONS.length))
 </script>
 
 <template>
   <div class="relative w-full overflow-hidden" :style="{ height: props.height ?? '600px' }">
-    <!-- SVG network layer -->
-    <svg
-      class="absolute inset-0 w-full h-full"
-      style="z-index: 0;"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <line
-        v-for="([from, to], i) in NETWORK_LINES"
-        :key="`line-${i}`"
-        :x1="NETWORK_NODES[from].x"
-        :y1="NETWORK_NODES[from].y"
-        :x2="NETWORK_NODES[to].x"
-        :y2="NETWORK_NODES[to].y"
-        stroke="rgba(240,237,230,0.12)"
-        stroke-width="0.3"
-      />
-      <circle
-        v-for="(node, i) in NETWORK_NODES"
-        :key="`node-${i}`"
-        :cx="node.x"
-        :cy="node.y"
-        r="0.6"
-        fill="rgba(240,237,230,0.25)"
-      />
-    </svg>
+
+    <!-- Ambient dots: always visible, no lines -->
+    <div
+      v-for="(dot, i) in AMBIENT_DOTS"
+      :key="`dot-${i}`"
+      class="absolute rounded-full pointer-events-none"
+      :style="{
+        left: dot.left,
+        top: dot.top,
+        width: '4px',
+        height: '4px',
+        background: 'rgba(240,237,230,0.35)',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 0,
+      }"
+    />
 
     <!-- Image cards -->
     <!--
-      floatY 使用 transform: translateY，hover scale 改用獨立的 CSS `scale` property
-      避免兩者都操作 transform 互相覆蓋
+      floatY 使用 transform: translateY
+      hover scale 改用獨立 CSS `scale` property，避免覆蓋 transform
     -->
     <div
       v-for="(image, i) in visibleImages"
@@ -84,16 +96,48 @@ const visibleImages = computed(() => props.images.slice(0, IMAGE_POSITIONS.lengt
         left: IMAGE_POSITIONS[i].left,
         top: IMAGE_POSITIONS[i].top,
         width: IMAGE_POSITIONS[i].width,
-        zIndex: 1,
+        zIndex: 2,
         animationDelay: `${i * 0.8}s`,
       }"
+      @mouseenter="hoveredIndex = i"
+      @mouseleave="hoveredIndex = null"
       @click="emit('click', i)"
     >
+      <!-- Burst SVG: behind img, centered on card, overflow extends outward -->
+      <!-- Lines originate from card center → extend outside image bounds     -->
+      <svg
+        class="burst-svg"
+        :class="{ 'burst-svg--visible': hoveredIndex === i }"
+        viewBox="-250 -250 500 500"
+        width="500"
+        height="500"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <line
+          v-for="(line, j) in BURST_LINES"
+          :key="`line-${j}`"
+          x1="0" y1="0"
+          :x2="line.dx"
+          :y2="line.dy"
+          stroke="rgba(240,237,230,0.75)"
+          stroke-width="1.5"
+        />
+        <circle
+          v-for="(line, j) in BURST_LINES"
+          :key="`circle-${j}`"
+          :cx="line.dx"
+          :cy="line.dy"
+          :r="line.r"
+          fill="rgba(240,237,230,0.9)"
+        />
+      </svg>
+
       <img
         :src="image.src"
         :alt="image.alt ?? ''"
         class="w-full"
-        style="aspect-ratio: 3/4; object-fit: cover; display: block; border-radius: 4px;"
+        style="aspect-ratio: 3/4; object-fit: cover; display: block; border-radius: 4px; position: relative; z-index: 1;"
       />
     </div>
   </div>
@@ -116,5 +160,22 @@ const visibleImages = computed(() => props.images.slice(0, IMAGE_POSITIONS.lengt
 .image-card:hover {
   scale: 1.05;
   border-color: rgba(240, 237, 230, 0.4);
+}
+
+/* Burst SVG: behind the image (z-index < img's z-index:1), centered on card */
+.burst-svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  overflow: visible;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 0;
+}
+
+.burst-svg--visible {
+  opacity: 1;
 }
 </style>
