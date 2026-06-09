@@ -5,8 +5,8 @@ import TokenShowcase from './components/sections/TokenShowcase.vue';
 import FloatingImageNetwork from './components/sections/FloatingImageNetwork.vue';
 import ColorPaletteSwatch from './components/ui/ColorPaletteSwatch.vue';
 import Playground from './pages/Playground.vue';
-import ThemeTag from './components/ui/ThemeTag.vue';
-import ProfileCard from './components/ui/ProfileCard.vue';
+import SignUpOverlay from './components/overlay/SignUpOverlay.vue';
+import LoginOverlay from './components/overlay/LoginOverlay.vue';
 
 const demoImages = [
   { src: '/images/image2.png', alt: 'group 1' },
@@ -49,4 +49,5 @@ const demoThemeTags = ['Label', 'Editorial', 'Monochrome', 'Avant-garde', 'Indus
     <TokenShowcase />
   </PageContainer>
   <SignUpOverlay />
+  <LoginOverlay />
 </template>
