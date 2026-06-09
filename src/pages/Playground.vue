@@ -34,8 +34,8 @@ const inspirationItems = [
           Asterism overlay and constellation effects
         </h1>
         <p class="mt-5 max-w-lg text-sm leading-normal text-text-secondary sm:text-base">
-          Hover the image tiles to reveal the constellation background, then open the modal to
-          check the glass dialog layer in context.
+          Hover the image tiles to reveal the constellation background, then open the modal to check
+          the glass dialog layer in context.
         </p>
 
         <div class="mt-8 flex flex-wrap gap-3">
@@ -91,7 +91,9 @@ const inspirationItems = [
 
     <ModalOverlay v-model="isLimitModalOpen" max-width="590px">
       <template #icon>
-        <div class="flex size-14 items-center justify-center rounded-full bg-void/70 text-text-primary">
+        <div
+          class="flex size-14 items-center justify-center rounded-full bg-void/70 text-text-primary"
+        >
           <svg
             class="size-5"
             viewBox="0 0 24 24"
@@ -111,8 +113,8 @@ const inspirationItems = [
       <template #title>Your daily inspiration limit has been reached.</template>
 
       <template #description>
-        Create a free account to unlock endless scrolling, save your favorite pieces to boards,
-        and define your aesthetic DNA.
+        Create a free account to unlock endless scrolling, save your favorite pieces to boards, and
+        define your aesthetic DNA.
       </template>
 
       <template #actions>
