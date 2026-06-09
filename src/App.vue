@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import AppHeader from './layouts/AppHeader.vue';
 import PageContainer from './layouts/PageContainer.vue';
 import TokenShowcase from './components/sections/TokenShowcase.vue';
@@ -6,7 +7,8 @@ import FloatingImageNetwork from './components/sections/FloatingImageNetwork.vue
 import ColorPaletteSwatch from './components/ui/ColorPaletteSwatch.vue';
 import Playground from './pages/Playground.vue';
 import SignUpOverlay from './components/overlay/SignUpOverlay.vue';
-import LoginOverlay from './components/overlay/LoginOverlay.vue';
+
+const showSignUp = ref(true);
 
 const demoImages = [
   { src: '/images/image2.png', alt: 'group 1' },
@@ -48,6 +50,5 @@ const demoThemeTags = ['Label', 'Editorial', 'Monochrome', 'Avant-garde', 'Indus
     </div>
     <TokenShowcase />
   </PageContainer>
-  <SignUpOverlay />
-  <LoginOverlay />
+  <SignUpOverlay v-if="showSignUp" v-model="showSignUp" />
 </template>
