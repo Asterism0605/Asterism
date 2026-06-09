@@ -5,6 +5,8 @@ import TokenShowcase from './components/TokenShowcase.vue';
 import FloatingImageNetwork from './components/FloatingImageNetwork.vue';
 import ColorPaletteSwatch from './components/ColorPaletteSwatch.vue';
 import Playground from './pages/Playground.vue';
+import ThemeTag from './components/ui/ThemeTag.vue';
+import Profile from './components/ui/Profile.vue';
 
 const demoImages = [
   { src: '/images/image2.png', alt: 'group 1' },
@@ -21,6 +23,17 @@ const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608'];
   <AppHeader />
   <Playground />
   <PageContainer>
+    <div class="mb-14 flex flex-col gap-14">
+      <ThemeTag />
+      <section class="flex flex-col gap-5">
+        <div class="flex items-baseline gap-3">
+          <h2 class="text-h2 font-bold tracking-tight">Profile</h2>
+        </div>
+        <div class="max-w-3xl">
+          <Profile name="Zhenya Rukhlov" subtitle="Photographer / Image detail" showFollow />
+        </div>
+      </section>
+    </div>
     <div class="mb-8">
       <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">
         FloatingImageNetwork Preview
