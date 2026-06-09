@@ -7,8 +7,11 @@ import FloatingImageNetwork from './components/sections/FloatingImageNetwork.vue
 import ColorPaletteSwatch from './components/ui/ColorPaletteSwatch.vue';
 import Playground from './pages/Playground.vue';
 import SignUpOverlay from './components/overlay/SignUpOverlay.vue';
+import LoginOverlay from './components/overlay/LoginOverlay.vue';
 
-const showSignUp = ref(true);
+const showSignUp = ref(false);
+
+const showLogin = ref(true);
 
 const demoImages = [
   { src: '/images/image2.png', alt: 'group 1' },
@@ -51,4 +54,5 @@ const demoThemeTags = ['Label', 'Editorial', 'Monochrome', 'Avant-garde', 'Indus
     <TokenShowcase />
   </PageContainer>
   <SignUpOverlay v-if="showSignUp" v-model="showSignUp" />
+  <LoginOverlay v-if="showLogin" v-model="showLogin" />
 </template>
