@@ -18,12 +18,12 @@ const emit = defineEmits<{
 const hoveredIndex = ref<number | null>(null)
 
 const IMAGE_POSITIONS = [
-  { left: '3%',  top: '25%', width: '160px' },
-  { left: '55%', top: '8%',  width: '140px' },
-  { left: '38%', top: '50%', width: '170px' },
-  { left: '70%', top: '45%', width: '150px' },
-  { left: '15%', top: '62%', width: '130px' },
-  { left: '80%', top: '18%', width: '135px' },
+  { left: '3%',  top: '25%', width: '160px', aspect: '3/4' },
+  { left: '55%', top: '8%',  width: '200px', aspect: '4/3' },
+  { left: '38%', top: '50%', width: '170px', aspect: '3/4' },
+  { left: '70%', top: '45%', width: '210px', aspect: '4/3' },
+  { left: '15%', top: '62%', width: '130px', aspect: '3/4' },
+  { left: '80%', top: '18%', width: '135px', aspect: '3/4' },
 ] as const
 
 // Burst lines originate from card center (0,0), radiate outward
@@ -131,13 +131,22 @@ const visibleImages = computed(() => props.images.slice(0, IMAGE_POSITIONS.lengt
           :r="line.r"
           fill="rgba(240,237,230,0.9)"
         />
+        <!-- Satellite circles: no line, positioned 1.35× further along same direction -->
+        <circle
+          v-for="(line, j) in BURST_LINES"
+          :key="`satellite-${j}`"
+          :cx="Math.round(line.dx * 1.35)"
+          :cy="Math.round(line.dy * 1.35)"
+          r="3.5"
+          fill="rgba(240,237,230,0.55)"
+        />
       </svg>
 
       <img
         :src="image.src"
         :alt="image.alt ?? ''"
         class="w-full"
-        style="aspect-ratio: 3/4; object-fit: cover; display: block; border-radius: 4px; position: relative; z-index: 1;"
+        :style="`aspect-ratio: ${IMAGE_POSITIONS[i].aspect}; object-fit: cover; display: block; border-radius: 4px; position: relative; z-index: 1;`"
       />
     </div>
   </div>
