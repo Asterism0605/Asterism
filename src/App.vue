@@ -5,24 +5,48 @@ import TokenShowcase from './components/TokenShowcase.vue';
 import FloatingImageNetwork from './components/FloatingImageNetwork.vue';
 import ColorPaletteSwatch from './components/ColorPaletteSwatch.vue';
 import Playground from './pages/Playground.vue';
+import ThemeTag from './components/ui/ThemeTag.vue';
+import Profile from './components/ui/Profile.vue';
 
 const demoImages = [
   { src: '/images/image2.png', alt: 'group 1' },
   { src: '/images/image1.png', alt: 'group 2' },
   { src: '/images/image3.png', alt: 'chair' },
   { src: '/images/image4.png', alt: 'group 3' },
-  { src: '/images/image5.png', alt: 'art' },
-]
+  { src: '/images/image5.png', alt: 'art' }
+];
 
-const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608']
+const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608'];
 </script>
 
 <template>
   <AppHeader />
   <Playground />
   <PageContainer>
+    <div class="mb-14 flex flex-col gap-14">
+      <ThemeTag />
+      <section class="flex flex-col gap-5">
+        <div class="flex items-baseline gap-3">
+          <h2 class="text-h2 font-bold tracking-tight">Profile</h2>
+        </div>
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <Profile
+            name="Zhenya Rukhlov"
+            subtitle="Photographer / Image detail"
+            show-follow
+          />
+          <Profile
+            name="Mira Chen"
+            subtitle="mira@asterism.studio"
+            avatar-url="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80"
+          />
+        </div>
+      </section>
+    </div>
     <div class="mb-8">
-      <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">FloatingImageNetwork Preview</p>
+      <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">
+        FloatingImageNetwork Preview
+      </p>
       <FloatingImageNetwork :images="demoImages" />
     </div>
     <div class="mb-8 max-w-lg">
