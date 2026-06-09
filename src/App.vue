@@ -6,11 +6,11 @@ import FloatingImageNetwork from './components/FloatingImageNetwork.vue';
 import ColorPaletteSwatch from './components/ColorPaletteSwatch.vue';
 
 const demoImages = [
-  { src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400', alt: 'mountain' },
-  { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400', alt: 'forest' },
-  { src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400', alt: 'portrait' },
-  { src: 'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=400', alt: 'dog' },
-  { src: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=400', alt: 'street' },
+  { src: '/images/image2.png', alt: 'group 1' },
+  { src: '/images/image1.png', alt: 'group 2' },
+  { src: '/images/image3.png', alt: 'chair' },
+  { src: '/images/image4.png', alt: 'group 3' },
+  { src: '/images/image5.png', alt: 'art' },
 ]
 
 const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608']
