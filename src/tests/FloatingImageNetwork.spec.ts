@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import FloatingImageNetwork from '@/components/FloatingImageNetwork.vue'
+import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork.vue'
 
 const mockImages = [
   { src: '/img1.jpg', alt: 'image 1' },
@@ -46,8 +46,8 @@ describe('FloatingImageNetwork', () => {
     expect(wrapper.emitted('click')![1]).toEqual([1])
   })
 
-  it('renders an SVG element for the network', () => {
+  it('renders ambient dots behind the image cards', () => {
     const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } })
-    expect(wrapper.find('svg').exists()).toBe(true)
+    expect(wrapper.findAll('[data-testid="ambient-dot"]').length).toBeGreaterThan(0)
   })
 })

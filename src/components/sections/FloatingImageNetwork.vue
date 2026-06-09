@@ -14,6 +14,7 @@ interface NodePosition {
   aspect: string;
 }
 
+
 const props = defineProps<{
   images: ImageItem[];
   height?: string;
@@ -39,17 +40,17 @@ onMounted(() => {
   const W = container.clientWidth;
   const H = container.clientHeight;
 
-  const nodes = visibleImages.value.map((_, i) => ({
+  const nodes: NodePosition[] = visibleImages.value.map((_, i) => ({
     x: W * 0.2 + Math.random() * W * 0.6,
     y: H * 0.2 + Math.random() * H * 0.6,
     width: CARD_WIDTHS[i % CARD_WIDTHS.length],
-    aspect: CARD_ASPECTS[i % CARD_ASPECTS.length],
+    aspect: CARD_ASPECTS[i % CARD_ASPECTS.length]
   }));
 
   const sim = forceSimulation(nodes)
     .force('center', forceCenter(W / 2, H / 2).strength(0.3))
     .force('charge', forceManyBody().strength(-60))
-    .force('collide', forceCollide<(typeof nodes)[number]>((n) => n.width * 0.65).strength(1))
+    .force('collide', forceCollide((node: NodePosition) => node.width * 0.65).strength(1))
     .stop();
 
   for (let i = 0; i < 200; i++) sim.tick();
@@ -90,6 +91,7 @@ const AMBIENT_DOTS = [
     <div
       v-for="(dot, i) in AMBIENT_DOTS"
       :key="`dot-${i}`"
+      data-testid="ambient-dot"
       class="absolute rounded-full pointer-events-none"
       :style="{
         left: dot.left,

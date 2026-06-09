@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import ColorPaletteSwatch from '@/components/ColorPaletteSwatch.vue'
+import ColorPaletteSwatch from '@/components/ui/ColorPaletteSwatch.vue'
 
 describe('ColorPaletteSwatch', () => {
   it('renders the "color palette" label', () => {
