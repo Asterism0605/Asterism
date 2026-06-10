@@ -1,0 +1,1123 @@
+[
+  {
+    "id": "y2k-main-001",
+    "url": "/style-image/style2-main.webp",
+    "title": "Cloud9 團體概念視覺照",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "colorPalette": [
+      "#8EC9FF",
+      "#D8E8FF",
+      "#C8C9D8"
+    ]
+  },
+  {
+    "id": "y2k-graphic-001",
+    "url": "/style-image/style2-graphic.webp",
+    "title": "Cloud9 鍍鉻專輯海報",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "McBling"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#8CB9F7",
+      "#B9A8F3",
+      "#E9F5FF"
+    ]
+  },
+  {
+    "id": "y2k-graphic-poster-001",
+    "url": "/style-image/style2-graphic1.jpeg",
+    "title": "H2O 透明泡泡寫真卡",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#D9B3F0",
+      "#9FB8F2",
+      "#5A4774"
+    ]
+  },
+  {
+    "id": "y2k-graphic-editorial-001",
+    "url": "/style-image/style2-graphic2.webp",
+    "title": "Bubble Era 專輯內頁設計",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "McBling"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#A9D8FF",
+      "#8B7BDB",
+      "#F2F6FF"
+    ]
+  },
+  {
+    "id": "y2k-graphic-brand-001",
+    "url": "/style-image/style2-graphic3.webp",
+    "title": "Cloud9 品牌識別套組",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "McBling"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#D7E8FF",
+      "#D6B5F5",
+      "#F4F5FA"
+    ]
+  },
+  {
+    "id": "y2k-graphic-packaging-001",
+    "url": "/style-image/style2-graphic4.webp",
+    "title": "Lip Glaze 泡泡糖未來包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#E7B5D8",
+      "#C9B5EC",
+      "#F3E9F8"
+    ]
+  },
+  {
+    "id": "y2k-outfit-001",
+    "url": "/style-image/style2-outfit.webp",
+    "title": "粉紫金屬感偶像穿搭",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#8ACBFF",
+      "#C58AE9",
+      "#DDEEFF"
+    ]
+  },
+  {
+    "id": "y2k-outfit-accessory-001",
+    "url": "/style-image/style2-outfit1.webp",
+    "title": "水晶蝴蝶心形耳環",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#F7F8FB",
+      "#C6A4EF",
+      "#C9D9E8"
+    ]
+  },
+  {
+    "id": "y2k-outfit-top-001",
+    "url": "/style-image/style2-outfit2.webp",
+    "title": "虹彩 PVC 蝴蝶馬甲",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#F8F8FA",
+      "#B9A3F0",
+      "#D5E9FF"
+    ]
+  },
+  {
+    "id": "y2k-outfit-bottom-001",
+    "url": "/style-image/style2-outfit3.webp",
+    "title": "虹彩鍊飾百褶短裙",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#FAFAFB",
+      "#B7A0ED",
+      "#DDEBFF"
+    ]
+  },
+  {
+    "id": "y2k-interior-001",
+    "url": "/style-image/style2-interior.webp",
+    "title": "天空景觀泡泡未來臥室",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#8BD4FF",
+      "#D9A8F0",
+      "#F4F1FB"
+    ]
+  },
+  {
+    "id": "y2k-interior-chair-001",
+    "url": "/style-image/style2-interior1.webp",
+    "title": "鍍鉻紫光蛋形休閒椅",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#F5F3F5",
+      "#B88AE4",
+      "#C9C7D2"
+    ]
+  },
+  {
+    "id": "y2k-interior-wall-paint-001",
+    "url": "/style-image/style2-interior2-1.webp",
+    "title": "柔紫高光未來室內牆面",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Bubblegum Futurism",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Y2K"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#CBA7E9",
+      "#8DBEFF",
+      "#F3EEF8"
+    ]
+  },
+  {
+    "id": "y2k-interior-wall-paint-002",
+    "url": "/style-image/style2-interior2-2.webp",
+    "title": "Bubblegum Chrome 室內漆包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Bubblegum Futurism",
+      "Chrome Design",
+      "Y2K",
+      "Frutiger Aero"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#C996D6",
+      "#A4BDF2",
+      "#F7F7FA"
+    ]
+  },
+  {
+    "id": "y2k-interior-table-001",
+    "url": "/style-image/style2-interior3.webp",
+    "title": "紫光液態鍍鉻茶几",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#F4F2F5",
+      "#BA8CEA",
+      "#B9B3C4"
+    ]
+  },
+  {
+    "id": "y2k-architecture-001",
+    "url": "/style-image/style2-Architecture.webp",
+    "title": "粉藍虹彩未來建築外觀",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#70B7F1",
+      "#F0C5E7",
+      "#F8F3F8"
+    ]
+  },
+  {
+    "id": "y2k-architecture-facade-001",
+    "url": "/style-image/style2-Architecture1.webp",
+    "title": "玻璃粉藍建築立面細節",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#74B7ED",
+      "#E8B9D7",
+      "#F6F2F5"
+    ]
+  },
+  {
+    "id": "y2k-architecture-entrance-001",
+    "url": "/style-image/style2-Architecture2.webp",
+    "title": "虹彩柱廊入口空間",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Chrome Design",
+      "Frutiger Aero",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#DFF0FF",
+      "#F0B8D5",
+      "#C7CAD4"
+    ]
+  },
+  {
+    "id": "y2k-architecture-staircase-001",
+    "url": "/style-image/style2-Architecture3.webp",
+    "title": "粉色虹彩螺旋樓梯",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Bubblegum Futurism",
+      "Chrome Design",
+      "Frutiger Aero",
+      "Y2K"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#F0B5C9",
+      "#AEDCFF",
+      "#F4EDF2"
+    ]
+  },
+  {
+    "id": "y2k-architecture-window-001",
+    "url": "/style-image/style2-Architecture4.webp",
+    "title": "海景透明鍍鉻方窗",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#D2E9FF",
+      "#C58EDB",
+      "#C9C5C0"
+    ]
+  },
+  {
+    "id": "ftdp-main-001",
+    "url": "/style-image/style1-main.webp",
+    "title": "Neo Tokyo 團體概念視覺照",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Neo Tokyo",
+      "Future Tech",
+      "Digital Psychedelia",
+      "Glitch Aesthetic"
+    ],
+    "colorPalette": [
+      "#090B12",
+      "#123B75",
+      "#D9168D"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-001",
+    "url": "/style-image/style1-outfit.webp",
+    "title": "霓虹護目鏡未來穿搭",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Future Tech",
+      "Neo Tokyo",
+      "Digital Psychedelia"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#090B12",
+      "#1D4D8E",
+      "#E037B2"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-top-001",
+    "url": "/style-image/style1-outfit1.webp",
+    "title": "資料錯位機能上衣",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Glitch Aesthetic",
+      "Cyberpunk",
+      "Digital Psychedelia"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#111217",
+      "#3B3F48",
+      "#B526D4"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-bottom-001",
+    "url": "/style-image/style1-outfit2.webp",
+    "title": "黑色機能寬版長褲",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Cyberpunk",
+      "Glitch Aesthetic"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#111217",
+      "#363A43",
+      "#6F3BB3"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-dress-001",
+    "url": "/style-image/style1-outfit3.webp",
+    "title": "虹彩資料流長洋裝",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Digital Psychedelia",
+      "Future Tech",
+      "Cyberpunk",
+      "Glitch Aesthetic"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#151820",
+      "#4B5361",
+      "#8D4CC6"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-accessory-001",
+    "url": "/style-image/style1-outfit4.webp",
+    "title": "Hazard4 數位機能肩背包",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Cyberpunk",
+      "Glitch Aesthetic",
+      "Digital Psychedelia"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#10131B",
+      "#26304A",
+      "#8334D5"
+    ]
+  },
+  {
+    "id": "ftdp-graphic-001",
+    "url": "/style-image/style1-graphic.webp",
+    "title": "Neo Tokyo 視覺設計套組",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Neo Tokyo",
+      "Future Tech",
+      "Glitch Aesthetic"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#0B0A10",
+      "#142E72",
+      "#B22B9D"
+    ]
+  },
+  {
+    "id": "ftdp-graphic-brand-001",
+    "url": "/style-image/style1-graphic1.webp",
+    "title": "Nexora Protocol 品牌識別",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Glitch Aesthetic",
+      "Cyberpunk"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#111214",
+      "#252A31",
+      "#37A8D8"
+    ]
+  },
+  {
+    "id": "ftdp-graphic-poster-001",
+    "url": "/style-image/style1-graphic2.webp",
+    "title": "Neon Paradox 音樂節海報",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Digital Psychedelia",
+      "Cyberpunk",
+      "Neo Tokyo",
+      "Glitch Aesthetic"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#121019",
+      "#162B78",
+      "#E12BA4"
+    ]
+  },
+  {
+    "id": "ftdp-graphic-editorial-001",
+    "url": "/style-image/style1-graphic3.webp",
+    "title": "Datawave 未來城市雜誌版面",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Cyberpunk",
+      "Neo Tokyo",
+      "Glitch Aesthetic"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#0C111D",
+      "#163F9B",
+      "#7D2ED6"
+    ]
+  },
+  {
+    "id": "ftdp-interior-001",
+    "url": "/style-image/style1-interior.webp",
+    "title": "深色資料光廊室內空間",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Future Tech",
+      "Digital Psychedelia",
+      "Neo Tokyo"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#090A0F",
+      "#172E61",
+      "#A0197A"
+    ]
+  },
+  {
+    "id": "ftdp-interior-lighting-001",
+    "url": "/style-image/style1-interior1.webp",
+    "title": "粉藍霓虹幾何立燈",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Cyberpunk",
+      "Digital Psychedelia"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#15191F",
+      "#00A6C8",
+      "#DF2E93"
+    ]
+  },
+  {
+    "id": "ftdp-interior-table-001",
+    "url": "/style-image/style1-interior2.webp",
+    "title": "黑色低座科技茶几",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Cyberpunk",
+      "Glitch Aesthetic"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#121417",
+      "#3F3F3B",
+      "#5B48A6"
+    ]
+  },
+  {
+    "id": "ftdp-interior-wall-paint-001",
+    "url": "/style-image/style1-interior3.webp",
+    "title": "資料流霓虹牆面設計",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Digital Psychedelia",
+      "Glitch Aesthetic",
+      "Cyberpunk",
+      "Future Tech"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#111719",
+      "#0A879D",
+      "#C0208B"
+    ]
+  },
+  {
+    "id": "ftdp-interior-chair-001",
+    "url": "/style-image/style1-interior4.webp",
+    "title": "黑色模組化未來休閒椅",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Cyberpunk",
+      "Glitch Aesthetic"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#161719",
+      "#4B4C4A",
+      "#2F347C"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-001",
+    "url": "/style-image/style1-architecture.webp",
+    "title": "Neo Tokyo LED 建築外觀",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Neo Tokyo",
+      "Future Tech",
+      "Digital Psychedelia"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#06142A",
+      "#0057A6",
+      "#D3008B"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-window-001",
+    "url": "/style-image/style1-architecture1.webp",
+    "title": "未來城市景觀窗框",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Cyberpunk",
+      "Neo Tokyo"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#303843",
+      "#9BB3C5",
+      "#E05A8D"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-staircase-001",
+    "url": "/style-image/style1-architecture2.webp",
+    "title": "藍紫霓虹螺旋樓梯",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Digital Psychedelia",
+      "Cyberpunk",
+      "Future Tech"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#050816",
+      "#1237C7",
+      "#7B24E2"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-facade-001",
+    "url": "/style-image/style1-architecture3.webp",
+    "title": "穿孔 LED 數位建築立面",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Future Tech",
+      "Cyberpunk",
+      "Digital Psychedelia"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#101735",
+      "#104FD4",
+      "#A62AD5"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-entrance-001",
+    "url": "/style-image/style1-architecture4.webp",
+    "title": "桃紅霓虹建築入口",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Neo Tokyo",
+      "Future Tech"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#100F13",
+      "#B20D58",
+      "#D0773C"
+    ]
+  },
+  {
+    "id": "doa-main-001",
+    "url": "/style-image/style3-main.webp",
+    "title": "金色古典宮廷團體概念視覺照",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "colorPalette": [
+      "#11100C",
+      "#A87935",
+      "#D8B882"
+    ]
+  },
+  {
+    "id": "doa-outfit-001",
+    "url": "/style-image/style3-outfit.webp",
+    "title": "黑金奢華裝飾穿搭",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism",
+      "Baroque"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#090807",
+      "#7A5524",
+      "#C8A56A"
+    ]
+  },
+  {
+    "id": "doa-outfit-top-001",
+    "url": "/style-image/style3-outfit1.webp",
+    "title": "黑色單肩金扣上衣",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#090806",
+      "#B07A2F",
+      "#D8C6AE"
+    ]
+  },
+  {
+    "id": "doa-outfit-bottom-001",
+    "url": "/style-image/style3-outfit2.webp",
+    "title": "黑色金扣寬版長褲",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#080706",
+      "#7C5A2B",
+      "#A68B69"
+    ]
+  },
+  {
+    "id": "doa-outfit-dress-001",
+    "url": "/style-image/style3-outfit3.webp",
+    "title": "象牙金紋不對稱洋裝",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Gilded Ornament",
+      "Opulent Classicism",
+      "Baroque"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#F0E3C8",
+      "#B4873D",
+      "#19130F"
+    ]
+  },
+  {
+    "id": "doa-outfit-accessory-001",
+    "url": "/style-image/style3-outfit4.webp",
+    "title": "黑金幾何寬版手環",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#090806",
+      "#C28A2E",
+      "#EFE2C8"
+    ]
+  },
+  {
+    "id": "doa-graphic-001",
+    "url": "/style-image/style3-graphic.webp",
+    "title": "Maison Opaline 奢華品牌視覺套組",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Gilded Ornament",
+      "Opulent Classicism",
+      "Baroque"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#E8DCCB",
+      "#B88A44",
+      "#F4EDE2"
+    ]
+  },
+  {
+    "id": "doa-graphic-packaging-001",
+    "url": "/style-image/style3-graphic1.webp",
+    "title": "The Royal 金紋包裝設計",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#EDE1CA",
+      "#B38942",
+      "#F6F0E4"
+    ]
+  },
+  {
+    "id": "doa-graphic-brand-001",
+    "url": "/style-image/style3-graphic2.webp",
+    "title": "Opulence Atelier 品牌識別",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#10100E",
+      "#C0954B",
+      "#E7DCC8"
+    ]
+  },
+  {
+    "id": "doa-graphic-poster-001",
+    "url": "/style-image/style3-graphic3.webp",
+    "title": "Maison Opaline 裝飾藝術海報",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#F0E3C7",
+      "#BE8B3E",
+      "#16120D"
+    ]
+  },
+  {
+    "id": "doa-graphic-editorial-001",
+    "url": "/style-image/style3-graphic4.webp",
+    "title": "Maison Opaline 古典雜誌版面",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#EFE1CB",
+      "#B78C4A",
+      "#D8BBA1"
+    ]
+  },
+  {
+    "id": "doa-interior-001",
+    "url": "/style-image/style3-interior.webp",
+    "title": "金飾洛可可奢華客廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#F1E6D2",
+      "#B98A3F",
+      "#A9B4A4"
+    ]
+  },
+  {
+    "id": "doa-interior-lighting-001",
+    "url": "/style-image/style3-interior1.webp",
+    "title": "金色水晶古典吊燈",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#E8D6BA",
+      "#B88736",
+      "#FFF3DA"
+    ]
+  },
+  {
+    "id": "doa-interior-table-001",
+    "url": "/style-image/style3-interior2.webp",
+    "title": "黑金大理石裝飾圓桌",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#F0E4D0",
+      "#A8752C",
+      "#272019"
+    ]
+  },
+  {
+    "id": "doa-interior-chair-001",
+    "url": "/style-image/style3-interior3.webp",
+    "title": "淡藍金邊貝殼扶手椅",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#B9C9C1",
+      "#D3A64F",
+      "#F2E4D1"
+    ]
+  },
+  {
+    "id": "doa-interior-wall-paint-001",
+    "url": "/style-image/style3-interior4.webp",
+    "title": "花卉金框古典牆面",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#CDD4C0",
+      "#E8D7BE",
+      "#B9914D"
+    ]
+  },
+  {
+    "id": "doa-architecture-001",
+    "url": "/style-image/style3-architecture.webp",
+    "title": "白金裝飾藝術豪宅外觀",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism",
+      "Baroque"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#E8DECE",
+      "#BE9147",
+      "#2F341D"
+    ]
+  },
+  {
+    "id": "doa-architecture-entrance-001",
+    "url": "/style-image/style3-architecture1.webp",
+    "title": "金色雕花豪宅入口",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#E2D0B9",
+      "#B78335",
+      "#2B2418"
+    ]
+  },
+  {
+    "id": "doa-architecture-staircase-001",
+    "url": "/style-image/style3-architecture2.webp",
+    "title": "金飾大理石旋轉樓梯",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism",
+      "Baroque"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#E9D9BF",
+      "#B8893C",
+      "#F7EAD3"
+    ]
+  },
+  {
+    "id": "doa-architecture-window-001",
+    "url": "/style-image/style3-architecture3.webp",
+    "title": "金色扇形裝飾落地窗",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#F0E4D0",
+      "#B89145",
+      "#CBD0C4"
+    ]
+  },
+  {
+    "id": "doa-architecture-facade-001",
+    "url": "/style-image/style3-architecture4.webp",
+    "title": "白金大理石建築立面",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Gilded Ornament",
+      "Opulent Classicism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#E2D7C9",
+      "#B58A45",
+      "#44503B"
+    ]
+  }
+]
