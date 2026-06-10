@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { Lock } from '@lucide/vue';
+import { Lock, MoveDownLeft } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
@@ -70,23 +70,17 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div class="pointer-events-none relative z-20 pt-[20vh] sm:pl-20 sm:pt-[40vh]">
+      <div class="pointer-events-none relative z-20 pt-[20vh] pl-6 sm:pl-30 sm:pt-[40vh]">
         <h1
           class="text-display max-w-[9ch] tracking-normal text-text-primary [text-shadow:0_4px_24px_rgba(255,255,255,0.18)]"
         >
           Asterism
         </h1>
 
-        <div class="meteor-arrows mt-4 flex translate-x-[10vw] gap-5 sm:gap-2" aria-hidden="true">
-          <svg class="meteor-arrow" viewBox="0 0 90 90" focusable="false">
-            <path d="M78 10L18 70M18 70H42M18 70V46" />
-          </svg>
-          <svg class="meteor-arrow meteor-arrow--delay-1" viewBox="0 0 90 90" focusable="false">
-            <path d="M78 10L18 70M18 70H42M18 70V46" />
-          </svg>
-          <svg class="meteor-arrow meteor-arrow--delay-2" viewBox="0 0 90 90" focusable="false">
-            <path d="M78 10L18 70M18 70H42M18 70V46" />
-          </svg>
+        <div class="meteor-arrows mt-4 flex translate-x-[10vw]" aria-hidden="true">
+          <MoveDownLeft class="meteor-arrow meteor-arrow--primary" />
+          <MoveDownLeft class="meteor-arrow meteor-arrow--secondary meteor-arrow--delay-1" />
+          <MoveDownLeft class="meteor-arrow meteor-arrow--tertiary meteor-arrow--delay-2" />
         </div>
       </div>
     </section>
@@ -95,10 +89,7 @@ onBeforeUnmount(() => {
         <div
           class="flex size-14 items-center justify-center rounded-full bg-void/70 text-text-primary"
         >
-          <Lock
-            class="size-5"
-            aria-hidden="true"
-          />
+          <Lock class="size-5" aria-hidden="true" />
         </div>
       </template>
 
@@ -139,15 +130,27 @@ onBeforeUnmount(() => {
 
 .meteor-arrow {
   display: block;
-  width: 90px;
-  height: 90px;
+  width: clamp(64px, 10vw, 100px);
+  height: clamp(64px, 10vw, 100px);
   overflow: visible;
   fill: none;
-  stroke: rgb(240 237 230 / 0.42);
+  stroke: rgb(240 237 230 / var(--meteor-opacity, 0.42));
   stroke-linecap: square;
   stroke-linejoin: miter;
-  stroke-width: 1;
+  stroke-width: 0.75;
   animation: meteorArrow 2.4s ease-in-out infinite;
+}
+
+.meteor-arrow--primary {
+  --meteor-opacity: 0.72;
+}
+
+.meteor-arrow--secondary {
+  --meteor-opacity: 0.42;
+}
+
+.meteor-arrow--tertiary {
+  --meteor-opacity: 0.24;
 }
 
 .meteor-arrow--delay-1 {
@@ -161,22 +164,23 @@ onBeforeUnmount(() => {
 @keyframes meteorArrow {
   0% {
     opacity: 0;
-    translate: 22px -22px;
+    translate: 28px -28px;
   }
 
   34% {
-    opacity: 0.72;
+    opacity: 1;
   }
 
   100% {
     opacity: 0;
-    translate: -14px 14px;
+    translate: -18px 18px;
   }
 }
 
 @media (max-width: 768px) {
   .meteor-arrows {
-    transform: translateX(12vw) scale(0.72);
+    gap: 0;
+    transform: translateX(6vw) scale(0.72);
     transform-origin: left center;
   }
 }
