@@ -20,8 +20,6 @@ const demoImages = [
   { src: '/images/image4.png', alt: 'group 3' },
   { src: '/images/image5.png', alt: 'art' }
 ];
-  { src: '/images/image5.png', alt: 'art' }
-];
 
 const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608'];
 const demoThemeTags = ['Label', 'Editorial', 'Monochrome', 'Avant-garde', 'Industrial'];
