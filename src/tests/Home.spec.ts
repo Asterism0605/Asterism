@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import Home from '@/pages/Home.vue';
 
 describe('Home', () => {
-  it('uses the shared app header and page container', () => {
+  it('uses the shared app header and renders the hero section', () => {
     const wrapper = mount(Home, {
       global: {
         stubs: {
@@ -14,10 +14,11 @@ describe('Home', () => {
     });
 
     expect(wrapper.find('header').exists()).toBe(true);
-    expect(wrapper.find('.max-w-7xl.mx-auto').exists()).toBe(true);
+    expect(wrapper.find('main.home-page').exists()).toBe(true);
+    expect(wrapper.text()).toContain('Asterism');
   });
 
-  it('opens the limit modal when viewport bottom reaches 120vh', async () => {
+  it('opens the limit modal when viewport bottom reaches 150vh', async () => {
     const wrapper = mount(Home, {
       attachTo: document.body,
       global: {
@@ -34,7 +35,7 @@ describe('Home', () => {
     });
     Object.defineProperty(window, 'scrollY', {
       configurable: true,
-      value: 201
+      value: 501
     });
 
     window.dispatchEvent(new Event('scroll'));

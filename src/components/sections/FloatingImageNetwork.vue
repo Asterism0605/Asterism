@@ -32,60 +32,115 @@ const emit = defineEmits<{
 const MAX_IMAGES = 6;
 const CARD_WIDTHS = [130, 150, 160, 170, 200, 210];
 const CARD_ASPECTS = ['3/4', '3/4', '3/4', '3/4', '4/3', '4/3'];
-const HOME_LAYOUT: NodePosition[] = [
-  { x: 0, y: 0, left: '13%', top: '9%', width: 112, aspect: '3/4', constellationSize: 300 },
-  { x: 0, y: 0, left: '27%', top: '12%', width: 320, aspect: '16/10', constellationSize: 360 },
-  { x: 0, y: 0, left: '76%', top: '25%', width: 118, aspect: '3/4', constellationSize: 420 },
-  { x: 0, y: 0, left: '6%', top: '58%', width: 164, aspect: '3/4', constellationSize: 440 },
-  { x: 0, y: 0, left: '57%', top: '69%', width: 232, aspect: '4/3', constellationSize: 340 },
-  { x: 0, y: 0, left: '82%', top: '52%', width: 136, aspect: '3/4', constellationSize: 320 }
-];
+const HOME_CARD_WIDTHS = [112, 320, 118, 164, 232, 136];
+const HOME_CARD_ASPECTS = ['3/4', '16/10', '3/4', '3/4', '4/3', '3/4'];
+const HOME_CONSTELLATION_SIZES = [300, 360, 420, 440, 340, 320];
 
 const containerRef = ref<HTMLElement | null>(null);
 const autoPositions = ref<NodePosition[]>([]);
+const homePositions = ref<NodePosition[]>([]);
 const hoveredIndex = ref<number | null>(null);
 const visibleImages = computed(() => props.images.slice(0, MAX_IMAGES));
 const isHomeLayout = computed(() => props.layout === 'home');
 const renderPositions = computed(() =>
-  isHomeLayout.value ? getHomePositions() : autoPositions.value
+  isHomeLayout.value ? homePositions.value : autoPositions.value
 );
 
-function getHomePositions() {
-  return visibleImages.value.map((_, i) => HOME_LAYOUT[i % HOME_LAYOUT.length]);
+function getRandomPosition(min: number, max: number) {
+  return min + Math.random() * (max - min);
 }
 
-onMounted(() => {
-  if (isHomeLayout.value) {
-    return;
+function resolveConfiguredHeight() {
+  const rawHeight = props.height ?? '600px';
+
+  if (rawHeight.endsWith('px')) {
+    return Number.parseFloat(rawHeight);
   }
 
-  const container = containerRef.value;
-  if (!container) return;
+  if (rawHeight.endsWith('vh') && typeof window !== 'undefined') {
+    return (window.innerHeight * Number.parseFloat(rawHeight)) / 100;
+  }
 
-  const W = container.clientWidth;
-  const H = container.clientHeight;
+  return 600;
+}
 
+function resolveContainerSize(container: HTMLElement) {
+  const bounds = container.getBoundingClientRect();
+  const width =
+    container.clientWidth ||
+    bounds.width ||
+    (typeof window !== 'undefined' ? window.innerWidth : 0) ||
+    1200;
+  const height = container.clientHeight || bounds.height || resolveConfiguredHeight();
+
+  return {
+    width,
+    height
+  };
+}
+
+function buildAutoLayout(width: number, height: number) {
   const nodes: NodePosition[] = visibleImages.value.map((_, i) => ({
-    x: W * 0.2 + Math.random() * W * 0.6,
-    y: H * 0.2 + Math.random() * H * 0.6,
+    x: getRandomPosition(width * 0.2, width * 0.8),
+    y: getRandomPosition(height * 0.2, height * 0.8),
     width: CARD_WIDTHS[i % CARD_WIDTHS.length],
     aspect: CARD_ASPECTS[i % CARD_ASPECTS.length]
   }));
 
   const sim = forceSimulation(nodes)
-    .force('center', forceCenter(W / 2, H / 2).strength(0.3))
+    .force('center', forceCenter(width / 2, height / 2).strength(0.3))
     .force('charge', forceManyBody().strength(-60))
     .force('collide', forceCollide((node: NodePosition) => node.width * 0.65).strength(1))
     .stop();
 
   for (let i = 0; i < 200; i++) sim.tick();
 
-  autoPositions.value = nodes.map((n) => ({
-    x: Math.max(n.width / 2, Math.min(W - n.width, n.x - n.width / 2)),
-    y: Math.max(0, Math.min(H - 80, n.y - 80)),
+  return nodes.map((n) => ({
+    x: Math.max(n.width / 2, Math.min(width - n.width, n.x - n.width / 2)),
+    y: Math.max(0, Math.min(height - 80, n.y - 80)),
     width: n.width,
     aspect: n.aspect
   }));
+}
+
+function buildHomeLayout(width: number, height: number) {
+  const nodes: NodePosition[] = visibleImages.value.map((_, i) => ({
+    x: getRandomPosition(width * 0.14, width * 0.86),
+    y: getRandomPosition(height * 0.12, height * 0.78),
+    width: HOME_CARD_WIDTHS[i % HOME_CARD_WIDTHS.length],
+    aspect: HOME_CARD_ASPECTS[i % HOME_CARD_ASPECTS.length],
+    constellationSize: HOME_CONSTELLATION_SIZES[i % HOME_CONSTELLATION_SIZES.length]
+  }));
+
+  const sim = forceSimulation(nodes)
+    .force('center', forceCenter(width / 2, height * 0.42).strength(0.22))
+    .force('charge', forceManyBody().strength(-90))
+    .force('collide', forceCollide((node: NodePosition) => node.width * 0.72).strength(1))
+    .stop();
+
+  for (let i = 0; i < 240; i++) sim.tick();
+
+  return nodes.map((n) => ({
+    x: Math.max(n.width / 2, Math.min(width - n.width / 2, n.x)),
+    y: Math.max(80, Math.min(height - 120, n.y)),
+    width: n.width,
+    aspect: n.aspect,
+    constellationSize: n.constellationSize
+  }));
+}
+
+onMounted(() => {
+  const container = containerRef.value;
+  if (!container) return;
+
+  const { width, height } = resolveContainerSize(container);
+
+  if (isHomeLayout.value) {
+    homePositions.value = buildHomeLayout(width, height);
+    return;
+  }
+
+  autoPositions.value = buildAutoLayout(width, height);
 });
 
 const AMBIENT_DOTS = [
@@ -120,7 +175,7 @@ function getCardStyle(position: NodePosition | undefined, index: number) {
     width: `${item.width}px`,
     zIndex: 2,
     '--float-delay': `${index * 0.8}s`,
-    opacity: isHomeLayout.value || renderPositions.value.length ? 1 : 0
+    opacity: renderPositions.value.length ? 1 : 0
   };
 }
 

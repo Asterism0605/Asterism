@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { Lock } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
@@ -94,19 +95,10 @@ const inspirationItems = [
         <div
           class="flex size-14 items-center justify-center rounded-full bg-void/70 text-text-primary"
         >
-          <svg
+          <Lock
             class="size-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
             aria-hidden="true"
-          >
-            <rect x="5" y="11" width="14" height="10" rx="2" />
-            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-          </svg>
+          />
         </div>
       </template>
 

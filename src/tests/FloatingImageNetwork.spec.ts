@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { describe, it, expect } from 'vitest';
+import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork.vue';
 
 const mockImages = [
@@ -8,7 +8,34 @@ const mockImages = [
   { src: '/img3.jpg', alt: 'image 3' }
 ];
 
+function setContainerSize(width: number, height: number) {
+  Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
+    configurable: true,
+    get: () => width
+  });
+  Object.defineProperty(HTMLElement.prototype, 'clientHeight', {
+    configurable: true,
+    get: () => height
+  });
+  Object.defineProperty(HTMLDivElement.prototype, 'clientWidth', {
+    configurable: true,
+    get: () => width
+  });
+  Object.defineProperty(HTMLDivElement.prototype, 'clientHeight', {
+    configurable: true,
+    get: () => height
+  });
+}
+
 describe('FloatingImageNetwork', () => {
+  beforeEach(() => {
+    setContainerSize(1200, 900);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('renders without errors with empty images array', () => {
     const wrapper = mount(FloatingImageNetwork, { props: { images: [] } });
     expect(wrapper.exists()).toBe(true);
@@ -51,18 +78,31 @@ describe('FloatingImageNetwork', () => {
     expect(wrapper.findAll('[data-testid="ambient-dot"]').length).toBeGreaterThan(0);
   });
 
-  it('renders home layout image cards at fixed positions immediately', () => {
+  it('renders generated home layout image cards without fixed template coordinates', async () => {
+    vi.spyOn(Math, 'random')
+      .mockReturnValueOnce(0.05)
+      .mockReturnValueOnce(0.15)
+      .mockReturnValueOnce(0.25)
+      .mockReturnValueOnce(0.35)
+      .mockReturnValueOnce(0.45)
+      .mockReturnValueOnce(0.55);
+
     const wrapper = mount(FloatingImageNetwork, {
+      attachTo: document.body,
       props: { images: mockImages, layout: 'home' }
     });
+    await wrapper.vm.$nextTick();
 
     const cards = wrapper.findAll('[data-testid="image-card"]');
+    const firstStyle = cards[0].attributes('style');
 
     expect(cards.length).toBe(3);
     expect(cards[0].classes()).toContain('image-card--home');
-    expect(cards[0].attributes('style')).toContain('left: 13%');
-    expect(cards[0].attributes('style')).not.toContain('left: 0px');
-    expect(cards[0].attributes('style')).toContain('opacity: 1');
+    expect(firstStyle).toContain('left:');
+    expect(firstStyle).toContain('top:');
+    expect(firstStyle).not.toContain('left: 13%');
+    expect(firstStyle).not.toContain('top: 9%');
+    expect(firstStyle).toContain('opacity: 1');
   });
 
   it('still limits home layout images to six items', () => {
@@ -79,6 +119,7 @@ describe('FloatingImageNetwork', () => {
 
   it('activates each constellation background after its own image hover', async () => {
     const wrapper = mount(FloatingImageNetwork, {
+      attachTo: document.body,
       props: { images: mockImages, layout: 'home', showConstellations: true }
     });
 
@@ -108,6 +149,7 @@ describe('FloatingImageNetwork', () => {
 
   it('keeps home card positioning on the outer card and floats only inner content', () => {
     const wrapper = mount(FloatingImageNetwork, {
+      attachTo: document.body,
       props: { images: mockImages, layout: 'home', showConstellations: true }
     });
 
@@ -115,5 +157,43 @@ describe('FloatingImageNetwork', () => {
 
     expect(card.classes()).toContain('image-card--home');
     expect(card.find('.image-card__float').exists()).toBe(true);
+  });
+
+  it('generates a fresh home layout on each mount', async () => {
+    const firstRandom = vi
+      .spyOn(Math, 'random')
+      .mockReturnValueOnce(0.05)
+      .mockReturnValueOnce(0.15)
+      .mockReturnValueOnce(0.25)
+      .mockReturnValueOnce(0.35)
+      .mockReturnValueOnce(0.45)
+      .mockReturnValueOnce(0.55);
+
+    const firstWrapper = mount(FloatingImageNetwork, {
+      attachTo: document.body,
+      props: { images: mockImages, layout: 'home' }
+    });
+    await firstWrapper.vm.$nextTick();
+    const firstStyle = firstWrapper.findAll('[data-testid="image-card"]')[0].attributes('style');
+
+    firstWrapper.unmount();
+    firstRandom.mockRestore();
+
+    vi.spyOn(Math, 'random')
+      .mockReturnValueOnce(0.85)
+      .mockReturnValueOnce(0.75)
+      .mockReturnValueOnce(0.65)
+      .mockReturnValueOnce(0.55)
+      .mockReturnValueOnce(0.45)
+      .mockReturnValueOnce(0.35);
+
+    const secondWrapper = mount(FloatingImageNetwork, {
+      attachTo: document.body,
+      props: { images: mockImages, layout: 'home' }
+    });
+    await secondWrapper.vm.$nextTick();
+    const secondStyle = secondWrapper.findAll('[data-testid="image-card"]')[0].attributes('style');
+
+    expect(firstStyle).not.toEqual(secondStyle);
   });
 });

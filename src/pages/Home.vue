@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { Lock } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork.vue';
 import AppHeader from '@/layouts/AppHeader.vue';
-import PageContainer from '@/layouts/PageContainer.vue';
 
-const scrollLimitVh = 120;
+const scrollLimitVh = 150;
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
 
@@ -56,55 +56,45 @@ onBeforeUnmount(() => {
 
     <AppHeader />
 
-    <PageContainer>
-      <section class="relative z-10 min-h-[150vh] pt-28">
-        <div class="absolute inset-x-0 top-0 z-10 h-[112vh]">
-          <FloatingImageNetwork
-            :images="inspirationImages"
-            height="200vh"
-            layout="home"
-            show-constellations
-          />
+    <section class="relative z-10 min-h-[150vh] pt-28">
+      <div class="absolute inset-x-0 top-0 z-10 h-[112vh]">
+        <FloatingImageNetwork
+          :images="inspirationImages"
+          height="200vh"
+          layout="home"
+          show-constellations
+        />
+      </div>
+
+      <div class="pointer-events-none relative z-20 pt-[20vh] sm:pl-20 sm:pt-[40vh]">
+        <h1
+          class="text-display max-w-[9ch] font-normal tracking-normal text-text-primary [text-shadow:0_4px_24px_rgba(255,255,255,0.18)]"
+        >
+          Asterism
+        </h1>
+
+        <div class="meteor-arrows mt-4 flex translate-x-[10vw] gap-5 sm:gap-2" aria-hidden="true">
+          <svg class="meteor-arrow" viewBox="0 0 90 90" focusable="false">
+            <path d="M78 10L18 70M18 70H42M18 70V46" />
+          </svg>
+          <svg class="meteor-arrow meteor-arrow--delay-1" viewBox="0 0 90 90" focusable="false">
+            <path d="M78 10L18 70M18 70H42M18 70V46" />
+          </svg>
+          <svg class="meteor-arrow meteor-arrow--delay-2" viewBox="0 0 90 90" focusable="false">
+            <path d="M78 10L18 70M18 70H42M18 70V46" />
+          </svg>
         </div>
-
-        <div class="pointer-events-none relative z-20 pt-[20vh] sm:pl-20 sm:pt-[40vh]">
-          <h1 class="text-display max-w-[9ch] font-normal tracking-normal text-text-primary">
-            Asterism
-          </h1>
-
-          <div class="meteor-arrows mt-4 flex translate-x-[10vw] gap-5 sm:gap-2" aria-hidden="true">
-            <svg class="meteor-arrow" viewBox="0 0 90 90" focusable="false">
-              <path d="M78 10L18 70M18 70H42M18 70V46" />
-            </svg>
-            <svg class="meteor-arrow meteor-arrow--delay-1" viewBox="0 0 90 90" focusable="false">
-              <path d="M78 10L18 70M18 70H42M18 70V46" />
-            </svg>
-            <svg class="meteor-arrow meteor-arrow--delay-2" viewBox="0 0 90 90" focusable="false">
-              <path d="M78 10L18 70M18 70H42M18 70V46" />
-            </svg>
-          </div>
-        </div>
-      </section>
-    </PageContainer>
-
+      </div>
+    </section>
     <ModalOverlay v-model="isLimitModalOpen" max-width="590px" :close-on-backdrop="true">
       <template #icon>
         <div
           class="flex size-14 items-center justify-center rounded-full bg-void/70 text-text-primary"
         >
-          <svg
+          <Lock
             class="size-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
             aria-hidden="true"
-          >
-            <rect x="5" y="11" width="14" height="10" rx="2" />
-            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-          </svg>
+          />
         </div>
       </template>
 
