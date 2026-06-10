@@ -51,16 +51,20 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main class="home-page relative min-h-[160vh] overflow-hidden bg-void text-text-primary">
+  <main
+    class="home-page relative min-h-[160vh] overflow-hidden bg-void text-text-primary [--app-header-height:60px]"
+  >
     <div class="pointer-events-none absolute inset-0 z-0 home-page__wash" aria-hidden="true" />
 
     <AppHeader />
 
-    <section class="relative z-10 min-h-[150vh] pt-28">
-      <div class="absolute inset-x-0 top-0 z-10 h-[112vh]">
+    <section class="relative z-10 min-h-[150vh] pt-[var(--app-header-height)]">
+      <div
+        class="absolute inset-x-0 top-[var(--app-header-height)] z-10 h-[calc(112vh-var(--app-header-height))]"
+      >
         <FloatingImageNetwork
           :images="inspirationImages"
-          height="200vh"
+          height="calc(200vh - var(--app-header-height))"
           layout="home"
           show-constellations
         />
@@ -68,7 +72,7 @@ onBeforeUnmount(() => {
 
       <div class="pointer-events-none relative z-20 pt-[20vh] sm:pl-20 sm:pt-[40vh]">
         <h1
-          class="text-display max-w-[9ch] font-normal tracking-normal text-text-primary [text-shadow:0_4px_24px_rgba(255,255,255,0.18)]"
+          class="text-display max-w-[9ch] tracking-normal text-text-primary [text-shadow:0_4px_24px_rgba(255,255,255,0.18)]"
         >
           Asterism
         </h1>
