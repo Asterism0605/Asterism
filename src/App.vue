@@ -9,9 +9,9 @@ import Playground from './pages/Playground.vue';
 import SignUpOverlay from './components/overlay/SignUpOverlay.vue';
 import LoginOverlay from './components/overlay/LoginOverlay.vue';
 
-const showSignUp = ref(false);
+const showSignUp = ref(true);
 
-const showLogin = ref(true);
+const showLogin = ref(false);
 
 const demoImages = [
   { src: '/images/image2.png', alt: 'group 1' },
