@@ -3,7 +3,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { Lock } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
-import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork.vue';
+import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import AppHeader from '@/layouts/AppHeader.vue';
 
 const scrollLimitVh = 150;

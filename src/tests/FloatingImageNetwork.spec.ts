@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
-import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork.vue';
+import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 
 const mockImages = [
   { src: '/img1.jpg', alt: 'image 1' },

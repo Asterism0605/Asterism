@@ -1,0 +1,93 @@
+/**
+ * FloatingImageNetwork 的靜態設定與型別定義。
+ * 集中管理 layout preset、節點資料結構、顯示數量限制與背景點資料，
+ * 避免固定設定散落在元件與計算邏輯中。
+ */
+export interface ImageItem {
+  src: string;
+  alt?: string;
+}
+
+export interface NodePosition {
+  x: number;
+  y: number;
+  width: number;
+  aspect: string;
+  constellationSize?: number;
+}
+
+export interface LayoutPreset {
+  widths: number[];
+  aspects: string[];
+  constellationSizes?: number[];
+  randomX: readonly [number, number];
+  randomY: readonly [number, number];
+  center: readonly [number, number];
+  centerStrength: number;
+  chargeStrength: number;
+  collideMultiplier: number;
+  ticks: number;
+  clampPosition: (node: NodePosition, width: number, height: number) => NodePosition;
+}
+
+export const MAX_IMAGES = 6;
+
+export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
+  auto: {
+    widths: [130, 150, 160, 170, 200, 210],
+    aspects: ['3/4', '3/4', '3/4', '3/4', '4/3', '4/3'],
+    randomX: [0.2, 0.8],
+    randomY: [0.2, 0.8],
+    center: [0.5, 0.5],
+    centerStrength: 0.3,
+    chargeStrength: -60,
+    collideMultiplier: 0.65,
+    ticks: 200,
+    clampPosition(node, width, height) {
+      return {
+        x: Math.max(node.width / 2, Math.min(width - node.width, node.x - node.width / 2)),
+        y: Math.max(0, Math.min(height - 80, node.y - 80)),
+        width: node.width,
+        aspect: node.aspect
+      };
+    }
+  },
+  home: {
+    widths: [112, 320, 118, 164, 232, 136],
+    aspects: ['3/4', '16/10', '3/4', '3/4', '4/3', '3/4'],
+    constellationSizes: [300, 360, 420, 440, 340, 320],
+    randomX: [0.14, 0.86],
+    randomY: [0.12, 0.78],
+    center: [0.5, 0.42],
+    centerStrength: 0.22,
+    chargeStrength: -90,
+    collideMultiplier: 0.72,
+    ticks: 240,
+    clampPosition(node, width, height) {
+      return {
+        x: Math.max(node.width / 2, Math.min(width - node.width / 2, node.x)),
+        y: Math.max(80, Math.min(height - 120, node.y)),
+        width: node.width,
+        aspect: node.aspect,
+        constellationSize: node.constellationSize
+      };
+    }
+  }
+};
+
+export const AMBIENT_DOTS = [
+  { left: '35%', top: '8%' },
+  { left: '49%', top: '13%' },
+  { left: '62%', top: '6%' },
+  { left: '75%', top: '2%' },
+  { left: '87%', top: '9%' },
+  { left: '94%', top: '3%' },
+  { left: '43%', top: '33%' },
+  { left: '50%', top: '58%' },
+  { left: '85%', top: '58%' },
+  { left: '90%', top: '80%' },
+  { left: '20%', top: '83%' },
+  { left: '32%', top: '80%' },
+  { left: '65%', top: '25%' },
+  { left: '82%', top: '33%' }
+] as const;
