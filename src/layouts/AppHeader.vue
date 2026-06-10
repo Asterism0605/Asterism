@@ -10,7 +10,6 @@ const siteLogoSrc = '/sitelogo.png';
   >
     <div class="flex items-center gap-2">
       <img class="w-8 h-8" :src="siteLogoSrc" alt="Asterism" />
-      <span class="text-sm font-semibold text-text-primary tracking-wide">Asterism</span>
     </div>
 
     <div class="flex items-center gap-3">
