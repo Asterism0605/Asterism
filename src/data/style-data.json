@@ -1,7 +1,7 @@
 [
   {
     "id": "y2k-main-001",
-    "url": "/style-image/style2-main.png",
+    "url": "/style-image/style2-main.webp",
     "title": "Cloud9 團體概念視覺照",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -18,7 +18,7 @@
   },
   {
     "id": "y2k-graphic-001",
-    "url": "/style-image/style2-graphic.png",
+    "url": "/style-image/style2-graphic.webp",
     "title": "Cloud9 鍍鉻專輯海報",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -55,7 +55,7 @@
   },
   {
     "id": "y2k-graphic-editorial-001",
-    "url": "/style-image/style2-graphic2.png",
+    "url": "/style-image/style2-graphic2.webp",
     "title": "Bubble Era 專輯內頁設計",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -74,7 +74,7 @@
   },
   {
     "id": "y2k-graphic-brand-001",
-    "url": "/style-image/style2-graphic3.png",
+    "url": "/style-image/style2-graphic3.webp",
     "title": "Cloud9 品牌識別套組",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -93,7 +93,7 @@
   },
   {
     "id": "y2k-graphic-packaging-001",
-    "url": "/style-image/style2-graphic4.png",
+    "url": "/style-image/style2-graphic4.webp",
     "title": "Lip Glaze 泡泡糖未來包裝",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -112,7 +112,7 @@
   },
   {
     "id": "y2k-outfit-001",
-    "url": "/style-image/style2-outfit.png",
+    "url": "/style-image/style2-outfit.webp",
     "title": "粉紫金屬感偶像穿搭",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -130,7 +130,7 @@
   },
   {
     "id": "y2k-outfit-accessory-001",
-    "url": "/style-image/style2-outfit1.png",
+    "url": "/style-image/style2-outfit1.webp",
     "title": "水晶蝴蝶心形耳環",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -148,7 +148,7 @@
   },
   {
     "id": "y2k-outfit-top-001",
-    "url": "/style-image/style2-outfit2.png",
+    "url": "/style-image/style2-outfit2.webp",
     "title": "虹彩 PVC 蝴蝶馬甲",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -167,7 +167,7 @@
   },
   {
     "id": "y2k-outfit-bottom-001",
-    "url": "/style-image/style2-outfit3.png",
+    "url": "/style-image/style2-outfit3.webp",
     "title": "虹彩鍊飾百褶短裙",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -186,7 +186,7 @@
   },
   {
     "id": "y2k-interior-001",
-    "url": "/style-image/style2-interior.png",
+    "url": "/style-image/style2-interior.webp",
     "title": "天空景觀泡泡未來臥室",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -204,7 +204,7 @@
   },
   {
     "id": "y2k-interior-chair-001",
-    "url": "/style-image/style2-interior1.png",
+    "url": "/style-image/style2-interior1.webp",
     "title": "鍍鉻紫光蛋形休閒椅",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -222,7 +222,7 @@
   },
   {
     "id": "y2k-interior-wall-paint-001",
-    "url": "/style-image/style2-interior2-1.png",
+    "url": "/style-image/style2-interior2-1.webp",
     "title": "柔紫高光未來室內牆面",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -241,7 +241,7 @@
   },
   {
     "id": "y2k-interior-wall-paint-002",
-    "url": "/style-image/style2-interior2-2.png",
+    "url": "/style-image/style2-interior2-2.webp",
     "title": "Bubblegum Chrome 室內漆包裝",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -260,7 +260,7 @@
   },
   {
     "id": "y2k-interior-table-001",
-    "url": "/style-image/style2-interior3.png",
+    "url": "/style-image/style2-interior3.webp",
     "title": "紫光液態鍍鉻茶几",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -278,7 +278,7 @@
   },
   {
     "id": "y2k-architecture-001",
-    "url": "/style-image/style2-Architecture.png",
+    "url": "/style-image/style2-Architecture.webp",
     "title": "粉藍虹彩未來建築外觀",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -296,7 +296,7 @@
   },
   {
     "id": "y2k-architecture-facade-001",
-    "url": "/style-image/style2-Architecture1.png",
+    "url": "/style-image/style2-Architecture1.webp",
     "title": "玻璃粉藍建築立面細節",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -315,7 +315,7 @@
   },
   {
     "id": "y2k-architecture-entrance-001",
-    "url": "/style-image/style2-Architecture2.png",
+    "url": "/style-image/style2-Architecture2.webp",
     "title": "虹彩柱廊入口空間",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -334,7 +334,7 @@
   },
   {
     "id": "y2k-architecture-staircase-001",
-    "url": "/style-image/style2-Architecture3.png",
+    "url": "/style-image/style2-Architecture3.webp",
     "title": "粉色虹彩螺旋樓梯",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -353,7 +353,7 @@
   },
   {
     "id": "y2k-architecture-window-001",
-    "url": "/style-image/style2-Architecture4.png",
+    "url": "/style-image/style2-Architecture4.webp",
     "title": "海景透明鍍鉻方窗",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -372,7 +372,7 @@
   },
   {
     "id": "ftdp-main-001",
-    "url": "/style-image/style1-main.png",
+    "url": "/style-image/style1-main.webp",
     "title": "Neo Tokyo 團體概念視覺照",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -390,7 +390,7 @@
   },
   {
     "id": "ftdp-outfit-001",
-    "url": "/style-image/style1-outfit.png",
+    "url": "/style-image/style1-outfit.webp",
     "title": "霓虹護目鏡未來穿搭",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -408,7 +408,7 @@
   },
   {
     "id": "ftdp-outfit-top-001",
-    "url": "/style-image/style1-outfit1.png",
+    "url": "/style-image/style1-outfit1.webp",
     "title": "資料錯位機能上衣",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -427,7 +427,7 @@
   },
   {
     "id": "ftdp-outfit-bottom-001",
-    "url": "/style-image/style1-outfit2.png",
+    "url": "/style-image/style1-outfit2.webp",
     "title": "黑色機能寬版長褲",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -445,7 +445,7 @@
   },
   {
     "id": "ftdp-outfit-dress-001",
-    "url": "/style-image/style1-outfit3.png",
+    "url": "/style-image/style1-outfit3.webp",
     "title": "虹彩資料流長洋裝",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -464,7 +464,7 @@
   },
   {
     "id": "ftdp-outfit-accessory-001",
-    "url": "/style-image/style1-outfit4.png",
+    "url": "/style-image/style1-outfit4.webp",
     "title": "Hazard4 數位機能肩背包",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -483,7 +483,7 @@
   },
   {
     "id": "ftdp-graphic-001",
-    "url": "/style-image/style1-graphic.png",
+    "url": "/style-image/style1-graphic.webp",
     "title": "Neo Tokyo 視覺設計套組",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -501,7 +501,7 @@
   },
   {
     "id": "ftdp-graphic-brand-001",
-    "url": "/style-image/style1-graphic1.png",
+    "url": "/style-image/style1-graphic1.webp",
     "title": "Nexora Protocol 品牌識別",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -519,7 +519,7 @@
   },
   {
     "id": "ftdp-graphic-poster-001",
-    "url": "/style-image/style1-graphic2.png",
+    "url": "/style-image/style1-graphic2.webp",
     "title": "Neon Paradox 音樂節海報",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -538,7 +538,7 @@
   },
   {
     "id": "ftdp-graphic-editorial-001",
-    "url": "/style-image/style1-graphic3.png",
+    "url": "/style-image/style1-graphic3.webp",
     "title": "Datawave 未來城市雜誌版面",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -557,7 +557,7 @@
   },
   {
     "id": "ftdp-interior-001",
-    "url": "/style-image/style1-interior.png",
+    "url": "/style-image/style1-interior.webp",
     "title": "深色資料光廊室內空間",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -575,7 +575,7 @@
   },
   {
     "id": "ftdp-interior-lighting-001",
-    "url": "/style-image/style1-interior1.png",
+    "url": "/style-image/style1-interior1.webp",
     "title": "粉藍霓虹幾何立燈",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -593,7 +593,7 @@
   },
   {
     "id": "ftdp-interior-table-001",
-    "url": "/style-image/style1-interior2.png",
+    "url": "/style-image/style1-interior2.webp",
     "title": "黑色低座科技茶几",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -611,7 +611,7 @@
   },
   {
     "id": "ftdp-interior-wall-paint-001",
-    "url": "/style-image/style1-interior3.png",
+    "url": "/style-image/style1-interior3.webp",
     "title": "資料流霓虹牆面設計",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -630,7 +630,7 @@
   },
   {
     "id": "ftdp-interior-chair-001",
-    "url": "/style-image/style1-interior4.png",
+    "url": "/style-image/style1-interior4.webp",
     "title": "黑色模組化未來休閒椅",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -648,7 +648,7 @@
   },
   {
     "id": "ftdp-architecture-001",
-    "url": "/style-image/style1-architecture.png",
+    "url": "/style-image/style1-architecture.webp",
     "title": "Neo Tokyo LED 建築外觀",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -666,7 +666,7 @@
   },
   {
     "id": "ftdp-architecture-window-001",
-    "url": "/style-image/style1-architecture1.png",
+    "url": "/style-image/style1-architecture1.webp",
     "title": "未來城市景觀窗框",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -684,7 +684,7 @@
   },
   {
     "id": "ftdp-architecture-staircase-001",
-    "url": "/style-image/style1-architecture2.png",
+    "url": "/style-image/style1-architecture2.webp",
     "title": "藍紫霓虹螺旋樓梯",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -702,7 +702,7 @@
   },
   {
     "id": "ftdp-architecture-facade-001",
-    "url": "/style-image/style1-architecture3.png",
+    "url": "/style-image/style1-architecture3.webp",
     "title": "穿孔 LED 數位建築立面",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -720,7 +720,7 @@
   },
   {
     "id": "ftdp-architecture-entrance-001",
-    "url": "/style-image/style1-architecture4.png",
+    "url": "/style-image/style1-architecture4.webp",
     "title": "桃紅霓虹建築入口",
     "styleGroup": "Future Tech & Digital Psychedelia",
     "style": [
@@ -738,7 +738,7 @@
   },
   {
     "id": "doa-main-001",
-    "url": "/style-image/style3-main.png",
+    "url": "/style-image/style3-main.webp",
     "title": "金色古典宮廷團體概念視覺照",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -756,7 +756,7 @@
   },
   {
     "id": "doa-outfit-001",
-    "url": "/style-image/style3-outfit.png",
+    "url": "/style-image/style3-outfit.webp",
     "title": "黑金奢華裝飾穿搭",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -774,7 +774,7 @@
   },
   {
     "id": "doa-outfit-top-001",
-    "url": "/style-image/style3-outfit1.png",
+    "url": "/style-image/style3-outfit1.webp",
     "title": "黑色單肩金扣上衣",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -792,7 +792,7 @@
   },
   {
     "id": "doa-outfit-bottom-001",
-    "url": "/style-image/style3-outfit2.png",
+    "url": "/style-image/style3-outfit2.webp",
     "title": "黑色金扣寬版長褲",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -810,7 +810,7 @@
   },
   {
     "id": "doa-outfit-dress-001",
-    "url": "/style-image/style3-outfit3.png",
+    "url": "/style-image/style3-outfit3.webp",
     "title": "象牙金紋不對稱洋裝",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -829,7 +829,7 @@
   },
   {
     "id": "doa-outfit-accessory-001",
-    "url": "/style-image/style3-outfit4.png",
+    "url": "/style-image/style3-outfit4.webp",
     "title": "黑金幾何寬版手環",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -847,7 +847,7 @@
   },
   {
     "id": "doa-graphic-001",
-    "url": "/style-image/style3-graphic.png",
+    "url": "/style-image/style3-graphic.webp",
     "title": "Maison Opaline 奢華品牌視覺套組",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -865,7 +865,7 @@
   },
   {
     "id": "doa-graphic-packaging-001",
-    "url": "/style-image/style3-graphic1.png",
+    "url": "/style-image/style3-graphic1.webp",
     "title": "The Royal 金紋包裝設計",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -883,7 +883,7 @@
   },
   {
     "id": "doa-graphic-brand-001",
-    "url": "/style-image/style3-graphic2.png",
+    "url": "/style-image/style3-graphic2.webp",
     "title": "Opulence Atelier 品牌識別",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -901,7 +901,7 @@
   },
   {
     "id": "doa-graphic-poster-001",
-    "url": "/style-image/style3-graphic3.png",
+    "url": "/style-image/style3-graphic3.webp",
     "title": "Maison Opaline 裝飾藝術海報",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -920,7 +920,7 @@
   },
   {
     "id": "doa-graphic-editorial-001",
-    "url": "/style-image/style3-graphic4.png",
+    "url": "/style-image/style3-graphic4.webp",
     "title": "Maison Opaline 古典雜誌版面",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -939,7 +939,7 @@
   },
   {
     "id": "doa-interior-001",
-    "url": "/style-image/style3-interior.png",
+    "url": "/style-image/style3-interior.webp",
     "title": "金飾洛可可奢華客廳",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -957,7 +957,7 @@
   },
   {
     "id": "doa-interior-lighting-001",
-    "url": "/style-image/style3-interior1.png",
+    "url": "/style-image/style3-interior1.webp",
     "title": "金色水晶古典吊燈",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -976,7 +976,7 @@
   },
   {
     "id": "doa-interior-table-001",
-    "url": "/style-image/style3-interior2.png",
+    "url": "/style-image/style3-interior2.webp",
     "title": "黑金大理石裝飾圓桌",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -994,7 +994,7 @@
   },
   {
     "id": "doa-interior-chair-001",
-    "url": "/style-image/style3-interior3.png",
+    "url": "/style-image/style3-interior3.webp",
     "title": "淡藍金邊貝殼扶手椅",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -1012,7 +1012,7 @@
   },
   {
     "id": "doa-interior-wall-paint-001",
-    "url": "/style-image/style3-interior4.png",
+    "url": "/style-image/style3-interior4.webp",
     "title": "花卉金框古典牆面",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -1031,7 +1031,7 @@
   },
   {
     "id": "doa-architecture-001",
-    "url": "/style-image/style3-architecture.png",
+    "url": "/style-image/style3-architecture.webp",
     "title": "白金裝飾藝術豪宅外觀",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -1049,7 +1049,7 @@
   },
   {
     "id": "doa-architecture-entrance-001",
-    "url": "/style-image/style3-architecture1.png",
+    "url": "/style-image/style3-architecture1.webp",
     "title": "金色雕花豪宅入口",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -1067,7 +1067,7 @@
   },
   {
     "id": "doa-architecture-staircase-001",
-    "url": "/style-image/style3-architecture2.png",
+    "url": "/style-image/style3-architecture2.webp",
     "title": "金飾大理石旋轉樓梯",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -1086,7 +1086,7 @@
   },
   {
     "id": "doa-architecture-window-001",
-    "url": "/style-image/style3-architecture3.png",
+    "url": "/style-image/style3-architecture3.webp",
     "title": "金色扇形裝飾落地窗",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
@@ -1104,7 +1104,7 @@
   },
   {
     "id": "doa-architecture-facade-001",
-    "url": "/style-image/style3-architecture4.png",
+    "url": "/style-image/style3-architecture4.webp",
     "title": "白金大理石建築立面",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
