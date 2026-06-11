@@ -56,9 +56,6 @@
           v-for="fv in folderView"
           :key="'f' + fv.i"
           class="absolute"
-          @mouseenter="hoverIdx = fv.i"
-          @mouseleave="hoverIdx = -1"
-          @click="openFolder(fv.i)"
           :style="{
             left: fv.left + 'px',
             top: fv.top + 'px',
@@ -70,6 +67,9 @@
             zIndex: fv.active ? 30 : 2,
             cursor: 'pointer'
           }"
+          @mouseenter="hoverIdx = fv.i"
+          @mouseleave="hoverIdx = -1"
+          @click="openFolder(fv.i)"
         >
           <img
             :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
@@ -95,10 +95,10 @@
         >
           <img
             :src="n.src"
-            @error="onImgError"
             draggable="false"
             class="w-full h-full block select-none"
             style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
+            @error="onImgError"
           />
           <div
             class="w-full h-full"
@@ -120,7 +120,6 @@
         <!-- back link -->
         <div class="absolute" style="left: 30px; top: 928px">
           <button
-            @click="goHome"
             class="flex items-center gap-2 text-white/75 hover:text-white"
             style="
               font-size: 17px;
@@ -129,6 +128,7 @@
               cursor: pointer;
               font-weight: 300;
             "
+            @click="goHome"
           >
             <span style="font-size: 20px; line-height: 1">&larr;</span> Back
           </button>
@@ -269,7 +269,7 @@ const INNER_K = 0.9;
 const NODE = { x: 1098, y: 170 };
 
 /* ---- folders (base positions; theta = angle on the ellipse) ---- */
-const folders = [
+const orbitFolders = [
   { x: 672, y: 108, w: 152, h: 100 },
   { x: 1022, y: 120, w: 152, h: 100 },
   { x: 1300, y: 325, w: 152, h: 100 },
@@ -277,7 +277,7 @@ const folders = [
   { x: 215, y: 520, w: 152, h: 103 },
   { x: 190, y: 818, w: 152, h: 105 }
 ];
-folders.forEach((f) => {
+orbitFolders.forEach((f) => {
   const cx = f.x + f.w / 2,
     cy = f.y + f.h / 2;
   f.theta = Math.atan2((cy - CY) / RY, (cx - CX) / RX);
@@ -339,7 +339,7 @@ const outerPathFlip = computed(() => ellipsePath(1, true));
 const innerPathFlip = computed(() => ellipsePath(INNER_K, true));
 
 const folderView = computed(() =>
-  folders.map((f, i) => {
+  orbitFolders.map((f, i) => {
     const ang = f.theta + orbitPhase.value;
     const cx = CX + RX * Math.cos(ang);
     const cy = CY + RY * Math.sin(ang);
