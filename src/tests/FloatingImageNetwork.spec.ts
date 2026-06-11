@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
+import { applyAvoidAreas } from '@/components/sections/FloatingImageNetwork/avoidance';
 import {
   buildFloatingImageLayout,
   resolveLayoutPreset
@@ -235,5 +236,16 @@ describe('FloatingImageNetwork', () => {
     const positions = buildFloatingImageLayout(6, 1200, 900, resolveLayoutPreset('home'));
 
     expect(positions.some(overlapsTitleArea)).toBe(false);
+  });
+
+  it('keeps right-side mobile cards from over-avoiding the title row', () => {
+    const [position] = applyAvoidAreas(
+      [{ x: 300, y: 150, width: 96, aspect: '1/1' }],
+      360,
+      900,
+      resolveLayoutPreset('home').avoidAreas
+    );
+
+    expect(position).toEqual({ x: 300, y: 150, width: 96, aspect: '1/1' });
   });
 });

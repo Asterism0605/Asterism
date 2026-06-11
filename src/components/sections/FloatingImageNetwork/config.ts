@@ -78,9 +78,9 @@ export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
       {
         left: 0,
         top: 0.08,
-        right: 0.98,
-        bottom: 0.28,
-        padding: 24,
+        right: 0.58,
+        bottom: 0.24,
+        padding: 16,
         maxWidth: 767
       },
       {
