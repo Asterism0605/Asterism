@@ -29,12 +29,19 @@ const currentType = computed(() => {
   return props.type;
 });
 
+const internalError = computed(() => {
+  if (props.type === 'password' && props.modelValue.length > 0 && props.modelValue.length < 8) {
+    return '密碼長度不足，必須至少包含 8 個字元';
+  }
+
+  return props.errorMessage;
+});
+
 function handleInput(event: Event) {
   const target = event.target as HTMLInputElement;
   emit('update:modelValue', target.value);
 }
 
-// ✨ 新增：切換眼睛狀態的函式
 function togglePasswordVisibility() {
   isPasswordVisible.value = !isPasswordVisible.value;
 }
@@ -49,7 +56,7 @@ function togglePasswordVisibility() {
         :placeholder="placeholder"
         :autocomplete="autocomplete"
         class="overlay-input"
-        :class="{ 'input-error-border': !!errorMessage, 'pr-12': type === 'password' }"
+        :class="{ 'input-error-border': !!internalError, 'pr-12': type === 'password' }"
         @input="handleInput"
       />
 
@@ -61,7 +68,7 @@ function togglePasswordVisibility() {
       >
         <svg
           v-if="isPasswordVisible"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="http://w3.org"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
@@ -79,9 +86,10 @@ function togglePasswordVisibility() {
             d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
           />
         </svg>
+
         <svg
           v-else
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="http://w3.org"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
@@ -97,8 +105,8 @@ function togglePasswordVisibility() {
       </button>
     </div>
 
-    <span v-if="errorMessage" class="form-error-text">
-      {{ errorMessage }}
+    <span v-if="internalError" class="form-error-text">
+      {{ internalError }}
     </span>
   </div>
 </template>

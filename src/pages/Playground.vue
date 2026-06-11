@@ -11,12 +11,6 @@ const hoveredItemId = ref<number | null>(null);
 const email = ref('');
 const password = ref('');
 
-const passwordError = computed(() => {
-  if (password.value.length === 0) return '';
-  if (password.value.length < 8) return '密碼長度不足，必須至少包含 8 個字元';
-  return '';
-});
-
 const inspirationItems = [
   {
     id: 1,
@@ -108,7 +102,6 @@ const inspirationItems = [
           type="password"
           placeholder="PASSWORD"
           autocomplete="new-password"
-          :error-message="passwordError"
         />
       </div>
     </section>
