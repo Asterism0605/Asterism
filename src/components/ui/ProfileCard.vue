@@ -27,7 +27,7 @@ const initials = computed(() =>
 </script>
 
 <template>
-  <article class="glass-panel rounded-[32px] p-7 sm:p-9">
+  <article class="rounded-[32px] p-7 sm:p-9">
     <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
       <div class="flex min-w-0 items-center gap-5">
         <div
