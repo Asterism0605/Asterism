@@ -51,9 +51,7 @@ function openLimitModal() {
     <AppHeader />
 
     <PageContainer>
-      <section
-        class="relative z-10 grid gap-10 pt-[calc(var(--app-header-height)+2.5rem)] lg:grid-cols-[0.82fr_1.18fr] lg:items-center"
-      >
+      <section class="relative z-10 grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
         <div class="max-w-xl">
           <p class="text-mono uppercase tracking-[0.28em] text-gold-dim">Component Playground</p>
           <h1 class="mt-5 text-h1 font-normal leading-tight">
@@ -118,8 +116,8 @@ function openLimitModal() {
         </div>
       </section>
 
-      <section class="relative z-10 mt-20 grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
-        <div class="flex flex-col gap-6">
+      <section class="relative z-10 mt-10 grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
+        <div class="flex flex-col gap-6 text-sm">
           <ProfileCard
             name="Zhenya Rukhlov"
             subtitle="Photographer / Object studies"
@@ -130,9 +128,7 @@ function openLimitModal() {
           <ThemeTag :tags="themeTags" />
         </div>
 
-        <div
-          class="glass-panel grid gap-6 rounded-[32px] p-6 sm:grid-cols-[0.9fr_1.1fr] sm:p-8"
-        >
+        <div class="glass-panel grid gap-6 rounded-[32px] sm:grid-cols-[0.9fr_1.1fr] sm:p-6">
           <div class="overflow-hidden rounded-2xl border border-white/10 bg-elevated">
             <img
               class="aspect-[4/5] h-full w-full object-cover"
@@ -165,10 +161,7 @@ function openLimitModal() {
         <div
           class="flex size-14 items-center justify-center rounded-full bg-void/70 text-text-primary"
         >
-          <Lock
-            class="size-5"
-            aria-hidden="true"
-          />
+          <Lock class="size-5" aria-hidden="true" />
         </div>
       </template>
 
