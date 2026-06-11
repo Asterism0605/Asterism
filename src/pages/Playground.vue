@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';

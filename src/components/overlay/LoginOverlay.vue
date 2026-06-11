@@ -28,10 +28,6 @@ let previousBodyOverflow = '';
 const email = ref('');
 const password = ref('');
 
-function closeModal() {
-  emit('update:modelValue', false);
-}
-
 function handleSubmit() {
   emit('submit', { email: email.value, password: password.value });
 }
