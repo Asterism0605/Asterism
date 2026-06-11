@@ -11,7 +11,9 @@ import LoginOverlay from './components/overlay/LoginOverlay.vue';
 import MoodboardOrbit from './pages/MoodboardOrbit.vue';
 import ThemeTag from './components/ui/ThemeTag.vue';
 import ProfileCard from './components/ui/ProfileCard.vue';
+import StyleDnaResult from './pages/StyleDnaResult.vue';
 
+const isStyleDnaResultPage = window.location.pathname === '/style-dna-result';
 const showSignUp = ref(true);
 const showLogin = ref(false);
 
@@ -84,40 +86,41 @@ const demoThemeTags = ['Label', 'Editorial', 'Monochrome', 'Avant-garde', 'Indus
 </script>
 
 <template>
-  <AppHeader />
-  <Playground />
-  <PageContainer>
-    <div class="mb-14 flex flex-col gap-14">
-      <ThemeTag :tags="demoThemeTags" />
-      <section class="flex flex-col gap-5">
-        <div class="flex items-baseline gap-3">
-          <h2 class="text-h2 font-bold tracking-tight">Profile</h2>
-        </div>
-        <div class="max-w-3xl">
-          <ProfileCard name="Zhenya Rukhlov" subtitle="Photographer / Image detail" show-follow />
-        </div>
-      </section>
-    </div>
+  <StyleDnaResult v-if="isStyleDnaResultPage" />
+  <template v-else>
+    <AppHeader />
+    <Playground />
+    <PageContainer>
+      <div class="mb-14 flex flex-col gap-14">
+        <ThemeTag :tags="demoThemeTags" />
+        <section class="flex flex-col gap-5">
+          <div class="flex items-baseline gap-3">
+            <h2 class="text-h2 font-bold tracking-tight">Profile</h2>
+          </div>
+          <div class="max-w-3xl">
+            <ProfileCard name="Zhenya Rukhlov" subtitle="Photographer / Image detail" show-follow />
+          </div>
+        </section>
+      </div>
+      <div class="mb-8">
+        <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">
+          FloatingImageNetwork Preview
+        </p>
+        <FloatingImageNetwork :images="demoImages" :line-width="1.55" :line-opacity="0.78" />
+      </div>
+      <div class="mb-8 max-w-lg">
+        <ColorPaletteSwatch :colors="demoColors" />
+      </div>
+      <TokenShowcase />
+    </PageContainer>
     <div class="mb-8">
-      <p class="text-caption font-mono text-text-secondary mb-4 uppercase tracking-widest">
-        FloatingImageNetwork Preview
-      </p>
-      <FloatingImageNetwork :images="demoImages" :line-width="1.55" :line-opacity="0.78" />
+      <MoodboardOrbit
+        :folders="orbitHasFolders ? demoFolders : []"
+        :images="orbitHasFolders ? [] : demoImages"
+        height="720px"
+      />
     </div>
-    <div class="mb-8 max-w-lg">
-      <ColorPaletteSwatch :colors="demoColors" />
-    </div>
-    <TokenShowcase />
-  </PageContainer>
-
-  <!-- MoodboardOrbit: full-width, outside PageContainer constraint -->
-  <div class="mb-8">
-    <MoodboardOrbit
-      :folders="orbitHasFolders ? demoFolders : []"
-      :images="orbitHasFolders ? [] : demoImages"
-      height="720px"
-    />
-  </div>
-  <SignUpOverlay v-if="showSignUp" v-model="showSignUp" />
-  <LoginOverlay v-if="showLogin" v-model="showLogin" />
+    <SignUpOverlay v-if="showSignUp" v-model="showSignUp" />
+    <LoginOverlay v-if="showLogin" v-model="showLogin" />
+  </template>
 </template>
