@@ -143,29 +143,39 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 .instruction {
   position: absolute;
   left: 17.4%;
-  top: 13.7%;
+  top: 12.6%;
   z-index: 5;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 28px;
   color: rgb(240 237 230 / 80%);
-  font-size: 17px;
+  font-size: 14px;
   transform: translateX(0);
 }
 
 .instruction-line {
+  position: relative;
   width: 210px;
-  height: 48px;
-  border-bottom: 1px solid rgb(240 237 230 / 78%);
-  border-left: 1px solid rgb(240 237 230 / 78%);
-  transform: skewY(16deg);
-  transform-origin: left bottom;
+  height: 1px;
+  background: rgb(240 237 230 / 78%);
+}
+
+.instruction-line::before {
+  position: absolute;
+  right: 100%;
+  top: 0;
+  width: 96px;
+  height: 1px;
+  content: '';
+  background: rgb(240 237 230 / 78%);
+  transform: rotate(24deg);
+  transform-origin: right center;
 }
 
 .instruction-dot {
   width: 10px;
   height: 10px;
-  margin-left: -18px;
+  margin-left: -33px;
   border-radius: 50%;
   background: var(--color-text-primary);
 }
@@ -209,7 +219,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .choice--left.is-low {
-  top: 45%;
+  top: calc(100vh - 502px);
 }
 
 .choice--right.is-high {
@@ -217,7 +227,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .choice--right.is-low {
-  top: 38%;
+  top: calc(100vh - 476px);
 }
 
 .image-card {
@@ -318,8 +328,8 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .star--small {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 .choice--left .star--large {
@@ -397,7 +407,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 @keyframes orbitFloat {
   0%,
   100% {
-    translate: 0 -8px;
+    translate: 0 -20px;
   }
   50% {
     translate: 0 10px;
