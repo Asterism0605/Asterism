@@ -6,13 +6,77 @@ import TokenShowcase from './components/sections/TokenShowcase.vue';
 import FloatingImageNetwork from './components/sections/FloatingImageNetwork.vue';
 import ColorPaletteSwatch from './components/ui/ColorPaletteSwatch.vue';
 import Playground from './pages/Playground.vue';
+import SignUpOverlay from './components/overlay/SignUpOverlay.vue';
+import LoginOverlay from './components/overlay/LoginOverlay.vue';
+import MoodboardOrbit from './pages/MoodboardOrbit.vue';
+import ThemeTag from './components/ui/ThemeTag.vue';
+import ProfileCard from './components/ui/ProfileCard.vue';
+
+const showSignUp = ref(true);
+const showLogin = ref(false);
+
+// 切換有/無資料夾狀態
+const orbitHasFolders = ref(true);
 
 const demoImages = [
   { src: '/images/image2.png', alt: 'group 1' },
   { src: '/images/image1.png', alt: 'group 2' },
   { src: '/images/image3.png', alt: 'chair' },
   { src: '/images/image4.png', alt: 'group 3' },
-  { src: '/images/image5.png', alt: 'art' }
+  { src: '/images/image5.png', alt: 'art' },
+  { src: '/images/image3.png', alt: 'chair 2' },
+  { src: '/images/image1.png', alt: 'group 4' },
+  { src: '/images/image4.png', alt: 'group 5' },
+  { src: '/images/image2.png', alt: 'group 6' }
+];
+
+// 每個 folder 補足 9 張，讓 Fibonacci 球面更飽滿
+const demoFolders = [
+  {
+    id: 'editorial',
+    name: 'Editorial',
+    images: [
+      { src: '/images/image1.png' },
+      { src: '/images/image2.png' },
+      { src: '/images/image3.png' },
+      { src: '/images/image4.png' },
+      { src: '/images/image5.png' },
+      { src: '/images/image2.png' },
+      { src: '/images/image4.png' },
+      { src: '/images/image1.png' },
+      { src: '/images/image3.png' }
+    ]
+  },
+  {
+    id: 'portrait',
+    name: 'Portrait',
+    images: [
+      { src: '/images/image3.png' },
+      { src: '/images/image5.png' },
+      { src: '/images/image1.png' },
+      { src: '/images/image2.png' },
+      { src: '/images/image4.png' },
+      { src: '/images/image3.png' },
+      { src: '/images/image5.png' },
+      { src: '/images/image1.png' },
+      { src: '/images/image2.png' }
+    ]
+  },
+  {
+    id: 'abstract',
+    name: 'Abstract',
+    images: [
+      { src: '/images/image2.png' },
+      { src: '/images/image4.png' },
+      { src: '/images/image5.png' },
+      { src: '/images/image1.png' },
+      { src: '/images/image3.png' },
+      { src: '/images/image4.png' },
+      { src: '/images/image2.png' },
+      { src: '/images/image5.png' },
+      { src: '/images/image1.png' }
+    ]
+  }
 ];
 
 const demoColors = ['#F0EDE6', '#8A8880', '#3A3A42', '#17171D', '#060608'];
@@ -45,4 +109,15 @@ const demoThemeTags = ['Label', 'Editorial', 'Monochrome', 'Avant-garde', 'Indus
     </div>
     <TokenShowcase />
   </PageContainer>
+
+  <!-- MoodboardOrbit: full-width, outside PageContainer constraint -->
+  <div class="mb-8">
+    <MoodboardOrbit
+      :folders="orbitHasFolders ? demoFolders : []"
+      :images="orbitHasFolders ? [] : demoImages"
+      height="720px"
+    />
+  </div>
+  <SignUpOverlay v-if="showSignUp" v-model="showSignUp" />
+  <LoginOverlay v-if="showLogin" v-model="showLogin" />
 </template>
