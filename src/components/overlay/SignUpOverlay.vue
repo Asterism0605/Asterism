@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import Button from '@/components/ui/Button.vue';
+import FormInput from '@/components/ui/FormInput.vue';
 
 interface Props {
   modelValue: boolean;
@@ -31,22 +32,12 @@ function closeModal() {
   emit('update:modelValue', false);
 }
 
-function handleBackdropClick() {
-  closeModal();
-}
-
 function handleSubmit() {
   emit('submit', { email: email.value, password: password.value });
 }
 
 function handleKeydown(event: KeyboardEvent) {
   if (!props.modelValue) return;
-
-  if (event.key === 'Escape') {
-    event.preventDefault();
-    closeModal();
-    return;
-  }
 
   const panelElement = panelRef.value;
   if (event.key !== 'Tab' || !panelElement) return;
@@ -109,12 +100,7 @@ onBeforeUnmount(() => {
 <template>
   <Teleport to="body">
     <Transition name="overlay">
-      <div
-        v-if="modelValue"
-        class="overlay-backdrop"
-        role="presentation"
-        @click.self="handleBackdropClick"
-      >
+      <div v-if="modelValue" class="overlay-backdrop" role="presentation">
         <section
           ref="panelRef"
           class="overlay-panel overlay-form glass-panel"
@@ -127,20 +113,12 @@ onBeforeUnmount(() => {
           <h2 class="overlay-title">Sign up</h2>
 
           <div class="overlay-fields">
-            <input
-              v-model="email"
-              type="email"
-              class="overlay-input"
-              placeholder="EMAIL"
-              autocomplete="email"
-            />
-            <input
+            <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
+            <FormInput
               v-model="password"
               type="password"
-              class="overlay-input"
               placeholder="PASSWORD"
               autocomplete="new-password"
-              @keydown.enter="handleSubmit"
             />
           </div>
 
@@ -155,3 +133,15 @@ onBeforeUnmount(() => {
   </Teleport>
 </template>
 
+<style scoped>
+@media (max-width: 640px) {
+  .overlay-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .overlay-fields {
+    gap: 12px;
+  }
+}
+</style>
