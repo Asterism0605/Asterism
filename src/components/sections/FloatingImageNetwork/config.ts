@@ -16,6 +16,16 @@ export interface NodePosition {
   constellationSize?: number;
 }
 
+export interface AvoidArea {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+  padding: number;
+  minWidth?: number;
+  maxWidth?: number;
+}
+
 export interface LayoutPreset {
   widths: number[];
   aspects: string[];
@@ -27,6 +37,7 @@ export interface LayoutPreset {
   chargeStrength: number;
   collideMultiplier: number;
   ticks: number;
+  avoidAreas?: AvoidArea[];
   clampPosition: (node: NodePosition, width: number, height: number) => NodePosition;
 }
 
@@ -63,6 +74,24 @@ export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
     chargeStrength: -90,
     collideMultiplier: 0.72,
     ticks: 240,
+    avoidAreas: [
+      {
+        left: 0,
+        top: 0.08,
+        right: 0.98,
+        bottom: 0.28,
+        padding: 24,
+        maxWidth: 767
+      },
+      {
+        left: 0,
+        top: 0.14,
+        right: 0.62,
+        bottom: 0.32,
+        padding: 32,
+        minWidth: 768
+      }
+    ],
     clampPosition(node, width, height) {
       return {
         x: Math.max(node.width / 2, Math.min(width - node.width / 2, node.x)),

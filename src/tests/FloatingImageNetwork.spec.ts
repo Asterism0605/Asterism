@@ -1,6 +1,10 @@
 import { mount } from '@vue/test-utils';
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
+import {
+  buildFloatingImageLayout,
+  resolveLayoutPreset
+} from '@/components/sections/FloatingImageNetwork/layout';
 
 const mockImages = [
   { src: '/img1.jpg', alt: 'image 1' },
@@ -25,6 +29,34 @@ function setContainerSize(width: number, height: number) {
     configurable: true,
     get: () => height
   });
+}
+
+function getNodeHeight(width: number, aspect: string) {
+  const [aspectWidth, aspectHeight] = aspect.split('/').map(Number);
+  return width / (aspectWidth / aspectHeight);
+}
+
+function overlapsTitleArea(node: { x: number; y: number; width: number; aspect: string }) {
+  const nodeHeight = getNodeHeight(node.width, node.aspect);
+  const nodeRect = {
+    left: node.x - node.width / 2,
+    top: node.y - nodeHeight / 2,
+    right: node.x + node.width / 2,
+    bottom: node.y + nodeHeight / 2
+  };
+  const titleRect = {
+    left: 0,
+    top: 900 * 0.14,
+    right: 1200 * 0.62,
+    bottom: 900 * 0.32
+  };
+
+  return (
+    nodeRect.left < titleRect.right &&
+    nodeRect.right > titleRect.left &&
+    nodeRect.top < titleRect.bottom &&
+    nodeRect.bottom > titleRect.top
+  );
 }
 
 describe('FloatingImageNetwork', () => {
@@ -195,5 +227,13 @@ describe('FloatingImageNetwork', () => {
     const secondStyle = secondWrapper.findAll('[data-testid="image-card"]')[0].attributes('style');
 
     expect(firstStyle).not.toEqual(secondStyle);
+  });
+
+  it('keeps generated home layout image cards out of the h1 title area', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.05);
+
+    const positions = buildFloatingImageLayout(6, 1200, 900, resolveLayoutPreset('home'));
+
+    expect(positions.some(overlapsTitleArea)).toBe(false);
   });
 });

@@ -4,6 +4,7 @@
  * 不依賴 Vue reactivity，方便獨立維護與測試。
  */
 import { forceSimulation, forceCollide, forceCenter, forceManyBody } from 'd3-force';
+import { applyAvoidAreas } from './avoidance';
 import { LAYOUT_PRESETS, type LayoutPreset, type NodePosition } from './config';
 
 export function resolveConfiguredHeight(rawHeight: string | undefined) {
@@ -86,7 +87,10 @@ export function buildFloatingImageLayout(
 
   runLayoutSimulation(nodes, width, height, preset);
 
-  return nodes.map((node) => preset.clampPosition(node, width, height));
+  const clampedNodes = nodes.map((node) => preset.clampPosition(node, width, height));
+  const resolvedNodes = applyAvoidAreas(clampedNodes, width, height, preset.avoidAreas);
+
+  return resolvedNodes.map((node) => preset.clampPosition(node, width, height));
 }
 
 export function getFallbackCard(layout: 'auto' | 'home') {
