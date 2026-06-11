@@ -68,7 +68,7 @@ function togglePasswordVisibility() {
       >
         <svg
           v-if="isPasswordVisible"
-          xmlns="http://w3.org"
+          xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
@@ -89,7 +89,7 @@ function togglePasswordVisibility() {
 
         <svg
           v-else
-          xmlns="http://w3.org"
+          xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
