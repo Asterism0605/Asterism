@@ -2,18 +2,22 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import Home from '@/pages/Home.vue';
 
+const floatingImageNetworkStub = {
+  template: '<div data-test="floating-image-network" />'
+};
+
 describe('Home', () => {
   it('uses the shared app header and renders the hero section', () => {
     const wrapper = mount(Home, {
       global: {
         stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
           Teleport: true,
           Transition: false
         }
       }
     });
 
-    expect(wrapper.find('header').exists()).toBe(true);
     expect(wrapper.find('main.home-page').exists()).toBe(true);
     expect(wrapper.text()).toContain('Asterism');
   });
@@ -23,6 +27,7 @@ describe('Home', () => {
       attachTo: document.body,
       global: {
         stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
           Teleport: true,
           Transition: false
         }

@@ -1,11 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/pages/Home.vue'
-import Login from '@/pages/Login.vue'
-import MoodboardOrbit from '@/pages/MoodboardOrbit.vue'
-import Playground from '@/pages/Playground.vue'
-import SignUp from '@/pages/SignUp.vue'
-import StyleDna from '@/pages/StyleDna.vue'
-import StyleDnaResult from '@/pages/StyleDnaResult.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '@/pages/Home.vue';
+import Login from '@/pages/Login.vue';
+import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
+import Playground from '@/pages/Playground.vue';
+import SignUp from '@/pages/SignUp.vue';
+import StyleDna from '@/pages/StyleDna.vue';
+import StyleDnaResult from '@/pages/StyleDnaResult.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -13,48 +13,39 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Home,
+      component: Home
     },
     {
       path: '/login',
       name: 'login',
-      component: Login,
-    },
-    {
-      path: '/moodboard',
-      redirect: '/moodboard-orbit',
-    },
-    {
-      path: '/moodboard-orbit',
-      name: 'moodboard-orbit',
-      component: MoodboardOrbit,
-    },
-    {
-      path: '/playground',
-      name: 'playground',
-      component: Playground,
+      component: Login
     },
     {
       path: '/sign-up',
       name: 'sign-up',
-      component: SignUp,
+      component: SignUp
+    },
+    {
+      path: '/moodboard',
+      name: 'moodboard',
+      component: MoodboardOrbit
+    },
+    {
+      path: '/playground',
+      name: 'playground',
+      component: Playground
     },
     {
       path: '/style-dna',
       name: 'style-dna',
-      component: StyleDna,
+      component: StyleDna
     },
     {
       path: '/style-dna/result',
-      name: 'style-dna-result-nested',
-      component: StyleDnaResult,
-    },
-    {
-      path: '/style-dna-result',
       name: 'style-dna-result',
-      component: StyleDnaResult,
-    },
-  ],
-})
+      component: StyleDnaResult
+    }
+  ]
+});
 
-export default router
+export default router;

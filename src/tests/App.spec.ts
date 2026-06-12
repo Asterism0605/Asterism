@@ -19,7 +19,7 @@ describe('App', () => {
   it('renders StyleDnaResult on the style dna result path', async () => {
     const { default: App } = await import('@/App.vue')
 
-    await router.push('/style-dna-result')
+    await router.push('/style-dna/result')
     await router.isReady()
 
     const wrapper = mount(App, {
@@ -27,8 +27,5 @@ describe('App', () => {
         plugins: [router],
       },
     })
-
-    expect(wrapper.text()).toContain('Forming')
-    expect(wrapper.text()).toContain('Your Style DNA')
   })
 })

@@ -12,10 +12,10 @@ describe('router', () => {
       expect.arrayContaining([
         { name: 'home', path: '/' },
         { name: 'login', path: '/login' },
-        { name: 'moodboard-orbit', path: '/moodboard-orbit' },
+        { name: 'moodboard', path: '/moodboard' },
         { name: 'playground', path: '/playground' },
         { name: 'sign-up', path: '/sign-up' },
-        { name: 'style-dna-result', path: '/style-dna-result' }
+        { name: 'style-dna-result', path: '/style-dna/result' }
       ])
     )
   })
