@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onBeforeUnmount, ref } from 'vue'
 import AppHeader from '@/layouts/AppHeader.vue'
 import StyleComparisonPicker from '@/components/feature/StyleComparisonPicker.vue'
 import { useStyleDnaQuiz } from '@/composables/useStyleDnaQuiz'
@@ -8,13 +8,19 @@ const quiz = useStyleDnaQuiz()
 const { currentQuestion, currentQuestionIndex, isCompleted, questions, resetQuiz, selectAnswer } = quiz
 const selectedId = ref<string | null>(null)
 const isTransitioning = ref(false)
+const isHoverSuppressed = ref(false)
 const completedTargetPath = '/style-dna/result'
+let hoverSuppressTimer: number | undefined
 
 resetQuiz()
 
 const handleSelect = (optionId: string) => {
   if (isTransitioning.value) {
     return
+  }
+
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur()
   }
 
   selectedId.value = optionId
@@ -24,6 +30,12 @@ const handleSelect = (optionId: string) => {
     selectAnswer(optionId)
     selectedId.value = null
     isTransitioning.value = false
+    isHoverSuppressed.value = true
+
+    window.clearTimeout(hoverSuppressTimer)
+    hoverSuppressTimer = window.setTimeout(() => {
+      isHoverSuppressed.value = false
+    }, 260)
 
     if (isCompleted.value) {
       // TODO: 導入 Vue Router 後改為 router.push(completedTargetPath)
@@ -31,22 +43,28 @@ const handleSelect = (optionId: string) => {
     }
   }, 500)
 }
+
+onBeforeUnmount(() => {
+  window.clearTimeout(hoverSuppressTimer)
+})
 </script>
 
 <template>
   <main class="style-dna-page">
     <AppHeader />
+
     <StyleComparisonPicker
       v-if="currentQuestion"
       :left-option="currentQuestion.options[0]"
       :right-option="currentQuestion.options[1]"
       :selected-id="selectedId"
       :question-index="currentQuestionIndex"
+      :suppress-hover="isHoverSuppressed"
       @select="handleSelect"
     />
 
-    <div class="quiz-progress" aria-label="Quiz progress">
-      <span class="quiz-label">Quiz</span>
+    <div class="quiz-progress">
+      <span class="quiz-label" aria-label="Quiz progress">Quiz</span>
       <span class="quiz-current">{{ Math.min(currentQuestionIndex + 1, questions.length) }}</span>
       <span class="quiz-slash" aria-hidden="true"></span>
       <span class="quiz-total">{{ questions.length }}</span>
@@ -71,7 +89,7 @@ const handleSelect = (optionId: string) => {
   width: 17.4%;
   height: 128px;
   color: rgb(240 237 230 / 70%);
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 200;
   pointer-events: none;
 }
@@ -99,26 +117,27 @@ const handleSelect = (optionId: string) => {
 
 .quiz-label {
   position: absolute;
-  right: 26px;
-  top: 0;
+  right: 20px;
+  top: 6px;
+  font-size: 16px;
 }
 
 .quiz-current {
   position: absolute;
-  left: 44px;
-  top: 82px;
+  left: 36px;
+  top: 95px;
 }
 
 .quiz-total {
   position: absolute;
-  left: 82px;
-  top: 112px;
+  left: 75px;
+  top: 138px;
 }
 
 .quiz-slash {
   position: absolute;
-  left: 56px;
-  top: 98px;
+  left:37px;
+  top: 154px;
   width: 64px;
   height: 1px;
   background: rgb(240 237 230 / 78%);

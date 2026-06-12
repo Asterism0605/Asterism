@@ -7,6 +7,7 @@ const props = defineProps<{
   rightOption: StyleDnaOption
   selectedId: string | null
   questionIndex: number
+  suppressHover?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -32,7 +33,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 </script>
 
 <template>
-  <div class="comparison-stage">
+  <div class="comparison-stage" :class="{ 'is-hover-suppressed': suppressHover }">
     <div class="axis axis--left" aria-hidden="true"></div>
     <div class="axis axis--right" aria-hidden="true"></div>
     <div
@@ -49,7 +50,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
     <div class="instruction" aria-hidden="true">
       <span class="instruction-line"></span>
       <span class="instruction-dot"></span>
-      <span>Click to choose your preferred style</span>
+      <span>Click one image to continue</span>
     </div>
 
     <span class="ambient-dot ambient-dot--one" aria-hidden="true"></span>
@@ -143,7 +144,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 .instruction {
   position: absolute;
   left: 17.4%;
-  top: 12.6%;
+  top: calc(20%);
   z-index: 5;
   display: flex;
   align-items: center;
@@ -155,16 +156,17 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 
 .instruction-line {
   position: relative;
-  width: 210px;
+  width: 230px;
   height: 1px;
+  margin-left: 55px;
   background: rgb(240 237 230 / 78%);
 }
 
 .instruction-line::before {
   position: absolute;
-  right: 100%;
+  right: calc(100% - 1px);
   top: 0;
-  width: 96px;
+  width: 60px;
   height: 1px;
   content: '';
   background: rgb(240 237 230 / 78%);
@@ -193,13 +195,17 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
     filter 240ms ease;
 }
 
+.comparison-stage:not(.is-hover-suppressed) .choice:hover {
+  filter: drop-shadow(0 0 44px rgb(240 237 230 / 34%));
+}
+
+.comparison-stage.is-hover-suppressed .choice {
+  filter: none;
+}
+
 .choice:focus-visible {
   outline: 1px solid rgb(240 237 230 / 68%);
   outline-offset: 8px;
-}
-
-.choice.is-selected {
-  filter: drop-shadow(0 0 44px rgb(240 237 230 / 34%));
 }
 
 .choice.is-muted {
@@ -207,7 +213,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .choice--left {
-  left: 23.8%;
+  left: 13.8%;
 }
 
 .choice--right {
@@ -242,11 +248,14 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
     box-shadow 220ms ease;
 }
 
-.choice:hover .image-card,
-.choice:focus-visible .image-card {
-  box-shadow: 0 24px 80px rgb(0 0 0 / 36%);
-  filter: brightness(1.08) contrast(1.04);
-  transform: translateY(-4px) scale(1.025);
+.choice.is-selected .image-card {
+  box-shadow:
+    0 0 42px rgb(240 237 230 / 26%),
+    0 0 118px rgb(240 237 230 / 16%),
+    0 0 190px rgb(240 237 230 / 8%),
+    0 24px 80px rgb(0 0 0 / 34%);
+  filter: brightness(1.14) contrast(1.03);
+  transform: translateY(-3px) scale(1.018);
 }
 
 .choice--left .image-card {
@@ -257,7 +266,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .choice--right .image-card {
-  left: 128px;
+  left: 60px;
   top: 88px;
   width: 232px;
   height: 310px;
@@ -292,11 +301,11 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .choice--left .orbit {
-  left: -160px;
-  top: -28px;
+  left: -100px;
+  top: 120px;
   width: 620px;
   height: 260px;
-  transform: rotate(15deg);
+  transform: rotate(35deg);
 }
 
 .choice--right .orbit {
@@ -345,7 +354,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 
 .choice--left .star--small {
   left: 406px;
-  top: 26px;
+  top: 33px;
   animation-delay: -2.1s;
 }
 
@@ -433,20 +442,49 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
   }
 
   .choice {
+    --mobile-choice-scale: 0.7;
+
     left: 50%;
     width: 520px;
-    max-width: calc(100% - 24px);
-    transform: translateX(-50%);
+    max-width: none;
+    transform: translateX(-50%) scale(var(--mobile-choice-scale));
+    transform-origin: top center;
   }
 
   .choice--left.is-high,
   .choice--right.is-high {
-    top: 120px;
+    top: clamp(96px, 12svh, 120px);
   }
 
   .choice--left.is-low,
   .choice--right.is-low {
-    top: 560px;
+    top: calc(100svh - 379px);
+  }
+
+  .choice--left .orbit {
+    transform: rotate(15deg) scale(0.85);
+    transform-origin: center;
+  }
+
+  .choice--right .orbit {
+    transform: rotate(-28deg) scale(0.85);
+    transform-origin: center;
+  }
+}
+
+@media (max-width: 980px) and (max-height: 740px) {
+  .choice {
+    --mobile-choice-scale: 0.56;
+  }
+
+  .choice--left.is-high,
+  .choice--right.is-high {
+    top: 76px;
+  }
+
+  .choice--left.is-low,
+  .choice--right.is-low {
+    top: calc(100svh - 306px);
   }
 }
 </style>
