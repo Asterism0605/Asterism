@@ -13,6 +13,9 @@ import PageContainer from '@/layouts/PageContainer.vue';
 const isLimitModalOpen = ref(false);
 const hoveredItemId = ref<number | null>(null);
 
+const email = ref('');
+const password = ref('');
+
 const inspirationItems = [
   {
     id: 1,
