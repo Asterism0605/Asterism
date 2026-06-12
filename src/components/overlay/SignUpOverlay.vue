@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button.vue';
 import FormInput from '@/components/ui/FormInput.vue';
 
 interface Props {
-  modelValue: boolean;
+  modelValue?: boolean;
 }
 
 interface SignUpPayload {

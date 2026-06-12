@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button.vue'
 
 <template>
   <header
-    class="fixed w-full top-0 z-50 flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl"
+    class="fixed w-full top-0 z-[60] flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl"
   >
     <div class="flex items-center gap-2">
       <img class="w-8 h-8" src="/sitelogo.png" alt="Asterism" />
