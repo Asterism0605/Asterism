@@ -31,7 +31,7 @@
       @pointercancel="onDragEnd"
       @pointerleave="onDragEnd"
     >
-      <!-- orbit lines (normal arc on home, flipped smile on detail) -->
+      <!-- orbit lines: the line does NOT flip on detail — same home arc, only the folders disappear -->
       <svg
         class="absolute inset-0 pointer-events-none"
         width="440"
@@ -190,7 +190,8 @@
         </div>
       </div>
 
-      <!-- header: plain profile -->
+      <!-- header: asterisk logo + plain profile -->
+
       <div class="absolute flex items-center gap-4" style="left: 20px; top: 80px">
         <div
           style="
@@ -291,18 +292,8 @@
         viewBox="0 0 1440 1024"
         fill="none"
       >
-        <path
-          :d="hasFolders ? outerPath : outerPathFlip"
-          stroke="rgba(220,222,228,0.45)"
-          stroke-width="1"
-          fill="none"
-        />
-        <path
-          :d="hasFolders ? innerPath : innerPathFlip"
-          stroke="rgba(220,222,228,0.32)"
-          stroke-width="1"
-          fill="none"
-        />
+        <path :d="outerPath" stroke="rgba(220,222,228,0.45)" stroke-width="1" fill="none" />
+        <path :d="innerPath" stroke="rgba(220,222,228,0.32)" stroke-width="1" fill="none" />
       </svg>
 
       <!-- ===== STATE A : HAS FOLDERS (orbit + photo sphere) ===== -->
@@ -318,6 +309,9 @@
           v-for="fv in folderView"
           :key="'f' + fv.i"
           class="absolute"
+          @mouseenter="hoverIdx = fv.i"
+          @mouseleave="hoverIdx = -1"
+          @click="openFolder(fv.i)"
           :style="{
             left: fv.left + 'px',
             top: fv.top + 'px',
@@ -331,9 +325,6 @@
             zIndex: fv.active ? 30 : 2,
             cursor: 'pointer'
           }"
-          @mouseenter="hoverIdx = fv.i"
-          @mouseleave="hoverIdx = -1"
-          @click="openFolder(fv.i)"
         >
           <img
             :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
@@ -359,10 +350,10 @@
         >
           <img
             :src="n.src"
+            @error="onImgError"
             draggable="false"
             class="w-full h-full block select-none"
             style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
-            @error="onImgError"
           />
           <div
             class="w-full h-full"
@@ -384,6 +375,7 @@
         <!-- back link -->
         <div class="absolute" style="left: 30px; top: 928px">
           <button
+            @click="goHome"
             class="flex items-center gap-2 text-white/75 hover:text-white"
             style="
               font-size: 17px;
@@ -392,7 +384,6 @@
               cursor: pointer;
               font-weight: 300;
             "
-            @click="goHome"
           >
             <span style="font-size: 20px; line-height: 1">&larr;</span> Back
           </button>
@@ -613,12 +604,8 @@ function ellipsePathM(o, k) {
   }
   return 'M' + pts.join(' L') + ' Z';
 }
-const mOrbitOuter = computed(() =>
-  ellipsePathM(hasFolders.value ? M_HOME_ORBIT : M_DETAIL_ORBIT, 1)
-);
-const mOrbitInner = computed(() =>
-  ellipsePathM(hasFolders.value ? M_HOME_ORBIT : M_DETAIL_ORBIT, 0.9)
-);
+const mOrbitOuter = computed(() => ellipsePathM(M_HOME_ORBIT, 1));
+const mOrbitInner = computed(() => ellipsePathM(M_HOME_ORBIT, 0.9));
 // up to MAX_FOLDERS spread evenly around the home orbit, sharing the travel phase.
 // on mobile they may sit off-screen; the user drags the orbit to bring one into view.
 const mFolders = computed(() => {
@@ -659,7 +646,14 @@ const mBuildSeq = ref(0);
 function buildMobileDetail() {
   mBuildSeq.value++;
   const seq = mBuildSeq.value;
-  const R = { x0: 42, x1: 398, y0: 200, y1: 792 }; // body region (below header, above tab)
+  const o = M_HOME_ORBIT; // same orbit as home (line not flipped)
+  const cx = o.cx,
+    cy = o.cy,
+    rx = o.rx,
+    ry = o.ry;
+  const yTop = 300,
+    yBot = Math.min(mDesignH.value - 120, 760);
+  const R = { x0: 34, x1: 406, y0: yTop, y1: yBot }; // body region (below the arc, above the tab)
   const base = mDetailBase;
   const n = base.length,
     cols = 3,
@@ -667,16 +661,16 @@ function buildMobileDetail() {
   const cellW = (R.x1 - R.x0) / cols,
     cellH = (R.y1 - R.y0) / rows;
   const cells = [];
-  for (let cy = 0; cy < rows; cy++) for (let cx = 0; cx < cols; cx++) cells.push([cx, cy]);
+  for (let cyi = 0; cyi < rows; cyi++) for (let cxi = 0; cxi < cols; cxi++) cells.push([cxi, cyi]);
   for (let k = cells.length - 1; k > 0; k--) {
     const j = Math.floor(Math.random() * (k + 1));
     [cells[k], cells[j]] = [cells[j], cells[k]];
   }
   const rnd = (a, b) => a + Math.random() * (b - a);
   const nodes = base.map((p, idx) => {
-    const [cx, cy] = cells[idx];
-    const tx = R.x0 + cellW * (cx + 0.5) + rnd(-cellW * 0.26, cellW * 0.26);
-    const ty = R.y0 + cellH * (cy + 0.5) + rnd(-cellH * 0.26, cellH * 0.26);
+    const [cxi, cyi] = cells[idx];
+    const tx = R.x0 + cellW * (cxi + 0.5) + rnd(-cellW * 0.26, cellW * 0.26);
+    const ty = R.y0 + cellH * (cyi + 0.5) + rnd(-cellH * 0.26, cellH * 0.26);
     return {
       id: 'd' + seq + '-' + idx,
       src: p.src,
@@ -689,10 +683,22 @@ function buildMobileDetail() {
       ty
     };
   });
+  // keep cards inside the orbit ellipse near the top, and always within the screen
   const contain = () => {
     for (const d of nodes) {
-      d.x = Math.max(R.x0 + d.w / 2, Math.min(R.x1 - d.w / 2, d.x));
-      d.y = Math.max(R.y0 + d.h / 2, Math.min(R.y1 - d.h / 2, d.y));
+      const rxE = rx - d.w / 2 - 6,
+        ryE = ry - d.h / 2 - 6;
+      const nx = (d.x - cx) / rxE,
+        ny = (d.y - cy) / ryE,
+        dist = Math.hypot(nx, ny);
+      if (dist > 1) {
+        d.x = cx + (nx / dist) * rxE;
+        d.y = cy + (ny / dist) * ryE;
+        d.vx = 0;
+        d.vy = 0;
+      }
+      d.x = Math.max(18 + d.w / 2, Math.min(422 - d.w / 2, d.x));
+      d.y = Math.max(yTop - 46, Math.min(yBot + 12, d.y));
     }
   };
   const sim = forceSimulation(nodes)
@@ -789,14 +795,15 @@ function onImgError(e) {
 /* ---- detail page: open a folder, lay its photos out randomly INSIDE the circle (static) ---- */
 let scatterSim = null;
 function buildDetail() {
-  const cx = CX,
-    cyF = 1024 - CY,
-    rx = RX,
-    ry = RY; // flipped ellipse = the circle shown here
+  const o = HO; // same orbit shown on home (line not flipped)
+  const cx = o.cx,
+    cy = o.cy,
+    rx = o.rx,
+    ry = o.ry;
   const n = photos.length,
     cols = 4,
     rows = Math.ceil(n / cols);
-  const R = { x0: 440, x1: 1330, y0: 155, y1: 895 };
+  const R = { x0: cx - rx + 40, x1: cx + rx - 40, y0: cy - ry + 30, y1: cy + ry - 30 };
   const cellW = (R.x1 - R.x0) / cols,
     cellH = (R.y1 - R.y0) / rows;
   const cells = [];
@@ -812,23 +819,21 @@ function buildDetail() {
     const ty = R.y0 + cellH * (cyi + 0.5) + rnd(-cellH * 0.28, cellH * 0.28);
     return { id: 's' + i, src: p.src, w: p.w, h: p.h, x: tx, y: ty, tx, ty };
   });
-  // keep every card whole inside the ellipse + clear of the profile card
+  // keep every card whole inside the orbit ellipse + clear of the profile card
   const contain = () => {
     for (const d of nodes) {
       const rxE = rx - d.w / 2 - 6,
         ryE = ry - d.h / 2 - 6;
       const nx = (d.x - cx) / rxE,
-        ny = (d.y - cyF) / ryE,
+        ny = (d.y - cy) / ryE,
         dist = Math.hypot(nx, ny);
       if (dist > 1) {
         d.x = cx + (nx / dist) * rxE;
-        d.y = cyF + (ny / dist) * ryE;
+        d.y = cy + (ny / dist) * ryE;
         d.vx = 0;
         d.vy = 0;
       }
-      d.x = Math.max(360, Math.min(1380, d.x));
-      d.y = Math.max(120, Math.min(1000, d.y));
-      if (d.x - d.w / 2 < 415 && d.y - d.h / 2 < 290) d.x = 415 + d.w / 2;
+      if (d.x - d.w / 2 < 390 && d.y - d.h / 2 < 285) d.x = 390 + d.w / 2;
     }
   };
   if (scatterSim) scatterSim.stop();

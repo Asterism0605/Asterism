@@ -14,7 +14,7 @@ import ProfileCard from './components/ui/ProfileCard.vue';
 import StyleDnaResult from './pages/StyleDnaResult.vue';
 
 const isStyleDnaResultPage = window.location.pathname === '/style-dna-result';
-const showSignUp = ref(true);
+const showSignUp = ref(false);
 const showLogin = ref(false);
 
 // 切換有/無資料夾狀態
@@ -117,7 +117,7 @@ const demoThemeTags = ['Label', 'Editorial', 'Monochrome', 'Avant-garde', 'Indus
       <MoodboardOrbit
         :folders="orbitHasFolders ? demoFolders : []"
         :images="orbitHasFolders ? [] : demoImages"
-        height="720px"
+        height="800px"
       />
     </div>
     <SignUpOverlay v-if="showSignUp" v-model="showSignUp" />
