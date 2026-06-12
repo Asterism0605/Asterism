@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
 import AppHeader from '@/layouts/AppHeader.vue'
-import StyleComparisonPicker from '@/components/feature/StyleComparisonPicker.vue'
+import StyleComparisonPicker from '@/components/feature/dna/StyleComparisonPicker.vue'
 import { useStyleDnaQuiz } from '@/composables/useStyleDnaQuiz'
 
 const quiz = useStyleDnaQuiz()
