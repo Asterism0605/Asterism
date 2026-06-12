@@ -25,6 +25,7 @@ dist-ssr
 
 # Plan
 Asterism_30Day_Plan.md
+vue3-team-guideline.md
 
 # TypeScript
 *.tsbuildinfo

@@ -128,17 +128,17 @@ onBeforeUnmount(() => {
 
 <template>
   <Teleport to="body">
-    <Transition name="modal-overlay">
+    <Transition name="overlay">
       <div
         v-if="modelValue"
-        class="modal-overlay fixed inset-0 z-50 flex items-center justify-center px-4 py-8 sm:px-6"
+        class="overlay-backdrop"
         :class="overlayClass"
         role="presentation"
         @click.self="handleBackdropClick"
       >
         <section
           ref="panelRef"
-          class="modal-overlay__panel glass-panel relative w-full px-6 py-8 text-center text-text-primary shadow-2xl sm:px-12 sm:py-12"
+          class="overlay-panel glass-panel"
           :class="panelClass"
           :style="panelStyle"
           role="dialog"
@@ -149,7 +149,7 @@ onBeforeUnmount(() => {
           <Button
             v-if="showCloseButton"
             variant="secondary"
-            class="modal-overlay__close absolute right-5 top-5 flex size-9 items-center justify-center rounded-md border border-white/15 p-0 text-text-secondary hover:border-white/30 hover:bg-white/10 hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
+            class="overlay-close"
             type="button"
             aria-label="Close dialog"
             @click="closeModal"
@@ -161,13 +161,13 @@ onBeforeUnmount(() => {
             <slot name="icon" />
           </div>
 
-          <h2 v-if="$slots.title" class="mx-auto text-h1 font-normal">
+          <h2 v-if="$slots.title" class="overlay-title">
             <slot name="title" />
           </h2>
 
           <p
             v-if="$slots.description"
-            class="text-body mx-auto mt-6 leading-normal text-text-primary/75"
+            class="overlay-description"
           >
             <slot name="description" />
           </p>
@@ -176,7 +176,7 @@ onBeforeUnmount(() => {
             <slot />
           </div>
 
-          <div v-if="$slots.actions" class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <div v-if="$slots.actions" class="overlay-actions overlay-actions--stackable">
             <slot name="actions" />
           </div>
         </section>
@@ -185,51 +185,3 @@ onBeforeUnmount(() => {
   </Teleport>
 </template>
 
-<style scoped>
-.modal-overlay {
-  background:
-    radial-gradient(circle at center, rgb(240 237 230 / 0.12), transparent 38%),
-    linear-gradient(180deg, rgb(6 6 8 / 0.84), rgb(6 6 8 / 0.94));
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.modal-overlay__panel {
-  border-radius: 48px;
-  transform-origin: center;
-}
-
-.modal-overlay__close {
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
-.modal-overlay-enter-active,
-.modal-overlay-leave-active {
-  transition: opacity 240ms ease;
-}
-
-.modal-overlay-enter-active .modal-overlay__panel,
-.modal-overlay-leave-active .modal-overlay__panel {
-  transition:
-    opacity 240ms ease,
-    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.modal-overlay-enter-from,
-.modal-overlay-leave-to {
-  opacity: 0;
-}
-
-.modal-overlay-enter-from .modal-overlay__panel,
-.modal-overlay-leave-to .modal-overlay__panel {
-  opacity: 0;
-  transform: translateY(12px) scale(0.96);
-}
-
-@media (max-width: 640px) {
-  .modal-overlay__panel {
-    border-radius: 32px;
-  }
-}
-</style>

@@ -27,21 +27,21 @@ const initials = computed(() =>
 </script>
 
 <template>
-  <article class="glass-panel rounded-[32px] p-7 sm:p-9">
-    <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
-      <div class="flex min-w-0 items-center gap-5">
+  <article class="rounded-3xl p-4 sm:rounded-[32px]">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+      <div class="flex min-w-0 items-center gap-4 sm:gap-5">
         <div
-          class="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gold-dim text-xl font-semibold text-text-primary"
+          class="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gold-dim text-mono text-sm font-semibold text-text-primary sm:size-20 sm:text-base"
         >
           <img v-if="avatarUrl" :src="avatarUrl" :alt="name" class="size-full object-cover" />
           <span v-else>{{ initials }}</span>
         </div>
 
         <div class="min-w-0">
-          <p class="truncate text-3xl font-medium leading-tight">
+          <p class="truncate text-2xl font-medium leading-tight sm:text-3xl">
             {{ name }}
           </p>
-          <p v-if="subtitle" class="mt-1 truncate text-sm text-text-secondary">
+          <p v-if="subtitle" class="mt-1 truncate text-xs text-text-secondary sm:text-sm">
             {{ subtitle }}
           </p>
         </div>
@@ -50,7 +50,7 @@ const initials = computed(() =>
       <button
         v-if="showFollow"
         type="button"
-        class="min-h-12 rounded-full border border-text-primary/80 px-8 text-xl font-medium text-text-primary transition-all duration-200 hover:bg-text-primary hover:text-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-text-primary sm:ml-auto"
+        class="min-h-11 w-full cursor-pointer rounded-full border border-text-primary/80 px-5 text-sm font-medium text-text-primary transition-all duration-200 hover:bg-text-primary hover:text-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-text-primary sm:ml-auto sm:min-h-12 sm:w-auto sm:px-4 sm:text-body"
       >
         {{ followLabel }}
       </button>
