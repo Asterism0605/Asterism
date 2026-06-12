@@ -4,7 +4,6 @@ import { Lock, MoveDownLeft } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
-import AppHeader from '@/layouts/AppHeader.vue';
 
 const scrollLimitVh = 150;
 const isLimitModalOpen = ref(false);
@@ -55,8 +54,6 @@ onBeforeUnmount(() => {
     class="home-page relative min-h-[160vh] overflow-hidden bg-void text-text-primary [--app-header-height:60px]"
   >
     <div class="pointer-events-none absolute inset-0 z-0 home-page__wash" aria-hidden="true" />
-
-    <AppHeader />
 
     <section class="relative z-10 min-h-[150vh] pt-[var(--app-header-height)]">
       <div

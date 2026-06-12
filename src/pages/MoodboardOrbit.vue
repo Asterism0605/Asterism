@@ -1,29 +1,14 @@
-<!--
-  MoodboardOrbit.vue — drop-in Single File Component (Vue 3 + Tailwind)
-
-  Install deps:   npm i three d3-force
-  Assets:         folder PNGs in  public/images/folder-idle.png + folder-active.png
-                  photos in       public/images/image1.png … image5.png
-  Tailwind:       this component uses a few Tailwind utility classes
-                  (you mentioned Vue + Tailwind). Everything else is inline.
-
-  Two pages:
-    • home   (hasFolders = true)  → folder images orbit the ellipse + Three.js photo sphere.
-                                    hovering a folder pauses the orbit, swaps it to the
-                                    active (white) image, and shows the "Project Title" label + underline.
-    • detail (hasFolders = false) → click a folder to open it; its photos are randomly
-                                    arranged (static, no animation) inside the orbit circle
--->
 <template>
   <div
+    ref="container"
     class="relative w-full overflow-hidden flex items-center justify-center"
     :style="{ background: '#0b0b0d', height: height }"
   >
     <!-- ===================== MOBILE STAGE (440×956) ===================== -->
     <div
       v-if="isMobile"
-      class="relative"
       ref="mStage"
+      class="relative"
       :style="mStageStyle"
       @pointerdown="onDragStart"
       @pointermove="onDragMove"
@@ -53,9 +38,6 @@
           v-for="f in mFolders"
           :key="'mf' + f.i"
           class="absolute"
-          @pointerenter="mHover = f.i"
-          @pointerleave="mHover = -1"
-          @click="onFolderClick(f.i)"
           :style="{
             left: f.cx - f.w / 2 + 'px',
             top: f.cy - f.h / 2 + 'px',
@@ -66,6 +48,9 @@
             zIndex: mHover === f.i ? 20 : 5,
             cursor: 'pointer'
           }"
+          @pointerenter="mHover = f.i"
+          @pointerleave="mHover = -1"
+          @click="onFolderClick(f.i)"
         >
           <img
             :src="mHover === f.i ? '/images/folder-active.png' : '/images/folder-idle.png'"
@@ -168,10 +153,10 @@
         >
           <img
             :src="p.src"
-            @error="onImgError"
             draggable="false"
             class="w-full h-full block select-none"
             style="object-fit: cover; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55)"
+            @error="onImgError"
           />
           <div
             class="w-full h-full"
@@ -215,7 +200,6 @@
       <!-- detail: back + docked Project Title tab -->
       <div v-show="!hasFolders" class="absolute inset-0 pointer-events-none">
         <button
-          @click="goHome"
           class="absolute flex items-center gap-2"
           style="
             left: 18px;
@@ -233,6 +217,7 @@
             backdrop-filter: blur(12px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
           "
+          @click="goHome"
         >
           <span style="font-size: 19px; line-height: 1">&larr;</span> Back
         </button>
@@ -287,9 +272,9 @@
       <!-- ===== ORBIT LINES (two converging ellipses) ===== -->
       <svg
         class="absolute inset-0 pointer-events-none"
-        width="1440"
-        height="1024"
-        viewBox="0 0 1440 1024"
+        width="100vw"
+        height="100vh"
+        viewBox="0 0 100vw 100vh"
         fill="none"
       >
         <path :d="outerPath" stroke="rgba(220,222,228,0.45)" stroke-width="1" fill="none" />
@@ -309,9 +294,6 @@
           v-for="fv in folderView"
           :key="'f' + fv.i"
           class="absolute"
-          @mouseenter="hoverIdx = fv.i"
-          @mouseleave="hoverIdx = -1"
-          @click="openFolder(fv.i)"
           :style="{
             left: fv.left + 'px',
             top: fv.top + 'px',
@@ -325,6 +307,9 @@
             zIndex: fv.active ? 30 : 2,
             cursor: 'pointer'
           }"
+          @mouseenter="hoverIdx = fv.i"
+          @mouseleave="hoverIdx = -1"
+          @click="openFolder(fv.i)"
         >
           <img
             :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
@@ -350,10 +335,10 @@
         >
           <img
             :src="n.src"
-            @error="onImgError"
             draggable="false"
             class="w-full h-full block select-none"
             style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
+            @error="onImgError"
           />
           <div
             class="w-full h-full"
@@ -375,7 +360,6 @@
         <!-- back link -->
         <div class="absolute" style="left: 30px; top: 928px">
           <button
-            @click="goHome"
             class="flex items-center gap-2 text-white/75 hover:text-white"
             style="
               font-size: 17px;
@@ -384,6 +368,7 @@
               cursor: pointer;
               font-weight: 300;
             "
+            @click="goHome"
           >
             <span style="font-size: 20px; line-height: 1">&larr;</span> Back
           </button>
@@ -556,6 +541,7 @@ const hoverIdx = ref(-1);
 const selectedFolder = ref(0);
 const scatter = ref([]);
 const sphereCanvas = ref(null);
+const container = ref(null);
 const isMobile = ref(false);
 // mobile orbit interaction
 const mHover = ref(-1);
@@ -567,8 +553,8 @@ const mStage = ref(null);
 
 /* ---- derived ---- */
 const stageStyle = computed(() => ({
-  width: '1440px',
-  height: '1024px',
+  width: '100vw',
+  height: '100vh',
   transform: `scale(${scale.value})`,
   transformOrigin: 'center center',
   flex: '0 0 auto'
@@ -591,7 +577,6 @@ const mStageStyle = computed(() => ({
 }));
 // mobile orbit params: home = arc through the folder row, detail = shallow smile across the top
 const M_HOME_ORBIT = { cx: 220, cy: 815, rx: 345, ry: 575, node: { x: 346, y: 280 } };
-const M_DETAIL_ORBIT = { cx: 220, cy: -120, rx: 370, ry: 440, node: { x: 430, y: 242 } };
 function ellipsePathM(o, k) {
   const pts = [];
   for (let t = 0; t <= 360; t += 2) {
@@ -753,9 +738,6 @@ function ellipsePath(k, flip) {
 }
 const outerPath = computed(() => ellipsePath(1));
 const innerPath = computed(() => ellipsePath(INNER_K));
-// vertically-mirrored orbit (used in the detail / no-folders state)
-const outerPathFlip = computed(() => ellipsePath(1, true));
-const innerPathFlip = computed(() => ellipsePath(INNER_K, true));
 
 // up to MAX_FOLDERS spread EVENLY around the home orbit, all sharing the travel phase.
 // a folder is shown ONLY while it sits on the drawn arc (105°..350°); folders rotating
@@ -1043,9 +1025,22 @@ function onResize() {
     scale.value = window.innerWidth / MW;
     mDesignH.value = Math.max(MH * 0.72, window.innerHeight / scale.value);
   } else {
-    const containerH = parseFloat(props.height) || window.innerHeight;
+    const containerH = resolveContainerHeight();
     scale.value = Math.min(window.innerWidth / 1440, containerH / 1024);
   }
+}
+
+function resolveContainerHeight() {
+  if (container.value?.clientHeight) return container.value.clientHeight;
+
+  const rawHeight = String(props.height || '').trim();
+  const parsedHeight = parseFloat(rawHeight);
+  if (rawHeight.endsWith('vh') && Number.isFinite(parsedHeight)) {
+    return (window.innerHeight * parsedHeight) / 100;
+  }
+  if (rawHeight.endsWith('px') && Number.isFinite(parsedHeight)) return parsedHeight;
+
+  return window.innerHeight;
 }
 
 onMounted(() => {
