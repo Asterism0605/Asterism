@@ -1,10 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/pages/Home.vue';
-import Login from '@/pages/Login.vue';
-import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
-import Playground from '@/pages/Playground.vue';
-import SignUp from '@/pages/SignUp.vue';
-import StyleDnaResult from '@/pages/StyleDnaResult.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/pages/Home.vue'
+import Login from '@/pages/Login.vue'
+import MoodboardOrbit from '@/pages/MoodboardOrbit.vue'
+import Playground from '@/pages/Playground.vue'
+import SignUp from '@/pages/SignUp.vue'
+import StyleDna from '@/pages/StyleDna.vue'
+import StyleDnaResult from '@/pages/StyleDnaResult.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -12,34 +13,48 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
     },
     {
       path: '/moodboard',
-      name: 'moodboard',
-      component: MoodboardOrbit
+      redirect: '/moodboard-orbit',
+    },
+    {
+      path: '/moodboard-orbit',
+      name: 'moodboard-orbit',
+      component: MoodboardOrbit,
     },
     {
       path: '/playground',
       name: 'playground',
-      component: Playground
+      component: Playground,
     },
     {
       path: '/sign-up',
       name: 'sign-up',
-      component: SignUp
+      component: SignUp,
+    },
+    {
+      path: '/style-dna',
+      name: 'style-dna',
+      component: StyleDna,
+    },
+    {
+      path: '/style-dna/result',
+      name: 'style-dna-result-nested',
+      component: StyleDnaResult,
     },
     {
       path: '/style-dna-result',
       name: 'style-dna-result',
-      component: StyleDnaResult
-    }
-  ]
-});
+      component: StyleDnaResult,
+    },
+  ],
+})
 
-export default router;
+export default router

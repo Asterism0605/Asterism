@@ -1,3 +1,5 @@
+import type { StyleDnaAnswer } from '@/types/style-dna'
+
 export interface StyleDnaSelection {
   style?: string | null
   weight?: number | null
@@ -15,7 +17,7 @@ export interface StyleDnaAnnotation {
   position: 'left' | 'right' | 'top-right'
 }
 
-export interface StyleDnaResult {
+export interface ComputedStyleDnaResult {
   isFallback: boolean
   primaryStyle: string
   styles: StyleDnaScore[]
@@ -33,13 +35,14 @@ const FALLBACK_STYLES: StyleDnaScore[] = [
 
 const ANNOTATION_POSITIONS: StyleDnaAnnotation['position'][] = ['top-right', 'left', 'right']
 
-const annotationsFor = (styles: StyleDnaScore[]): StyleDnaAnnotation[] => styles.map((style, index) => ({
-  label: style.label,
-  value: `${style.percentage}%`,
-  position: ANNOTATION_POSITIONS[index],
-}))
+const annotationsFor = (styles: StyleDnaScore[]): StyleDnaAnnotation[] =>
+  styles.map((style, index) => ({
+    label: style.label,
+    value: `${style.percentage}%`,
+    position: ANNOTATION_POSITIONS[index],
+  }))
 
-const fallbackResult = (): StyleDnaResult => ({
+const fallbackResult = (): ComputedStyleDnaResult => ({
   isFallback: true,
   primaryStyle: 'Minimalism',
   styles: FALLBACK_STYLES.map((style) => ({ ...style })),
@@ -49,15 +52,36 @@ const fallbackResult = (): StyleDnaResult => ({
 
 const isPositiveWeight = (weight: number) => Number.isFinite(weight) && weight > 0
 
-export function computeStyleDnaResult(selectionHistory?: StyleDnaSelection[]): StyleDnaResult {
+const isStyleDnaAnswer = (selection: StyleDnaSelection | StyleDnaAnswer): selection is StyleDnaAnswer =>
+  'weights' in selection && 'selectedImage' in selection
+
+const normalizeSelectionHistory = (
+  selectionHistory: Array<StyleDnaSelection | StyleDnaAnswer>,
+): StyleDnaSelection[] =>
+  selectionHistory.flatMap((selection) => {
+    if (!isStyleDnaAnswer(selection)) {
+      return selection
+    }
+
+    return Object.entries(selection.weights).map(([style, weight]) => ({
+      style,
+      weight,
+      image: selection.selectedImage.url,
+    }))
+  })
+
+export function computeStyleDnaResult(
+  selectionHistory?: Array<StyleDnaSelection | StyleDnaAnswer>,
+): ComputedStyleDnaResult {
   if (!Array.isArray(selectionHistory) || selectionHistory.length === 0) {
     return fallbackResult()
   }
 
+  const normalizedSelections = normalizeSelectionHistory(selectionHistory)
   const styleTotals = new Map<string, { total: number; firstIndex: number }>()
   const validSelections: Array<Required<Pick<StyleDnaSelection, 'style'>> & StyleDnaSelection> = []
 
-  selectionHistory.forEach((selection, index) => {
+  normalizedSelections.forEach((selection, index) => {
     const style = selection.style?.trim()
     const weight = selection.weight ?? 1
 
@@ -67,6 +91,7 @@ export function computeStyleDnaResult(selectionHistory?: StyleDnaSelection[]): S
 
     validSelections.push({ ...selection, style })
     const current = styleTotals.get(style)
+
     if (current) {
       current.total += weight
     } else {
