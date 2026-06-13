@@ -11,6 +11,7 @@ describe('router', () => {
     expect(routes).toEqual(
       expect.arrayContaining([
         { name: 'home', path: '/' },
+        { name: 'discover-dna', path: '/discover-dna' },
         { name: 'login', path: '/login' },
         { name: 'moodboard', path: '/moodboard' },
         { name: 'playground', path: '/playground' },
