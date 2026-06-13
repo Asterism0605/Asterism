@@ -11,6 +11,7 @@ const route = useRoute();
 const router = useRouter();
 
 const centerImage = ref<ImageSpreadNode | undefined>();
+const rootImage = ref<ImageSpreadNode | undefined>();
 const relatedImages = ref<ImageSpreadNode[]>([]);
 const visitedImageIds = ref<string[]>([]);
 const spreadDepth = ref(0);
@@ -30,6 +31,7 @@ function refreshRelatedImages(imageId: string) {
 function loadImageSpread(imageId: string | undefined) {
   if (!imageId) {
     centerImage.value = undefined;
+    rootImage.value = undefined;
     relatedImages.value = [];
     visitedImageIds.value = [];
     spreadDepth.value = 0;
@@ -38,6 +40,7 @@ function loadImageSpread(imageId: string | undefined) {
 
   const image = getImageById(imageId);
   centerImage.value = image;
+  rootImage.value = image;
   relatedImages.value = [];
   visitedImageIds.value = image ? [image.id] : [];
   spreadDepth.value = 0;
@@ -47,8 +50,16 @@ function loadImageSpread(imageId: string | undefined) {
   }
 }
 
-function returnHome() {
-  void router.push({ name: 'home' });
+function returnToPreviousLayer() {
+  if (spreadDepth.value > 0 && rootImage.value) {
+    centerImage.value = rootImage.value;
+    visitedImageIds.value = [rootImage.value.id];
+    spreadDepth.value = 0;
+    refreshRelatedImages(rootImage.value.id);
+    return;
+  }
+
+  router.back();
 }
 
 function handleRelatedSelect(image: ImageSpreadNode) {
@@ -83,7 +94,7 @@ watch(routeImageId, loadImageSpread, { immediate: true });
           @select="handleRelatedSelect"
         />
 
-        <ImageSpreadOverlay :image="centerImage" @return="returnHome" />
+        <ImageSpreadOverlay :image="centerImage" @return="returnToPreviousLayer" />
       </div>
 
       <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
@@ -121,7 +132,7 @@ watch(routeImageId, loadImageSpread, { immediate: true });
       <p class="text-sm leading-7 text-text-secondary sm:text-base">
         Return home and choose another visual path from the exploration field.
       </p>
-      <Button data-testid="return-home" type="button" variant="primary" @click="returnHome">
+      <Button data-testid="return-home" type="button" variant="primary" @click="returnToPreviousLayer">
         Return home
       </Button>
     </section>

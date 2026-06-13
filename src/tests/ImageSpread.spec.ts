@@ -87,6 +87,33 @@ describe('ImageSpread', () => {
     });
   });
 
+  it('returns to the previous spread layer after the first related click', async () => {
+    const { wrapper, push } = await mountImageSpread();
+    const initialSrc = wrapper.find('[data-testid="spread-main-image"]').attributes('src');
+    const firstRelatedImage = wrapper.findAll('[data-testid="related-image-card"]')[0];
+
+    await firstRelatedImage.trigger('click');
+    expect(wrapper.find('[data-testid="spread-main-image"]').attributes('src')).not.toBe(
+      initialSrc
+    );
+
+    await wrapper.find('[data-testid="return-home"]').trigger('click');
+
+    expect(wrapper.find('[data-testid="spread-main-image"]').attributes('src')).toBe(initialSrc);
+    expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4);
+    expect(push).not.toHaveBeenCalledWith({ name: 'home' });
+  });
+
+  it('uses browser history when returning from the root spread layer', async () => {
+    const { wrapper, push } = await mountImageSpread();
+    const back = vi.spyOn(wrapper.vm.$router, 'back');
+
+    await wrapper.find('[data-testid="return-home"]').trigger('click');
+
+    expect(back).toHaveBeenCalledOnce();
+    expect(push).not.toHaveBeenCalledWith({ name: 'home' });
+  });
+
   it('shows an error state for unknown image ids', async () => {
     const { wrapper } = await mountImageSpread('missing-image');
 
