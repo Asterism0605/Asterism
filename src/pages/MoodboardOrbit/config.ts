@@ -1,30 +1,38 @@
 // src/pages/MoodboardOrbit/config.ts
 
-export const NAV_H = 64
-export const INNER_K = 0.9
-export const ORBIT_SPEED = (Math.PI * 2) / 60
-export const SPRITE_RADIUS = 2.2
-export const MAX_FOLDERS = 10
-export const DETAIL_CAP = 20
+export const NAV_H = 64;
+export const INNER_K = 0.9;
+export const ORBIT_SPEED = (Math.PI * 2) / 60;
+export const SPRITE_RADIUS = 2.2;
+export const MAX_FOLDERS = 10;
+export const DETAIL_CAP = 20;
 
-export const HO = { cx: 980, cy: 550, rx: 500, ry: 500, node: { x: 1350, y: 40 } }
+export const HO = { cx: 980, cy: 550, rx: 500, ry: 500, node: { x: 1350, y: 40 } };
 
-export const MW = 440
-export const MH = 956
+export const MW = 440;
+export const MH = 956;
 
-export const M_HOME_ORBIT = { cx: 220, cy: 831, rx: 597, ry: 597, node: { x: 470, y: 230 } }
-export const M_DETAIL_ORBIT = { cx: 220, cy: 831, rx: 597, ry: 597, node: { x: 470, y: 230 } }
+export const M_HOME_ORBIT = { cx: 220, cy: 770, rx: 597, ry: 597, node: { x: 470, y: 230 } };
+export const M_DETAIL_ORBIT = { cx: 220, cy: 770, rx: 597, ry: 597, node: { x: 470, y: 230 } };
 
 export const folderNames: string[] = [
-  'Project Title', 'Editorial 02', 'Texture Study', 'Runway SS', 'Interiors',
-  'Palette', 'Archive', 'Studio Day', 'Lookbook', 'Muse'
-]
+  'Project Title',
+  'Editorial 02',
+  'Texture Study',
+  'Runway SS',
+  'Interiors',
+  'Palette',
+  'Archive',
+  'Studio Day',
+  'Lookbook',
+  'Muse'
+];
 
 export interface PhotoItem {
-  src: string
-  w: number
-  h: number
-  faded?: boolean
+  src: string;
+  w: number;
+  h: number;
+  faded?: boolean;
 }
 
 export const photos: PhotoItem[] = [
@@ -48,11 +56,11 @@ export const photos: PhotoItem[] = [
   { src: '/images/image3.png', w: 98, h: 138 },
   { src: '/images/image4.png', w: 146, h: 116 },
   { src: '/images/image5.png', w: 120, h: 148 }
-]
+];
 
-export const IMG_URLS: string[] = photos.map(p => p.src)
+export const IMG_URLS: string[] = photos.map((p) => p.src);
 
-const mImg = (n: number) => `/images/image${n}.png`
+const mImg = (n: number) => `/images/image${n}.png`;
 
 export const mDetailBase: PhotoItem[] = [
   { src: mImg(4), w: 58, h: 66 },
@@ -65,16 +73,16 @@ export const mDetailBase: PhotoItem[] = [
   { src: mImg(2), w: 74, h: 92 },
   { src: mImg(4), w: 62, h: 56 },
   { src: mImg(1), w: 70, h: 84 }
-]
+];
 
 export interface HomePhoto {
-  id: string
-  src: string
-  cx: number
-  cy: number
-  w: number
-  h: number
-  faded?: boolean
+  id: string;
+  src: string;
+  cx: number;
+  cy: number;
+  w: number;
+  h: number;
+  faded?: boolean;
 }
 
 export const mHomePhotos: HomePhoto[] = [
@@ -84,4 +92,4 @@ export const mHomePhotos: HomePhoto[] = [
   { id: 'h3', src: mImg(3), cx: 217, cy: 656, w: 44, h: 52, faded: true },
   { id: 'h4', src: mImg(1), cx: 128, cy: 785, w: 58, h: 64 },
   { id: 'h5', src: mImg(5), cx: 294, cy: 853, w: 104, h: 96 }
-]
+];

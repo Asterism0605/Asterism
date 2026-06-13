@@ -1,58 +1,83 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import ProfileCard from '../../components/ui/ProfileCard.vue'
+// ├── config.ts          — 常數與靜態資料
+// ├── layout.ts          — 純幾何算法（packPhotos, ellipsePath...）
+// ├── sphere.ts          — Three.js 球體邏輯
+// ├── useMobileOrbit.ts  — 手機拖曳 composable
+// ├── MoodboardOrbit.vue — 主元件（template/style 不動）
+// └── index.ts           — re-export
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import ProfileCard from '../../components/ui/ProfileCard.vue';
 import {
-  NAV_H, INNER_K, ORBIT_SPEED, MAX_FOLDERS, DETAIL_CAP,
-  HO, MW, MH, M_HOME_ORBIT, M_DETAIL_ORBIT,
-  folderNames, photos, mDetailBase, mHomePhotos
-} from './config'
-import { packPhotos, ellipsePath, ellipsePathM } from './layout'
-import { initSphere } from './sphere'
-import { useMobileOrbit } from './useMobileOrbit'
+  NAV_H,
+  INNER_K,
+  ORBIT_SPEED,
+  MAX_FOLDERS,
+  DETAIL_CAP,
+  HO,
+  MW,
+  MH,
+  M_HOME_ORBIT,
+  M_DETAIL_ORBIT,
+  folderNames,
+  photos,
+  mDetailBase,
+  mHomePhotos
+} from './config';
+import { packPhotos, ellipsePath, ellipsePathM } from './layout';
+import { initSphere } from './sphere';
+import { useMobileOrbit } from './useMobileOrbit';
 
 const props = defineProps({
   height: { type: String, default: '100vh' },
   folders: { type: Array, default: () => [] },
   images: { type: Array, default: () => [] },
   basePath: { type: String, default: '/moodboard' }
-})
-const emit = defineEmits(['open', 'home'])
+});
+const emit = defineEmits(['open', 'home']);
 
-const folderCount = ref(10)
+const folderCount = ref(10);
 
 /* ---- reactive state ---- */
-const scale = ref(1)
-const hasFolders = ref(true)
-const orbitPhase = ref(0)
-const hoverIdx = ref(-1)
-const selectedFolder = ref(0)
-const selectedName = computed(() => folderNames[selectedFolder.value % folderNames.length])
-const scatter = ref([])
-const sphereCanvas = ref(null)
-const isMobile = ref(false)
-const deskVisibleH = ref(1024)
-const deskBackTop = computed(() => Math.round(deskVisibleH.value - 130))
-const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96))
-const mStage = ref(null)
-const mDesignH = ref(MH)
-const mDetailPhotos = ref([])
+const scale = ref(1);
+const hasFolders = ref(true);
+const orbitPhase = ref(0);
+const hoverIdx = ref(-1);
+const selectedFolder = ref(0);
+const selectedName = computed(() => folderNames[selectedFolder.value % folderNames.length]);
+const scatter = ref([]);
+const sphereCanvas = ref(null);
+const isMobile = ref(false);
+const deskVisibleH = ref(1024);
+const deskBackTop = computed(() => Math.round(deskVisibleH.value - 130));
+const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96));
+const mStage = ref(null);
+const mDesignH = ref(MH);
+const mDetailPhotos = ref([]);
+const mHomePhotosRandom = ref([]);
 
-const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } =
-  useMobileOrbit(mStage, scale, orbitPhase, hasFolders)
+const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useMobileOrbit(
+  mStage,
+  scale,
+  orbitPhase,
+  hasFolders
+);
 
 /* ---- derived ---- */
 const stageStyle = computed(() => ({
-  position: 'absolute', top: '0', left: '0',
-  width: '1440px', height: '1024px',
+  position: 'absolute',
+  top: '0',
+  left: '0',
+  width: '1440px',
+  height: '1024px',
   transform: `scale(${scale.value})`,
   transformOrigin: 'top left'
-}))
+}));
 
 const sphereStyle = computed(() => {
-  const vh = deskVisibleH.value
-  const size = Math.min(860, Math.max(440, vh - 70))
-  const top = Math.max(36, (vh - size) / 2 + 50)
-  const left = Math.round(1000 - size / 2)
+  const vh = deskVisibleH.value;
+  const size = Math.min(860, Math.max(440, vh - 70));
+  const top = Math.max(36, (vh - size) / 2 + 50);
+  const left = Math.round(1000 - size / 2);
   return {
     position: 'absolute',
     left: left + 'px',
@@ -60,178 +85,262 @@ const sphereStyle = computed(() => {
     width: size + 'px',
     height: size + 'px',
     pointerEvents: 'none'
-  }
-})
+  };
+});
 
 const mStageStyle = computed(() => ({
-  position: 'absolute', left: '0', top: '0',
-  width: MW + 'px', height: mDesignH.value + 'px',
+  position: 'absolute',
+  left: '0',
+  top: '0',
+  width: MW + 'px',
+  height: mDesignH.value + 'px',
   transform: `scale(${scale.value})`,
   transformOrigin: 'top left'
-}))
+}));
 
 const mOrbitOuter = computed(() =>
   ellipsePathM(hasFolders.value ? M_HOME_ORBIT : M_DETAIL_ORBIT, 1)
-)
+);
 const mOrbitInner = computed(() =>
   ellipsePathM(hasFolders.value ? M_HOME_ORBIT : M_DETAIL_ORBIT, 0.9)
-)
+);
 
 const mFolders = computed(() => {
-  const o = M_HOME_ORBIT, n = Math.min(folderCount.value, MAX_FOLDERS), w = 86, h = 66
+  const o = M_HOME_ORBIT,
+    n = Math.min(folderCount.value, MAX_FOLDERS),
+    w = 86,
+    h = 66;
   return Array.from({ length: n }, (_, i) => {
-    const ang = (i / n) * Math.PI * 2 - Math.PI / 2 + orbitPhase.value
-    return { i, cx: o.cx + o.rx * Math.cos(ang), cy: o.cy + o.ry * Math.sin(ang), w, h }
-  })
-})
+    const ang = (i / n) * Math.PI * 2 - Math.PI / 2 + orbitPhase.value;
+    return { i, cx: o.cx + o.rx * Math.cos(ang), cy: o.cy + o.ry * Math.sin(ang), w, h };
+  });
+});
 
 const mPhotoView = computed(() => {
-  if (hasFolders.value) return mHomePhotos.map((p, i) => ({ ...p, delay: (i * 0.06).toFixed(2) }))
-  return mDetailPhotos.value
-})
+  if (hasFolders.value) return mHomePhotosRandom.value;
+  return mDetailPhotos.value;
+});
 
-const outerPath = computed(() => ellipsePath(1))
-const innerPath = computed(() => ellipsePath(INNER_K))
+const outerPath = computed(() => ellipsePath(1));
+const innerPath = computed(() => ellipsePath(INNER_K));
 
 const folderView = computed(() => {
-  const n = Math.min(folderCount.value, MAX_FOLDERS), w = 110, h = 60
+  const n = Math.min(folderCount.value, MAX_FOLDERS),
+    w = 100,
+    h = 50;
   return Array.from({ length: n }, (_, i) => {
-    const ang = (i / n) * Math.PI * 2 - Math.PI / 2 + orbitPhase.value
-    const cx = HO.cx + HO.rx * Math.cos(ang)
-    const cy = HO.cy + HO.ry * Math.sin(ang)
-    const deg = ((((ang * 180) / Math.PI) % 360) + 360) % 360
-    const onLine = deg >= 105 && deg <= 350
-    return { i, w, h, active: hoverIdx.value === i, onLine, left: cx - w / 2 - 10, top: cy - h / 2 - 30 }
-  })
-})
+    const ang = (i / n) * Math.PI * 2 - Math.PI / 2 + orbitPhase.value;
+    const cx = HO.cx + HO.rx * Math.cos(ang);
+    const cy = HO.cy + HO.ry * Math.sin(ang);
+    const deg = ((((ang * 180) / Math.PI) % 360) + 360) % 360;
+    const onLine = deg >= 105 && deg <= 350;
+    return {
+      i,
+      w,
+      h,
+      active: hoverIdx.value === i,
+      onLine,
+      left: cx - w / 2 - 10,
+      top: cy - h / 2 - 30
+    };
+  });
+});
 
-const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0)
+const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
 
 function onImgError(e) {
-  const img = e.target
-  img.style.display = 'none'
-  const ph = img.nextElementSibling
-  if (ph) ph.style.display = 'block'
+  const img = e.target;
+  img.style.display = 'none';
+  const ph = img.nextElementSibling;
+  if (ph) ph.style.display = 'block';
 }
 
 function buildDetail() {
-  const o = HO
-  const floor = deskVisibleH.value
-  const list = photos.slice(0, DETAIL_CAP)
+  const o = HO;
+  const floor = deskVisibleH.value;
+  const list = photos.slice(0, DETAIL_CAP);
   const nodes = packPhotos(list, {
-    idPrefix: 's', cx: o.cx, cy: o.cy, rx: o.rx, ry: o.ry,
-    gap: 14, xMin: 18, xMax: 1422, yMin: 234, yMax: floor - 116,
+    idPrefix: 's',
+    cx: o.cx,
+    cy: o.cy,
+    rx: o.rx,
+    ry: o.ry,
+    gap: 14,
+    xMin: 18,
+    xMax: 1422,
+    yMin: 234,
+    yMax: floor - 116,
     obstacles: [
       { x0: -100, x1: 412, y0: -100, y1: 300 },
       { x0: -100, x1: 360, y0: floor - 100, y1: floor + 100 }
     ]
-  })
-  scatter.value = nodes.map(d => ({ id: d.id, src: d.src, w: d.w, h: d.h, delay: d.delay, x: d.x, y: d.y }))
+  });
+  scatter.value = nodes.map((d) => ({
+    id: d.id,
+    src: d.src,
+    w: d.w,
+    h: d.h,
+    delay: d.delay,
+    x: d.x,
+    y: d.y
+  }));
 }
 
 function buildMobileDetail() {
-  const o = M_DETAIL_ORBIT
-  const photoFloorBottom = mDesignH.value - 138
+  const o = M_DETAIL_ORBIT;
+  const photoFloorBottom = mDesignH.value - 138;
   const nodes = packPhotos(mDetailBase, {
-    idPrefix: 'md', cx: o.cx, cy: o.cy, rx: o.rx, ry: o.ry,
-    gap: 10, xMin: 16, xMax: 424, yMin: 196, yMax: photoFloorBottom
-  })
-  mDetailPhotos.value = nodes.map(d => ({
-    id: d.id, src: d.src, w: d.w, h: d.h, faded: d.faded, delay: d.delay, cx: d.x, cy: d.y
-  }))
+    idPrefix: 'md',
+    cx: o.cx,
+    cy: o.cy,
+    rx: o.rx,
+    ry: o.ry,
+    gap: 10,
+    xMin: 16,
+    xMax: 424,
+    yMin: 196,
+    yMax: photoFloorBottom
+  });
+  mDetailPhotos.value = nodes.map((d) => ({
+    id: d.id,
+    src: d.src,
+    w: d.w,
+    h: d.h,
+    faded: d.faded,
+    delay: d.delay,
+    cx: d.x,
+    cy: d.y
+  }));
+}
+
+function buildMobileHome() {
+  const o = M_HOME_ORBIT;
+  const list = mHomePhotos.map((p) => ({ src: p.src, w: p.w, h: p.h, faded: p.faded }));
+  const nodes = packPhotos(list, {
+    idPrefix: 'mh',
+    cx: o.cx,
+    cy: o.cy,
+    rx: o.rx,
+    ry: o.ry,
+    gap: 12,
+    xMin: 16,
+    xMax: 424,
+    yMin: 200,
+    yMax: 720
+  });
+  mHomePhotosRandom.value = nodes.map((d) => ({
+    id: d.id,
+    src: d.src,
+    w: d.w,
+    h: d.h,
+    faded: d.faded,
+    delay: d.delay,
+    cx: d.x,
+    cy: d.y
+  }));
 }
 
 function openFolder(i) {
-  selectedFolder.value = i
-  hasFolders.value = false
-  if (isMobile.value) buildMobileDetail()
-  else buildDetail()
-  navigate(slugFor(i), i)
+  selectedFolder.value = i;
+  hasFolders.value = false;
+  if (isMobile.value) buildMobileDetail();
+  else buildDetail();
+  navigate(slugFor(i), i);
 }
 
 function slugFor(i) {
-  const name = folderNames[i % folderNames.length] || 'folder-' + i
-  return encodeURIComponent(name.trim().replace(/\s+/g, '-').toLowerCase())
+  const name = folderNames[i % folderNames.length] || 'folder-' + i;
+  return encodeURIComponent(name.trim().replace(/\s+/g, '-').toLowerCase());
 }
 
 function navigate(slug, i) {
-  const path = props.basePath + (slug ? '/' + slug : '')
-  try { window.history.pushState({ slug }, '', path) } catch (e) { /* ignore */ }
-  if (slug) emit('open', { index: i, name: folderNames[i % folderNames.length], slug, path })
-  else emit('home', { path })
+  const path = props.basePath + (slug ? '/' + slug : '');
+  try {
+    window.history.pushState({ slug }, '', path);
+  } catch (e) {
+    /* ignore */
+  }
+  if (slug) emit('open', { index: i, name: folderNames[i % folderNames.length], slug, path });
+  else emit('home', { path });
 }
 
 function goHome() {
-  hasFolders.value = true
-  hoverIdx.value = -1
-  mHover.value = -1
-  dragging.value = false
-  navigate('', -1)
+  hasFolders.value = true;
+  hoverIdx.value = -1;
+  mHover.value = -1;
+  dragging.value = false;
+  navigate('', -1);
 }
 
 function onPopState() {
   const m = (window.location.pathname || '').match(
     new RegExp(props.basePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '/(.+)$')
-  )
+  );
   if (!m && !hasFolders.value) {
-    hasFolders.value = true
-    hoverIdx.value = -1
-    mHover.value = -1
+    hasFolders.value = true;
+    hoverIdx.value = -1;
+    mHover.value = -1;
   }
 }
 
 function onFolderClick(i) {
-  if (consumeDidDrag()) return
-  openFolder(i)
+  if (consumeDidDrag()) return;
+  openFolder(i);
 }
 
-let sphereHandle = null
-let orbitRaf = 0, orbitLast = null
+let sphereHandle = null;
+let orbitRaf = 0,
+  orbitLast = null;
 
 function orbitLoop(ts) {
-  if (orbitLast == null) orbitLast = ts
-  const dt = Math.min(0.05, (ts - orbitLast) / 1000)
-  orbitLast = ts
+  if (orbitLast == null) orbitLast = ts;
+  const dt = Math.min(0.05, (ts - orbitLast) / 1000);
+  orbitLast = ts;
   if (hasFolders.value && !dragging.value && hoverIdx.value < 0 && mHover.value < 0)
-    orbitPhase.value += ORBIT_SPEED * dt
-  orbitRaf = requestAnimationFrame(orbitLoop)
+    orbitPhase.value += ORBIT_SPEED * dt;
+  orbitRaf = requestAnimationFrame(orbitLoop);
 }
 
 function onResize() {
-  isMobile.value = window.innerWidth < 760
-  const viewH = window.innerHeight - NAV_H
+  isMobile.value = window.innerWidth < 760;
+  const viewH = window.innerHeight - NAV_H;
   if (isMobile.value) {
-    scale.value = window.innerWidth / MW
-    mDesignH.value = Math.max(MH * 0.72, viewH / scale.value)
+    scale.value = window.innerWidth / MW;
+    mDesignH.value = Math.max(MH * 0.72, viewH / scale.value);
   } else {
-    scale.value = window.innerWidth / 1440
-    deskVisibleH.value = Math.min(1024, viewH / scale.value)
-    nextTick(() => sphereHandle && sphereHandle.resize())
+    scale.value = window.innerWidth / 1440;
+    deskVisibleH.value = Math.min(1024, viewH / scale.value);
+    nextTick(() => sphereHandle && sphereHandle.resize());
   }
   if (!hasFolders.value) {
-    if (isMobile.value) buildMobileDetail()
-    else buildDetail()
+    if (isMobile.value) buildMobileDetail();
+    else buildDetail();
   }
 }
 
 onMounted(() => {
-  onResize()
-  window.addEventListener('resize', onResize)
+  onResize();
+  window.addEventListener('resize', onResize);
+  if (isMobile.value) buildMobileHome();
   nextTick(() => {
     if (sphereCanvas.value) {
-      sphereHandle = initSphere(sphereCanvas.value, () => scale.value, () => hasFolders.value)
+      sphereHandle = initSphere(
+        sphereCanvas.value,
+        () => scale.value,
+        () => hasFolders.value
+      );
     }
-  })
-  orbitRaf = requestAnimationFrame(orbitLoop)
-  window.addEventListener('popstate', onPopState)
-})
+  });
+  orbitRaf = requestAnimationFrame(orbitLoop);
+  window.addEventListener('popstate', onPopState);
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
-  window.removeEventListener('popstate', onPopState)
-  cancelAnimationFrame(orbitRaf)
-  if (sphereHandle) sphereHandle.dispose()
-})
+  window.removeEventListener('resize', onResize);
+  window.removeEventListener('popstate', onPopState);
+  cancelAnimationFrame(orbitRaf);
+  if (sphereHandle) sphereHandle.dispose();
+});
 </script>
 
 <template>
@@ -305,7 +414,7 @@ onBeforeUnmount(() => {
           class="absolute"
           :style="{
             left: '28px',
-            top: '150px',
+            top: '100px',
             pointerEvents: 'none',
             opacity: mHover >= 0 ? 1 : 0,
             transform: mHover >= 0 ? 'translateY(0)' : 'translateY(8px)',
@@ -410,13 +519,7 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- header: asterisk logo + plain profile (NAME kept compact) -->
-      <div class="absolute" style="left: 26px; top: 18px; color: #f0ede6; line-height: 1">
-        <div style="display: flex; justify-content: center; font-size: 20px">&#10033;</div>
-        <div style="display: flex; gap: 8px; font-size: 20px; margin-top: 3px">
-          &#10033;&#10033;
-        </div>
-      </div>
-      <div class="absolute flex items-center gap-3" style="left: 20px; top: 78px">
+      <div class="absolute flex items-center gap-3" style="left: 20px; top: 28px">
         <div
           style="
             width: 34px;
@@ -428,7 +531,7 @@ onBeforeUnmount(() => {
         <div style="line-height: 1.25">
           <div
             class="text-white/90"
-            style="font-size: 14px; font-weight: 500; letter-spacing: 0.5px"
+            style="font-size: 12px; font-weight: 500; letter-spacing: 0.5px"
           >
             NAME
           </div>
@@ -605,7 +708,7 @@ onBeforeUnmount(() => {
         <!-- docked folder-name tab -->
         <div
           class="absolute"
-          :style="{ left: '-14px', top: deskTabTop + 'px', width: '360px', height: '130px' }"
+          :style="{ left: '30px', top: deskTabTop + 'px', width: '360px', height: '130px' }"
         >
           <div
             class="absolute"
@@ -639,11 +742,12 @@ onBeforeUnmount(() => {
           <div
             class="absolute text-white/90 font-light"
             style="
-              left: 34px;
+              left: 0;
+              right: 0;
               top: 44px;
               font-size: 24px;
               letter-spacing: 0.4px;
-              max-width: 300px;
+              text-align: center;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -657,7 +761,7 @@ onBeforeUnmount(() => {
       <!-- ===== PROFILE (teammate's ProfileCard component, scaled down a touch) ===== -->
       <div
         class="absolute"
-        style="left: 34px; top: 150px; transform: scale(0.84); transform-origin: top left"
+        style="left: 100px; top: 150px; transform: scale(0.5); transform-origin: top left"
       >
         <ProfileCard name="NAME" subtitle="alawhoagua@gmail.com" />
       </div>
@@ -666,12 +770,12 @@ onBeforeUnmount(() => {
       <div
         class="absolute"
         :style="{
-          left: '120px',
+          left: '150px',
           top: '300px',
           pointerEvents: 'none',
           opacity: showLeader ? 1 : 0,
           transform: showLeader ? 'translateY(0)' : 'translateY(8px)',
-          transition: 'opacity .32s ease, transform .32s ease'
+          transition: showLeader ? 'opacity .32s ease, transform .32s ease' : 'none'
         }"
       >
         <div
@@ -693,7 +797,7 @@ onBeforeUnmount(() => {
         <div
           class="relative text-white"
           style="
-            font-size: 31px;
+            font-size: 16px;
             font-weight: 400;
             letter-spacing: 0.6px;
             text-shadow:
@@ -701,7 +805,7 @@ onBeforeUnmount(() => {
               0 0 18px rgba(255, 255, 255, 0.14);
           "
         >
-          {{ showLeader ? folderNames[hoverIdx % folderNames.length] : 'Project Title' }}
+          {{ folderNames[hoverIdx % folderNames.length] }}
         </div>
         <div class="relative flex items-center" style="gap: 10px; margin-top: 20px">
           <span
