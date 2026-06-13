@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/pages/Home.vue';
 import Login from '@/pages/Login.vue';
-import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
+import MoodboardOrbit from '@/pages/MoodboardOrbit';
 import Playground from '@/pages/Playground.vue';
 import SignUp from '@/pages/SignUp.vue';
 import StyleDna from '@/pages/StyleDna.vue';
