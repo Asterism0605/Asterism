@@ -14,6 +14,7 @@ describe('router', () => {
         { name: 'login', path: '/login' },
         { name: 'moodboard', path: '/moodboard' },
         { name: 'playground', path: '/playground' },
+        { name: 'image-spread', path: '/images/:imageId/spread' },
         { name: 'sign-up', path: '/sign-up' },
         { name: 'style-dna-result', path: '/style-dna/result' }
       ])
