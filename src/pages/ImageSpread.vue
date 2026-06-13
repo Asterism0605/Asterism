@@ -15,6 +15,7 @@ const rootImage = ref<ImageSpreadNode | undefined>();
 const relatedImages = ref<ImageSpreadNode[]>([]);
 const visitedImageIds = ref<string[]>([]);
 const spreadDepth = ref(0);
+let syncedRouteImageId: string | undefined;
 
 const routeImageId = computed(() => {
   const rawImageId = route.params.imageId;
@@ -50,12 +51,31 @@ function loadImageSpread(imageId: string | undefined) {
   }
 }
 
+function syncSpreadRoute(imageId: string) {
+  if (routeImageId.value === imageId) {
+    return;
+  }
+
+  syncedRouteImageId = imageId;
+  void router
+    .replace({
+      name: 'image-spread',
+      params: { imageId }
+    })
+    .catch(() => {
+      if (syncedRouteImageId === imageId) {
+        syncedRouteImageId = undefined;
+      }
+    });
+}
+
 function returnToPreviousLayer() {
   if (spreadDepth.value > 0 && rootImage.value) {
     centerImage.value = rootImage.value;
     visitedImageIds.value = [rootImage.value.id];
     spreadDepth.value = 0;
     refreshRelatedImages(rootImage.value.id);
+    syncSpreadRoute(rootImage.value.id);
     return;
   }
 
@@ -72,9 +92,21 @@ function handleRelatedSelect(image: ImageSpreadNode) {
   visitedImageIds.value = [...visitedImageIds.value, image.id];
   spreadDepth.value = 1;
   refreshRelatedImages(image.id);
+  syncSpreadRoute(image.id);
 }
 
-watch(routeImageId, loadImageSpread, { immediate: true });
+watch(
+  routeImageId,
+  (imageId) => {
+    if (imageId && syncedRouteImageId === imageId) {
+      syncedRouteImageId = undefined;
+      return;
+    }
+
+    loadImageSpread(imageId);
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
