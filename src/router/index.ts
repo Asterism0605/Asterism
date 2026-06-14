@@ -32,7 +32,7 @@ const router = createRouter({
       component: SignUp
     },
     {
-      path: '/moodboard',
+      path: '/moodboard/:slug?',
       name: 'moodboard',
       component: MoodboardOrbit
     },
