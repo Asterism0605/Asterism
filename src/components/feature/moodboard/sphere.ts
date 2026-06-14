@@ -1,5 +1,7 @@
-// src/pages/MoodboardOrbit/sphere.ts
+// src/components/feature/moodboard/sphere.ts
 import * as THREE from 'three'
+
+type TextureWithAspect = THREE.Texture & { _aspect: number }
 import { fibSphere } from './layout'
 import { IMG_URLS, SPRITE_RADIUS } from './config'
 
@@ -47,7 +49,7 @@ export function initSphere(
     ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 2
     ctx.strokeRect(1, 1, w - 2, h - 2)
     const t = new THREE.CanvasTexture(cv)
-    ;(t as any)._aspect = w / h
+    ;(t as TextureWithAspect)._aspect = w / h
     return t
   }
 
@@ -65,7 +67,7 @@ export function initSphere(
       const sp = new THREE.Sprite(
         new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false })
       )
-      const a = (tex as any)._aspect || 0.75
+      const a = (tex as TextureWithAspect)._aspect || 0.75
       sp.scale.set(0.9 * a, 0.9, 1)
       sp.position.copy(pos)
       group.add(sp)
@@ -85,7 +87,7 @@ export function initSphere(
         tex.anisotropy = renderer.capabilities.getMaxAnisotropy()
         tex.minFilter = THREE.LinearFilter
         tex.generateMipmaps = false
-        ;(tex as any)._aspect = (tex.image?.naturalWidth || 3) / (tex.image?.naturalHeight || 4)
+        ;(tex as TextureWithAspect)._aspect = (tex.image?.naturalWidth || 3) / (tex.image?.naturalHeight || 4)
         textures[i] = tex
         finishOne()
       },

@@ -1,0 +1,148 @@
+<h2>弧線設計確認圖</h2>
+<p class="subtitle">C 型：上方交錯、下方平行、照片在虛線以下散布</p>
+
+<style>
+.compare-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 20px 0;
+}
+.panel {
+  background: #06060d;
+  border-radius: 8px;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.panel h3 { margin: 0 0 3px; font-size: 0.88rem; }
+.panel p  { margin: 0 0 10px; font-size: 0.72rem; color: #8a8880; }
+.label-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-family: monospace;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-right: 4px;
+}
+.tag-wrong { background: rgba(255,80,80,0.15); color: #ff7766; border: 1px solid #ff776640; }
+.tag-right { background: rgba(68,204,136,0.15); color: #44dd99; border: 1px solid #44dd9940; }
+</style>
+
+<div class="compare-wrap">
+
+<!-- ── LEFT: WRONG ─────────────────────────────── -->
+<div class="panel">
+  <h3><span class="label-tag tag-wrong">目前實作</span>∩ 形，向下鼓出</h3>
+  <p>圓心在上方 → 弧線從右上繞到下方再到左側</p>
+  <svg viewBox="0 0 300 215" width="100%" style="display:block">
+    <rect width="300" height="215" fill="#040408"/>
+
+    <!-- Outer solid arc: ∩ shape, bowing DOWNWARD -->
+    <path d="M 258 18 C 274 14, 275 110, 270 145 C 264 180, 175 210, 10 175"
+          stroke="#5566dd" stroke-width="2" fill="none"/>
+    <!-- Inner dashed arc: ∩ shape parallel -->
+    <path d="M 240 22 C 255 18, 256 105, 250 138 C 244 170, 160 200, 20 170"
+          stroke="#5566dd" stroke-width="1.5" fill="none" stroke-dasharray="6,3"/>
+
+    <!-- DOWN arrow showing belly direction -->
+    <text x="200" y="145" fill="#ff5555" font-size="10" font-family="monospace">↓ 弧底在下方</text>
+    <text x="200" y="157" fill="#ff5555" font-size="9" font-family="monospace">向下鼓出 ✗</text>
+
+    <!-- Two arcs are just parallel, no crossing at start -->
+    <line x1="240" y1="10" x2="260" y2="10" stroke="#ffcc44" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="175" y="9" fill="#ffcc44" font-size="8">兩弧平行，無交錯</text>
+
+    <!-- Folders incorrectly along the bottom arc -->
+    <rect x="225" y="26" width="14" height="9" rx="1.5" fill="#445"/>
+    <rect x="230" y="80" width="14" height="9" rx="1.5" fill="#445"/>
+    <rect x="200" y="130" width="14" height="9" rx="1.5" fill="#445"/>
+    <rect x="140" y="172" width="14" height="9" rx="1.5" fill="#445"/>
+
+    <!-- Photos cluster: wrong position (above arc) -->
+    <text x="60" y="70" fill="#44aa64" font-size="8" opacity="0.7">照片位置</text>
+    <rect x="52" y="34" width="30" height="38" rx="2" fill="none" stroke="#44aa64" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+    <rect x="88" y="50" width="22" height="28" rx="2" fill="none" stroke="#44aa64" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+  </svg>
+</div>
+
+<!-- ── RIGHT: CORRECT ──────────────────────────── -->
+<div class="panel">
+  <h3><span class="label-tag tag-right">設計目標</span>C 形，向左鼓出</h3>
+  <p>圓心在右方 → 上方交錯、下方平行、照片在虛線以下</p>
+  <svg viewBox="0 0 300 215" width="100%" style="display:block">
+    <rect width="300" height="215" fill="#040408"/>
+
+    <!--
+      Circle center off-screen right: roughly (330, 108)
+      Outer arc: large C, angle ~125° to ~240° (through 180°)
+      Inner arc: same circle roughly, slightly smaller R, starts LATER (angle ~140°)
+        → at the top, outer extends PAST inner = crossing visual
+        → at the bottom, both end at similar y = parallel visual
+    -->
+
+    <!-- Outer arc (solid 實線): sweeps from upper-right (~255,8) down through left belly (~32,108) to lower (~105, 208) -->
+    <path d="M 255 8
+             C 288 4, 295 50, 260 88
+             C 215 130, 28 90, 32 108
+             C 35 128, 80 185, 108 208"
+          stroke="#8877ff" stroke-width="2.2" fill="none"/>
+
+    <!-- Inner arc (dashed 虛線): starts further along = at (272, 42), sweeps through belly (~55,110) to lower (~128, 208) -->
+    <!-- At top: inner start (272,42) is to the RIGHT of where outer arc passes → visual crossing ✓ -->
+    <!-- At bottom: both end near y=208, parallel ✓ -->
+    <path d="M 272 42
+             C 292 32, 285 75, 250 105
+             C 210 138, 50 110, 55 112
+             C 55 140, 105 195, 128 208"
+          stroke="#8877ff" stroke-width="1.5" fill="none" stroke-dasharray="6,3"/>
+
+    <!-- ── Crossing zone (top) ──────────────── -->
+    <!-- Outer arc passes through x≈272 around y≈28; inner starts at (272,42)
+         The outer arc's TOP SEGMENT (y=8 to y=42) crosses the inner arc's starting region -->
+    <circle cx="264" cy="26" r="14" fill="none" stroke="#ffcc44" stroke-width="1.2" stroke-dasharray="3,2" opacity="0.8"/>
+    <text x="196" y="15" fill="#ffcc44" font-size="8" font-family="monospace">上方交錯區</text>
+    <text x="196" y="24" fill="#ffcc44" font-size="8" font-family="monospace">實線延伸過虛線</text>
+    <line x1="255" y1="18" x2="196" y2="18" stroke="#ffcc44" stroke-width="0.7" opacity="0.6"/>
+
+    <!-- ── Parallel zone (bottom) ──────────── -->
+    <line x1="108" y1="212" x2="128" y2="212" stroke="#aaffcc" stroke-width="1.5"/>
+    <circle cx="108" cy="208" r="2.5" fill="#aaffcc"/>
+    <circle cx="128" cy="208" r="2.5" fill="#aaffcc" opacity="0.6"/>
+    <text x="130" y="213" fill="#aaffcc" font-size="8" font-family="monospace">下方平行</text>
+
+    <!-- ── Folders on outer arc ─────────────── -->
+    <rect x="239" y="17" width="14" height="9" rx="1.5" fill="#556"/>
+    <rect x="239" y="60" width="14" height="9" rx="1.5" fill="#445"/>
+    <rect x="146" y="104" width="14" height="9" rx="1.5" fill="#556"/>
+    <rect x="65"  y="138" width="14" height="9" rx="1.5" fill="#445"/>
+    <rect x="85"  y="185" width="14" height="9" rx="1.5" fill="#556"/>
+
+    <!-- ── Photo zone: BELOW/INSIDE inner dashed arc ──── -->
+    <!-- Shaded region: right side of canvas, below where inner arc curves -->
+    <clipPath id="photoZone">
+      <rect x="55" y="60" width="245" height="148"/>
+    </clipPath>
+    <!-- Photos scattered inside the zone (below inner dashed arc) -->
+    <rect x="165" y="65" width="48" height="60" rx="2" fill="#1a1a28" stroke="#aaa" stroke-width="0.8" opacity="0.9"/>
+    <rect x="222" y="55" width="36" height="46" rx="2" fill="#1a1a28" stroke="#aaa" stroke-width="0.8" opacity="0.9"/>
+    <rect x="220" y="112" width="55" height="68" rx="2" fill="#1a1a28" stroke="#aaa" stroke-width="0.8" opacity="0.9"/>
+    <rect x="152" y="140" width="44" height="56" rx="2" fill="#1a1a28" stroke="#aaa" stroke-width="0.8" opacity="0.9"/>
+    <rect x="195" y="148" width="30" height="38" rx="2" fill="#1a1a28" stroke="#aaa" stroke-width="0.8" opacity="0.8"/>
+    <rect x="255" y="140" width="38" height="48" rx="2" fill="#1a1a28" stroke="#aaa" stroke-width="0.8" opacity="0.7"/>
+
+    <!-- Boundary annotation: inner arc = upper limit for photos -->
+    <text x="166" y="60" fill="#88aaff" font-size="7.5" font-family="monospace">虛線以下 ↓ 照片散布在此</text>
+
+    <!-- Arrow showing C-bow direction (left) -->
+    <text x="5" y="114" fill="#44dd99" font-size="11" font-family="monospace">← 向左鼓出</text>
+  </svg>
+</div>
+
+</div>
+
+<div style="font-size:0.8rem;color:#ccc;margin-top:8px;line-height:1.9">
+  <strong>設計稿三個核心規則（請確認）：</strong><br>
+  🟡 <strong>上方交錯</strong>：實線（外弧）起點延伸超過虛線（內弧）起點 → 視覺上兩弧「剪刀式」交叉<br>
+  🟢 <strong>下方平行</strong>：兩弧終點相近，弧線末段間距相等、平行收攏<br>
+  🔵 <strong>照片限制</strong>：照片球散布在 <em>虛線（內弧）以下</em> 的右側空間，不超過虛線上緣
+</div>

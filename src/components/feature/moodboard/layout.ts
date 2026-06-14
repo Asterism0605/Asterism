@@ -63,8 +63,8 @@ export function packPhotos(list: PhotoItem[], opt: PackOptions): PackNode[] {
     const t = 1 - ((y - cy) / ry) ** 2;
     if (t <= 0) continue;
     const halfW = rx * Math.sqrt(t);
-    let xl = Math.max(xMin, cx - halfW),
-      xr = Math.min(xMax, cx + halfW);
+    let xl = Math.max(xMin, cx - halfW);
+    const xr = Math.min(xMax, cx + halfW);
     for (const ob of obstacles) {
       if (y > ob.y0 && y < ob.y1) {
         const or = Math.min(xr, ob.x1);

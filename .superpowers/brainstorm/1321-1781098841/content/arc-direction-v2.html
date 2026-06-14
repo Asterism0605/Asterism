@@ -1,0 +1,125 @@
+<h2>弧線方向 + 兩條弧交錯 + 照片邊界</h2>
+<p class="subtitle">左：目前錯誤實作　右：設計稿正確版本</p>
+
+<style>
+.split-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 20px 0;
+}
+.panel {
+  background: #07070d;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.panel.wrong  { border-color: rgba(255,80,80,0.3); }
+.panel.right  { border-color: rgba(68,204,136,0.3); }
+.panel h3 { margin: 0 0 4px; font-size: 0.85rem; }
+.panel h3.wrong-label { color: #ff6655; }
+.panel h3.right-label { color: #44cc88; }
+.panel p  { margin: 0 0 10px; font-size: 0.72rem; color: #8a8880; }
+.notes { margin-top: 20px; font-size: 0.78rem; color: #ccc; line-height: 2; }
+.notes li { margin-bottom: 4px; }
+</style>
+
+<div class="split-compare">
+
+  <!-- LEFT: Current WRONG (bowing downward) -->
+  <div class="panel wrong">
+    <h3 class="wrong-label">✗ 目前實作 — ∩ 形（向下膨脹）</h3>
+    <p>圓心在畫布上方，弧線向下鼓出；照片球在弧線「上方」內凹處</p>
+    <svg viewBox="0 0 300 200" width="100%" style="display:block">
+      <rect x="0" y="0" width="300" height="200" fill="#050509"/>
+
+      <!-- center dot (inside canvas, upper area) -->
+      <circle cx="130" cy="34" r="3" fill="#ff5555"/>
+      <text x="135" y="38" fill="#ff5555" font-size="8">圓心</text>
+
+      <!-- Arc 1 outer: bowing DOWN, from upper-right to left -->
+      <path d="M 255 10 C 270 80, 260 150, 13 160" stroke="#5566ff" stroke-width="1.8" fill="none"/>
+      <!-- Arc 2 inner (slightly smaller, same bow direction) -->
+      <path d="M 240 15 C 255 75, 240 140, 20 148" stroke="#5566ff" stroke-width="1.2" fill="none" stroke-dasharray="4,2" opacity="0.6"/>
+
+      <!-- Crossing indicator: NO crossing, just parallel -->
+      <text x="190" y="8" fill="#888" font-size="7">兩弧平行（無交錯）</text>
+
+      <!-- Photos sphere: upper-right area (inside the concave top) -->
+      <ellipse cx="205" cy="80" rx="42" ry="38" fill="rgba(68,170,100,0.08)" stroke="#44aa64" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="183" y="83" fill="#44aa64" font-size="7">照片球</text>
+
+      <!-- Folders on arc -->
+      <rect x="238" y="30" width="16" height="10" rx="1.5" fill="#444"/>
+      <rect x="208" y="65" width="16" height="10" rx="1.5" fill="#333"/>
+      <rect x="155" y="120" width="16" height="10" rx="1.5" fill="#444"/>
+      <rect x="80"  y="148" width="16" height="10" rx="1.5" fill="#333"/>
+
+      <!-- Direction arrow showing bow direction -->
+      <path d="M 148 100 L 148 175" stroke="#ff5555" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <text x="153" y="168" fill="#ff5555" font-size="8">弧底在這裡</text>
+      <text x="153" y="178" fill="#ff5555" font-size="8">向下鼓出 ↓</text>
+    </svg>
+  </div>
+
+  <!-- RIGHT: Correct (C-shape, crossing at top-right, photos bounded) -->
+  <div class="panel right">
+    <h3 class="right-label">✓ 設計稿目標 — C 形 + 上方交錯 + 照片受弧線限制</h3>
+    <p>圓心在右方（出框外）；兩弧在右上角交錯；照片球不超過下方弧線</p>
+    <svg viewBox="0 0 300 200" width="100%" style="display:block">
+      <rect x="0" y="0" width="300" height="200" fill="#050509"/>
+
+      <!-- Arc center (off-screen right) -->
+      <circle cx="305" cy="95" r="3" fill="#ff5555" opacity="0.6"/>
+      <text x="256" y="92" fill="#ff5555" font-size="7">圓心（框外）</text>
+      <line x1="260" y1="94" x2="302" y2="95" stroke="#ff5555" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
+
+      <!-- Outer arc (C-shape, larger radius) -->
+      <!-- Center at (305, 95), R=220: from ~105° to ~230° -->
+      <path d="M 249 10 C 160 5, 75 40, 50 95 C 28 148, 62 188, 115 198"
+            stroke="#7c6fff" stroke-width="2" fill="none"/>
+
+      <!-- Inner arc (C-shape, smaller radius; CROSSES outer arc near top-right) -->
+      <!-- Slightly different center → creates crossing effect -->
+      <path d="M 280 35 C 220 10, 120 25, 82 82 C 52 132, 72 178, 118 195"
+            stroke="#7c6fff" stroke-width="1.5" fill="none" stroke-dasharray="4,2" opacity="0.7"/>
+
+      <!-- ✦ Crossing point indicator (upper area ~x=230,y=12) -->
+      <circle cx="232" cy="14" r="5" fill="none" stroke="#ffcc44" stroke-width="1.5"/>
+      <text x="238" y="12" fill="#ffcc44" font-size="7">交錯點</text>
+      <text x="238" y="20" fill="#ffcc44" font-size="7">兩弧在此相交</text>
+
+      <!-- Photos sphere: RIGHT side, ABOVE lower arc boundary -->
+      <ellipse cx="218" cy="90" rx="52" ry="55" fill="rgba(68,170,100,0.08)" stroke="#44aa64" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="196" y="93" fill="#44aa64" font-size="7">照片球</text>
+
+      <!-- Lower boundary line (inner arc acts as lower limit) -->
+      <!-- Show that photos must not go below this -->
+      <line x1="50" y1="152" x2="295" y2="152" stroke="#ff6644" stroke-width="0.8" stroke-dasharray="2,3" opacity="0.5"/>
+      <text x="55" y="148" fill="#ff6644" font-size="7">照片不可超過此線 ↑</text>
+      <text x="190" y="162" fill="#ff6644" font-size="7">（弧線下方區域）</text>
+
+      <!-- Folders on outer arc -->
+      <rect x="233" y="28" width="16" height="10" rx="1.5" fill="#555"/>
+      <rect x="174" y="14" width="16" height="10" rx="1.5" fill="#444"/>
+      <rect x="94"  y="38" width="16" height="10" rx="1.5" fill="#555"/>
+      <rect x="52"  y="88" width="16" height="10" rx="1.5" fill="#444"/>
+      <rect x="68"  y="148" width="16" height="10" rx="1.5" fill="#555"/>
+
+      <!-- Photos contained annotation -->
+      <path d="M 218 143 L 218 149" stroke="#ff6644" stroke-width="1.5" stroke-dasharray="2,1"/>
+      <text x="220" y="148" fill="#ff6644" font-size="7">↓ 照片底部不能碰到</text>
+    </svg>
+  </div>
+
+</div>
+
+<div class="notes">
+  <strong>設計稿關鍵差異整理：</strong>
+  <ol>
+    <li>🔴 弧線方向反了：目前是 <strong>∩（向下）</strong>，設計稿要 <strong>C（向左）</strong></li>
+    <li>🟡 兩條弧要在 <strong>右上角交錯</strong>（兩弧中心偏移 → 圓圈相交 → 右上角有交叉）</li>
+    <li>🟢 照片球要在弧線 <strong>右側內凹空間</strong>，且 <strong>照片底部不能超過弧線最低點</strong></li>
+    <li>⚪ 弧線圓心要移到 <strong>畫布右方（甚至出框外）</strong>，這樣弧才會呈 C 形</li>
+  </ol>
+</div>

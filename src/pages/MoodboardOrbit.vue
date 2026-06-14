@@ -1,12 +1,12 @@
 <script setup>
-// ├── config.ts          — 常數與靜態資料
-// ├── layout.ts          — 純幾何算法（packPhotos, ellipsePath...）
-// ├── sphere.ts          — Three.js 球體邏輯
-// ├── useMobileOrbit.ts  — 手機拖曳 composable
-// ├── MoodboardOrbit.vue — 主元件（template/style 不動）
-// └── index.ts           — re-export
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue';
-import ProfileCard from '../../components/ui/ProfileCard.vue';
+// src/components/feature/moodboard/
+//   config.ts         — 常數與靜態資料
+//   layout.ts         — 純幾何算法（packPhotos, ellipsePath...）
+//   sphere.ts         — Three.js 球體邏輯
+//   useMobileOrbit.ts — 手機拖曳 composable
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import ProfileCard from '@/components/ui/ProfileCard.vue';
 import {
   NAV_H,
   INNER_K,
@@ -22,10 +22,10 @@ import {
   photos,
   mDetailBase,
   mHomePhotos
-} from './config';
-import { packPhotos, ellipsePath, ellipsePathM } from './layout';
-import { initSphere } from './sphere';
-import { useMobileOrbit } from './useMobileOrbit';
+} from '@/components/feature/moodboard/config';
+import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
+import { initSphere } from '@/components/feature/moodboard/sphere';
+import { useMobileOrbit } from '@/components/feature/moodboard/useMobileOrbit';
 
 const props = defineProps({
   height: { type: String, default: '100vh' },
@@ -34,6 +34,9 @@ const props = defineProps({
   basePath: { type: String, default: '/moodboard' }
 });
 const emit = defineEmits(['open', 'home']);
+
+const router = useRouter();
+const route = useRoute();
 
 const folderCount = ref(10);
 
@@ -253,13 +256,9 @@ function slugFor(i) {
   return encodeURIComponent(name.trim().replace(/\s+/g, '-').toLowerCase());
 }
 
-function navigate(slug, i) {
+function navigate(slug: string, i: number) {
   const path = props.basePath + (slug ? '/' + slug : '');
-  try {
-    window.history.pushState({ slug }, '', path);
-  } catch (e) {
-    /* ignore */
-  }
+  router.push(path);
   if (slug) emit('open', { index: i, name: folderNames[i % folderNames.length], slug, path });
   else emit('home', { path });
 }
@@ -272,16 +271,13 @@ function goHome() {
   navigate('', -1);
 }
 
-function onPopState() {
-  const m = (window.location.pathname || '').match(
-    new RegExp(props.basePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '/(.+)$')
-  );
-  if (!m && !hasFolders.value) {
+watch(() => route.params.slug, (slug) => {
+  if (!slug && !hasFolders.value) {
     hasFolders.value = true;
     hoverIdx.value = -1;
     mHover.value = -1;
   }
-}
+});
 
 function onFolderClick(i) {
   if (consumeDidDrag()) return;
@@ -332,12 +328,10 @@ onMounted(() => {
     }
   });
   orbitRaf = requestAnimationFrame(orbitLoop);
-  window.addEventListener('popstate', onPopState);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize);
-  window.removeEventListener('popstate', onPopState);
   cancelAnimationFrame(orbitRaf);
   if (sphereHandle) sphereHandle.dispose();
 });

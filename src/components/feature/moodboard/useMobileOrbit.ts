@@ -15,7 +15,7 @@ export function useMobileOrbit(
   let dragLastAng = 0
 
   function evtPoint(e: PointerEvent) {
-    const t = ((e as any).touches?.[0]) || e
+    const t = (e as PointerEvent & { touches?: Touch[] }).touches?.[0] ?? e
     const r = mStageRef.value!.getBoundingClientRect()
     return {
       x: (t.clientX - r.left) / scaleRef.value,
