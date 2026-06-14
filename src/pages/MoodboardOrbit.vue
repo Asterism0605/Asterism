@@ -24,7 +24,9 @@ import {
   mHomePhotos
 } from '@/components/feature/moodboard/config';
 import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
+import type { PackNode } from '@/components/feature/moodboard/layout';
 import { initSphere } from '@/components/feature/moodboard/sphere';
+import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useMobileOrbit } from '@/components/feature/moodboard/useMobileOrbit';
 
 const props = defineProps({
@@ -47,16 +49,16 @@ const orbitPhase = ref(0);
 const hoverIdx = ref(-1);
 const selectedFolder = ref(0);
 const selectedName = computed(() => folderNames[selectedFolder.value % folderNames.length]);
-const scatter = ref([]);
-const sphereCanvas = ref(null);
+const scatter = ref<PackNode[]>([]);
+const sphereCanvas = ref<HTMLCanvasElement | null>(null);
 const isMobile = ref(false);
 const deskVisibleH = ref(1024);
 const deskBackTop = computed(() => Math.round(deskVisibleH.value - 130));
 const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96));
-const mStage = ref(null);
+const mStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
-const mDetailPhotos = ref([]);
-const mHomePhotosRandom = ref([]);
+const mDetailPhotos = ref<PackNode[]>([]);
+const mHomePhotosRandom = ref<PackNode[]>([]);
 
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useMobileOrbit(
   mStage,
@@ -151,10 +153,10 @@ const folderView = computed(() => {
 
 const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
 
-function onImgError(e) {
-  const img = e.target;
+function onImgError(e: Event) {
+  const img = e.target as HTMLImageElement;
   img.style.display = 'none';
-  const ph = img.nextElementSibling;
+  const ph = img.nextElementSibling as HTMLElement | null;
   if (ph) ph.style.display = 'block';
 }
 
@@ -243,7 +245,7 @@ function buildMobileHome() {
   }));
 }
 
-function openFolder(i) {
+function openFolder(i: number) {
   selectedFolder.value = i;
   hasFolders.value = false;
   if (isMobile.value) buildMobileDetail();
@@ -251,7 +253,7 @@ function openFolder(i) {
   navigate(slugFor(i), i);
 }
 
-function slugFor(i) {
+function slugFor(i: number) {
   const name = folderNames[i % folderNames.length] || 'folder-' + i;
   return encodeURIComponent(name.trim().replace(/\s+/g, '-').toLowerCase());
 }
@@ -271,22 +273,25 @@ function goHome() {
   navigate('', -1);
 }
 
-watch(() => route.params.slug, (slug) => {
-  if (!slug && !hasFolders.value) {
-    hasFolders.value = true;
-    hoverIdx.value = -1;
-    mHover.value = -1;
+watch(
+  () => route.params.slug,
+  (slug) => {
+    if (!slug && !hasFolders.value) {
+      hasFolders.value = true;
+      hoverIdx.value = -1;
+      mHover.value = -1;
+    }
   }
-});
+);
 
-function onFolderClick(i) {
+function onFolderClick(i: number) {
   if (consumeDidDrag()) return;
   openFolder(i);
 }
 
-let sphereHandle = null;
-let orbitRaf = 0,
-  orbitLast = null;
+let sphereHandle: SphereHandle | null = null;
+let orbitRaf = 0;
+let orbitLast: number | null = null;
 
 function orbitLoop(ts) {
   if (orbitLast == null) orbitLast = ts;
