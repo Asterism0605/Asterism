@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // src/components/feature/moodboard/
 //   config.ts         — 常數與靜態資料
 //   layout.ts         — 純幾何算法（packPhotos, ellipsePath...）
