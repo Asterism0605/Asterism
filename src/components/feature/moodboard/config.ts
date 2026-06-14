@@ -1,4 +1,8 @@
-// src/pages/MoodboardOrbit/config.ts
+import type {
+  MoodboardHomePhoto,
+  MoodboardOrbitParams,
+  MoodboardPhoto
+} from '@/types/moodboard';
 
 export const NAV_H = 64;
 export const INNER_K = 0.9;
@@ -7,13 +11,31 @@ export const SPRITE_RADIUS = 2.2;
 export const MAX_FOLDERS = 10;
 export const DETAIL_CAP = 20;
 
-export const HO = { cx: 980, cy: 550, rx: 500, ry: 500, node: { x: 1350, y: 40 } };
+export const HO: MoodboardOrbitParams = {
+  cx: 980,
+  cy: 550,
+  rx: 500,
+  ry: 500,
+  node: { x: 1350, y: 40 }
+};
 
 export const MW = 440;
 export const MH = 956;
 
-export const M_HOME_ORBIT = { cx: 220, cy: 770, rx: 597, ry: 597, node: { x: 470, y: 230 } };
-export const M_DETAIL_ORBIT = { cx: 220, cy: 770, rx: 597, ry: 597, node: { x: 470, y: 230 } };
+export const M_HOME_ORBIT: MoodboardOrbitParams = {
+  cx: 220,
+  cy: 770,
+  rx: 597,
+  ry: 597,
+  node: { x: 470, y: 230 }
+};
+export const M_DETAIL_ORBIT: MoodboardOrbitParams = {
+  cx: 220,
+  cy: 770,
+  rx: 597,
+  ry: 597,
+  node: { x: 470, y: 230 }
+};
 
 export const folderNames: string[] = [
   'Project Title',
@@ -28,14 +50,7 @@ export const folderNames: string[] = [
   'Muse'
 ];
 
-export interface PhotoItem {
-  src: string;
-  w: number;
-  h: number;
-  faded?: boolean;
-}
-
-export const photos: PhotoItem[] = [
+export const photos: MoodboardPhoto[] = [
   { src: '/images/image1.png', w: 120, h: 96 },
   { src: '/images/image2.png', w: 112, h: 150 },
   { src: '/images/image3.png', w: 100, h: 140 },
@@ -62,7 +77,7 @@ export const IMG_URLS: string[] = photos.map((p) => p.src);
 
 const mImg = (n: number) => `/images/image${n}.png`;
 
-export const mDetailBase: PhotoItem[] = [
+export const mDetailBase: MoodboardPhoto[] = [
   { src: mImg(4), w: 58, h: 66 },
   { src: mImg(5), w: 116, h: 136 },
   { src: mImg(3), w: 48, h: 74 },
@@ -75,17 +90,7 @@ export const mDetailBase: PhotoItem[] = [
   { src: mImg(1), w: 70, h: 84 }
 ];
 
-export interface HomePhoto {
-  id: string;
-  src: string;
-  cx: number;
-  cy: number;
-  w: number;
-  h: number;
-  faded?: boolean;
-}
-
-export const mHomePhotos: HomePhoto[] = [
+export const mHomePhotos: MoodboardHomePhoto[] = [
   { id: 'h0', src: mImg(4), cx: 140, cy: 447, w: 52, h: 52 },
   { id: 'h1', src: mImg(5), cx: 313, cy: 517, w: 108, h: 130 },
   { id: 'h2', src: mImg(2), cx: 80, cy: 614, w: 80, h: 96 },

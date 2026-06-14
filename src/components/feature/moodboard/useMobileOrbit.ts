@@ -1,4 +1,3 @@
-// src/pages/MoodboardOrbit/useMobileOrbit.ts
 import { ref, type Ref } from 'vue'
 import { M_HOME_ORBIT } from './config'
 

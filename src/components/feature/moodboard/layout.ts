@@ -1,31 +1,16 @@
 import * as THREE from 'three'
 import { HO } from './config'
-import type { PhotoItem } from './config'
+import type {
+  MoodboardOrbitParams,
+  MoodboardPackOptions,
+  MoodboardPhoto,
+  MoodboardPositionedPhoto
+} from '@/types/moodboard'
 
-export interface Obstacle {
-  x0: number; x1: number; y0: number; y1: number
-}
-
-export interface PackOptions {
-  cx: number; cy: number; rx: number; ry: number
-  gap?: number
-  xMin?: number; xMax?: number; yMin?: number; yMax?: number
-  obstacles?: Obstacle[]
-  fillRatio?: number
-  idPrefix?: string
-}
-
-export interface PackNode {
-  id: string; src: string; w: number; h: number
-  faded?: boolean; delay: string; x: number; y: number
-}
-
-export interface OrbitParams {
-  cx: number; cy: number; rx: number; ry: number
-  node: { x: number; y: number }
-}
-
-export function packPhotos(list: PhotoItem[], opt: PackOptions): PackNode[] {
+export function packPhotos(
+  list: MoodboardPhoto[],
+  opt: MoodboardPackOptions
+): MoodboardPositionedPhoto[] {
   const { cx, cy, rx, ry } = opt;
   const gap = opt.gap ?? 12; // visible gutter between photos
   const xMin = opt.xMin ?? 0,
@@ -208,7 +193,7 @@ export function packPhotos(list: PhotoItem[], opt: PackOptions): PackNode[] {
   return nodes;
 }
 
-export function ellipsePathM(o: OrbitParams, k: number): string {
+export function ellipsePathM(o: MoodboardOrbitParams, k: number): string {
   const pts = [];
   for (let t = 0; t <= 360; t += 2) {
     const r = (t * Math.PI) / 180;

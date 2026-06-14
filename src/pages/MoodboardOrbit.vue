@@ -25,18 +25,7 @@ import {
   mHomePhotos
 } from '@/components/feature/moodboard/config';
 import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
-import type { PackNode } from '@/components/feature/moodboard/layout';
-
-interface MobilePhoto {
-  id: string;
-  src: string;
-  w: number;
-  h: number;
-  faded?: boolean;
-  delay: string;
-  cx: number;
-  cy: number;
-}
+import type { MoodboardMobilePhoto, MoodboardPositionedPhoto } from '@/types/moodboard';
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useMobileOrbit } from '@/components/feature/moodboard/useMobileOrbit';
@@ -61,7 +50,7 @@ const orbitPhase = ref(0);
 const hoverIdx = ref(-1);
 const selectedFolder = ref(0);
 const selectedName = computed(() => folderNames[selectedFolder.value % folderNames.length]);
-const scatter = ref<PackNode[]>([]);
+const scatter = ref<MoodboardPositionedPhoto[]>([]);
 const sphereCanvas = ref<HTMLCanvasElement | null>(null);
 const isMobile = ref(false);
 const deskVisibleH = ref(1024);
@@ -69,8 +58,8 @@ const deskBackTop = computed(() => Math.round(deskVisibleH.value - 130));
 const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96));
 const mStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
-const mDetailPhotos = ref<MobilePhoto[]>([]);
-const mHomePhotosRandom = ref<MobilePhoto[]>([]);
+const mDetailPhotos = ref<MoodboardMobilePhoto[]>([]);
+const mHomePhotosRandom = ref<MoodboardMobilePhoto[]>([]);
 
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useMobileOrbit(
   mStage,
