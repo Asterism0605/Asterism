@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DiscoverDna from '@/pages/DiscoverDna.vue';
 import Home from '@/pages/Home.vue';
+import ImageSpread from '@/pages/ImageSpread.vue';
 import Login from '@/pages/Login.vue';
 import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import Playground from '@/pages/Playground.vue';
@@ -25,6 +26,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/images/:imageId/spread',
+      name: 'image-spread',
+      component: ImageSpread
     },
     {
       path: '/sign-up',

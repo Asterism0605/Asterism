@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { Lock, MoveDownLeft } from '@lucide/vue';
+import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
+import { getHomeInspirationImages } from '@/services/image.service';
 
 const scrollLimitVh = 150;
+const router = useRouter();
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
-
-const inspirationImages = [
-  { src: '/images/image3.png', alt: 'Chrome chair inspiration' },
-  { src: '/images/image2.png', alt: 'Editorial style group' },
-  { src: '/images/image1.png', alt: 'Layered fashion portrait' },
-  { src: '/images/image4.png', alt: 'Outdoor fashion moment' },
-  { src: '/images/image5.png', alt: 'Monochrome object study' }
-];
+const inspirationImages = getHomeInspirationImages();
 
 function openLimitModal() {
   if (hasTriggeredLimit.value) {
@@ -37,6 +33,19 @@ function handleScrollLimit() {
   if (viewportBottom >= limit) {
     openLimitModal();
   }
+}
+
+function openImageSpread(index: number) {
+  const image = inspirationImages[index];
+
+  if (!image) {
+    return;
+  }
+
+  void router.push({
+    name: 'image-spread',
+    params: { imageId: image.id }
+  });
 }
 
 onMounted(() => {
@@ -64,6 +73,7 @@ onBeforeUnmount(() => {
           height="calc(200vh - var(--app-header-height))"
           layout="home"
           show-constellations
+          @click="openImageSpread"
         />
       </div>
 
