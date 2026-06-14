@@ -25,6 +25,11 @@ import {
 } from '@/components/feature/moodboard/config';
 import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
 import type { PackNode } from '@/components/feature/moodboard/layout';
+
+interface MobilePhoto {
+  id: string; src: string; w: number; h: number
+  faded?: boolean; delay: string; cx: number; cy: number
+}
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useMobileOrbit } from '@/components/feature/moodboard/useMobileOrbit';
@@ -57,8 +62,8 @@ const deskBackTop = computed(() => Math.round(deskVisibleH.value - 130));
 const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96));
 const mStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
-const mDetailPhotos = ref<PackNode[]>([]);
-const mHomePhotosRandom = ref<PackNode[]>([]);
+const mDetailPhotos = ref<MobilePhoto[]>([]);
+const mHomePhotosRandom = ref<MobilePhoto[]>([]);
 
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useMobileOrbit(
   mStage,
