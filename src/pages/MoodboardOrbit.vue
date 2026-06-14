@@ -5,6 +5,7 @@
 //   sphere.ts         — Three.js 球體邏輯
 //   useMobileOrbit.ts — 手機拖曳 composable
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
+import type { CSSProperties } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
 import {
@@ -27,8 +28,14 @@ import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/mood
 import type { PackNode } from '@/components/feature/moodboard/layout';
 
 interface MobilePhoto {
-  id: string; src: string; w: number; h: number
-  faded?: boolean; delay: string; cx: number; cy: number
+  id: string;
+  src: string;
+  w: number;
+  h: number;
+  faded?: boolean;
+  delay: string;
+  cx: number;
+  cy: number;
 }
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
@@ -73,7 +80,7 @@ const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } =
 );
 
 /* ---- derived ---- */
-const stageStyle = computed(() => ({
+const stageStyle = computed<CSSProperties>(() => ({
   position: 'absolute',
   top: '0',
   left: '0',
@@ -83,7 +90,7 @@ const stageStyle = computed(() => ({
   transformOrigin: 'top left'
 }));
 
-const sphereStyle = computed(() => {
+const sphereStyle = computed<CSSProperties>(() => {
   const vh = deskVisibleH.value;
   const size = Math.min(860, Math.max(440, vh - 70));
   const top = Math.max(36, (vh - size) / 2 + 50);
@@ -98,7 +105,7 @@ const sphereStyle = computed(() => {
   };
 });
 
-const mStageStyle = computed(() => ({
+const mStageStyle = computed<CSSProperties>(() => ({
   position: 'absolute',
   left: '0',
   top: '0',
@@ -298,8 +305,8 @@ let sphereHandle: SphereHandle | null = null;
 let orbitRaf = 0;
 let orbitLast: number | null = null;
 
-function orbitLoop(ts) {
-  if (orbitLast == null) orbitLast = ts;
+function orbitLoop(ts: number) {
+  if (orbitLast === null) orbitLast = ts;
   const dt = Math.min(0.05, (ts - orbitLast) / 1000);
   orbitLast = ts;
   if (hasFolders.value && !dragging.value && hoverIdx.value < 0 && mHover.value < 0)
