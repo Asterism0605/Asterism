@@ -345,8 +345,8 @@ onBeforeUnmount(() => {
     <!-- ===================== MOBILE STAGE (440×fluid) ===================== -->
     <div
       v-if="isMobile"
-      class="relative"
       ref="mStage"
+      class="relative"
       :style="mStageStyle"
       @pointerdown="onDragStart"
       @pointermove="onDragMove"
@@ -376,9 +376,6 @@ onBeforeUnmount(() => {
           v-for="f in mFolders"
           :key="'mf' + f.i"
           class="absolute"
-          @pointerenter="mHover = f.i"
-          @pointerleave="mHover = -1"
-          @click="onFolderClick(f.i)"
           :style="{
             left: f.cx - f.w / 2 + 'px',
             top: f.cy - f.h / 2 + 'px',
@@ -389,6 +386,9 @@ onBeforeUnmount(() => {
             zIndex: mHover === f.i ? 20 : 5,
             cursor: 'pointer'
           }"
+          @pointerenter="mHover = f.i"
+          @pointerleave="mHover = -1"
+          @click="onFolderClick(f.i)"
         >
           <img
             :src="mHover === f.i ? '/images/folder-active.png' : '/images/folder-idle.png'"
@@ -490,10 +490,10 @@ onBeforeUnmount(() => {
         >
           <img
             :src="p.src"
-            @error="onImgError"
             draggable="false"
             class="w-full h-full block select-none"
             style="object-fit: cover; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55)"
+            @error="onImgError"
           />
           <div
             class="w-full h-full"
@@ -536,7 +536,6 @@ onBeforeUnmount(() => {
       <!-- detail: back (just above the name tab) + docked folder-name tab -->
       <div v-show="!hasFolders" class="absolute inset-0 pointer-events-none">
         <button
-          @click="goHome"
           class="absolute flex items-center gap-2 text-white/80"
           style="
             left: 22px;
@@ -548,6 +547,7 @@ onBeforeUnmount(() => {
             cursor: pointer;
             pointer-events: auto;
           "
+          @click="goHome"
         >
           <span style="font-size: 19px; line-height: 1">&larr;</span> Back
         </button>
@@ -619,9 +619,6 @@ onBeforeUnmount(() => {
           v-for="fv in folderView"
           :key="'f' + fv.i"
           class="absolute"
-          @mouseenter="hoverIdx = fv.i"
-          @mouseleave="hoverIdx = -1"
-          @click="openFolder(fv.i)"
           :style="{
             left: fv.left + 'px',
             top: fv.top + 'px',
@@ -635,6 +632,9 @@ onBeforeUnmount(() => {
             zIndex: fv.active ? 30 : 2,
             cursor: 'pointer'
           }"
+          @mouseenter="hoverIdx = fv.i"
+          @mouseleave="hoverIdx = -1"
+          @click="openFolder(fv.i)"
         >
           <img
             :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
@@ -661,10 +661,10 @@ onBeforeUnmount(() => {
         >
           <img
             :src="n.src"
-            @error="onImgError"
             draggable="false"
             class="w-full h-full block select-none"
             style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
+            @error="onImgError"
           />
           <div
             class="w-full h-full"
@@ -686,7 +686,6 @@ onBeforeUnmount(() => {
         <!-- back link (sits just above the docked tab, against the visible bottom) -->
         <div class="absolute" :style="{ left: '30px', top: deskBackTop + 'px' }">
           <button
-            @click="goHome"
             class="flex items-center gap-2 text-white/75 hover:text-white"
             style="
               font-size: 17px;
@@ -695,6 +694,7 @@ onBeforeUnmount(() => {
               cursor: pointer;
               font-weight: 300;
             "
+            @click="goHome"
           >
             <span style="font-size: 20px; line-height: 1">&larr;</span> Back
           </button>

@@ -36,7 +36,7 @@ export function useMobileOrbit(
     if (!dragging.value) return
     const p = evtPoint(e)
     if (Math.hypot(p.x - dragStart!.x, p.y - dragStart!.y) > 6) didDrag = true
-    let ang = Math.atan2(p.y - M_HOME_ORBIT.cy, p.x - M_HOME_ORBIT.cx)
+    const ang = Math.atan2(p.y - M_HOME_ORBIT.cy, p.x - M_HOME_ORBIT.cx)
     let d = ang - dragLastAng
     if (d > Math.PI) d -= 2 * Math.PI
     if (d < -Math.PI) d += 2 * Math.PI
