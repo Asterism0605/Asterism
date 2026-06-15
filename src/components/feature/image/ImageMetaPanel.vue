@@ -29,7 +29,7 @@ const emit = defineEmits<{
 
 <template>
   <div
-    class="flex flex-col gap-6 px-6 py-6 md:h-full md:overflow-hidden"
+    class="flex flex-col gap-6 px-6 py-6 md:h-full"
     style="background: linear-gradient(180deg, #2c2c2c 0%, #1e1e1e 100%)"
   >
     <button
@@ -50,7 +50,7 @@ const emit = defineEmits<{
     </button>
 
     <div class="flex items-start justify-between gap-4">
-      <h1 class="text-4xl leading-tight text-text-primary">{{ title }}</h1>
+      <h1 class="text-2xl md:text-4xl leading-tight text-text-primary">{{ title }}</h1>
       <a
         v-if="sourceUrl"
         :href="sourceUrl"
@@ -169,7 +169,12 @@ const emit = defineEmits<{
   margin-bottom: 0;
 }
 :deep(section .flex-wrap) {
-  flex-wrap: nowrap;
   gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  :deep(section .flex-wrap) {
+    flex-wrap: nowrap;
+  }
 }
 </style>

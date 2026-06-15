@@ -3,7 +3,8 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
-import { getImageById, getRelatedImages, type ImageItem } from '@/services/image.service';
+import { getImageById, getRelatedImages } from '@/services/image.service';
+import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
 const router = useRouter();
@@ -11,16 +12,16 @@ const router = useRouter();
 const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
 
-const relatedImages = ref<ImageItem[]>([]);
+const relatedImages = ref<ImageSpreadNode[]>([]);
 watch(
   imageId,
   (newId) => {
-    relatedImages.value = getRelatedImages(newId);
+    relatedImages.value = getRelatedImages(newId, { limit: 6 });
   },
   { immediate: true }
 );
-const smallImages = computed(() => relatedImages.value.slice(0, 2).map((img) => img.url));
-const similarImages = computed(() => relatedImages.value.slice(2, 6).map((img) => img.url));
+const smallImages = computed(() => relatedImages.value.slice(0, 2).map((img) => img.src));
+const similarImages = computed(() => relatedImages.value.slice(2, 6).map((img) => img.src));
 
 const isSaving = ref(false);
 const saveError = ref<string | null>(null);
@@ -52,7 +53,7 @@ async function handleSaveToFolder() {
     <ImageStagePanel
       v-if="currentImage"
       class="hidden md:flex"
-      :main-image-url="currentImage.url"
+      :main-image-url="currentImage.src"
       :small-images="smallImages"
     />
 

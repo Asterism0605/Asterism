@@ -11,11 +11,14 @@ describe('router', () => {
     expect(routes).toEqual(
       expect.arrayContaining([
         { name: 'home', path: '/' },
+        { name: 'discover-dna', path: '/discover-dna' },
         { name: 'login', path: '/login' },
-        { name: 'moodboard-orbit', path: '/moodboard-orbit' },
+        { name: 'moodboard', path: '/moodboard/:slug?' },
         { name: 'playground', path: '/playground' },
+        { name: 'image-spread', path: '/images/:imageId/spread' },
         { name: 'sign-up', path: '/sign-up' },
-        { name: 'style-dna-result', path: '/style-dna-result' }
+        { name: 'style-dna', path: '/style-dna' },
+        { name: 'style-dna-result', path: '/style-dna/result' }
       ])
     )
   })

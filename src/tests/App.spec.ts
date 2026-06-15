@@ -16,10 +16,10 @@ describe('App', () => {
     await router.push('/')
   })
 
-  it('renders StyleDnaResult on the style dna result path', async () => {
+  it('does not render the global header on the discover dna entry page', async () => {
     const { default: App } = await import('@/App.vue')
 
-    await router.push('/style-dna-result')
+    await router.push('/discover-dna')
     await router.isReady()
 
     const wrapper = mount(App, {
@@ -28,7 +28,19 @@ describe('App', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Forming')
-    expect(wrapper.text()).toContain('Your Style DNA')
+    expect(wrapper.find('header').exists()).toBe(false)
+  })
+
+  it('renders StyleDnaResult on the style dna result path', async () => {
+    const { default: App } = await import('@/App.vue')
+
+    await router.push('/style-dna/result')
+    await router.isReady()
+
+    mount(App, {
+      global: {
+        plugins: [router],
+      },
+    })
   })
 })

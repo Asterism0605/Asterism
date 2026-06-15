@@ -8,7 +8,9 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'bookmark'
+  variant: 'bookmark',
+  loading: false,
+  error: null
 });
 
 const emit = defineEmits<{

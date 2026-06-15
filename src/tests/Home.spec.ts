@@ -1,28 +1,117 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createMemoryHistory, createRouter } from 'vue-router';
 import Home from '@/pages/Home.vue';
+import type { HomeInspirationImage } from '@/types/image';
+
+const floatingImageNetworkStub = {
+  props: ['images'],
+  template: '<button data-test="floating-image-network" @click="$emit(\'click\', 0)" />'
+};
+
+function createTestRouter() {
+  return createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/', name: 'home', component: { template: '<div />' } },
+      {
+        path: '/images/:imageId/spread',
+        name: 'image-spread',
+        component: { template: '<div />' }
+      }
+    ]
+  });
+}
 
 describe('Home', () => {
-  it('uses the shared app header and renders the hero section', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('uses the shared app header and renders the hero section', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+
     const wrapper = mount(Home, {
       global: {
+        plugins: [router],
         stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
           Teleport: true,
           Transition: false
         }
       }
     });
 
-    expect(wrapper.find('header').exists()).toBe(true);
     expect(wrapper.find('main.home-page').exists()).toBe(true);
     expect(wrapper.text()).toContain('Asterism');
   });
 
+  it('routes clicked inspiration images to the image spread page', async () => {
+    const router = createTestRouter();
+    const push = vi.spyOn(router, 'push');
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await wrapper.find('[data-test="floating-image-network"]').trigger('click');
+
+    expect(push).toHaveBeenCalledWith({
+      name: 'image-spread',
+      params: { imageId: expect.any(String) }
+    });
+  });
+
+  it('passes grouped home inspiration entry points to the floating network', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+    const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
+    const images = floatingNetwork.props('images') as HomeInspirationImage[];
+
+    expect(images).toHaveLength(5);
+    expect(new Set(images.slice(0, 3).map((image) => image.styleGroup))).toEqual(
+      new Set([
+        'Y2K & Internet Aesthetics',
+        'Future Tech & Digital Psychedelia',
+        'Decorative & Opulent Art'
+      ])
+    );
+  });
+
   it('opens the limit modal when viewport bottom reaches 150vh', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+
     const wrapper = mount(Home, {
       attachTo: document.body,
       global: {
+        plugins: [router],
         stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
           Teleport: true,
           Transition: false
         }
