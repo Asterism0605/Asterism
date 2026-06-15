@@ -113,7 +113,7 @@ const emit = defineEmits<{
         :key="i"
         :src="img"
         alt=""
-        :class="['aspect-square w-full rounded object-cover', i >= 2 ? 'hidden md:block' : '']"
+        class="aspect-square w-full rounded object-cover"
       />
     </div>
   </div>

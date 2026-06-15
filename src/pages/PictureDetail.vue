@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
-import { getImageById, getRelatedImages } from '@/services/image.service';
+import { getImageById, getRelatedImages, type ImageItem } from '@/services/image.service';
 
 const route = useRoute();
 const router = useRouter();
@@ -11,10 +11,14 @@ const router = useRouter();
 const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
 
-const relatedImages = ref(getRelatedImages(imageId.value));
-watch(imageId, (newId) => {
-  relatedImages.value = getRelatedImages(newId);
-});
+const relatedImages = ref<ImageItem[]>([]);
+watch(
+  imageId,
+  (newId) => {
+    relatedImages.value = getRelatedImages(newId);
+  },
+  { immediate: true }
+);
 const smallImages = computed(() => relatedImages.value.slice(0, 2).map((img) => img.url));
 const similarImages = computed(() => relatedImages.value.slice(2, 6).map((img) => img.url));
 
