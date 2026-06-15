@@ -50,7 +50,7 @@ const emit = defineEmits<{
     </button>
 
     <div class="flex items-start justify-between gap-4">
-      <h1 class="text-2xl leading-tight text-text-primary">{{ title }}</h1>
+      <h1 class="text-4xl leading-tight text-text-primary">{{ title }}</h1>
       <a
         v-if="sourceUrl"
         :href="sourceUrl"
@@ -139,9 +139,6 @@ const emit = defineEmits<{
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
-:deep(button.min-h-10) {
-  min-height: 2rem;
-}
 :deep(.h-16) {
   height: 3rem;
 }
@@ -153,5 +150,26 @@ const emit = defineEmits<{
   width: auto;
   margin-left: auto;
   min-height: 2rem;
+}
+:deep(section > .glass-panel) {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+}
+:deep(p.text-caption.font-mono) {
+  font-size: 1.5rem;
+  font-weight: normal;
+  font-family: var(--font-family-title);
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 0;
+}
+:deep(section .flex-wrap) {
+  flex-wrap: nowrap;
+  gap: 0.5rem;
 }
 </style>

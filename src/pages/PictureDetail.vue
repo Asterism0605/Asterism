@@ -56,7 +56,7 @@ async function handleSaveToFolder() {
       :small-images="smallImages"
     />
 
-    <div class="w-full overflow-y-auto md:w-1/2 md:overflow-hidden">
+    <div class="w-full overflow-y-auto md:w-2/5 md:overflow-hidden">
       <ImageMetaPanel
         v-if="currentImage"
         :title="currentImage.title"

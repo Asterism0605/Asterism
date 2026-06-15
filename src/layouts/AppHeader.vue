@@ -16,7 +16,7 @@ const isPictureDetail = computed(
   <header
     :class="[
       'fixed top-0 z-60 flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl',
-      isPictureDetail ? 'max-md:hidden md:w-1/2' : 'w-full'
+      isPictureDetail ? 'max-md:hidden md:w-3/5' : 'w-full'
     ]"
   >
     <div class="flex items-center gap-2">

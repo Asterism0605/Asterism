@@ -10,21 +10,19 @@ defineProps<Props>();
 </script>
 
 <template>
-  <div class="relative w-1/2 overflow-hidden bg-void">
+  <div class="relative w-3/5 overflow-hidden bg-void">
     <div class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
       <ConstellationBackground
-        :active="true"
-        :size="900"
-        :spacing="95"
-        :line-length="320"
-        :node-size="7"
+        :size="820"
+        :node-size="12"
         :center-size="10"
-        :line-width="2.5"
-        :line-opacity="0.8"
-        :active-node-opacity="1.5"
+        :spacing="120"
+        :line-length="490"
+        :line-width="3.5"
+        :line-opacity="2"
+        :active-node-opacity="0.85"
         :inactive-node-opacity="0.2"
-        :glow-opacity="9"
-        :intensity="1"
+        :intensity="0.5"
       />
     </div>
 
@@ -63,7 +61,7 @@ defineProps<Props>();
 :deep(.constellation-background__canvas) {
   transform: scale(1);
   transition: none;
-  border-radius: 0;
+  border-radius: 50%;
 }
 
 @keyframes floatY {
