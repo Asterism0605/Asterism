@@ -1,0 +1,195 @@
+<script setup lang="ts">
+interface ConsultantProfile {
+  styleName: string;
+  designDirection: string;
+  consultantLabel: string;
+}
+
+withDefaults(
+  defineProps<{
+    profile?: ConsultantProfile | null;
+    hasSourceData?: boolean;
+  }>(),
+  {
+    profile: null,
+    hasSourceData: false
+  }
+);
+</script>
+
+<template>
+  <section class="consultant-summary">
+    <div>
+      <p class="consultant-summary__eyebrow">Style DNA translation</p>
+      <h1 class="consultant-summary__title">Consultation Booking</h1>
+    </div>
+
+    <div class="consultant-summary__copy">
+      <p>Your aesthetic coordinates have been mapped.</p>
+      <p>
+        We’ve matched you with a consultant to help translate your Style DNA into a real
+        design direction.
+      </p>
+    </div>
+
+    <dl v-if="profile && hasSourceData" class="consultant-summary__profile">
+      <div>
+        <dt>Style signal</dt>
+        <dd>{{ profile.styleName }}</dd>
+      </div>
+      <div>
+        <dt>Design direction</dt>
+        <dd>{{ profile.designDirection }}</dd>
+      </div>
+      <div>
+        <dt>Matched consultant</dt>
+        <dd>{{ profile.consultantLabel }}</dd>
+      </div>
+    </dl>
+
+    <div v-else class="consultant-summary__fallback">
+      <p>We need a Style DNA result before matching a consultant.</p>
+      <div class="consultant-summary__actions">
+        <a class="consultant-summary__button consultant-summary__button--primary" href="/style-dna">
+          Retake quiz
+        </a>
+        <a class="consultant-summary__button" href="/discover-dna">
+          Explore styles
+        </a>
+      </div>
+    </div>
+  </section>
+</template>
+
+<style scoped>
+.consultant-summary {
+  display: grid;
+  gap: 28px;
+}
+
+.consultant-summary__eyebrow {
+  margin-bottom: 12px;
+  color: var(--color-gold-dim);
+  font-family: var(--font-family-mono);
+  font-size: var(--text-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.consultant-summary__title {
+  font-size: clamp(2.5rem, 7vw, 5.75rem);
+  font-weight: 200;
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.consultant-summary__copy {
+  max-width: 590px;
+  display: grid;
+  gap: 12px;
+  color: rgb(240 237 230 / 0.76);
+  font-size: clamp(0.95rem, 2vw, 1.12rem);
+  line-height: 1.7;
+}
+
+.consultant-summary__profile {
+  display: grid;
+  max-width: 680px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.045);
+}
+
+.consultant-summary__profile div {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 18px;
+  border-right: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.consultant-summary__profile div:last-child {
+  border-right: 0;
+}
+
+.consultant-summary__profile dt {
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-mono);
+  font-size: var(--text-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.consultant-summary__profile dd {
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.consultant-summary__fallback {
+  max-width: 560px;
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid rgb(168 137 58 / 0.35);
+  border-radius: 8px;
+  background: rgb(168 137 58 / 0.08);
+  color: rgb(240 237 230 / 0.78);
+}
+
+.consultant-summary__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.consultant-summary__button {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 9999px;
+  padding: 8px 18px;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    opacity 200ms ease;
+}
+
+.consultant-summary__button:hover {
+  border-color: rgb(255 255 255 / 0.34);
+  background: rgb(255 255 255 / 0.06);
+}
+
+.consultant-summary__button--primary {
+  border-color: transparent;
+  background: var(--color-stellar-red);
+}
+
+.consultant-summary__button--primary:hover {
+  border-color: transparent;
+  background: var(--color-stellar-red);
+  opacity: 0.9;
+}
+
+@media (max-width: 720px) {
+  .consultant-summary__profile {
+    grid-template-columns: 1fr;
+  }
+
+  .consultant-summary__profile div {
+    border-right: 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  }
+
+  .consultant-summary__profile div:last-child {
+    border-bottom: 0;
+  }
+}
+</style>
