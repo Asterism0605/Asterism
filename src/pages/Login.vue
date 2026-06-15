@@ -29,7 +29,7 @@ function handleSubmit() {
       <div class="absolute top-[39%] left-[74%] -translate-x-1/2 -translate-y-1/2">
         <ConstellationBackground
           :size="580"
-          class-name="login-constellation"
+          class-name="constellation-pulse"
           :node-size="6"
           :center-size="12"
           :spacing="50"
@@ -44,7 +44,7 @@ function handleSubmit() {
       <div class="absolute top-[89%] left-[10%] -translate-x-1/2 -translate-y-1/2">
         <ConstellationBackground
           :size="560"
-          class-name="login-constellation"
+          class-name="constellation-pulse"
           :node-size="6"
           :center-size="12"
           :spacing="48"
@@ -95,31 +95,3 @@ function handleSubmit() {
     </div>
   </main>
 </template>
-
-<style scoped>
-:deep(.login-constellation) {
-  animation: cs-fade-in 1500ms ease infinite alternate;
-}
-
-:deep(.login-constellation .constellation-background__canvas) {
-  animation: cs-scale-in 620ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes cs-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes cs-scale-in {
-  from {
-    transform: scale(0.82);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-</style>
