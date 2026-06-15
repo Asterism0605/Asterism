@@ -1,15 +1,39 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import AppHeader from '@/layouts/AppHeader.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import FormInput from '@/components/ui/FormInput.vue';
 import Button from '@/components/ui/Button.vue';
+import { useAuthStore } from '@/stores/auth.store';
+import { getSafeRedirectPath } from '@/utils/redirect';
+import { getErrorMessage } from '@/utils/api-error';
+
+const route = useRoute();
+const router = useRouter();
+const authStore = useAuthStore();
 
 const email = ref('');
 const password = ref('');
+const isSubmitting = ref(false);
+const errorMessage = ref('');
 
-function handleSubmit() {
-  // auth logic TBD
+async function handleSubmit() {
+  if (isSubmitting.value) {
+    return;
+  }
+
+  isSubmitting.value = true;
+  errorMessage.value = '';
+
+  try {
+    await authStore.login({ email: email.value, password: password.value });
+    router.push(getSafeRedirectPath(route.query.next, '/'));
+  } catch (error) {
+    errorMessage.value = getErrorMessage(error, '發生錯誤，請稍後再試');
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 </script>
 
@@ -86,9 +110,21 @@ function handleSubmit() {
           </div>
         </div>
 
+        <p v-if="errorMessage" class="overlay-error" data-testid="auth-error" role="alert">
+          {{ errorMessage }}
+        </p>
+
         <div class="overlay-actions">
           <span class="overlay-submit">
-            <Button variant="secondary" type="button" @click="handleSubmit">SEND</Button>
+            <Button
+              variant="secondary"
+              type="button"
+              data-testid="auth-submit"
+              :disabled="isSubmitting"
+              @click="handleSubmit"
+            >
+              {{ isSubmitting ? 'SENDING…' : 'SEND' }}
+            </Button>
           </span>
         </div>
       </section>
@@ -97,6 +133,14 @@ function handleSubmit() {
 </template>
 
 <style scoped>
+.overlay-error {
+  margin-top: 14px;
+  font-family: var(--font-family-body);
+  font-size: var(--text-mono);
+  color: var(--color-stellar-red);
+  letter-spacing: 0.05em;
+}
+
 :deep(.login-constellation) {
   animation: cs-fade-in 1500ms ease infinite alternate;
 }
