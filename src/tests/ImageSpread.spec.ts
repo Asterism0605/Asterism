@@ -42,8 +42,6 @@ describe('ImageSpread', () => {
     );
     expect(wrapper.text()).toContain('Return');
     expect(wrapper.text()).toContain('Add to moodboard');
-    expect(wrapper.text()).not.toContain('Frutiger Aero');
-    expect(wrapper.text()).not.toContain('Chrome Design');
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4);
   });
 

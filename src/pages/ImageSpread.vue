@@ -4,7 +4,11 @@ import { useRoute, useRouter } from 'vue-router';
 import ImageSpreadOverlay from '@/components/feature/image/ImageSpreadOverlay.vue';
 import RelatedImageCluster from '@/components/feature/image/RelatedImageCluster.vue';
 import Button from '@/components/ui/Button.vue';
-import { getImageById, getRelatedImages } from '@/services/image.service';
+import {
+  getImageById,
+  getMediumGroupImages,
+  getSubMediumGroupImages
+} from '@/services/image.service';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
@@ -24,7 +28,9 @@ const routeImageId = computed(() => {
 });
 
 function refreshRelatedImages(imageId: string) {
-  relatedImages.value = getRelatedImages(imageId, {
+  const fn = spreadDepth.value === 0 ? getMediumGroupImages : getSubMediumGroupImages;
+
+  relatedImages.value = fn(imageId, {
     visitedImageIds: visitedImageIds.value
   });
 }
