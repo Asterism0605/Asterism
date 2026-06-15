@@ -3,6 +3,7 @@ import Home from '@/pages/Home.vue';
 import Login from '@/pages/Login.vue';
 import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import Playground from '@/pages/Playground.vue';
+import PictureDetail from '@/pages/PictureDetail.vue';
 import SignUp from '@/pages/SignUp.vue';
 import StyleDnaResult from '@/pages/StyleDnaResult.vue';
 
@@ -28,6 +29,11 @@ const router = createRouter({
       path: '/playground',
       name: 'playground',
       component: Playground
+    },
+    {
+      path: '/images/:imageId',
+      name: 'picture-detail',
+      component: PictureDetail
     },
     {
       path: '/sign-up',
