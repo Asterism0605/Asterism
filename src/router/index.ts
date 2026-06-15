@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import DiscoverDna from '@/pages/DiscoverDna.vue';
 import Home from '@/pages/Home.vue';
 import ImageSpread from '@/pages/ImageSpread.vue';
 import Login from '@/pages/Login.vue';
@@ -17,6 +18,11 @@ const router = createRouter({
       component: Home
     },
     {
+      path: '/discover-dna',
+      name: 'discover-dna',
+      component: DiscoverDna
+    },
+    {
       path: '/login',
       name: 'login',
       component: Login
@@ -32,7 +38,7 @@ const router = createRouter({
       component: SignUp
     },
     {
-      path: '/moodboard',
+      path: '/moodboard/:slug?',
       name: 'moodboard',
       component: MoodboardOrbit
     },
