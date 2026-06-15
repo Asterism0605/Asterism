@@ -46,27 +46,50 @@ function loadImageSpread(imageId: string | undefined) {
   }
 
   const image = getImageById(imageId);
-  centerImage.value = image;
-  rootImage.value = image;
-  relatedImages.value = [];
-  visitedImageIds.value = image ? [image.id] : [];
-  spreadDepth.value = 0;
+  const rawRootId = route.query.rootId;
+  const rootId = Array.isArray(rawRootId) ? rawRootId[0] : rawRootId;
 
   if (image) {
+    if (rootId && typeof rootId === 'string' && rootId !== imageId) {
+      const rImage = getImageById(rootId);
+      if (rImage && rImage.styleGroup === image.styleGroup) {
+        rootImage.value = rImage;
+        centerImage.value = image;
+        spreadDepth.value = 1;
+        visitedImageIds.value = [rImage.id, image.id];
+        refreshRelatedImages(image.id);
+        return;
+      }
+    }
+
+    centerImage.value = image;
+    rootImage.value = image;
+    spreadDepth.value = 0;
+    visitedImageIds.value = [image.id];
     refreshRelatedImages(image.id);
+  } else {
+    centerImage.value = undefined;
+    rootImage.value = undefined;
+    relatedImages.value = [];
+    visitedImageIds.value = [];
+    spreadDepth.value = 0;
   }
 }
 
 function syncSpreadRoute(imageId: string) {
-  if (routeImageId.value === imageId) {
+  const currentRootId = spreadDepth.value === 1 ? rootImage.value?.id : undefined;
+  if (routeImageId.value === imageId && route.query.rootId === currentRootId) {
     return;
   }
 
   syncedRouteImageId = imageId;
+  const query = currentRootId ? { rootId: currentRootId } : undefined;
+
   void router
     .replace({
       name: 'image-spread',
-      params: { imageId }
+      params: { imageId },
+      query
     })
     .catch(() => {
       if (syncedRouteImageId === imageId) {
@@ -90,7 +113,7 @@ function returnToPreviousLayer() {
 
 function handleRelatedSelect(image: ImageSpreadNode) {
   if (spreadDepth.value >= 1) {
-    void router.push({ path: `/images/${image.id}` });
+    void router.push({ name: 'image-detail', params: { imageId: image.id } });
     return;
   }
 

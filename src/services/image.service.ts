@@ -74,7 +74,8 @@ function getFirstImagePerSubMedium(
   for (const image of styleImages) {
     if (image.styleGroup !== styleGroup) continue;
     if (image.medium !== medium) continue;
-    const key = image.subMedium ?? '';
+    if (!image.subMedium) continue;
+    const key = image.subMedium;
     if (subMediums.has(key)) continue;
     subMediums.set(key, image);
   }

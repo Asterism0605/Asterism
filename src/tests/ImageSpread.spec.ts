@@ -9,7 +9,8 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
     history: createMemoryHistory(),
     routes: [
       { path: '/', name: 'home', component: { template: '<div />' } },
-      { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread }
+      { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread },
+      { path: '/images/:imageId', name: 'image-detail', component: { template: '<div />' } }
     ]
   });
   const push = vi.spyOn(router, 'push');
@@ -79,15 +80,16 @@ describe('ImageSpread', () => {
   });
 
   it('routes to the future detail page on second-depth related click', async () => {
-    const { wrapper, push } = await mountImageSpread();
+    const { wrapper, router } = await mountImageSpread();
     const firstRelatedImage = wrapper.findAll('[data-testid="related-image-card"]')[0];
 
     await firstRelatedImage.trigger('click');
+    await flushPromises();
     await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click');
+    await flushPromises();
 
-    expect(push).toHaveBeenCalledWith({
-      path: expect.stringMatching(/^\/images\/.+/)
-    });
+    expect(router.currentRoute.value.name).toBe('image-detail');
+    expect(router.currentRoute.value.params.imageId).toBeDefined();
   });
 
   it('returns to the previous spread layer after the first related click', async () => {

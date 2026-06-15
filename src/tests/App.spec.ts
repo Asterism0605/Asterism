@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { afterEach, describe, it, vi } from 'vitest'
+import { afterEach, describe, it, vi, expect } from 'vitest'
 import router from '@/router'
 
 vi.mock('@/layouts/AppHeader.vue', () => ({ default: { template: '<header />' } }))
@@ -22,7 +22,7 @@ describe('App', () => {
     await router.push('/discover-dna')
     await router.isReady()
 
-    mount(App, {
+    const wrapper = mount(App, {
       global: {
         plugins: [router],
       },

@@ -56,6 +56,18 @@ const router = createRouter({
       path: '/style-dna/result',
       name: 'style-dna-result',
       component: StyleDnaResult
+    },
+    {
+      path: '/images/:imageId',
+      name: 'image-detail',
+      component: () => import('@/pages/Error.vue'),
+      meta: { errorType: 'coming-soon' }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/pages/Error.vue'),
+      meta: { errorType: '404' }
     }
   ]
 });
