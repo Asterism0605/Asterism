@@ -73,11 +73,6 @@ function handleReset() {
       />
     </div>
 
-    <header class="style-consultant__nav">
-      <a class="style-consultant__logo" href="/">Logo</a>
-      <a class="style-consultant__signout" href="/login">sign out</a>
-    </header>
-
     <section class="style-consultant__content">
       <ConsultantSummary :profile="profile" :has-source-data="hasSourceData" />
 
@@ -134,44 +129,17 @@ function handleReset() {
   top: 18vh;
 }
 
-.style-consultant__nav {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: clamp(22px, 4vw, 38px) clamp(20px, 5vw, 56px);
-}
-
-.style-consultant__logo {
-  display: inline-flex;
-  min-width: 108px;
-  min-height: 42px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgb(240 237 230 / 0.56);
-  color: rgb(240 237 230 / 0.76);
-  font-size: 0.95rem;
-}
-
-.style-consultant__signout {
-  color: rgb(240 237 230 / 0.7);
-  font-family: var(--font-family-mono);
-  font-size: 0.95rem;
-  letter-spacing: 0.06em;
-}
-
 .style-consultant__content {
   position: relative;
   z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(360px, 560px);
   gap: clamp(32px, 6vw, 86px);
-  align-items: center;
+  align-items: stretch;
   width: min(1180px, calc(100% - 40px));
-  min-height: calc(100vh - 108px);
+  min-height: 100vh;
   margin: 0 auto;
-  padding: 24px 0 68px;
+  padding: clamp(116px, 14vh, 148px) 0 68px;
 }
 
 .style-consultant__booking {
@@ -185,7 +153,7 @@ function handleReset() {
   border-radius: 8px;
   background: rgb(168 137 58 / 0.1);
   color: rgb(240 237 230 / 0.82);
-  font-size: 0.9rem;
+  font-size: 0.5rem;
   line-height: 1.6;
 }
 
@@ -202,16 +170,9 @@ function handleReset() {
 }
 
 @media (max-width: 560px) {
-  .style-consultant__nav {
-    padding-inline: 20px;
-  }
-
-  .style-consultant__logo {
-    min-width: 92px;
-  }
-
   .style-consultant__content {
     width: min(100% - 28px, 1180px);
+    padding-top: 104px;
     padding-bottom: 42px;
   }
 }

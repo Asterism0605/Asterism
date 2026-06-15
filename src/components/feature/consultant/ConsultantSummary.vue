@@ -63,12 +63,15 @@ withDefaults(
 
 <style scoped>
 .consultant-summary {
-  display: grid;
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
   gap: 28px;
 }
 
 .consultant-summary__eyebrow {
-  margin-bottom: 12px;
+  margin-bottom: 30px;
   color: var(--color-gold-dim);
   font-family: var(--font-family-mono);
   font-size: var(--text-mono);
@@ -79,7 +82,7 @@ withDefaults(
 .consultant-summary__title {
   font-size: clamp(2.5rem, 7vw, 5.75rem);
   font-weight: 200;
-  line-height: 0.95;
+  line-height: 1.1;
   letter-spacing: 0;
 }
 
@@ -88,13 +91,14 @@ withDefaults(
   display: grid;
   gap: 12px;
   color: rgb(240 237 230 / 0.76);
-  font-size: clamp(0.95rem, 2vw, 1.12rem);
-  line-height: 1.7;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .consultant-summary__profile {
   display: grid;
   max-width: 680px;
+  margin-top: auto;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   overflow: hidden;
   border: 1px solid rgb(255 255 255 / 0.1);
@@ -132,6 +136,7 @@ withDefaults(
   max-width: 560px;
   display: grid;
   gap: 18px;
+  margin-top: auto;
   padding: 20px;
   border: 1px solid rgb(168 137 58 / 0.35);
   border-radius: 8px;
@@ -179,7 +184,12 @@ withDefaults(
 }
 
 @media (max-width: 720px) {
+  .consultant-summary {
+    height: auto;
+  }
+
   .consultant-summary__profile {
+    margin-top: 0;
     grid-template-columns: 1fr;
   }
 

@@ -135,7 +135,11 @@ function handleSubmit() {
 
       <label class="recommendation-panel__field">
         <span>Preferred Time Slot</span>
-        <select v-model="form.timeSlot" class="recommendation-panel__select">
+        <select
+          v-model="form.timeSlot"
+          class="recommendation-panel__select"
+          :class="{ 'recommendation-panel__select--placeholder': !form.timeSlot }"
+        >
           <option value="">Morning / Afternoon / Evening</option>
           <option value="morning">Morning</option>
           <option value="afternoon">Afternoon</option>
@@ -146,7 +150,11 @@ function handleSubmit() {
 
       <label class="recommendation-panel__field">
         <span>Design Field</span>
-        <select v-model="form.designField" class="recommendation-panel__select">
+        <select
+          v-model="form.designField"
+          class="recommendation-panel__select"
+          :class="{ 'recommendation-panel__select--placeholder': !form.designField }"
+        >
           <option value="">Select a field</option>
           <option v-for="field in fieldOptions" :key="field" :value="field">
             {{ field }}
@@ -157,7 +165,11 @@ function handleSubmit() {
 
       <label class="recommendation-panel__field">
         <span>Design Focus</span>
-        <select v-model="form.designFocus" class="recommendation-panel__select">
+        <select
+          v-model="form.designFocus"
+          class="recommendation-panel__select"
+          :class="{ 'recommendation-panel__select--placeholder': !form.designFocus }"
+        >
           <option value="">Select a focus area</option>
           <option v-for="focus in focusOptions" :key="focus" :value="focus">
             {{ focus }}
@@ -288,9 +300,17 @@ function handleSubmit() {
   padding: 0 20px;
 }
 
+.recommendation-panel__select--placeholder {
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .recommendation-panel__select option {
   background: var(--color-elevated);
   color: var(--color-text-primary);
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .recommendation-panel__textarea {
