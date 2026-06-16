@@ -3,6 +3,8 @@ import ColorPaletteSwatch from '@/components/ui/ColorPaletteSwatch.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
 import ThemeTag from '@/components/ui/ThemeTag.vue';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
+import { ArrowLeft, ExternalLink } from '@lucide/vue';
+import SimilarImages from '@/components/feature/image/SimilarImages.vue';
 
 interface Props {
   title: string;
@@ -29,28 +31,20 @@ const emit = defineEmits<{
 
 <template>
   <div
-    class="flex flex-col gap-6 px-6 py-6 md:h-full"
+    class="flex flex-col gap-6 overflow-y-auto px-6 py-6 md:h-full"
     style="background: linear-gradient(180deg, #2c2c2c 0%, #1e1e1e 100%)"
   >
     <button
       type="button"
-      class="flex w-fit items-center gap-1 text-base text-text-secondary transition-colors duration-150 hover:text-text-primary"
+      class="cursor-pointer flex w-fit items-center gap-1 text-base text-text-secondary transition-colors duration-150 hover:text-text-primary"
       @click="emit('back')"
     >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <path
-          d="M10 3L5 8L10 13"
-          stroke="currentColor"
-          stroke-width="1.4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
+      <ArrowLeft class="size-4" aria-hidden="true" />
       Back
     </button>
 
     <div class="flex items-start justify-between gap-4">
-      <h1 class="text-2xl md:text-4xl leading-tight text-text-primary">{{ title }}</h1>
+      <h1 class="text-h2 text-text-primary leading-tight">{{ title }}</h1>
       <a
         v-if="sourceUrl"
         :href="sourceUrl"
@@ -59,15 +53,7 @@ const emit = defineEmits<{
         class="mt-1 flex shrink-0 items-center gap-1 font-mono text-xs uppercase tracking-widest text-text-secondary underline underline-offset-2 transition-colors duration-150 hover:text-text-primary"
       >
         {{ sourceLabel ?? sourceUrl }}
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-          <path
-            d="M2 8L8 2M8 2H4M8 2V6"
-            stroke="currentColor"
-            stroke-width="1.2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+        <ExternalLink class="size-2.5" aria-hidden="true" />
       </a>
     </div>
 
@@ -86,7 +72,7 @@ const emit = defineEmits<{
 
     <ColorPaletteSwatch :colors="colorPalette" class="bg-transparent! p-0!" />
 
-    <ThemeTag :tags="styleTags" />
+    <ThemeTag :tags="styleTags" compact />
 
     <div class="flex items-center gap-3">
       <ActionButton class="flex-1" variant="consult" />
@@ -105,42 +91,14 @@ const emit = defineEmits<{
       <div class="h-0.5 flex-1 bg-white/15" />
     </div>
 
-    <p class="font-mono text-2xl uppercase tracking-widest text-text-primary">Similar</p>
-
-    <div v-if="similarImages?.length" class="grid grid-cols-2 gap-4 md:grid-cols-4">
-      <img
-        v-for="(img, i) in similarImages.slice(0, 4)"
-        :key="i"
-        :src="img"
-        alt=""
-        class="aspect-square w-full rounded object-cover"
-      />
-    </div>
+    <SimilarImages v-if="similarImages?.length" :images="similarImages" />
   </div>
 </template>
 
 <style scoped>
-:deep(.size-16) {
-  width: 2rem;
-  height: 2rem;
-}
-:deep(.text-2xl.font-medium) {
-  font-size: 1rem;
-}
-:deep(h2.text-2xl) {
-  font-size: 1.5rem;
-  font-weight: normal;
-  color: var(--color-text-primary);
-}
-:deep(section.flex-col) {
-  gap: 0.375rem;
-}
 :deep(.glass-panel) {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-:deep(.h-16) {
-  height: 3rem;
 }
 :deep(article > div) {
   flex-direction: row;
@@ -150,31 +108,5 @@ const emit = defineEmits<{
   width: auto;
   margin-left: auto;
   min-height: 2rem;
-}
-:deep(section > .glass-panel) {
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  border-radius: 0;
-}
-:deep(p.text-caption.font-mono) {
-  font-size: 1.5rem;
-  font-weight: normal;
-  font-family: var(--font-family-title);
-  color: var(--color-text-primary);
-  letter-spacing: -0.02em;
-  margin-bottom: 0;
-}
-:deep(section .flex-wrap) {
-  gap: 0.5rem;
-}
-
-@media (min-width: 768px) {
-  :deep(section .flex-wrap) {
-    flex-wrap: nowrap;
-  }
 }
 </style>
