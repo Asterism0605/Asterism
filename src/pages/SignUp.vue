@@ -30,7 +30,7 @@ async function handleSubmit() {
     await authStore.register({ email: email.value, password: password.value });
     router.push(getSafeRedirectPath(route.query.next, '/discover-dna'));
   } catch (error) {
-    errorMessage.value = getErrorMessage(error, '發生錯誤，請稍後再試');
+    errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
   } finally {
     isSubmitting.value = false;
   }
@@ -95,7 +95,7 @@ async function handleSubmit() {
         aria-label="Sign up"
       >
         <h2 class="overlay-title">Sign up</h2>
-        <p class="overlay-subtitle">完成註冊後即可開始建立你的 Style DNA。</p>
+        <p class="overlay-subtitle">Sign up to start building your Style DNA.</p>
 
         <div class="overlay-fields">
           <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
@@ -132,6 +132,8 @@ async function handleSubmit() {
 <style scoped>
 .overlay-subtitle {
   margin-top: 10px;
+  /* 與下方 input 拉開約 1rem 間距（review #2） */
+  margin-bottom: 1rem;
   font-family: var(--font-family-body);
   font-size: var(--text-mono);
   color: var(--color-text-secondary);
@@ -140,6 +142,8 @@ async function handleSubmit() {
 
 .overlay-error {
   margin-top: 14px;
+  /* 與下方按鈕拉開約 1rem 間距（review #4） */
+  margin-bottom: 1rem;
   font-family: var(--font-family-body);
   font-size: var(--text-mono);
   color: var(--color-stellar-red);

@@ -30,7 +30,7 @@ async function handleSubmit() {
     await authStore.login({ email: email.value, password: password.value });
     router.push(getSafeRedirectPath(route.query.next, '/'));
   } catch (error) {
-    errorMessage.value = getErrorMessage(error, '發生錯誤，請稍後再試');
+    errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
   } finally {
     isSubmitting.value = false;
   }
@@ -135,6 +135,8 @@ async function handleSubmit() {
 <style scoped>
 .overlay-error {
   margin-top: 14px;
+  /* 與下方按鈕拉開約 1rem 間距（review #4） */
+  margin-bottom: 1rem;
   font-family: var(--font-family-body);
   font-size: var(--text-mono);
   color: var(--color-stellar-red);
