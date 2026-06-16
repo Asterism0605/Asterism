@@ -30,3 +30,6 @@ vue3-team-guideline.md
 # TypeScript
 *.tsbuildinfo
 .superpowers/
+
+# Env
+.env
