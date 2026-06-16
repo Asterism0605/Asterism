@@ -31,7 +31,7 @@ const currentType = computed(() => {
 
 const internalError = computed(() => {
   if (props.type === 'password' && props.modelValue.length > 0 && props.modelValue.length < 8) {
-    return '密碼長度不足，必須至少包含 8 個字元';
+    return 'Password must be at least 8 characters.';
   }
 
   return props.errorMessage;
@@ -151,6 +151,12 @@ function togglePasswordVisibility() {
 
 .pr-12 {
   padding-right: 48px !important;
+}
+
+/* 隱藏瀏覽器（Edge/IE）內建的密碼顯示眼睛，只保留自製的 .eye-button，避免出現兩個眼睛。 */
+.overlay-input::-ms-reveal,
+.overlay-input::-ms-clear {
+  display: none;
 }
 
 .form-error-text {

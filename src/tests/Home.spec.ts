@@ -18,9 +18,18 @@ function createTestRouter() {
         path: '/images/:imageId/spread',
         name: 'image-spread',
         component: { template: '<div />' }
-      }
+      },
+      { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
+      { path: '/login', name: 'login', component: { template: '<div />' } }
     ]
   });
+}
+
+async function openLimitModal(wrapper: { vm: { $nextTick: () => Promise<void> } }) {
+  Object.defineProperty(window, 'innerHeight', { configurable: true, value: 1000 });
+  Object.defineProperty(window, 'scrollY', { configurable: true, value: 501 });
+  window.dispatchEvent(new Event('scroll'));
+  await wrapper.vm.$nextTick();
 }
 
 describe('Home', () => {
@@ -132,6 +141,35 @@ describe('Home', () => {
     await wrapper.vm.$nextTick();
 
     expect(wrapper.text()).toContain('Your daily inspiration limit has been reached.');
+
+    wrapper.unmount();
+  });
+
+  it('routes the create-account CTA to sign-up with the discover-dna next query', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await openLimitModal(wrapper);
+    await wrapper.find('[data-testid="cta-create-account"]').trigger('click');
+
+    expect(push).toHaveBeenCalledWith({
+      name: 'sign-up',
+      query: { next: '/discover-dna' }
+    });
 
     wrapper.unmount();
   });

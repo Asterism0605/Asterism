@@ -1,15 +1,37 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import AppHeader from '@/layouts/AppHeader.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
-import FormInput from '@/components/ui/FormInput.vue';
-import Button from '@/components/ui/Button.vue';
+import LoginOverlay from '@/components/overlay/LoginOverlay.vue';
+import { useAuthStore } from '@/stores/auth.store';
+import { getSafeRedirectPath } from '@/utils/redirect';
+import { getErrorMessage } from '@/utils/api-error';
+import type { LoginPayload } from '@/types/auth';
 
-const email = ref('');
-const password = ref('');
+const route = useRoute();
+const router = useRouter();
+const authStore = useAuthStore();
 
-function handleSubmit() {
-  // auth logic TBD
+const isSubmitting = ref(false);
+const errorMessage = ref('');
+
+async function handleSubmit(payload: LoginPayload) {
+  if (isSubmitting.value) {
+    return;
+  }
+
+  isSubmitting.value = true;
+  errorMessage.value = '';
+
+  try {
+    await authStore.login(payload);
+    router.push(getSafeRedirectPath(route.query.next, '/'));
+  } catch (error) {
+    errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 </script>
 
@@ -17,14 +39,18 @@ function handleSubmit() {
   <main
     class="relative min-h-screen overflow-hidden bg-void text-text-primary [--app-header-height:60px]"
   >
-    <!-- 背景遮罩 -->
     <div
       class="fixed inset-0 z-10"
-      style="background: radial-gradient(circle at center, rgb(240 237 230 / 0.12), transparent 38%), linear-gradient(180deg, rgb(6 6 8 / 0.84), rgb(6 6 8 / 0.94)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);"
+      style="
+        background:
+          radial-gradient(circle at center, rgb(240 237 230 / 0.12), transparent 38%),
+          linear-gradient(180deg, rgb(6 6 8 / 0.84), rgb(6 6 8 / 0.94));
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      "
       aria-hidden="true"
     />
 
-    <!-- 星座 -->
     <div class="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
       <div class="absolute top-[39%] left-[74%] -translate-x-1/2 -translate-y-1/2">
         <ConstellationBackground
@@ -64,34 +90,11 @@ function handleSubmit() {
     <div
       class="relative z-30 flex min-h-screen items-center justify-center px-4 pt-(--app-header-height)"
     >
-      <section
-        class="overlay-panel overlay-form glass-panel"
-        style="max-width: 640px; padding: 72px 64px 68px;"
-        role="main"
-        aria-label="Login"
-      >
-        <h2 class="overlay-title">Login</h2>
-
-        <div class="overlay-fields">
-          <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
-          <FormInput
-            v-model="password"
-            type="password"
-            placeholder="PASSWORD"
-            autocomplete="current-password"
-          />
-
-          <div class="overlay-helper">
-            <button type="button" class="overlay-link">FORGOT PASSWORD?</button>
-          </div>
-        </div>
-
-        <div class="overlay-actions">
-          <span class="overlay-submit">
-            <Button variant="secondary" type="button" @click="handleSubmit">SEND</Button>
-          </span>
-        </div>
-      </section>
+      <LoginOverlay
+        :is-submitting="isSubmitting"
+        :error-message="errorMessage"
+        @submit="handleSubmit"
+      />
     </div>
   </main>
 </template>

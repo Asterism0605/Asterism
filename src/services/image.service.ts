@@ -1,6 +1,7 @@
 import rawStyleImages from '@/data/style-data.json';
 import type { HomeInspirationImage, ImageSpreadNode, StyleImage } from '@/types/image';
 
+
 interface RelatedImageOptions {
   limit?: number;
   visitedImageIds?: string[];
