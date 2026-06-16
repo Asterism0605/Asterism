@@ -1,7 +1,9 @@
 <script setup lang="ts">
 interface ConsultantProfile {
-  styleName: string;
-  designDirection: string;
+  styleDna: Array<{
+    label: string;
+    percentage: number;
+  }>;
   consultantLabel: string;
 }
 
@@ -34,12 +36,15 @@ withDefaults(
 
     <dl v-if="profile && hasSourceData" class="consultant-summary__profile">
       <div>
-        <dt>Style signal</dt>
-        <dd>{{ profile.styleName }}</dd>
-      </div>
-      <div>
-        <dt>Design direction</dt>
-        <dd>{{ profile.designDirection }}</dd>
+        <dt>Style DNA</dt>
+        <dd>
+          <ol class="consultant-summary__dna-list">
+            <li v-for="style in profile.styleDna" :key="style.label">
+              <span>{{ style.label }}</span>
+              <span>{{ style.percentage }}%</span>
+            </li>
+          </ol>
+        </dd>
       </div>
       <div>
         <dt>Matched consultant</dt>
@@ -53,9 +58,7 @@ withDefaults(
         <a class="consultant-summary__button consultant-summary__button--primary" href="/style-dna">
           Retake quiz
         </a>
-        <a class="consultant-summary__button" href="/discover-dna">
-          Explore styles
-        </a>
+        <button class="consultant-summary__button" type="button">Skip</button>
       </div>
     </div>
   </section>
@@ -99,7 +102,7 @@ withDefaults(
   display: grid;
   max-width: 680px;
   margin-top: auto;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   overflow: hidden;
   border: 1px solid rgb(255 255 255 / 0.1);
   border-radius: 8px;
@@ -132,15 +135,34 @@ withDefaults(
   line-height: 1.45;
 }
 
+.consultant-summary__dna-list {
+  display: grid;
+  gap: 10px;
+}
+
+.consultant-summary__dna-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.consultant-summary__dna-list li span:last-child {
+  flex: 0 0 auto;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-mono);
+  font-size: var(--text-mono);
+}
+
 .consultant-summary__fallback {
   max-width: 560px;
   display: grid;
   gap: 18px;
-  margin-top: auto;
+  margin-top: 20px;
   padding: 20px;
-  border: 1px solid rgb(168 137 58 / 0.35);
+  border: 1px solid rgb(255 255 255 / 0.1);
   border-radius: 8px;
-  background: rgb(168 137 58 / 0.08);
+  background: rgb(255 255 255 / 0.045);
   color: rgb(240 237 230 / 0.78);
 }
 
@@ -186,6 +208,11 @@ withDefaults(
 @media (max-width: 720px) {
   .consultant-summary {
     height: auto;
+  }
+
+  .consultant-summary__title {
+    font-size: 3.6rem;
+    line-height: 1.05;
   }
 
   .consultant-summary__profile {

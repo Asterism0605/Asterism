@@ -6,15 +6,17 @@ import RecommendationPanel from '@/components/feature/consultant/RecommendationP
 import { useAuthStore } from '@/stores/auth.store';
 
 interface ConsultantProfile {
-  styleName: string;
-  designDirection: string;
+  styleDna: Array<{
+    label: string;
+    percentage: number;
+  }>;
   consultantLabel: string;
 }
 
 interface BookingPayload {
   method: 'online' | 'in-person';
   date: string;
-  timeSlot: '' | 'morning' | 'afternoon' | 'evening';
+  timeSlot: '' | 'am' | 'pm';
   designField: string;
   designFocus: string;
   name: string;
@@ -27,13 +29,18 @@ const bookingStatus = ref<'idle' | 'submitted'>('idle');
 const lastBooking = ref<BookingPayload | null>(null);
 
 const mockProfile: ConsultantProfile = {
-  styleName: 'Luminous Minimalism',
-  designDirection: 'Soft spatial clarity with sculptural accents and warm material contrast.',
+  styleDna: [
+    { label: 'Luminous Minimalism', percentage: 54 },
+    { label: 'Organic Modern', percentage: 28 },
+    { label: 'Soft Industrial', percentage: 18 }
+  ],
   consultantLabel: 'Spatial Consultant · Mira Chen'
 };
 
+// 是否帶入 DNA 測驗 mock data &
 const profile = computed(() => mockProfile);
 const hasSourceData = computed(() => Boolean(profile.value));
+//
 const accountName = computed(() => authStore.user?.displayName ?? '');
 const accountEmail = computed(() => authStore.user?.email ?? '');
 
@@ -52,7 +59,7 @@ function handleReset() {
   <main class="style-consultant">
     <div class="style-consultant__background" aria-hidden="true">
       <ConstellationBackground
-        class-name="style-consultant__constellation style-consultant__constellation--left"
+        class-name="style-consultant__constellation style-consultant__constellation--left consultant-constellation"
         size="36vw"
         :line-length="180"
         :center-size="7"
@@ -62,7 +69,7 @@ function handleReset() {
         :intensity="0.62"
       />
       <ConstellationBackground
-        class-name="style-consultant__constellation style-consultant__constellation--right"
+        class-name="style-consultant__constellation style-consultant__constellation--right consultant-constellation"
         size="42vw"
         :line-length="210"
         :center-size="6"
@@ -121,12 +128,30 @@ function handleReset() {
 
 :deep(.style-consultant__constellation--left) {
   left: -10vw;
-  bottom: -10vw;
+  bottom: -20px;
+  opacity: 0.4;
 }
 
 :deep(.style-consultant__constellation--right) {
   right: -5vw;
   top: 18vh;
+}
+
+:deep(.consultant-constellation) {
+  animation: consultant-fade-in 1500ms ease infinite alternate;
+}
+
+:deep(.style-consultant__constellation--left.consultant-constellation) {
+  animation-name: consultant-fade-in-muted;
+  animation-delay: 0ms;
+}
+
+:deep(.style-consultant__constellation--right.consultant-constellation) {
+  animation-delay: -3000ms;
+}
+
+:deep(.consultant-constellation .constellation-background__canvas) {
+  animation: consultant-scale-in 620ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .style-consultant__content {
@@ -135,7 +160,7 @@ function handleReset() {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(360px, 560px);
   gap: clamp(32px, 6vw, 86px);
-  align-items: stretch;
+  align-items: center;
   width: min(1180px, calc(100% - 40px));
   min-height: 100vh;
   margin: 0 auto;
@@ -153,7 +178,7 @@ function handleReset() {
   border-radius: 8px;
   background: rgb(168 137 58 / 0.1);
   color: rgb(240 237 230 / 0.82);
-  font-size: 0.5rem;
+  font-size: 0.9rem;
   line-height: 1.6;
 }
 
@@ -174,6 +199,56 @@ function handleReset() {
     width: min(100% - 28px, 1180px);
     padding-top: 104px;
     padding-bottom: 42px;
+  }
+
+  :deep(.consultant-constellation) {
+    animation-name: consultant-fade-in-mobile;
+  }
+
+  :deep(.style-consultant__constellation--left.consultant-constellation) {
+    animation-name: consultant-fade-in-mobile;
+  }
+}
+
+
+
+@keyframes consultant-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes consultant-fade-in-muted {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.4;
+  }
+}
+
+@keyframes consultant-fade-in-mobile {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.3;
+  }
+}
+
+@keyframes consultant-scale-in {
+  from {
+    transform: scale(0.82);
+  }
+
+  to {
+    transform: scale(1);
   }
 }
 </style>

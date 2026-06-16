@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button.vue';
 import FormInput from '@/components/ui/FormInput.vue';
 
 type ConsultationMethod = 'online' | 'in-person';
-type TimeSlot = '' | 'morning' | 'afternoon' | 'evening';
+type TimeSlot = '' | 'am' | 'pm';
 
 interface BookingForm {
   method: ConsultationMethod;
@@ -49,11 +49,10 @@ const hasSubmitted = ref(false);
 const useAccountInfo = ref(false);
 
 const fieldOptions = [
+  'Styling design',
+  'Graphic Design',
   'Interior Design',
   'Architecture',
-  'Brand Identity',
-  'Product Styling',
-  'Retail Experience'
 ];
 
 const focusOptions = [
@@ -70,8 +69,8 @@ const fieldErrors = computed(() => {
   }
 
   return {
-    date: form.date.trim() ? '' : 'Preferred date is required.',
-    timeSlot: form.timeSlot ? '' : 'Preferred time slot is required.',
+    date: form.date.trim() ? '' : 'Date is required.',
+    timeSlot: form.timeSlot ? '' : 'Time slot is required.',
     designField: form.designField ? '' : 'Design field is required.',
     designFocus: form.designFocus ? '' : 'Design focus is required.',
     name: form.name.trim() ? '' : 'Name is required.',
@@ -128,22 +127,21 @@ function handleSubmit() {
 
     <div class="recommendation-panel__grid">
       <label class="recommendation-panel__field">
-        <span>Preferred Date</span>
+        <span>Date</span>
         <FormInput v-model="form.date" placeholder="MM / DD / YYYY" />
         <small v-if="fieldErrors.date">{{ fieldErrors.date }}</small>
       </label>
 
       <label class="recommendation-panel__field">
-        <span>Preferred Time Slot</span>
+        <span>Time Slot</span>
         <select
           v-model="form.timeSlot"
           class="recommendation-panel__select"
           :class="{ 'recommendation-panel__select--placeholder': !form.timeSlot }"
         >
-          <option value="">Morning / Afternoon / Evening</option>
-          <option value="morning">Morning</option>
-          <option value="afternoon">Afternoon</option>
-          <option value="evening">Evening</option>
+          <option value="">AM / PM</option>
+          <option value="am">AM</option>
+          <option value="pm">PM</option>
         </select>
         <small v-if="fieldErrors.timeSlot">{{ fieldErrors.timeSlot }}</small>
       </label>
@@ -226,7 +224,7 @@ function handleSubmit() {
 <style scoped>
 .recommendation-panel {
   display: grid;
-  gap: 24px;
+  gap: 32px;
   padding: clamp(24px, 5vw, 46px);
   border: 1px solid rgb(255 255 255 / 0.16);
   border-radius: 8px;
@@ -247,7 +245,7 @@ function handleSubmit() {
 .recommendation-panel__label,
 .recommendation-panel__field > span {
   color: rgb(240 237 230 / 0.84);
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
@@ -274,7 +272,7 @@ function handleSubmit() {
 .recommendation-panel__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: 32px;
 }
 
 .recommendation-panel__field {
@@ -296,8 +294,15 @@ function handleSubmit() {
 }
 
 .recommendation-panel__select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.5 6.75L9 11.25L13.5 6.75' stroke='%238A8880' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: right 20px center;
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
   min-height: 47px;
   padding: 0 20px;
+  padding-right: 56px;
 }
 
 .recommendation-panel__select--placeholder {
