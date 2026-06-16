@@ -1,4 +1,4 @@
-import rawStyleImages from '@/data/style-data.json';
+import { fetchImagesApi } from '@/api/image.api';
 import type { HomeInspirationImage, ImageSpreadNode, StyleImage } from '@/types/image';
 
 interface RelatedImageOptions {
@@ -13,7 +13,15 @@ interface HomeInspirationOptions {
 const DEFAULT_RELATED_LIMIT = 4;
 const HOME_INSPIRATION_LIMIT = 5;
 
-const styleImages = rawStyleImages as StyleImage[];
+let cachedImagesPromise: Promise<StyleImage[]> | null = null;
+
+function loadImages(): Promise<StyleImage[]> {
+  if (!cachedImagesPromise) {
+    cachedImagesPromise = fetchImagesApi().then((response) => response.data);
+  }
+
+  return cachedImagesPromise;
+}
 
 function toSpreadNode(image: StyleImage): ImageSpreadNode {
   return {
@@ -44,7 +52,7 @@ function toHomeInspirationImage(image: StyleImage): HomeInspirationImage {
   };
 }
 
-function getFirstImagesByStyleGroup(): StyleImage[] {
+function getFirstImagesByStyleGroup(styleImages: StyleImage[]): StyleImage[] {
   const groups = new Map<string, StyleImage>();
 
   for (const image of styleImages) {
@@ -56,7 +64,7 @@ function getFirstImagesByStyleGroup(): StyleImage[] {
   return [...groups.values()];
 }
 
-function getFirstImagesByStyle(excludedImageIds: Set<string>): StyleImage[] {
+function getFirstImagesByStyle(styleImages: StyleImage[], excludedImageIds: Set<string>): StyleImage[] {
   const styles = new Map<string, StyleImage>();
 
   for (const image of styleImages) {
@@ -91,16 +99,18 @@ function pickRandomImages(
   return selectedImages;
 }
 
-export function getImageById(imageId: string): ImageSpreadNode | undefined {
+export async function getImageById(imageId: string): Promise<ImageSpreadNode | undefined> {
+  const styleImages = await loadImages();
   const image = styleImages.find((item) => item.id === imageId);
 
   return image ? toSpreadNode(image) : undefined;
 }
 
-export function getRelatedImages(
+export async function getRelatedImages(
   imageId: string,
   options: RelatedImageOptions = {}
-): ImageSpreadNode[] {
+): Promise<ImageSpreadNode[]> {
+  const styleImages = await loadImages();
   const baseImage = styleImages.find((item) => item.id === imageId);
 
   if (!baseImage) {
@@ -119,11 +129,12 @@ export function getRelatedImages(
   return sameGroupImages.slice(0, limit).map(toSpreadNode);
 }
 
-export function getHomeInspirationImages(
+export async function getHomeInspirationImages(
   options: HomeInspirationOptions = {}
-): HomeInspirationImage[] {
+): Promise<HomeInspirationImage[]> {
+  const styleImages = await loadImages();
   const random = options.random ?? Math.random;
-  const groupLeadImages = getFirstImagesByStyleGroup();
+  const groupLeadImages = getFirstImagesByStyleGroup(styleImages);
 
   if (groupLeadImages.length >= HOME_INSPIRATION_LIMIT) {
     return groupLeadImages.slice(0, HOME_INSPIRATION_LIMIT).map(toHomeInspirationImage);
@@ -131,7 +142,7 @@ export function getHomeInspirationImages(
 
   const selectedIds = new Set(groupLeadImages.map((image) => image.id));
   const fillerImages = pickRandomImages(
-    getFirstImagesByStyle(selectedIds),
+    getFirstImagesByStyle(styleImages, selectedIds),
     HOME_INSPIRATION_LIMIT - groupLeadImages.length,
     random
   );

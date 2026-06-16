@@ -1,4 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import rawStyleImages from '@/data/style-data.json';
+import type { StyleImage } from '@/types/image';
+
+vi.mock('@/api/image.api', () => ({
+  fetchImagesApi: vi.fn(async () => ({
+    data: rawStyleImages as StyleImage[],
+    meta: { timestamp: new Date().toISOString() }
+  }))
+}));
+
 import {
   getHomeInspirationImages,
   getImageById,
@@ -6,13 +16,13 @@ import {
 } from '@/services/image.service';
 
 describe('image.service', () => {
-  it('finds an image by id and returns undefined for unknown ids', () => {
-    expect(getImageById('y2k-main-001')?.id).toBe('y2k-main-001');
-    expect(getImageById('missing-image')).toBeUndefined();
+  it('finds an image by id and returns undefined for unknown ids', async () => {
+    expect((await getImageById('y2k-main-001'))?.id).toBe('y2k-main-001');
+    expect(await getImageById('missing-image')).toBeUndefined();
   });
 
-  it('returns five home inspiration images led by every style group', () => {
-    const images = getHomeInspirationImages({ random: () => 0 });
+  it('returns five home inspiration images led by every style group', async () => {
+    const images = await getHomeInspirationImages({ random: () => 0 });
     const styleGroups = images.map((image) => image.styleGroup);
 
     expect(images).toHaveLength(5);
@@ -33,8 +43,8 @@ describe('image.service', () => {
     );
   });
 
-  it('returns related images from the same style group without current or visited images', () => {
-    const relatedImages = getRelatedImages('y2k-main-001', {
+  it('returns related images from the same style group without current or visited images', async () => {
+    const relatedImages = await getRelatedImages('y2k-main-001', {
       visitedImageIds: ['y2k-graphic-001']
     });
 
@@ -46,8 +56,8 @@ describe('image.service', () => {
     );
   });
 
-  it('does not fill related images from another style group', () => {
-    const relatedImages = getRelatedImages('y2k-main-001', {
+  it('does not fill related images from another style group', async () => {
+    const relatedImages = await getRelatedImages('y2k-main-001', {
       limit: 50
     });
 
