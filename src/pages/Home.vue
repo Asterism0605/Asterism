@@ -35,6 +35,14 @@ function handleScrollLimit() {
   }
 }
 
+function startStyleDnaSignUp() {
+  void router.push({ name: 'sign-up', query: { next: '/discover-dna' } });
+}
+
+function goToLogin() {
+  void router.push({ name: 'login' });
+}
+
 function openImageSpread(index: number) {
   const image = inspirationImages[index];
 
@@ -108,8 +116,10 @@ onBeforeUnmount(() => {
       </template>
 
       <template #actions>
-        <Button variant="primary">Create Free Account</Button>
-        <Button variant="secondary">Log In</Button>
+        <Button variant="primary" data-testid="cta-create-account" @click="startStyleDnaSignUp">
+          Create Free Account
+        </Button>
+        <Button variant="secondary" data-testid="cta-login" @click="goToLogin">Log In</Button>
       </template>
     </ModalOverlay>
   </main>
