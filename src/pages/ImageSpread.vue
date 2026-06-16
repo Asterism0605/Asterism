@@ -23,13 +23,13 @@ const routeImageId = computed(() => {
   return Array.isArray(rawImageId) ? rawImageId[0] : rawImageId;
 });
 
-function refreshRelatedImages(imageId: string) {
-  relatedImages.value = getRelatedImages(imageId, {
+async function refreshRelatedImages(imageId: string) {
+  relatedImages.value = await getRelatedImages(imageId, {
     visitedImageIds: visitedImageIds.value
   });
 }
 
-function loadImageSpread(imageId: string | undefined) {
+async function loadImageSpread(imageId: string | undefined) {
   if (!imageId) {
     centerImage.value = undefined;
     rootImage.value = undefined;
@@ -39,7 +39,7 @@ function loadImageSpread(imageId: string | undefined) {
     return;
   }
 
-  const image = getImageById(imageId);
+  const image = await getImageById(imageId);
   centerImage.value = image;
   rootImage.value = image;
   relatedImages.value = [];
@@ -47,7 +47,7 @@ function loadImageSpread(imageId: string | undefined) {
   spreadDepth.value = 0;
 
   if (image) {
-    refreshRelatedImages(image.id);
+    await refreshRelatedImages(image.id);
   }
 }
 
@@ -74,7 +74,7 @@ function returnToPreviousLayer() {
     centerImage.value = rootImage.value;
     visitedImageIds.value = [rootImage.value.id];
     spreadDepth.value = 0;
-    refreshRelatedImages(rootImage.value.id);
+    void refreshRelatedImages(rootImage.value.id);
     syncSpreadRoute(rootImage.value.id);
     return;
   }
@@ -91,7 +91,7 @@ function handleRelatedSelect(image: ImageSpreadNode) {
   centerImage.value = image;
   visitedImageIds.value = [...visitedImageIds.value, image.id];
   spreadDepth.value = 1;
-  refreshRelatedImages(image.id);
+  void refreshRelatedImages(image.id);
   syncSpreadRoute(image.id);
 }
 
@@ -103,7 +103,7 @@ watch(
       return;
     }
 
-    loadImageSpread(imageId);
+    void loadImageSpread(imageId);
   },
   { immediate: true }
 );

@@ -3,6 +3,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import ImageSpread from '@/pages/ImageSpread.vue';
 import { getImageById } from '@/services/image.service';
+import rawStyleImages from '@/data/style-data.json';
+import type { StyleImage } from '@/types/image';
+
+vi.mock('@/api/image.api', () => ({
+  fetchImagesApi: vi.fn(async () => ({
+    data: rawStyleImages as StyleImage[],
+    meta: { timestamp: new Date().toISOString() }
+  }))
+}));
 
 async function mountImageSpread(imageId = 'y2k-main-001') {
   const router = createRouter({
@@ -25,6 +34,7 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
       }
     }
   });
+  await flushPromises();
 
   return { wrapper, push, router };
 }
@@ -71,7 +81,7 @@ describe('ImageSpread', () => {
     await firstRelatedImage.trigger('click');
     await flushPromises();
     const routeImageId = router.currentRoute.value.params.imageId;
-    const routeImage = getImageById(Array.isArray(routeImageId) ? routeImageId[0] : routeImageId);
+    const routeImage = await getImageById(Array.isArray(routeImageId) ? routeImageId[0] : routeImageId);
 
     expect(wrapper.find('[data-testid="spread-main-image"]').attributes('src')).toBe(
       firstRelatedSrc
@@ -106,7 +116,7 @@ describe('ImageSpread', () => {
     await wrapper.find('[data-testid="return-home"]').trigger('click');
     await flushPromises();
     const routeImageId = router.currentRoute.value.params.imageId;
-    const routeImage = getImageById(Array.isArray(routeImageId) ? routeImageId[0] : routeImageId);
+    const routeImage = await getImageById(Array.isArray(routeImageId) ? routeImageId[0] : routeImageId);
 
     expect(wrapper.find('[data-testid="spread-main-image"]').attributes('src')).toBe(initialSrc);
     expect(routeImage?.src).toBe(initialSrc);
