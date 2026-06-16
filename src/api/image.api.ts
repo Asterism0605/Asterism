@@ -1,11 +1,12 @@
-import rawStyleImages from '@/data/style-data.json';
-import { createMockSuccess, withMockDelay } from '@/api/mockAdapter';
+import { httpClient } from '@/api/httpClient';
 import type { ApiResponse } from '@/types/api';
 import type { StyleImage } from '@/types/image';
 
-const MOCK_IMAGE_DELAY_MS = 300;
-const mockStyleImages = rawStyleImages as StyleImage[];
-
 export async function fetchImagesApi(): Promise<ApiResponse<StyleImage[]>> {
-  return withMockDelay(createMockSuccess(mockStyleImages), MOCK_IMAGE_DELAY_MS);
+  const response = await httpClient.get<StyleImage[]>('/api/images');
+
+  return {
+    data: response.data,
+    meta: { timestamp: new Date().toISOString() }
+  };
 }
