@@ -12,6 +12,17 @@ const emit = defineEmits<{
   submit: [payload: SignUpPayload];
 }>();
 
+withDefaults(
+  defineProps<{
+    isSubmitting?: boolean;
+    errorMessage?: string;
+  }>(),
+  {
+    isSubmitting: false,
+    errorMessage: ''
+  }
+);
+
 const email = ref('');
 const password = ref('');
 
@@ -21,39 +32,43 @@ function handleSubmit() {
 </script>
 
 <template>
-  <Teleport to="body">
-    <div
-      class="overlay-backdrop"
-      style="background: none; backdrop-filter: none"
-      role="presentation"
-    >
-      <section
-        class="overlay-panel overlay-form glass-panel"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Sign up"
-        tabindex="-1"
-      >
-        <h2 class="overlay-title">Sign up</h2>
+  <section
+    class="overlay-panel overlay-form glass-panel"
+    style="max-width: 640px; padding: 72px 64px 68px"
+    role="main"
+    aria-label="Sign up"
+  >
+    <h2 class="overlay-title">Sign up</h2>
+    <p class="overlay-subtitle">Sign up to start building your Style DNA.</p>
 
-        <div class="overlay-fields">
-          <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
-          <FormInput
-            v-model="password"
-            type="password"
-            placeholder="PASSWORD"
-            autocomplete="new-password"
-          />
-        </div>
-
-        <div class="overlay-actions">
-          <span class="overlay-submit">
-            <Button variant="secondary" type="button" @click="handleSubmit">SEND</Button>
-          </span>
-        </div>
-      </section>
+    <div class="overlay-fields">
+      <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
+      <FormInput
+        v-model="password"
+        type="password"
+        placeholder="PASSWORD"
+        autocomplete="new-password"
+      />
     </div>
-  </Teleport>
+
+    <p v-if="errorMessage" class="overlay-error" data-testid="auth-error" role="alert">
+      {{ errorMessage }}
+    </p>
+
+    <div class="overlay-actions">
+      <span class="overlay-submit">
+        <Button
+          variant="secondary"
+          type="button"
+          data-testid="auth-submit"
+          :disabled="isSubmitting"
+          @click="handleSubmit"
+        >
+          {{ isSubmitting ? 'SENDING…' : 'SEND' }}
+        </Button>
+      </span>
+    </div>
+  </section>
 </template>
 
 <style scoped>
@@ -66,5 +81,25 @@ function handleSubmit() {
   .overlay-fields {
     gap: 12px;
   }
+}
+
+.overlay-subtitle {
+  margin-top: 10px;
+  /* 與下方 input 拉開約 1rem 間距（review #2） */
+  margin-bottom: 1rem;
+  font-family: var(--font-family-body);
+  font-size: var(--text-mono);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.overlay-error {
+  margin-top: 14px;
+  /* 與下方按鈕拉開約 1rem 間距（review #4） */
+  margin-bottom: 1rem;
+  font-family: var(--font-family-body);
+  font-size: var(--text-mono);
+  color: var(--color-stellar-red);
+  letter-spacing: 0.05em;
 }
 </style>

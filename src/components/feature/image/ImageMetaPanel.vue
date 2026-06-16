@@ -27,6 +27,8 @@ const emit = defineEmits<{
   'create-folder': [];
   'save-to-folder': [];
 }>();
+
+const siteLogoSrc = '/sitelogo.png';
 </script>
 
 <template>
@@ -87,7 +89,7 @@ const emit = defineEmits<{
 
     <div class="flex items-center gap-4">
       <div class="h-0.5 flex-1 bg-white/15" />
-      <img src="/sitelogo.png" alt="Asterism" class="h-9 w-9 opacity-60" />
+      <img :src="siteLogoSrc" alt="Asterism" class="h-9 w-9 opacity-60" />
       <div class="h-0.5 flex-1 bg-white/15" />
     </div>
 

@@ -3,22 +3,20 @@ import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppHeader from '@/layouts/AppHeader.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
-import FormInput from '@/components/ui/FormInput.vue';
-import Button from '@/components/ui/Button.vue';
+import SignUpOverlay from '@/components/overlay/SignUpOverlay.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
 import { getErrorMessage } from '@/utils/api-error';
+import type { RegisterPayload } from '@/types/auth';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
-const email = ref('');
-const password = ref('');
 const isSubmitting = ref(false);
 const errorMessage = ref('');
 
-async function handleSubmit() {
+async function handleSubmit(payload: RegisterPayload) {
   if (isSubmitting.value) {
     return;
   }
@@ -27,7 +25,7 @@ async function handleSubmit() {
   errorMessage.value = '';
 
   try {
-    await authStore.register({ email: email.value, password: password.value });
+    await authStore.register(payload);
     router.push(getSafeRedirectPath(route.query.next, '/discover-dna'));
   } catch (error) {
     errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
@@ -92,68 +90,16 @@ async function handleSubmit() {
     <div
       class="relative z-30 flex min-h-screen items-center justify-center px-4 pt-(--app-header-height)"
     >
-      <section
-        class="overlay-panel overlay-form glass-panel"
-        style="max-width: 640px; padding: 72px 64px 68px"
-        role="main"
-        aria-label="Sign up"
-      >
-        <h2 class="overlay-title">Sign up</h2>
-        <p class="overlay-subtitle">Sign up to start building your Style DNA.</p>
-
-        <div class="overlay-fields">
-          <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
-          <FormInput
-            v-model="password"
-            type="password"
-            placeholder="PASSWORD"
-            autocomplete="new-password"
-          />
-        </div>
-
-        <p v-if="errorMessage" class="overlay-error" data-testid="auth-error" role="alert">
-          {{ errorMessage }}
-        </p>
-
-        <div class="overlay-actions">
-          <span class="overlay-submit">
-            <Button
-              variant="secondary"
-              type="button"
-              data-testid="auth-submit"
-              :disabled="isSubmitting"
-              @click="handleSubmit"
-            >
-              {{ isSubmitting ? 'SENDING…' : 'SEND' }}
-            </Button>
-          </span>
-        </div>
-      </section>
+      <SignUpOverlay
+        :is-submitting="isSubmitting"
+        :error-message="errorMessage"
+        @submit="handleSubmit"
+      />
     </div>
   </main>
 </template>
 
 <style scoped>
-.overlay-subtitle {
-  margin-top: 10px;
-  /* 與下方 input 拉開約 1rem 間距（review #2） */
-  margin-bottom: 1rem;
-  font-family: var(--font-family-body);
-  font-size: var(--text-mono);
-  color: var(--color-text-secondary);
-  letter-spacing: 0.05em;
-}
-
-.overlay-error {
-  margin-top: 14px;
-  /* 與下方按鈕拉開約 1rem 間距（review #4） */
-  margin-bottom: 1rem;
-  font-family: var(--font-family-body);
-  font-size: var(--text-mono);
-  color: var(--color-stellar-red);
-  letter-spacing: 0.05em;
-}
-
 :deep(.signup-constellation) {
   animation: cs-fade-in 1500ms ease infinite alternate;
 }
