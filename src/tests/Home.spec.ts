@@ -1,8 +1,17 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import Home from '@/pages/Home.vue';
 import type { HomeInspirationImage } from '@/types/image';
+import rawStyleImages from '@/data/style-data.json';
+import type { StyleImage } from '@/types/image';
+
+vi.mock('@/api/image.api', () => ({
+  fetchImagesApi: vi.fn(async () => ({
+    data: rawStyleImages as StyleImage[],
+    meta: { timestamp: new Date().toISOString() }
+  }))
+}));
 
 const floatingImageNetworkStub = {
   props: ['images'],
@@ -74,6 +83,7 @@ describe('Home', () => {
       }
     });
 
+    await flushPromises();
     await wrapper.find('[data-test="floating-image-network"]').trigger('click');
 
     expect(push).toHaveBeenCalledWith({
@@ -97,6 +107,7 @@ describe('Home', () => {
         }
       }
     });
+    await flushPromises();
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 

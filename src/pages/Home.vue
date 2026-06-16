@@ -6,12 +6,13 @@ import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import { getHomeInspirationImages } from '@/services/image.service';
+import type { HomeInspirationImage } from '@/types/image';
 
 const scrollLimitVh = 150;
 const router = useRouter();
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
-const inspirationImages = getHomeInspirationImages();
+const inspirationImages = ref<HomeInspirationImage[]>([]);
 
 function openLimitModal() {
   if (hasTriggeredLimit.value) {
@@ -44,7 +45,7 @@ function goToLogin() {
 }
 
 function openImageSpread(index: number) {
-  const image = inspirationImages[index];
+  const image = inspirationImages.value[index];
 
   if (!image) {
     return;
@@ -56,9 +57,14 @@ function openImageSpread(index: number) {
   });
 }
 
+async function loadInspirationImages() {
+  inspirationImages.value = await getHomeInspirationImages();
+}
+
 onMounted(() => {
   handleScrollLimit();
   window.addEventListener('scroll', handleScrollLimit, { passive: true });
+  void loadInspirationImages();
 });
 
 onBeforeUnmount(() => {
