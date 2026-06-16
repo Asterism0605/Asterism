@@ -20,7 +20,13 @@ function handleSubmit() {
     <!-- 背景遮罩 -->
     <div
       class="fixed inset-0 z-10"
-      style="background: radial-gradient(circle at center, rgb(240 237 230 / 0.12), transparent 38%), linear-gradient(180deg, rgb(6 6 8 / 0.84), rgb(6 6 8 / 0.94)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);"
+      style="
+        background:
+          radial-gradient(circle at center, rgb(240 237 230 / 0.12), transparent 38%),
+          linear-gradient(180deg, rgb(6 6 8 / 0.84), rgb(6 6 8 / 0.94));
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      "
       aria-hidden="true"
     />
 
@@ -66,7 +72,7 @@ function handleSubmit() {
     >
       <section
         class="overlay-panel overlay-form glass-panel"
-        style="max-width: 640px; padding: 72px 64px 68px;"
+        style="max-width: 640px; padding: 72px 64px 68px"
         role="main"
         aria-label="Sign up"
       >
@@ -91,5 +97,3 @@ function handleSubmit() {
     </div>
   </main>
 </template>
-
-

@@ -43,7 +43,10 @@ function handleAction() {
     <div class="pointer-events-none absolute inset-0 z-0 error-page__wash" aria-hidden="true" />
 
     <!-- 居中星座背景效果 -->
-    <div class="pointer-events-none absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 opacity-60" aria-hidden="true">
+    <div
+      class="pointer-events-none absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 opacity-60"
+      aria-hidden="true"
+    >
       <ConstellationBackground
         :size="580"
         class-name="constellation-pulse"
@@ -58,17 +61,19 @@ function handleAction() {
         :intensity="0.5"
       />
     </div>
-    
-    <div class="relative z-20 flex min-h-screen flex-col items-center justify-center px-6 text-center">
+
+    <div
+      class="relative z-20 flex min-h-screen flex-col items-center justify-center px-6 text-center"
+    >
       <div class="max-w-xl">
         <span class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">
           {{ content.code }}
         </span>
-        
+
         <h1 class="text-h1 mt-3 font-bold tracking-normal sm:text-5xl">
           {{ content.title }}
         </h1>
-        
+
         <p class="text-body mt-6 leading-7 text-text-secondary">
           {{ content.desc }}
         </p>
