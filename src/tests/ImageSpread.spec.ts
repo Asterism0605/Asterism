@@ -10,7 +10,7 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
     routes: [
       { path: '/', name: 'home', component: { template: '<div />' } },
       { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread },
-      { path: '/images/:imageId', name: 'image-detail', component: { template: '<div />' } }
+      { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } }
     ]
   });
   const push = vi.spyOn(router, 'push');
@@ -88,7 +88,7 @@ describe('ImageSpread', () => {
     await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click');
     await flushPromises();
 
-    expect(router.currentRoute.value.name).toBe('image-detail');
+    expect(router.currentRoute.value.name).toBe('picture-detail');
     expect(router.currentRoute.value.params.imageId).toBeDefined();
   });
 

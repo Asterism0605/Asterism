@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AppHeader from '@/layouts/AppHeader.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import LoginOverlay from '@/components/overlay/LoginOverlay.vue';
 import { useAuthStore } from '@/stores/auth.store';
@@ -83,8 +82,6 @@ async function handleSubmit(payload: LoginPayload) {
         />
       </div>
     </div>
-
-    <AppHeader />
 
     <!-- 卡片 -->
     <div

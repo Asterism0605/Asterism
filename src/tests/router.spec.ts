@@ -16,7 +16,7 @@ describe('router', () => {
         { name: 'moodboard', path: '/moodboard/:slug?' },
         { name: 'playground', path: '/playground' },
         { name: 'image-spread', path: '/images/:imageId/spread' },
-        { name: 'image-detail', path: '/images/:imageId' },
+        { name: 'picture-detail', path: '/images/:imageId' },
         { name: 'sign-up', path: '/sign-up' },
         { name: 'style-dna', path: '/style-dna' },
         { name: 'style-dna-result', path: '/style-dna/result' },
@@ -35,7 +35,7 @@ describe('router', () => {
     await router.push('/images/y2k-main-001')
     await router.isReady()
 
-    expect(router.currentRoute.value.name).toBe('image-detail')
+    expect(router.currentRoute.value.name).toBe('picture-detail')
 
     await router.push('/images/missing-image')
     await router.isReady()

@@ -55,7 +55,7 @@ const router = createRouter({
     },
     {
       path: '/images/:imageId',
-      name: 'image-detail',
+      name: 'picture-detail',
       component: PictureDetail
     },
     {
@@ -78,14 +78,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  if (to.name !== 'image-detail') {
+  if (to.name !== 'picture-detail') {
     return true;
   }
 
   const rawImageId = to.params.imageId;
-  const imageId = typeof rawImageId === 'string' || Array.isArray(rawImageId)
-    ? getRouteImageId(rawImageId)
-    : '';
+  const imageId =
+    typeof rawImageId === 'string' || Array.isArray(rawImageId) ? getRouteImageId(rawImageId) : '';
 
   if (imageId && getImageById(imageId)) {
     return true;
