@@ -26,6 +26,9 @@ export interface AvoidArea {
   padding: number;
   minWidth?: number;
   maxWidth?: number;
+  // top/bottom 改成相對「第一個 viewport 高度」而非總容器高度，
+  // 這樣標題避讓區永遠固定在第一螢幕，不隨容器總高（900vh）放大跑掉。
+  viewportRelative?: boolean;
 }
 
 export interface LayoutPreset {
@@ -69,31 +72,32 @@ export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
   home: {
     widths: [112, 320, 118, 164, 232, 136],
     aspects: ['3/4', '16/10', '3/4', '3/4', '4/3', '3/4'],
-    constellationSizes: [300, 360, 420, 440, 340, 320],
     randomX: [0.14, 0.86],
     randomY: [0.12, 0.78],
     center: [0.5, 0.42],
     centerStrength: 0.22,
-    chargeStrength: -90,
+    chargeStrength: -45,
     collideMultiplier: 0.72,
-    ticks: 240,
+    ticks: 600,
     evenYDistribution: true,
     avoidAreas: [
       {
         left: 0,
-        top: 0.08,
+        top: 0.16,
         right: 0.58,
-        bottom: 0.24,
+        bottom: 0.48,
         padding: 16,
-        maxWidth: 767
+        maxWidth: 767,
+        viewportRelative: true
       },
       {
         left: 0,
-        top: 0.14,
+        top: 0.28,
         right: 0.62,
-        bottom: 0.32,
+        bottom: 0.64,
         padding: 32,
-        minWidth: 768
+        minWidth: 768,
+        viewportRelative: true
       }
     ],
     clampPosition(node, width, height) {

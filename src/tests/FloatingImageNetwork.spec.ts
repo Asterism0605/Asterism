@@ -45,11 +45,12 @@ function overlapsTitleArea(node: { x: number; y: number; width: number; aspect: 
     right: node.x + node.width / 2,
     bottom: node.y + nodeHeight / 2
   };
+  // 標題避讓區改成相對第一個 viewport（0.28~0.64），對應 Home.vue 的 pt-40vh 標題位置
   const titleRect = {
     left: 0,
-    top: 900 * 0.14,
+    top: 900 * 0.28,
     right: 1200 * 0.62,
-    bottom: 900 * 0.32
+    bottom: 900 * 0.64
   };
 
   return (
@@ -231,9 +232,8 @@ describe('FloatingImageNetwork', () => {
   });
 
   it('keeps generated home layout image cards out of the h1 title area', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.05);
-
-    const positions = buildFloatingImageLayout(6, 1200, 900, resolveLayoutPreset('home'));
+    // 稀疏版面（6 張、3000px 容器、viewport 900）下，標題帶（第一個 viewport）不該被卡片壓到
+    const positions = buildFloatingImageLayout(6, 1200, 3000, resolveLayoutPreset('home'), 900);
 
     expect(positions.some(overlapsTitleArea)).toBe(false);
   });
@@ -243,7 +243,8 @@ describe('FloatingImageNetwork', () => {
       [{ x: 300, y: 150, width: 96, aspect: '1/1' }],
       360,
       900,
-      resolveLayoutPreset('home').avoidAreas
+      resolveLayoutPreset('home').avoidAreas,
+      900
     );
 
     expect(position).toEqual({ x: 300, y: 150, width: 96, aspect: '1/1' });

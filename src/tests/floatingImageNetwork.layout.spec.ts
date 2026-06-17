@@ -28,7 +28,7 @@ describe('buildFloatingImageLayout (home)', () => {
   it('keeps nodes spread across the full height instead of clustering at the center', () => {
     const width = 1200;
     const height = 9000;
-    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home);
+    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home, 900);
 
     const ys = nodes.map((n) => n.y);
     const span = Math.max(...ys) - Math.min(...ys);
@@ -38,7 +38,7 @@ describe('buildFloatingImageLayout (home)', () => {
   it('scatters nodes horizontally across the width instead of a centered column', () => {
     const width = 1440;
     const height = 9000;
-    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home);
+    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home, 900);
 
     const xs = nodes.map((n) => n.x);
     const inLeftThird = xs.filter((x) => x < width / 3).length;
@@ -49,4 +49,71 @@ describe('buildFloatingImageLayout (home)', () => {
     expect(inRightThird).toBeGreaterThan(0);
     expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(width * 0.5);
   });
+
+  it('does not overlap home cards with each other', () => {
+    const width = 1440;
+    const height = 9000;
+    const viewportHeight = 900;
+    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home, viewportHeight);
+
+    expect(countOverlappingPairs(nodes)).toBe(0);
+  });
+
+  it('keeps home cards clear of the title area in the first viewport', () => {
+    const width = 1440;
+    const height = 9000;
+    const viewportHeight = 900;
+    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home, viewportHeight);
+
+    // 標題在第一個 viewport 左側（桌機 avoid 區 ~0.28~0.64 viewport、左 0~0.62 寬）
+    const titleBox = {
+      left: 0,
+      right: width * 0.5,
+      top: viewportHeight * 0.28,
+      bottom: viewportHeight * 0.64
+    };
+    const offenders = nodes.filter((node) => rectsOverlap(nodeRect(node), titleBox));
+
+    expect(offenders).toHaveLength(0);
+  });
 });
+
+function nodeRect(node: { x: number; y: number; width: number; aspect: string }) {
+  const [w, h] = node.aspect.split('/').map(Number);
+  const aspectRatio = w && h ? w / h : 3 / 4;
+  const nodeHeight = node.width / aspectRatio;
+  return {
+    left: node.x - node.width / 2,
+    right: node.x + node.width / 2,
+    top: node.y - nodeHeight / 2,
+    bottom: node.y + nodeHeight / 2
+  };
+}
+
+function rectsOverlap(
+  a: { left: number; right: number; top: number; bottom: number },
+  b: { left: number; right: number; top: number; bottom: number }
+) {
+  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+}
+
+// 容許 8px 以下的接觸（視覺看不出、且 floatY 動畫本來就會 ±6px 飄動），
+// 只把「穿透超過 8px」視為真正的重疊。
+function countOverlappingPairs(
+  nodes: { x: number; y: number; width: number; aspect: string }[],
+  tolerance = 8
+) {
+  let overlaps = 0;
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodeRect(nodes[i]);
+      const b = nodeRect(nodes[j]);
+      const penetrationX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+      const penetrationY = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+      if (Math.min(penetrationX, penetrationY) > tolerance) {
+        overlaps++;
+      }
+    }
+  }
+  return overlaps;
+}

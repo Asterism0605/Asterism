@@ -61,11 +61,13 @@ function recomputeLayout() {
   if (!container) return;
 
   const { width, height } = resolveContainerSize(container, props.height);
+  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : height;
   positions.value = buildFloatingImageLayout(
     visibleImages.value.length,
     width,
     height,
-    resolveLayoutPreset(layoutKey.value)
+    resolveLayoutPreset(layoutKey.value),
+    viewportHeight
   );
 }
 
