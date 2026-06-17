@@ -7,7 +7,7 @@ vi.mock('@/layouts/PageContainer.vue', () => ({ default: { template: '<main><slo
 vi.mock('@/components/sections/TokenShowcase.vue', () => ({ default: { template: '<section />' } }))
 vi.mock('@/components/sections/FloatingImageNetwork.vue', () => ({ default: { template: '<section />' } }))
 vi.mock('@/components/ui/ColorPaletteSwatch.vue', () => ({ default: { template: '<section />' } }))
-vi.mock('@/components/ui/AppToast.vue', () => ({ default: { template: '<section data-testid=\"app-toast\" />' } }))
+vi.mock('@/components/ui/AppToast.vue', () => ({ default: { template: '<section data-testid="app-toast" />' } }))
 vi.mock('@/pages/Playground.vue', () => ({ default: { template: '<section />' } }))
 vi.mock('@/components/overlay/SignUpOverlay.vue', () => ({ default: { template: '<aside />' } }))
 vi.mock('@/components/overlay/LoginOverlay.vue', () => ({ default: { template: '<aside />' } }))
