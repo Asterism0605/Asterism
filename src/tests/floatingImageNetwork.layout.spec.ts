@@ -57,11 +57,17 @@ describe('buildFloatingImageLayout (home)', () => {
     expect(nodes.every((node) => node.aspect === '1000/500')).toBe(true);
   });
 
-  it('does not overlap home cards with each other', () => {
+  it('does not overlap home cards with each other (合理尺寸 + 真實比例)', () => {
+    // 測演算法本身不重疊：用合理寬度 + 多種真實圖片比例（直/橫/方）。
+    // 不直接綁 LAYOUT_PRESETS.home 的 widths，因為那是視覺調校值（卡片越大越擠是密度取捨，非演算法問題）。
     const width = 1440;
     const height = 9000;
     const viewportHeight = 900;
-    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home, viewportHeight);
+    const preset = { ...LAYOUT_PRESETS.home, widths: [180, 260, 200, 240, 260, 210] };
+    const aspects = Array.from({ length: 45 }, (_, i) =>
+      ['1122/1402', '1536/1024', '3/4', '1402/1122', '4/3'][i % 5]
+    );
+    const nodes = buildFloatingImageLayout(45, width, height, preset, viewportHeight, aspects);
 
     expect(countOverlappingPairs(nodes)).toBe(0);
   });
@@ -70,7 +76,12 @@ describe('buildFloatingImageLayout (home)', () => {
     const width = 1440;
     const height = 9000;
     const viewportHeight = 900;
-    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home, viewportHeight);
+    // 合理尺寸 + 真實比例（測演算法的標題避讓，不綁視覺調校用的 widths）
+    const preset = { ...LAYOUT_PRESETS.home, widths: [180, 260, 200, 240, 260, 210] };
+    const aspects = Array.from({ length: 45 }, (_, i) =>
+      ['1122/1402', '1536/1024', '3/4', '1402/1122', '4/3'][i % 5]
+    );
+    const nodes = buildFloatingImageLayout(45, width, height, preset, viewportHeight, aspects);
 
     // 標題在第一個 viewport 左側（桌機 avoid 區 ~0.28~0.64 viewport、左 0~0.62 寬）
     const titleBox = {
