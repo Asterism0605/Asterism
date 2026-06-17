@@ -1,5 +1,452 @@
 [
   {
+    "id": "ftdp-main-001",
+    "url": "/style-image/style1-main.webp",
+    "title": "Neo Tokyo 團體概念視覺照",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#0A0D1B",
+      "#172040",
+      "#26356F"
+    ]
+  },
+  {
+    "id": "ftdp-main-002",
+    "url": "/style-image/style1-main-1.webp",
+    "title": "未來科技數位迷幻概念主視覺 1",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#03121F",
+      "#1A394B",
+      "#BACBDE"
+    ]
+  },
+  {
+    "id": "ftdp-main-003",
+    "url": "/style-image/style1-main-2.webp",
+    "title": "未來科技數位迷幻概念主視覺 2",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#101431",
+      "#143188",
+      "#C6BBCB"
+    ]
+  },
+  {
+    "id": "ftdp-main-004",
+    "url": "/style-image/style1-main-3.webp",
+    "title": "未來科技數位迷幻概念主視覺 3",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#03193C",
+      "#163C70",
+      "#6E7CB5"
+    ]
+  },
+  {
+    "id": "ftdp-main-005",
+    "url": "/style-image/style1-main-4.webp",
+    "title": "未來科技數位迷幻概念主視覺 4",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#171921",
+      "#444D6E",
+      "#767DA6"
+    ]
+  },
+  {
+    "id": "ftdp-graphic-001",
+    "url": "/style-image/style1-graphic.webp",
+    "title": "Neo Tokyo 視覺設計套組",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#0D0B13",
+      "#252644",
+      "#4E4578"
+    ]
+  },
+  {
+    "id": "ftdp-graphic-brand-001",
+    "url": "/style-image/style1-graphic1.webp",
+    "title": "Nexora Protocol 品牌識別",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#08090B",
+      "#202225",
+      "#32343A"
+    ]
+  },
+  {
+    "id": "ftdp-graphic-poster-001",
+    "url": "/style-image/style1-graphic2.webp",
+    "title": "Neon Paradox 音樂節海報",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#171522",
+      "#403852",
+      "#74616F"
+    ]
+  },
+  {
+    "id": "ftdp-graphic-editorial-001",
+    "url": "/style-image/style1-graphic3.webp",
+    "title": "Datawave 未來城市雜誌版面",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#080A13",
+      "#12192B",
+      "#1D2954"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-001",
+    "url": "/style-image/style1-outfit.webp",
+    "title": "霓虹護目鏡未來穿搭",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#080D1C",
+      "#202C49",
+      "#545676"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-top-001",
+    "url": "/style-image/style1-outfit1.webp",
+    "title": "資料錯位機能上衣",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#1F2027",
+      "#3A3D46",
+      "#666974"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-bottom-001",
+    "url": "/style-image/style1-outfit2.webp",
+    "title": "黑色機能寬版長褲",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#101217",
+      "#575960",
+      "#6B6D75"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-dress-001",
+    "url": "/style-image/style1-outfit3.webp",
+    "title": "虹彩資料流長洋裝",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#989EA9",
+      "#BAC0CB",
+      "#D8DEE7"
+    ]
+  },
+  {
+    "id": "ftdp-outfit-accessory-001",
+    "url": "/style-image/style1-outfit4.webp",
+    "title": "Hazard4 數位機能肩背包",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#262E48",
+      "#434A62",
+      "#606784"
+    ]
+  },
+  {
+    "id": "ftdp-interior-001",
+    "url": "/style-image/style1-interior.webp",
+    "title": "深色資料光廊室內空間",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#0A0A13",
+      "#1F1D2C",
+      "#39374B"
+    ]
+  },
+  {
+    "id": "ftdp-interior-lighting-001",
+    "url": "/style-image/style1-interior1.webp",
+    "title": "粉藍霓虹幾何立燈",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#35383D",
+      "#5B646C",
+      "#B8A2B6"
+    ]
+  },
+  {
+    "id": "ftdp-interior-table-001",
+    "url": "/style-image/style1-interior2.webp",
+    "title": "黑色低座科技茶几",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#272524",
+      "#B3AEA7",
+      "#C5C0BB"
+    ]
+  },
+  {
+    "id": "ftdp-interior-wall-paint-001",
+    "url": "/style-image/style1-interior3.webp",
+    "title": "資料流霓虹牆面設計",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#3A3D44",
+      "#5A555B",
+      "#827778"
+    ]
+  },
+  {
+    "id": "ftdp-interior-chair-001",
+    "url": "/style-image/style1-interior4.webp",
+    "title": "黑色模組化未來休閒椅",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#8D8A89",
+      "#A6A4A2",
+      "#C1BFBE"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-001",
+    "url": "/style-image/style1-architecture.webp",
+    "title": "Neo Tokyo LED 建築外觀",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#19112B",
+      "#22305C",
+      "#0E5A98"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-window-001",
+    "url": "/style-image/style1-architecture1.webp",
+    "title": "未來城市景觀窗框",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#11141B",
+      "#5E6679",
+      "#8691A8"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-staircase-001",
+    "url": "/style-image/style1-architecture2.webp",
+    "title": "藍紫霓虹螺旋樓梯",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#0B123E",
+      "#30376F",
+      "#6669C7"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-facade-001",
+    "url": "/style-image/style1-architecture3.webp",
+    "title": "穿孔 LED 數位建築立面",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#0C163C",
+      "#384CA8",
+      "#576CCB"
+    ]
+  },
+  {
+    "id": "ftdp-architecture-entrance-001",
+    "url": "/style-image/style1-architecture4.webp",
+    "title": "桃紅霓虹建築入口",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#120C10",
+      "#352228",
+      "#612E30"
+    ]
+  },
+  {
     "id": "y2k-main-001",
     "url": "/style-image/style2-main.webp",
     "title": "Cloud9 團體概念視覺照",
@@ -8,12 +455,85 @@
       "Y2K",
       "Frutiger Aero",
       "McBling",
-      "Chrome Design"
+      "Chrome Design",
+      "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#8EC9FF",
-      "#D8E8FF",
-      "#C8C9D8"
+      "#AEA1AE",
+      "#88B0E0",
+      "#CAD1E6"
+    ]
+  },
+  {
+    "id": "y2k-main-002",
+    "url": "/style-image/style2-main-1.webp",
+    "title": "Y2K網路美學概念主視覺 1",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+      "#BDA9AF",
+      "#D0C7D1",
+      "#ECE7F2"
+    ]
+  },
+  {
+    "id": "y2k-main-003",
+    "url": "/style-image/style2-main-2.webp",
+    "title": "Y2K網路美學概念主視覺 2",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+      "#181F32",
+      "#D4BABB",
+      "#CED6F3"
+    ]
+  },
+  {
+    "id": "y2k-main-004",
+    "url": "/style-image/style2-main-3.webp",
+    "title": "Y2K網路美學概念主視覺 3",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+      "#A4C7F4",
+      "#C6CDE9",
+      "#DAE5FB"
+    ]
+  },
+  {
+    "id": "y2k-main-005",
+    "url": "/style-image/style2-main-4.webp",
+    "title": "Y2K網路美學概念主視覺 4",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+      "#8EA1B5",
+      "#CDBCBB",
+      "#C9DEEB"
     ]
   },
   {
@@ -29,28 +549,28 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#8CB9F7",
-      "#B9A8F3",
-      "#E9F5FF"
+      "#7E97D5",
+      "#A8B2DD",
+      "#CDD5F0"
     ]
   },
   {
     "id": "y2k-graphic-poster-001",
-    "url": "/style-image/style2-graphic1.jpeg",
+    "url": "/style-image/style2-graphic1.webp",
     "title": "H2O 透明泡泡寫真卡",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
       "Y2K",
-      "McBling",
+      "Frutiger Aero",
       "Chrome Design",
-      "Bubblegum Futurism"
+      "McBling"
     ],
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#D9B3F0",
-      "#9FB8F2",
-      "#5A4774"
+      "#332B3F",
+      "#9D95AF",
+      "#C5BFCB"
     ]
   },
   {
@@ -67,9 +587,9 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#A9D8FF",
-      "#8B7BDB",
-      "#F2F6FF"
+      "#A1ADD8",
+      "#C4CCE5",
+      "#E6E7ED"
     ]
   },
   {
@@ -86,9 +606,9 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#D7E8FF",
-      "#D6B5F5",
-      "#F4F5FA"
+      "#B8B9CC",
+      "#CECBE0",
+      "#E5E1EF"
     ]
   },
   {
@@ -97,17 +617,17 @@
     "title": "Lip Glaze 泡泡糖未來包裝",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
-      "McBling",
+      "Y2K",
+      "Frutiger Aero",
       "Chrome Design",
-      "Bubblegum Futurism",
-      "Y2K"
+      "McBling"
     ],
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#E7B5D8",
-      "#C9B5EC",
-      "#F3E9F8"
+      "#A78BAD",
+      "#BFABC6",
+      "#E0CFE0"
     ]
   },
   {
@@ -123,9 +643,9 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#8ACBFF",
-      "#C58AE9",
-      "#DDEEFF"
+      "#5A85BA",
+      "#85A8D3",
+      "#B8C7E4"
     ]
   },
   {
@@ -134,6 +654,7 @@
     "title": "水晶蝴蝶心形耳環",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
+      "Y2K",
       "McBling",
       "Chrome Design",
       "Bubblegum Futurism"
@@ -141,9 +662,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#F7F8FB",
-      "#C6A4EF",
-      "#C9D9E8"
+      "#767681",
+      "#BAB4CC",
+      "#E1E3EB"
     ]
   },
   {
@@ -160,9 +681,9 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#F8F8FA",
-      "#B9A3F0",
-      "#D5E9FF"
+      "#B1A8D0",
+      "#CBC6E6",
+      "#F4F2F5"
     ]
   },
   {
@@ -179,9 +700,9 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#FAFAFB",
-      "#B7A0ED",
-      "#DDEBFF"
+      "#B4A7D5",
+      "#CCC0E5",
+      "#F8F8F8"
     ]
   },
   {
@@ -197,9 +718,9 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#8BD4FF",
-      "#D9A8F0",
-      "#F4F1FB"
+      "#8E8EBD",
+      "#A9AAD2",
+      "#90C1E9"
     ]
   },
   {
@@ -208,6 +729,7 @@
     "title": "鍍鉻紫光蛋形休閒椅",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
+      "Frutiger Aero",
       "Chrome Design",
       "Bubblegum Futurism",
       "Y2K"
@@ -215,9 +737,9 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#F5F3F5",
-      "#B88AE4",
-      "#C9C7D2"
+      "#A898BB",
+      "#D2C6E1",
+      "#F6F4F4"
     ]
   },
   {
@@ -226,17 +748,17 @@
     "title": "柔紫高光未來室內牆面",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
-      "Bubblegum Futurism",
       "Frutiger Aero",
       "Chrome Design",
+      "Bubblegum Futurism",
       "Y2K"
     ],
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#CBA7E9",
-      "#8DBEFF",
-      "#F3EEF8"
+      "#857DA7",
+      "#BBA3C6",
+      "#EDCDDD"
     ]
   },
   {
@@ -245,17 +767,17 @@
     "title": "Bubblegum Chrome 室內漆包裝",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
-      "Bubblegum Futurism",
+      "Frutiger Aero",
       "Chrome Design",
-      "Y2K",
-      "Frutiger Aero"
+      "Bubblegum Futurism",
+      "Y2K"
     ],
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#C996D6",
-      "#A4BDF2",
-      "#F7F7FA"
+      "#D1B8D6",
+      "#E6DDEC",
+      "#F6F6F6"
     ]
   },
   {
@@ -264,6 +786,7 @@
     "title": "紫光液態鍍鉻茶几",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
+      "Frutiger Aero",
       "Chrome Design",
       "Bubblegum Futurism",
       "Y2K"
@@ -271,9 +794,9 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#F4F2F5",
-      "#BA8CEA",
-      "#B9B3C4"
+      "#C1ACCD",
+      "#D8C9DF",
+      "#E7E5E6"
     ]
   },
   {
@@ -284,14 +807,13 @@
     "style": [
       "Frutiger Aero",
       "Chrome Design",
-      "Bubblegum Futurism",
-      "Y2K"
+      "Bubblegum Futurism"
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#70B7F1",
-      "#F0C5E7",
-      "#F8F3F8"
+      "#689BCF",
+      "#B1B4DA",
+      "#E5DBED"
     ]
   },
   {
@@ -302,15 +824,14 @@
     "style": [
       "Frutiger Aero",
       "Chrome Design",
-      "Bubblegum Futurism",
-      "Y2K"
+      "Bubblegum Futurism"
     ],
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#74B7ED",
-      "#E8B9D7",
-      "#F6F2F5"
+      "#7DA9D4",
+      "#CBC5D3",
+      "#EEE7EB"
     ]
   },
   {
@@ -319,17 +840,16 @@
     "title": "虹彩柱廊入口空間",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
-      "Chrome Design",
       "Frutiger Aero",
-      "Bubblegum Futurism",
-      "Y2K"
+      "Chrome Design",
+      "Bubblegum Futurism"
     ],
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#DFF0FF",
-      "#F0B8D5",
-      "#C7CAD4"
+      "#737286",
+      "#B9B5C8",
+      "#D6D2E0"
     ]
   },
   {
@@ -338,17 +858,16 @@
     "title": "粉色虹彩螺旋樓梯",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
-      "Bubblegum Futurism",
-      "Chrome Design",
       "Frutiger Aero",
-      "Y2K"
+      "Chrome Design",
+      "Bubblegum Futurism"
     ],
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#F0B5C9",
-      "#AEDCFF",
-      "#F4EDF2"
+      "#C6A4AD",
+      "#AEAACC",
+      "#D7B9C3"
     ]
   },
   {
@@ -359,381 +878,14 @@
     "style": [
       "Frutiger Aero",
       "Chrome Design",
-      "Bubblegum Futurism",
-      "Y2K"
+      "Bubblegum Futurism"
     ],
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#D2E9FF",
-      "#C58EDB",
-      "#C9C5C0"
-    ]
-  },
-  {
-    "id": "ftdp-main-001",
-    "url": "/style-image/style1-main.webp",
-    "title": "Neo Tokyo 團體概念視覺照",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Cyberpunk",
-      "Neo Tokyo",
-      "Future Tech",
-      "Digital Psychedelia",
-      "Glitch Aesthetic"
-    ],
-    "colorPalette": [
-      "#090B12",
-      "#123B75",
-      "#D9168D"
-    ]
-  },
-  {
-    "id": "ftdp-outfit-001",
-    "url": "/style-image/style1-outfit.webp",
-    "title": "霓虹護目鏡未來穿搭",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Cyberpunk",
-      "Future Tech",
-      "Neo Tokyo",
-      "Digital Psychedelia"
-    ],
-    "medium": "Outfit",
-    "colorPalette": [
-      "#090B12",
-      "#1D4D8E",
-      "#E037B2"
-    ]
-  },
-  {
-    "id": "ftdp-outfit-top-001",
-    "url": "/style-image/style1-outfit1.webp",
-    "title": "資料錯位機能上衣",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Glitch Aesthetic",
-      "Cyberpunk",
-      "Digital Psychedelia"
-    ],
-    "medium": "Outfit",
-    "subMedium": "Top",
-    "colorPalette": [
-      "#111217",
-      "#3B3F48",
-      "#B526D4"
-    ]
-  },
-  {
-    "id": "ftdp-outfit-bottom-001",
-    "url": "/style-image/style1-outfit2.webp",
-    "title": "黑色機能寬版長褲",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Cyberpunk",
-      "Glitch Aesthetic"
-    ],
-    "medium": "Outfit",
-    "subMedium": "Bottom",
-    "colorPalette": [
-      "#111217",
-      "#363A43",
-      "#6F3BB3"
-    ]
-  },
-  {
-    "id": "ftdp-outfit-dress-001",
-    "url": "/style-image/style1-outfit3.webp",
-    "title": "虹彩資料流長洋裝",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Digital Psychedelia",
-      "Future Tech",
-      "Cyberpunk",
-      "Glitch Aesthetic"
-    ],
-    "medium": "Outfit",
-    "subMedium": "Dress",
-    "colorPalette": [
-      "#151820",
-      "#4B5361",
-      "#8D4CC6"
-    ]
-  },
-  {
-    "id": "ftdp-outfit-accessory-001",
-    "url": "/style-image/style1-outfit4.webp",
-    "title": "Hazard4 數位機能肩背包",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Cyberpunk",
-      "Glitch Aesthetic",
-      "Digital Psychedelia"
-    ],
-    "medium": "Outfit",
-    "subMedium": "Accessory",
-    "colorPalette": [
-      "#10131B",
-      "#26304A",
-      "#8334D5"
-    ]
-  },
-  {
-    "id": "ftdp-graphic-001",
-    "url": "/style-image/style1-graphic.webp",
-    "title": "Neo Tokyo 視覺設計套組",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Cyberpunk",
-      "Neo Tokyo",
-      "Future Tech",
-      "Glitch Aesthetic"
-    ],
-    "medium": "Graphic Design",
-    "colorPalette": [
-      "#0B0A10",
-      "#142E72",
-      "#B22B9D"
-    ]
-  },
-  {
-    "id": "ftdp-graphic-brand-001",
-    "url": "/style-image/style1-graphic1.webp",
-    "title": "Nexora Protocol 品牌識別",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Glitch Aesthetic",
-      "Cyberpunk"
-    ],
-    "medium": "Graphic Design",
-    "subMedium": "Brand Identity",
-    "colorPalette": [
-      "#111214",
-      "#252A31",
-      "#37A8D8"
-    ]
-  },
-  {
-    "id": "ftdp-graphic-poster-001",
-    "url": "/style-image/style1-graphic2.webp",
-    "title": "Neon Paradox 音樂節海報",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Digital Psychedelia",
-      "Cyberpunk",
-      "Neo Tokyo",
-      "Glitch Aesthetic"
-    ],
-    "medium": "Graphic Design",
-    "subMedium": "Poster Design",
-    "colorPalette": [
-      "#121019",
-      "#162B78",
-      "#E12BA4"
-    ]
-  },
-  {
-    "id": "ftdp-graphic-editorial-001",
-    "url": "/style-image/style1-graphic3.webp",
-    "title": "Datawave 未來城市雜誌版面",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Cyberpunk",
-      "Neo Tokyo",
-      "Glitch Aesthetic"
-    ],
-    "medium": "Graphic Design",
-    "subMedium": "Editorial Design",
-    "colorPalette": [
-      "#0C111D",
-      "#163F9B",
-      "#7D2ED6"
-    ]
-  },
-  {
-    "id": "ftdp-interior-001",
-    "url": "/style-image/style1-interior.webp",
-    "title": "深色資料光廊室內空間",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Cyberpunk",
-      "Future Tech",
-      "Digital Psychedelia",
-      "Neo Tokyo"
-    ],
-    "medium": "Interior Design",
-    "colorPalette": [
-      "#090A0F",
-      "#172E61",
-      "#A0197A"
-    ]
-  },
-  {
-    "id": "ftdp-interior-lighting-001",
-    "url": "/style-image/style1-interior1.webp",
-    "title": "粉藍霓虹幾何立燈",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Cyberpunk",
-      "Digital Psychedelia"
-    ],
-    "medium": "Interior Design",
-    "subMedium": "Lighting",
-    "colorPalette": [
-      "#15191F",
-      "#00A6C8",
-      "#DF2E93"
-    ]
-  },
-  {
-    "id": "ftdp-interior-table-001",
-    "url": "/style-image/style1-interior2.webp",
-    "title": "黑色低座科技茶几",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Cyberpunk",
-      "Glitch Aesthetic"
-    ],
-    "medium": "Interior Design",
-    "subMedium": "Table",
-    "colorPalette": [
-      "#121417",
-      "#3F3F3B",
-      "#5B48A6"
-    ]
-  },
-  {
-    "id": "ftdp-interior-wall-paint-001",
-    "url": "/style-image/style1-interior3.webp",
-    "title": "資料流霓虹牆面設計",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Digital Psychedelia",
-      "Glitch Aesthetic",
-      "Cyberpunk",
-      "Future Tech"
-    ],
-    "medium": "Interior Design",
-    "subMedium": "Wall Paint",
-    "colorPalette": [
-      "#111719",
-      "#0A879D",
-      "#C0208B"
-    ]
-  },
-  {
-    "id": "ftdp-interior-chair-001",
-    "url": "/style-image/style1-interior4.webp",
-    "title": "黑色模組化未來休閒椅",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Cyberpunk",
-      "Glitch Aesthetic"
-    ],
-    "medium": "Interior Design",
-    "subMedium": "Chair",
-    "colorPalette": [
-      "#161719",
-      "#4B4C4A",
-      "#2F347C"
-    ]
-  },
-  {
-    "id": "ftdp-architecture-001",
-    "url": "/style-image/style1-architecture.webp",
-    "title": "Neo Tokyo LED 建築外觀",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Cyberpunk",
-      "Neo Tokyo",
-      "Future Tech",
-      "Digital Psychedelia"
-    ],
-    "medium": "Architecture",
-    "colorPalette": [
-      "#06142A",
-      "#0057A6",
-      "#D3008B"
-    ]
-  },
-  {
-    "id": "ftdp-architecture-window-001",
-    "url": "/style-image/style1-architecture1.webp",
-    "title": "未來城市景觀窗框",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Cyberpunk",
-      "Neo Tokyo"
-    ],
-    "medium": "Architecture",
-    "subMedium": "Window",
-    "colorPalette": [
-      "#303843",
-      "#9BB3C5",
-      "#E05A8D"
-    ]
-  },
-  {
-    "id": "ftdp-architecture-staircase-001",
-    "url": "/style-image/style1-architecture2.webp",
-    "title": "藍紫霓虹螺旋樓梯",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Digital Psychedelia",
-      "Cyberpunk",
-      "Future Tech"
-    ],
-    "medium": "Architecture",
-    "subMedium": "Staircase",
-    "colorPalette": [
-      "#050816",
-      "#1237C7",
-      "#7B24E2"
-    ]
-  },
-  {
-    "id": "ftdp-architecture-facade-001",
-    "url": "/style-image/style1-architecture3.webp",
-    "title": "穿孔 LED 數位建築立面",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Future Tech",
-      "Cyberpunk",
-      "Digital Psychedelia"
-    ],
-    "medium": "Architecture",
-    "subMedium": "Facade",
-    "colorPalette": [
-      "#101735",
-      "#104FD4",
-      "#A62AD5"
-    ]
-  },
-  {
-    "id": "ftdp-architecture-entrance-001",
-    "url": "/style-image/style1-architecture4.webp",
-    "title": "桃紅霓虹建築入口",
-    "styleGroup": "Future Tech & Digital Psychedelia",
-    "style": [
-      "Cyberpunk",
-      "Neo Tokyo",
-      "Future Tech"
-    ],
-    "medium": "Architecture",
-    "subMedium": "Entrance",
-    "colorPalette": [
-      "#100F13",
-      "#B20D58",
-      "#D0773C"
+      "#8A807C",
+      "#A6999C",
+      "#E9DFEF"
     ]
   },
   {
@@ -742,107 +894,83 @@
     "title": "金色古典宮廷團體概念視覺照",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
+      "Art Deco",
       "Baroque",
       "Rococo",
-      "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Maximalism"
     ],
     "colorPalette": [
-      "#11100C",
-      "#A87935",
-      "#D8B882"
+      "#0B0D0F",
+      "#3E2D21",
+      "#A77D57"
     ]
   },
   {
-    "id": "doa-outfit-001",
-    "url": "/style-image/style3-outfit.webp",
-    "title": "黑金奢華裝飾穿搭",
+    "id": "doa-main-002",
+    "url": "/style-image/style3-main-1.webp",
+    "title": "華麗裝飾藝術概念主視覺 1",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
       "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism",
-      "Baroque"
-    ],
-    "medium": "Outfit",
-    "colorPalette": [
-      "#090807",
-      "#7A5524",
-      "#C8A56A"
-    ]
-  },
-  {
-    "id": "doa-outfit-top-001",
-    "url": "/style-image/style3-outfit1.webp",
-    "title": "黑色單肩金扣上衣",
-    "styleGroup": "Decorative & Opulent Art",
-    "style": [
-      "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism"
-    ],
-    "medium": "Outfit",
-    "subMedium": "Top",
-    "colorPalette": [
-      "#090806",
-      "#B07A2F",
-      "#D8C6AE"
-    ]
-  },
-  {
-    "id": "doa-outfit-bottom-001",
-    "url": "/style-image/style3-outfit2.webp",
-    "title": "黑色金扣寬版長褲",
-    "styleGroup": "Decorative & Opulent Art",
-    "style": [
-      "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism"
-    ],
-    "medium": "Outfit",
-    "subMedium": "Bottom",
-    "colorPalette": [
-      "#080706",
-      "#7C5A2B",
-      "#A68B69"
-    ]
-  },
-  {
-    "id": "doa-outfit-dress-001",
-    "url": "/style-image/style3-outfit3.webp",
-    "title": "象牙金紋不對稱洋裝",
-    "styleGroup": "Decorative & Opulent Art",
-    "style": [
+      "Baroque",
       "Rococo",
-      "Gilded Ornament",
-      "Opulent Classicism",
-      "Baroque"
+      "Maximalism"
     ],
-    "medium": "Outfit",
-    "subMedium": "Dress",
     "colorPalette": [
-      "#F0E3C8",
-      "#B4873D",
-      "#19130F"
+      "#19110A",
+      "#B9926F",
+      "#CFB39C"
     ]
   },
   {
-    "id": "doa-outfit-accessory-001",
-    "url": "/style-image/style3-outfit4.webp",
-    "title": "黑金幾何寬版手環",
+    "id": "doa-main-003",
+    "url": "/style-image/style3-main-2.webp",
+    "title": "華麗裝飾藝術概念主視覺 2",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
       "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Baroque",
+      "Rococo",
+      "Maximalism"
     ],
-    "medium": "Outfit",
-    "subMedium": "Accessory",
     "colorPalette": [
-      "#090806",
-      "#C28A2E",
-      "#EFE2C8"
+      "#150D09",
+      "#402D20",
+      "#6B5241"
+    ]
+  },
+  {
+    "id": "doa-main-004",
+    "url": "/style-image/style3-main-3.webp",
+    "title": "華麗裝飾藝術概念主視覺 3",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "colorPalette": [
+      "#503621",
+      "#6D5139",
+      "#8D6F56"
+    ]
+  },
+  {
+    "id": "doa-main-005",
+    "url": "/style-image/style3-main-4.webp",
+    "title": "華麗裝飾藝術概念主視覺 4",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "colorPalette": [
+      "#19150D",
+      "#896036",
+      "#CCAC91"
     ]
   },
   {
@@ -851,16 +979,15 @@
     "title": "Maison Opaline 奢華品牌視覺套組",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
-      "Rococo",
-      "Gilded Ornament",
-      "Opulent Classicism",
-      "Baroque"
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#E8DCCB",
-      "#B88A44",
-      "#F4EDE2"
+      "#A89E94",
+      "#C5B9B0",
+      "#D5CDC8"
     ]
   },
   {
@@ -869,16 +996,16 @@
     "title": "The Royal 金紋包裝設計",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
+      "Art Deco",
       "Baroque",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Maximalism"
     ],
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#EDE1CA",
-      "#B38942",
-      "#F6F0E4"
+      "#785B32",
+      "#A88A61",
+      "#EAE0D5"
     ]
   },
   {
@@ -888,15 +1015,15 @@
     "styleGroup": "Decorative & Opulent Art",
     "style": [
       "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Baroque",
+      "Maximalism"
     ],
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#10100E",
-      "#C0954B",
-      "#E7DCC8"
+      "#292621",
+      "#B9AA9A",
+      "#DBD0C5"
     ]
   },
   {
@@ -905,17 +1032,16 @@
     "title": "Maison Opaline 裝飾藝術海報",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
-      "Rococo",
+      "Art Deco",
       "Baroque",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Maximalism"
     ],
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#F0E3C7",
-      "#BE8B3E",
-      "#16120D"
+      "#B59976",
+      "#D8C5AE",
+      "#EDE0D1"
     ]
   },
   {
@@ -924,17 +1050,105 @@
     "title": "Maison Opaline 古典雜誌版面",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
-      "Rococo",
+      "Art Deco",
       "Baroque",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Maximalism"
     ],
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#EFE1CB",
-      "#B78C4A",
-      "#D8BBA1"
+      "#BCAD9F",
+      "#D3C7BC",
+      "#E9E2DB"
+    ]
+  },
+  {
+    "id": "doa-outfit-001",
+    "url": "/style-image/style3-outfit.webp",
+    "title": "黑金奢華裝飾穿搭",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#150E07",
+      "#39250E",
+      "#654B30"
+    ]
+  },
+  {
+    "id": "doa-outfit-top-001",
+    "url": "/style-image/style3-outfit1.webp",
+    "title": "黑色單肩金扣上衣",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#0F0C09",
+      "#BFAA94",
+      "#D6C5B5"
+    ]
+  },
+  {
+    "id": "doa-outfit-bottom-001",
+    "url": "/style-image/style3-outfit2.webp",
+    "title": "黑色金扣寬版長褲",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#120D08",
+      "#3B2D1F",
+      "#604D39"
+    ]
+  },
+  {
+    "id": "doa-outfit-dress-001",
+    "url": "/style-image/style3-outfit3.webp",
+    "title": "象牙金紋不對稱洋裝",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#947A5B",
+      "#BBA288",
+      "#CFBCAA"
+    ]
+  },
+  {
+    "id": "doa-outfit-accessory-001",
+    "url": "/style-image/style3-outfit4.webp",
+    "title": "黑金幾何寬版手環",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#130E08",
+      "#372817",
+      "#E3CFB4"
     ]
   },
   {
@@ -943,16 +1157,15 @@
     "title": "金飾洛可可奢華客廳",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
-      "Rococo",
       "Baroque",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Rococo",
+      "Maximalism"
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#F1E6D2",
-      "#B98A3F",
-      "#A9B4A4"
+      "#AC9981",
+      "#C9B8A6",
+      "#DFD4C8"
     ]
   },
   {
@@ -963,15 +1176,14 @@
     "style": [
       "Baroque",
       "Rococo",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Maximalism"
     ],
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#E8D6BA",
-      "#B88736",
-      "#FFF3DA"
+      "#9D8265",
+      "#AF967E",
+      "#BDAA96"
     ]
   },
   {
@@ -981,15 +1193,15 @@
     "styleGroup": "Decorative & Opulent Art",
     "style": [
       "Baroque",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Rococo",
+      "Maximalism"
     ],
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#F0E4D0",
-      "#A8752C",
-      "#272019"
+      "#8F714B",
+      "#AF997C",
+      "#C5B8A8"
     ]
   },
   {
@@ -998,16 +1210,16 @@
     "title": "淡藍金邊貝殼扶手椅",
     "styleGroup": "Decorative & Opulent Art",
     "style": [
+      "Baroque",
       "Rococo",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Maximalism"
     ],
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#B9C9C1",
-      "#D3A64F",
-      "#F2E4D1"
+      "#7D6F59",
+      "#A29483",
+      "#C6BBB1"
     ]
   },
   {
@@ -1018,15 +1230,14 @@
     "style": [
       "Rococo",
       "Baroque",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Maximalism"
     ],
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#CDD4C0",
-      "#E8D7BE",
-      "#B9914D"
+      "#9D8C71",
+      "#B5A690",
+      "#EAE2D5"
     ]
   },
   {
@@ -1036,15 +1247,14 @@
     "styleGroup": "Decorative & Opulent Art",
     "style": [
       "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism",
-      "Baroque"
+      "Baroque",
+      "Maximalism"
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#E8DECE",
-      "#BE9147",
-      "#2F341D"
+      "#7D644A",
+      "#B39475",
+      "#D4C0AB"
     ]
   },
   {
@@ -1054,15 +1264,15 @@
     "styleGroup": "Decorative & Opulent Art",
     "style": [
       "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Baroque",
+      "Maximalism"
     ],
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#E2D0B9",
-      "#B78335",
-      "#2B2418"
+      "#664A26",
+      "#8D7254",
+      "#B4987D"
     ]
   },
   {
@@ -1072,16 +1282,15 @@
     "styleGroup": "Decorative & Opulent Art",
     "style": [
       "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism",
-      "Baroque"
+      "Baroque",
+      "Maximalism"
     ],
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#E9D9BF",
-      "#B8893C",
-      "#F7EAD3"
+      "#866441",
+      "#A68464",
+      "#C4AC95"
     ]
   },
   {
@@ -1091,15 +1300,15 @@
     "styleGroup": "Decorative & Opulent Art",
     "style": [
       "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Baroque",
+      "Maximalism"
     ],
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#F0E4D0",
-      "#B89145",
-      "#CBD0C4"
+      "#927C63",
+      "#B5A18A",
+      "#EEEBE8"
     ]
   },
   {
@@ -1109,15 +1318,2689 @@
     "styleGroup": "Decorative & Opulent Art",
     "style": [
       "Art Deco",
-      "Gilded Ornament",
-      "Opulent Classicism"
+      "Baroque",
+      "Maximalism"
     ],
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#E2D7C9",
-      "#B58A45",
-      "#44503B"
+      "#9D8878",
+      "#BBACA4",
+      "#D4CFCF"
+    ]
+  },
+  {
+    "id": "msm-main-001",
+    "url": "/style-image/style4-main.webp",
+    "title": "極簡結構現代系列主視覺",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+      "#131B1E",
+      "#71716B",
+      "#D0CBC4"
+    ]
+  },
+  {
+    "id": "msm-main-002",
+    "url": "/style-image/style4-main-1.webp",
+    "title": "極簡結構現代概念主視覺 1",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+      "#1B2120",
+      "#D1BFB0",
+      "#E5DED6"
+    ]
+  },
+  {
+    "id": "msm-main-003",
+    "url": "/style-image/style4-main-2.webp",
+    "title": "極簡結構現代概念主視覺 2",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+      "#423E43",
+      "#AFA098",
+      "#D5D5D3"
+    ]
+  },
+  {
+    "id": "msm-main-004",
+    "url": "/style-image/style4-main-3.webp",
+    "title": "極簡結構現代概念主視覺 3",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+      "#CABFB6",
+      "#DFD7D1",
+      "#F2EFEC"
+    ]
+  },
+  {
+    "id": "msm-main-005",
+    "url": "/style-image/style4-main-4.webp",
+    "title": "極簡結構現代概念主視覺 4",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+      "#755F51",
+      "#A28877",
+      "#B9A699"
+    ]
+  },
+  {
+    "id": "msm-graphic-001",
+    "url": "/style-image/style4-graphic.webp",
+    "title": "極簡結構現代平面設計代表圖",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#ABA296",
+      "#C6BEB6",
+      "#E4E0DC"
+    ]
+  },
+  {
+    "id": "msm-graphic-editorial-001",
+    "url": "/style-image/style4-graphic1.webp",
+    "title": "極簡結構現代編輯版面平面設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#B1A9A0",
+      "#D0CAC7",
+      "#E6E2E0"
+    ]
+  },
+  {
+    "id": "msm-graphic-packaging-001",
+    "url": "/style-image/style4-graphic2.webp",
+    "title": "極簡結構現代包裝平面設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#A79E93",
+      "#CBC3BB",
+      "#DED8D3"
+    ]
+  },
+  {
+    "id": "msm-graphic-brand-001",
+    "url": "/style-image/style4-graphic3.webp",
+    "title": "極簡結構現代品牌識別平面設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#B9B0A3",
+      "#CCC5BD",
+      "#E2DEDA"
+    ]
+  },
+  {
+    "id": "msm-graphic-poster-001",
+    "url": "/style-image/style4-graphic4.webp",
+    "title": "極簡結構現代海報平面設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#665B50",
+      "#C0B8AF",
+      "#DFD8D0"
+    ]
+  },
+  {
+    "id": "msm-outfit-001",
+    "url": "/style-image/style4-outfit.webp",
+    "title": "極簡結構現代穿搭代表圖",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#BAB1A6",
+      "#CCC4BA",
+      "#E0D6C9"
+    ]
+  },
+  {
+    "id": "msm-outfit-top-001",
+    "url": "/style-image/style4-outfit1.webp",
+    "title": "極簡結構現代上身單品穿搭",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#988A7C",
+      "#D2C6B9",
+      "#E6E0D7"
+    ]
+  },
+  {
+    "id": "msm-outfit-bottom-001",
+    "url": "/style-image/style4-outfit2.webp",
+    "title": "極簡結構現代下身單品穿搭",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#484645",
+      "#88827D",
+      "#E4DDD6"
+    ]
+  },
+  {
+    "id": "msm-outfit-dress-001",
+    "url": "/style-image/style4-outfit3.webp",
+    "title": "極簡結構現代洋裝穿搭",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#A29486",
+      "#B4AA9F",
+      "#CDC1B4"
+    ]
+  },
+  {
+    "id": "msm-outfit-accessory-001",
+    "url": "/style-image/style4-outfit4.webp",
+    "title": "極簡結構現代配件穿搭",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#7E7265",
+      "#988878",
+      "#C3B6A7"
+    ]
+  },
+  {
+    "id": "msm-interior-001",
+    "url": "/style-image/style4-interior.webp",
+    "title": "極簡結構現代室內設計代表圖",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#A4988B",
+      "#BCB2A7",
+      "#D3CDC7"
+    ]
+  },
+  {
+    "id": "msm-interior-wall-paint-001",
+    "url": "/style-image/style4-interior1.webp",
+    "title": "極簡結構現代牆面色彩室內設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#97816A",
+      "#B8A591",
+      "#CDBDAD"
+    ]
+  },
+  {
+    "id": "msm-interior-chair-001",
+    "url": "/style-image/style4-interior2.webp",
+    "title": "極簡結構現代椅款室內設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#937F6A",
+      "#AD9C8B",
+      "#C7BCB1"
+    ]
+  },
+  {
+    "id": "msm-interior-table-001",
+    "url": "/style-image/style4-interior3.webp",
+    "title": "極簡結構現代桌几室內設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#B7AEA5",
+      "#D1CBC5",
+      "#EFEDEA"
+    ]
+  },
+  {
+    "id": "msm-interior-lighting-001",
+    "url": "/style-image/style4-interior4.webp",
+    "title": "極簡結構現代燈光室內設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#2C1706",
+      "#432A11",
+      "#6E4B29"
+    ]
+  },
+  {
+    "id": "msm-architecture-001",
+    "url": "/style-image/style4-architecture.webp",
+    "title": "極簡結構現代建築代表圖",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#3A3A35",
+      "#B2B0AE",
+      "#D5D3D2"
+    ]
+  },
+  {
+    "id": "msm-architecture-staircase-001",
+    "url": "/style-image/style4-architecture1.webp",
+    "title": "極簡結構現代樓梯建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#6C5C4C",
+      "#8A7B6B",
+      "#ABA195"
+    ]
+  },
+  {
+    "id": "msm-architecture-facade-001",
+    "url": "/style-image/style4-architecture2.webp",
+    "title": "極簡結構現代立面建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#252015",
+      "#7E7C7C",
+      "#DBDEE5"
+    ]
+  },
+  {
+    "id": "msm-architecture-entrance-001",
+    "url": "/style-image/style4-architecture3.webp",
+    "title": "極簡結構現代入口建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#1F150B",
+      "#5B3B20",
+      "#645A55"
+    ]
+  },
+  {
+    "id": "msm-architecture-window-001",
+    "url": "/style-image/style4-architecture4.webp",
+    "title": "極簡結構現代窗景建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#1A1B1C",
+      "#6C6751",
+      "#DAD9D7"
+    ]
+  },
+  {
+    "id": "eoh-main-001",
+    "url": "/style-image/style5-main.webp",
+    "title": "大地有機人文系列主視覺",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+      "#756951",
+      "#9F8E7A",
+      "#BAAD9D"
+    ]
+  },
+  {
+    "id": "eoh-main-002",
+    "url": "/style-image/style5-main-1.webp",
+    "title": "大地有機人文概念主視覺 1",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+      "#A28D74",
+      "#C6B29D",
+      "#E3D9CA"
+    ]
+  },
+  {
+    "id": "eoh-main-003",
+    "url": "/style-image/style5-main-2.webp",
+    "title": "大地有機人文概念主視覺 2",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+      "#584435",
+      "#796759",
+      "#988A80"
+    ]
+  },
+  {
+    "id": "eoh-main-004",
+    "url": "/style-image/style5-main-3.webp",
+    "title": "大地有機人文概念主視覺 3",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+      "#362413",
+      "#664E35",
+      "#8C7358"
+    ]
+  },
+  {
+    "id": "eoh-main-005",
+    "url": "/style-image/style5-main-4.webp",
+    "title": "大地有機人文概念主視覺 4",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+      "#21180F",
+      "#624C32",
+      "#B3A087"
+    ]
+  },
+  {
+    "id": "eoh-graphic-001",
+    "url": "/style-image/style5-graphic.webp",
+    "title": "大地有機人文平面設計代表圖",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#7A6C5A",
+      "#A29384",
+      "#C2B7AA"
+    ]
+  },
+  {
+    "id": "eoh-graphic-poster-001",
+    "url": "/style-image/style5-graphic1.webp",
+    "title": "大地有機人文海報平面設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#A59B91",
+      "#C9C0B7",
+      "#DCD5CE"
+    ]
+  },
+  {
+    "id": "eoh-graphic-brand-001",
+    "url": "/style-image/style5-graphic2.webp",
+    "title": "大地有機人文品牌識別平面設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#C5B8AA",
+      "#DBD1C9",
+      "#E9E4DE"
+    ]
+  },
+  {
+    "id": "eoh-graphic-packaging-001",
+    "url": "/style-image/style5-graphic3.webp",
+    "title": "大地有機人文包裝平面設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#251B11",
+      "#43382B",
+      "#6F6152"
+    ]
+  },
+  {
+    "id": "eoh-graphic-editorial-001",
+    "url": "/style-image/style5-graphic4.webp",
+    "title": "大地有機人文編輯版面平面設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#7A6D61",
+      "#9A8E84",
+      "#D2CDCA"
+    ]
+  },
+  {
+    "id": "eoh-outfit-001",
+    "url": "/style-image/style5-outfit.webp",
+    "title": "大地有機人文穿搭代表圖",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#352210",
+      "#5F4E3A",
+      "#B1A08C"
+    ]
+  },
+  {
+    "id": "eoh-outfit-bottom-001",
+    "url": "/style-image/style5-outfit1.webp",
+    "title": "大地有機人文下身單品穿搭",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#948772",
+      "#A59A87",
+      "#E3DDD4"
+    ]
+  },
+  {
+    "id": "eoh-outfit-accessory-001",
+    "url": "/style-image/style5-outfit2.webp",
+    "title": "大地有機人文配件穿搭",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#5D3613",
+      "#A6917B",
+      "#BDA993"
+    ]
+  },
+  {
+    "id": "eoh-outfit-top-001",
+    "url": "/style-image/style5-outfit3.webp",
+    "title": "大地有機人文上身單品穿搭",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#856E4F",
+      "#9C8D79",
+      "#B0A597"
+    ]
+  },
+  {
+    "id": "eoh-outfit-dress-001",
+    "url": "/style-image/style5-outfit4.webp",
+    "title": "大地有機人文洋裝穿搭",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#7B6B55",
+      "#9B8F81",
+      "#B1A69A"
+    ]
+  },
+  {
+    "id": "eoh-interior-001",
+    "url": "/style-image/style5-interior.webp",
+    "title": "大地有機人文室內設計代表圖",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#604931",
+      "#7F6A55",
+      "#A5917D"
+    ]
+  },
+  {
+    "id": "eoh-interior-chair-001",
+    "url": "/style-image/style5-interior1.webp",
+    "title": "大地有機藝術塗漆",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#836F58",
+      "#9D8B78",
+      "#B7A898"
+    ]
+  },
+  {
+    "id": "eoh-interior-lighting-001",
+    "url": "/style-image/style5-interior2.webp",
+    "title": "大地有機人文燈光室內設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#261304",
+      "#432B13",
+      "#63482F"
+    ]
+  },
+  {
+    "id": "eoh-interior-table-001",
+    "url": "/style-image/style5-interior3.webp",
+    "title": "大地有機人文桌几室內設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#351C09",
+      "#5E4328",
+      "#82664A"
+    ]
+  },
+  {
+    "id": "eoh-interior-chair-002",
+    "url": "/style-image/style5-interior4.webp",
+    "title": "大地有機人文椅款室內設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#867259",
+      "#A89883",
+      "#C4B5A6"
+    ]
+  },
+  {
+    "id": "eoh-architecture-001",
+    "url": "/style-image/style5-architecture.webp",
+    "title": "大地有機人文建築代表圖",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#3A2812",
+      "#64543E",
+      "#B8AA9E"
+    ]
+  },
+  {
+    "id": "eoh-architecture-facade-001",
+    "url": "/style-image/style5-architecture1.webp",
+    "title": "大地有機人文立面建築",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#352717",
+      "#645140",
+      "#8B7D71"
+    ]
+  },
+  {
+    "id": "eoh-architecture-entrance-001",
+    "url": "/style-image/style5-architecture2.webp",
+    "title": "大地有機人文入口建築",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#1C1708",
+      "#3D351D",
+      "#5E513B"
+    ]
+  },
+  {
+    "id": "eoh-architecture-staircase-001",
+    "url": "/style-image/style5-architecture3.webp",
+    "title": "大地有機人文樓梯建築",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#4E3B27",
+      "#6B5744",
+      "#8D7B6A"
+    ]
+  },
+  {
+    "id": "eoh-architecture-window-001",
+    "url": "/style-image/style5-architecture4.webp",
+    "title": "大地有機人文窗景建築",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#3E2D16",
+      "#61543E",
+      "#867563"
+    ]
+  },
+  {
+    "id": "rpl-main-001",
+    "url": "/style-image/style6-main.webp",
+    "title": "浪漫田園生活系列主視覺",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+      "#7E654A",
+      "#A58B6F",
+      "#C1A88F"
+    ]
+  },
+  {
+    "id": "rpl-main-002",
+    "url": "/style-image/style6-main-1.webp",
+    "title": "浪漫田園生活概念主視覺 1",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+      "#BA9D82",
+      "#D5BDA6",
+      "#E8D9C8"
+    ]
+  },
+  {
+    "id": "rpl-main-003",
+    "url": "/style-image/style6-main-2.webp",
+    "title": "浪漫田園生活概念主視覺 2",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+      "#8D795E",
+      "#B69D87",
+      "#D1C1B3"
+    ]
+  },
+  {
+    "id": "rpl-main-004",
+    "url": "/style-image/style6-main-3.webp",
+    "title": "浪漫田園生活概念主視覺 3",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+      "#B09B80",
+      "#C9B8A4",
+      "#E2DCD6"
+    ]
+  },
+  {
+    "id": "rpl-main-005",
+    "url": "/style-image/style6-main-4.webp",
+    "title": "浪漫田園生活概念主視覺 4",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+      "#2D2011",
+      "#AF8B6A",
+      "#CEB092"
+    ]
+  },
+  {
+    "id": "rpl-graphic-001",
+    "url": "/style-image/style6-graphic.webp",
+    "title": "浪漫田園生活平面設計代表圖",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#836F57",
+      "#AA9786",
+      "#CEBCAE"
+    ]
+  },
+  {
+    "id": "rpl-graphic-poster-001",
+    "url": "/style-image/style6-graphic1.webp",
+    "title": "浪漫田園生活海報平面設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#CDBA9F",
+      "#DED1C2",
+      "#F0E7DD"
+    ]
+  },
+  {
+    "id": "rpl-graphic-brand-001",
+    "url": "/style-image/style6-graphic2.webp",
+    "title": "浪漫田園生活品牌識別平面設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#83786B",
+      "#C2B8AE",
+      "#D3CCC6"
+    ]
+  },
+  {
+    "id": "rpl-graphic-packaging-001",
+    "url": "/style-image/style6-graphic3.webp",
+    "title": "浪漫田園生活包裝平面設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#33240A",
+      "#887960",
+      "#B09D89"
+    ]
+  },
+  {
+    "id": "rpl-graphic-editorial-001",
+    "url": "/style-image/style6-graphic4.webp",
+    "title": "浪漫田園生活編輯版面平面設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#977A63",
+      "#B49E8B",
+      "#CAB9AD"
+    ]
+  },
+  {
+    "id": "rpl-outfit-001",
+    "url": "/style-image/style6-outfit.webp",
+    "title": "浪漫田園生活穿搭代表圖",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#5F5845",
+      "#8E7E6C",
+      "#B7A799"
+    ]
+  },
+  {
+    "id": "rpl-outfit-bottom-001",
+    "url": "/style-image/style6-outfit1.webp",
+    "title": "浪漫田園生活下身單品穿搭",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#352D17",
+      "#A08569",
+      "#C2A890"
+    ]
+  },
+  {
+    "id": "rpl-outfit-top-001",
+    "url": "/style-image/style6-outfit2.webp",
+    "title": "浪漫田園生活上身單品穿搭",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#8D7A64",
+      "#A4917E",
+      "#BDAD9F"
+    ]
+  },
+  {
+    "id": "rpl-outfit-accessory-001",
+    "url": "/style-image/style6-outfit3.webp",
+    "title": "浪漫田園生活配件穿搭",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#8E7559",
+      "#B19B86",
+      "#D0C4B7"
+    ]
+  },
+  {
+    "id": "rpl-outfit-dress-001",
+    "url": "/style-image/style6-outfit4.webp",
+    "title": "浪漫田園生活洋裝穿搭",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#947D68",
+      "#A5927E",
+      "#C3B19F"
+    ]
+  },
+  {
+    "id": "rpl-interior-001",
+    "url": "/style-image/style6-interior.webp",
+    "title": "浪漫田園生活室內設計代表圖",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#281408",
+      "#78624C",
+      "#A08B78"
+    ]
+  },
+  {
+    "id": "rpl-interior-lighting-001",
+    "url": "/style-image/style6-interior1.webp",
+    "title": "浪漫田園生活燈光設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#907B62",
+      "#AC9479",
+      "#E3C49C"
+    ]
+  },
+  {
+    "id": "rpl-interior-wall-paint-001",
+    "url": "/style-image/style6-interior2.webp",
+    "title": "浪漫田園生活壁紙",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#6B5A3C",
+      "#7B7159",
+      "#8E866F"
+    ]
+  },
+  {
+    "id": "rpl-interior-chair-001",
+    "url": "/style-image/style6-interior3.webp",
+    "title": "浪漫田園生活椅款",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#B49B83",
+      "#C5B5A7",
+      "#D5CABF"
+    ]
+  },
+  {
+    "id": "rpl-interior-table-001",
+    "url": "/style-image/style6-interior4.webp",
+    "title": "浪漫田園生活桌几",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#412709",
+      "#6B573A",
+      "#8D7E68"
+    ]
+  },
+  {
+    "id": "rpl-architecture-001",
+    "url": "/style-image/style6-architecture.webp",
+    "title": "浪漫田園生活建築代表圖",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#2D2B0D",
+      "#5C5333",
+      "#897C5F"
+    ]
+  },
+  {
+    "id": "rpl-architecture-facade-001",
+    "url": "/style-image/style6-architecture1.webp",
+    "title": "浪漫田園生活立面建築",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#655342",
+      "#8C7767",
+      "#B59D8D"
+    ]
+  },
+  {
+    "id": "rpl-architecture-entrance-001",
+    "url": "/style-image/style6-architecture2.webp",
+    "title": "浪漫田園生活入口建築",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#33290C",
+      "#5B4C29",
+      "#7D6E4F"
+    ]
+  },
+  {
+    "id": "rpl-architecture-staircase-001",
+    "url": "/style-image/style6-architecture3.webp",
+    "title": "浪漫田園生活樓梯建築",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#816C55",
+      "#A1927F",
+      "#B8AB9C"
+    ]
+  },
+  {
+    "id": "rpl-architecture-window-001",
+    "url": "/style-image/style6-architecture4.webp",
+    "title": "浪漫田園生活窗景建築",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#6A5B47",
+      "#867B6A",
+      "#ADA99B"
+    ]
+  },
+  {
+    "id": "retro-main-001",
+    "url": "/style-image/style7-main.webp",
+    "title": "復古懷舊系列主視覺",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+      "#162120",
+      "#43382F",
+      "#765C48"
+    ]
+  },
+  {
+    "id": "retro-main-002",
+    "url": "/style-image/style7-main-1.webp",
+    "title": "復古懷舊概念主視覺 1",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+      "#884B1B",
+      "#B77842",
+      "#DCA05F"
+    ]
+  },
+  {
+    "id": "retro-main-003",
+    "url": "/style-image/style7-main-2.webp",
+    "title": "復古懷舊概念主視覺 2",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+      "#48372B",
+      "#83523A",
+      "#DDB58E"
+    ]
+  },
+  {
+    "id": "retro-main-004",
+    "url": "/style-image/style7-main-3.webp",
+    "title": "復古懷舊概念主視覺 3",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+      "#282627",
+      "#5A4133",
+      "#936B47"
+    ]
+  },
+  {
+    "id": "retro-main-005",
+    "url": "/style-image/style7-main-4.webp",
+    "title": "復古懷舊概念主視覺 4",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+      "#102037",
+      "#914A40",
+      "#D3BDA4"
+    ]
+  },
+  {
+    "id": "retro-graphic-001",
+    "url": "/style-image/style7-graphic.webp",
+    "title": "復古懷舊平面設計代表圖",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#2E271A",
+      "#5B4D37",
+      "#DCD2C5"
+    ]
+  },
+  {
+    "id": "retro-graphic-poster-001",
+    "url": "/style-image/style7-graphic1.webp",
+    "title": "復古懷舊海報平面設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#664828",
+      "#927656",
+      "#AA9579"
+    ]
+  },
+  {
+    "id": "retro-graphic-brand-001",
+    "url": "/style-image/style7-graphic2.webp",
+    "title": "復古懷舊品牌識別",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#C46A29",
+      "#CDB799",
+      "#DED0BD"
+    ]
+  },
+  {
+    "id": "retro-graphic-packaging-001",
+    "url": "/style-image/style7-graphic3.webp",
+    "title": "復古懷舊包裝設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#53371A",
+      "#83623A",
+      "#AC8A63"
+    ]
+  },
+  {
+    "id": "retro-graphic-editorial-001",
+    "url": "/style-image/style7-graphic4.webp",
+    "title": "復古懷舊書籍編排設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#594C3A",
+      "#7E715E",
+      "#BEB1A1"
+    ]
+  },
+  {
+    "id": "retro-outfit-001",
+    "url": "/style-image/style7-outfit.webp",
+    "title": "復古懷舊穿搭代表圖",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#703E22",
+      "#8B674D",
+      "#D3BFA4"
+    ]
+  },
+  {
+    "id": "retro-outfit-top-001",
+    "url": "/style-image/style7-outfit1.webp",
+    "title": "復古懷舊上衣",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#382616",
+      "#55615F",
+      "#AC987D"
+    ]
+  },
+  {
+    "id": "retro-outfit-bottom-001",
+    "url": "/style-image/style7-outfit2.webp",
+    "title": "復古懷舊褲裝",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#4C2A12",
+      "#B69979",
+      "#D6BFA5"
+    ]
+  },
+  {
+    "id": "retro-outfit-dress-001",
+    "url": "/style-image/style7-outfit3.webp",
+    "title": "復古懷舊洋裝穿搭",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#C2B19C",
+      "#CFC4B6",
+      "#E0E1DE"
+    ]
+  },
+  {
+    "id": "retro-outfit-accessory-001",
+    "url": "/style-image/style7-outfit4.webp",
+    "title": "復古懷舊配件穿搭",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#88583D",
+      "#CCB191",
+      "#E4CFB6"
+    ]
+  },
+  {
+    "id": "retro-interior-001",
+    "url": "/style-image/style7-interior.webp",
+    "title": "復古懷舊室內設計代表圖",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#1D120A",
+      "#4B2E15",
+      "#6D5131"
+    ]
+  },
+  {
+    "id": "retro-interior-lighting-001",
+    "url": "/style-image/style7-interior1.webp",
+    "title": "復古懷舊燈光設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#210C04",
+      "#6D492D",
+      "#976741"
+    ]
+  },
+  {
+    "id": "retro-interior-wall-paint-001",
+    "url": "/style-image/style7-interior2.webp",
+    "title": "復古懷舊牆面色彩設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#2A1B06",
+      "#4D3A19",
+      "#A1855A"
+    ]
+  },
+  {
+    "id": "retro-interior-table-001",
+    "url": "/style-image/style7-interior3.webp",
+    "title": "復古懷舊桌几",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#21170C",
+      "#493019",
+      "#6E5135"
+    ]
+  },
+  {
+    "id": "retro-interior-chair-001",
+    "url": "/style-image/style7-interior4.webp",
+    "title": "復古懷舊椅款室內設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#573C20",
+      "#7A6246",
+      "#A79070"
+    ]
+  },
+  {
+    "id": "retro-architecture-001",
+    "url": "/style-image/style7-architecture.webp",
+    "title": "復古懷舊建築代表圖",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#4A3E2D",
+      "#927B63",
+      "#BBC4C7"
+    ]
+  },
+  {
+    "id": "retro-architecture-facade-001",
+    "url": "/style-image/style7-architecture1.webp",
+    "title": "復古懷舊建築立面",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#3B3832",
+      "#766D62",
+      "#EBDECC"
+    ]
+  },
+  {
+    "id": "retro-architecture-staircase-001",
+    "url": "/style-image/style7-architecture2.webp",
+    "title": "復古懷舊樓梯",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#261D13",
+      "#463623",
+      "#63523B"
+    ]
+  },
+  {
+    "id": "retro-architecture-entrance-001",
+    "url": "/style-image/style7-architecture3.webp",
+    "title": "復古懷舊入口",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#261709",
+      "#633E21",
+      "#866349"
+    ]
+  },
+  {
+    "id": "retro-architecture-window-001",
+    "url": "/style-image/style7-architecture4.webp",
+    "title": "復古懷舊窗景",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#534739",
+      "#948B7D",
+      "#B4BDC7"
+    ]
+  },
+  {
+    "id": "eag-main-001",
+    "url": "/style-image/style8-main.webp",
+    "title": "實驗前衛系列主視覺",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+      "#0F1013",
+      "#2D2F31",
+      "#8B8988"
+    ]
+  },
+  {
+    "id": "eag-main-002",
+    "url": "/style-image/style8-main-1.webp",
+    "title": "實驗前衛概念主視覺 1",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+      "#13171E",
+      "#706D71",
+      "#BCB4B5"
+    ]
+  },
+  {
+    "id": "eag-main-003",
+    "url": "/style-image/style8-main-2.webp",
+    "title": "實驗前衛概念主視覺 2",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+      "#0E151E",
+      "#40454A",
+      "#BCB9BA"
+    ]
+  },
+  {
+    "id": "eag-main-004",
+    "url": "/style-image/style8-main-3.webp",
+    "title": "實驗前衛概念主視覺 3",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+      "#191B1E",
+      "#383C40",
+      "#5D6165"
+    ]
+  },
+  {
+    "id": "eag-main-005",
+    "url": "/style-image/style8-main-4.webp",
+    "title": "實驗前衛概念主視覺 4",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+      "#898179",
+      "#A6A19B",
+      "#C1BDBA"
+    ]
+  },
+  {
+    "id": "eag-graphic-001",
+    "url": "/style-image/style8-graphic.webp",
+    "title": "實驗前衛平面設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#302F30",
+      "#A9A7A5",
+      "#CDCAC7"
+    ]
+  },
+  {
+    "id": "eag-graphic-brand-001",
+    "url": "/style-image/style8-graphic1.webp",
+    "title": "實驗前衛品牌識別設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#535355",
+      "#7B7979",
+      "#D5D3D1"
+    ]
+  },
+  {
+    "id": "eag-graphic-editorial-001",
+    "url": "/style-image/style8-graphic2.webp",
+    "title": "實驗前衛編輯版面平面設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#393734",
+      "#878484",
+      "#B0ACAC"
+    ]
+  },
+  {
+    "id": "eag-graphic-packaging-001",
+    "url": "/style-image/style8-graphic3.webp",
+    "title": "實驗前衛包裝設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#1B1915",
+      "#5B554D",
+      "#C0B6AC"
+    ]
+  },
+  {
+    "id": "eag-graphic-poster-001",
+    "url": "/style-image/style8-graphic4.webp",
+    "title": "實驗前衛海報設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#161210",
+      "#56362F",
+      "#CDC8C3"
+    ]
+  },
+  {
+    "id": "eag-outfit-001",
+    "url": "/style-image/style8-outfit.webp",
+    "title": "實驗前衛穿搭代表圖",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#141313",
+      "#8B857E",
+      "#C2BEBA"
+    ]
+  },
+  {
+    "id": "eag-outfit-top-001",
+    "url": "/style-image/style8-outfit1.webp",
+    "title": "實驗前衛上衣",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#867C72",
+      "#B3AAA1",
+      "#D5CEC7"
+    ]
+  },
+  {
+    "id": "eag-outfit-bottom-001",
+    "url": "/style-image/style8-outfit2.webp",
+    "title": "實驗前衛褲裝",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#110F0F",
+      "#2F2B29",
+      "#7E7B77"
+    ]
+  },
+  {
+    "id": "eag-outfit-dress-001",
+    "url": "/style-image/style8-outfit3.webp",
+    "title": "實驗前衛洋裝",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#383735",
+      "#4C4A48",
+      "#ACABAD"
+    ]
+  },
+  {
+    "id": "eag-outfit-accessory-001",
+    "url": "/style-image/style8-outfit4.webp",
+    "title": "實驗前衛配件",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#7E7870",
+      "#918C87",
+      "#C7C1BC"
+    ]
+  },
+  {
+    "id": "eag-interior-001",
+    "url": "/style-image/style8-interior.webp",
+    "title": "實驗前衛室內設計代表圖",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#211D18",
+      "#4B433A",
+      "#796D5F"
+    ]
+  },
+  {
+    "id": "eag-interior-wall-paint-001",
+    "url": "/style-image/style8-interior1.webp",
+    "title": "實驗前衛牆面色彩設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#2A241C",
+      "#907C69",
+      "#AE9E8F"
+    ]
+  },
+  {
+    "id": "eag-interior-lighting-001",
+    "url": "/style-image/style8-interior2.webp",
+    "title": "實驗前衛燈光",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#8A7F77",
+      "#ACA39C",
+      "#D7D3D0"
+    ]
+  },
+  {
+    "id": "eag-interior-table-001",
+    "url": "/style-image/style8-interior3.webp",
+    "title": "實驗前衛桌几",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#54483C",
+      "#7D7165",
+      "#A89D92"
+    ]
+  },
+  {
+    "id": "eag-interior-chair-001",
+    "url": "/style-image/style8-interior4.webp",
+    "title": "實驗前衛椅款",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#2F2A25",
+      "#695147",
+      "#B2A69B"
+    ]
+  },
+  {
+    "id": "eag-architecture-001",
+    "url": "/style-image/style8-architecture.webp",
+    "title": "實驗前衛建築代表圖",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#807F80",
+      "#A2A3A6",
+      "#C3C7CE"
+    ]
+  },
+  {
+    "id": "eag-architecture-staircase-001",
+    "url": "/style-image/style8-architecture1.webp",
+    "title": "實驗前衛樓梯建築",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#323336",
+      "#525355",
+      "#9EA2AA"
+    ]
+  },
+  {
+    "id": "eag-architecture-facade-001",
+    "url": "/style-image/style8-architecture2.webp",
+    "title": "實驗前衛窗戶設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#19130C",
+      "#3F3224",
+      "#6C6054"
+    ]
+  },
+  {
+    "id": "eag-architecture-entrance-001",
+    "url": "/style-image/style8-architecture3.webp",
+    "title": "實驗前衛入口建築",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#847B74",
+      "#9FA2A6",
+      "#D0D7E0"
+    ]
+  },
+  {
+    "id": "eag-architecture-facade-002",
+    "url": "/style-image/style8-architecture4.webp",
+    "title": "實驗前衛立面建築",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#201C17",
+      "#7E7D7B",
+      "#D0D4DA"
+    ]
+  },
+  {
+    "id": "syc-main-001",
+    "url": "/style-image/style9-main.webp",
+    "title": "街頭青年文化系列主視覺",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+      "#0E1116",
+      "#2D363B",
+      "#B1B9B8"
+    ]
+  },
+  {
+    "id": "syc-main-002",
+    "url": "/style-image/style9-main-1.webp",
+    "title": "街頭青年文化概念主視覺 1",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+      "#0F1E1C",
+      "#B7B5B0",
+      "#E2E5E4"
+    ]
+  },
+  {
+    "id": "syc-main-003",
+    "url": "/style-image/style9-main-2.webp",
+    "title": "街頭青年文化概念主視覺 2",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+      "#17151B",
+      "#34333F",
+      "#A5989D"
+    ]
+  },
+  {
+    "id": "syc-main-004",
+    "url": "/style-image/style9-main-3.webp",
+    "title": "街頭青年文化概念主視覺 3",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+      "#2B3239",
+      "#7A7C86",
+      "#B9CAE1"
+    ]
+  },
+  {
+    "id": "syc-main-005",
+    "url": "/style-image/style9-main-4.webp",
+    "title": "街頭青年文化概念主視覺 4",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+      "#0C131A",
+      "#B29991",
+      "#D5CECE"
+    ]
+  },
+  {
+    "id": "syc-graphic-001",
+    "url": "/style-image/style9-graphic.webp",
+    "title": "街頭青年文化平面設計代表圖",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+      "#1B1B16",
+      "#B3866A",
+      "#CBC4C0"
+    ]
+  },
+  {
+    "id": "syc-graphic-poster-001",
+    "url": "/style-image/style9-graphic1.webp",
+    "title": "街頭青年文化海報設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#DDFF19",
+      "#000000",
+      "#5D5E54"
+    ]
+  },
+  {
+    "id": "syc-graphic-brand-001",
+    "url": "/style-image/style9-graphic2.webp",
+    "title": "街頭青年文化品牌識別設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#383A3B",
+      "#9E9A96",
+      "#C8C9CB"
+    ]
+  },
+  {
+    "id": "syc-graphic-packaging-001",
+    "url": "/style-image/style9-graphic3.webp",
+    "title": "街頭青年文化包裝設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#151513",
+      "#3A3632",
+      "#706760"
+    ]
+  },
+  {
+    "id": "syc-graphic-editorial-001",
+    "url": "/style-image/style9-graphic4.webp",
+    "title": "街頭青年文化編輯版面設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#4A453E",
+      "#A59E97",
+      "#D6D1CE"
+    ]
+  },
+  {
+    "id": "syc-outfit-001",
+    "url": "/style-image/style9-outfit.webp",
+    "title": "街頭青年文化穿搭代表圖",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+      "#151713",
+      "#3F3E37",
+      "#61615C"
+    ]
+  },
+  {
+    "id": "syc-outfit-top-001",
+    "url": "/style-image/style9-outfit1.webp",
+    "title": "街頭青年文化上身",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top",
+    "colorPalette": [
+      "#222222",
+      "#3B3B3A",
+      "#515151"
+    ]
+  },
+  {
+    "id": "syc-outfit-bottom-001",
+    "url": "/style-image/style9-outfit2.webp",
+    "title": "街頭青年文化褲裝",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom",
+    "colorPalette": [
+      "#747270",
+      "#A39E9B",
+      "#C1BDB7"
+    ]
+  },
+  {
+    "id": "syc-outfit-dress-001",
+    "url": "/style-image/style9-outfit3.webp",
+    "title": "街頭青年文化洋裝",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress",
+    "colorPalette": [
+      "#AAA6A0",
+      "#CBC9C6",
+      "#E6E6E5"
+    ]
+  },
+  {
+    "id": "syc-outfit-accessory-001",
+    "url": "/style-image/style9-outfit4.webp",
+    "title": "街頭青年文化配件",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#232225",
+      "#545254",
+      "#F6F6F6"
+    ]
+  },
+  {
+    "id": "syc-interior-001",
+    "url": "/style-image/style9-interior.webp",
+    "title": "街頭青年文化室內設計代表圖",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture",
+      "Hypebeast"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+      "#4C4132",
+      "#786551",
+      "#96867A"
+    ]
+  },
+  {
+    "id": "syc-interior-table-001",
+    "url": "/style-image/style9-interior1.webp",
+    "title": "街頭青年文化桌几",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Hypebeast",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+      "#4F4943",
+      "#6F6962",
+      "#89837D"
+    ]
+  },
+  {
+    "id": "syc-interior-chair-001",
+    "url": "/style-image/style9-interior2.webp",
+    "title": "街頭青年文化椅款",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Hypebeast",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+      "#45403B",
+      "#6E6963",
+      "#908D8B"
+    ]
+  },
+  {
+    "id": "syc-interior-lighting-001",
+    "url": "/style-image/style9-interior3.webp",
+    "title": "街頭青年文化落地燈",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#17120D",
+      "#362E26",
+      "#574C41"
+    ]
+  },
+  {
+    "id": "syc-interior-wall-paint-001",
+    "url": "/style-image/style9-interior4.webp",
+    "title": "街頭青年文化牆面設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+      "#1A1510",
+      "#393028",
+      "#5F4C3C"
+    ]
+  },
+  {
+    "id": "syc-architecture-001",
+    "url": "/style-image/style9-architecture.webp",
+    "title": "街頭青年文化建築代表圖",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+      "#1F1911",
+      "#6A625F",
+      "#CCD3DE"
+    ]
+  },
+  {
+    "id": "syc-architecture-facade-001",
+    "url": "/style-image/style9-architecture1.webp",
+    "title": "街頭青年文化建築立面",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#232319",
+      "#878582",
+      "#BED5E9"
+    ]
+  },
+  {
+    "id": "syc-architecture-entrance-001",
+    "url": "/style-image/style9-architecture2.webp",
+    "title": "街頭青年文化建築入口",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#181310",
+      "#2E2B2B",
+      "#666062"
+    ]
+  },
+  {
+    "id": "syc-architecture-staircase-001",
+    "url": "/style-image/style9-architecture3.webp",
+    "title": "街頭青年文化樓梯設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+      "#1E1B15",
+      "#46433A",
+      "#66645C"
+    ]
+  },
+  {
+    "id": "syc-architecture-window-001",
+    "url": "/style-image/style9-architecture4.webp",
+    "title": "街頭青年文化窗景建築",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+      "#191715",
+      "#38383A",
+      "#D3CBC5"
     ]
   }
 ]
