@@ -1,17 +1,13 @@
 import rawStyleImages from '@/data/style-data.json';
 import type { HomeInspirationImage, ImageSpreadNode, StyleImage } from '@/types/image';
 
+
 interface RelatedImageOptions {
   limit?: number;
   visitedImageIds?: string[];
 }
 
-interface HomeInspirationOptions {
-  random?: () => number;
-}
-
 const DEFAULT_RELATED_LIMIT = 4;
-const HOME_INSPIRATION_LIMIT = 5;
 
 const styleImages = rawStyleImages as StyleImage[];
 
@@ -48,6 +44,7 @@ function getFirstImagesByStyleGroup(): StyleImage[] {
   const groups = new Map<string, StyleImage>();
 
   for (const image of styleImages) {
+    if (!image.id.includes('main')) continue;
     if (!groups.has(image.styleGroup)) {
       groups.set(image.styleGroup, image);
     }
@@ -56,45 +53,120 @@ function getFirstImagesByStyleGroup(): StyleImage[] {
   return [...groups.values()];
 }
 
-function getFirstImagesByStyle(excludedImageIds: Set<string>): StyleImage[] {
-  const styles = new Map<string, StyleImage>();
+function getFirstImagePerMedium(styleGroup: string): StyleImage[] {
+  const mediums = new Map<string, StyleImage>();
 
   for (const image of styleImages) {
-    if (excludedImageIds.has(image.id)) {
-      continue;
-    }
-
-    for (const style of image.style) {
-      if (!styles.has(style)) {
-        styles.set(style, image);
-      }
-    }
+    if (image.styleGroup !== styleGroup) continue;
+    if (!image.medium) continue;
+    if (mediums.has(image.medium)) continue;
+    mediums.set(image.medium, image);
   }
 
-  return [...new Map([...styles.values()].map((image) => [image.id, image])).values()];
+  return [...mediums.values()];
 }
 
-function pickRandomImages(
-  candidates: StyleImage[],
-  count: number,
-  random: () => number
+function getFirstImagePerSubMedium(
+  styleGroup: string,
+  medium: string
 ): StyleImage[] {
-  const pool = [...candidates];
-  const selectedImages: StyleImage[] = [];
+  const subMediums = new Map<string, StyleImage>();
 
-  while (pool.length > 0 && selectedImages.length < count) {
-    const index = Math.min(Math.floor(random() * pool.length), pool.length - 1);
-    const [image] = pool.splice(index, 1);
-    selectedImages.push(image);
+  for (const image of styleImages) {
+    if (image.styleGroup !== styleGroup) continue;
+    if (image.medium !== medium) continue;
+    if (!image.subMedium) continue;
+    const key = image.subMedium;
+    if (subMediums.has(key)) continue;
+    subMediums.set(key, image);
   }
 
-  return selectedImages;
+  return [...subMediums.values()];
 }
 
 export function getImageById(imageId: string): ImageSpreadNode | undefined {
   const image = styleImages.find((item) => item.id === imageId);
 
   return image ? toSpreadNode(image) : undefined;
+}
+
+export function getMediumGroupImages(
+  imageId: string,
+  options: RelatedImageOptions = {}
+): ImageSpreadNode[] {
+  const baseImage = styleImages.find((item) => item.id === imageId);
+
+  if (!baseImage) return [];
+
+  const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
+  const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
+  const mediumImages = getFirstImagePerMedium(baseImage.styleGroup).filter(
+    (image) => !excludedIds.has(image.id)
+  );
+
+  return mediumImages.slice(0, limit).map(toSpreadNode);
+}
+
+export function getSubMediumGroupImages(
+  imageId: string,
+  options: RelatedImageOptions = {}
+): ImageSpreadNode[] {
+  const baseImage = styleImages.find((item) => item.id === imageId);
+
+  if (!baseImage || !baseImage.medium) return [];
+
+  const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
+  const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
+  const subMediumImages = getFirstImagePerSubMedium(
+    baseImage.styleGroup,
+    baseImage.medium
+  ).filter((image) => !excludedIds.has(image.id));
+
+  return subMediumImages.slice(0, limit).map(toSpreadNode);
+}
+
+function pickRelatedCandidates(
+  candidates: StyleImage[],
+  baseImage: StyleImage,
+  limit: number
+): StyleImage[] {
+  const selectedIds = new Set<string>();
+
+  function takeFrom(predicate: (image: StyleImage) => boolean): StyleImage[] {
+    const picked: StyleImage[] = [];
+
+    for (const image of candidates) {
+      if (picked.length >= limit) break;
+      if (selectedIds.has(image.id)) continue;
+      if (predicate(image)) {
+        selectedIds.add(image.id);
+        picked.push(image);
+      }
+    }
+
+    return picked;
+  }
+
+  const result: StyleImage[] = [];
+
+  if (baseImage.subMedium) {
+    result.push(...takeFrom((image) => image.subMedium === baseImage.subMedium));
+  }
+
+  if (baseImage.medium && result.length < limit) {
+    result.push(...takeFrom((image) => image.medium === baseImage.medium));
+  }
+
+  if (result.length < limit) {
+    result.push(
+      ...takeFrom((image) => image.styleGroup === baseImage.styleGroup)
+        .sort(
+          (first, second) => countSharedStyles(baseImage, second) - countSharedStyles(baseImage, first)
+        )
+    );
+  }
+
+  return result;
 }
 
 export function getRelatedImages(
@@ -110,33 +182,10 @@ export function getRelatedImages(
   const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
   const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
   const candidates = styleImages.filter((image) => !excludedIds.has(image.id));
-  const sameGroupImages = candidates
-    .filter((image) => image.styleGroup === baseImage.styleGroup)
-    .sort(
-      (first, second) => countSharedStyles(baseImage, second) - countSharedStyles(baseImage, first)
-    );
 
-  return sameGroupImages.slice(0, limit).map(toSpreadNode);
+  return pickRelatedCandidates(candidates, baseImage, limit).map(toSpreadNode);
 }
 
-export function getHomeInspirationImages(
-  options: HomeInspirationOptions = {}
-): HomeInspirationImage[] {
-  const random = options.random ?? Math.random;
-  const groupLeadImages = getFirstImagesByStyleGroup();
-
-  if (groupLeadImages.length >= HOME_INSPIRATION_LIMIT) {
-    return groupLeadImages.slice(0, HOME_INSPIRATION_LIMIT).map(toHomeInspirationImage);
-  }
-
-  const selectedIds = new Set(groupLeadImages.map((image) => image.id));
-  const fillerImages = pickRandomImages(
-    getFirstImagesByStyle(selectedIds),
-    HOME_INSPIRATION_LIMIT - groupLeadImages.length,
-    random
-  );
-
-  return [...groupLeadImages, ...fillerImages]
-    .slice(0, HOME_INSPIRATION_LIMIT)
-    .map(toHomeInspirationImage);
+export function getHomeInspirationImages(): HomeInspirationImage[] {
+  return getFirstImagesByStyleGroup().map(toHomeInspirationImage);
 }
