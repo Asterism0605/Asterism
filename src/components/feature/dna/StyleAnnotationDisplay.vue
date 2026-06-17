@@ -16,12 +16,12 @@
     </div>
 
     <div
-      class="relative z-40 h-screen min-h-0 px-0 pb-0 pt-0 sm:px-12 lg:grid lg:grid-cols-[0.58fr_0.42fr] lg:items-center lg:px-14"
+      class="relative z-40 h-screen min-h-0 px-0 pb-0 pt-0 sm:px-12 lg:grid lg:grid-cols-[0.5fr_0.5fr] lg:items-center lg:px-14"
     >
       <div class="hidden min-w-0 lg:block" aria-hidden="true" />
 
       <div
-        class="absolute bottom-[7vh] right-[-5.5rem] z-50 h-[64vh] w-[82vw] min-w-0 sm:right-0 sm:w-[58vw] lg:relative lg:bottom-auto lg:right-auto lg:h-screen lg:w-auto lg:min-h-0"
+        class="absolute bottom-[7vh] right-[-1.25rem] z-50 h-[64vh] w-[70vw] min-w-0 sm:right-0 sm:w-[58vw] lg:relative lg:bottom-auto lg:right-auto lg:h-screen lg:w-auto lg:min-h-0"
       >
         <div class="relative flex h-full min-h-0 items-end justify-center">
           <img
@@ -33,15 +33,37 @@
           <div
             v-for="annotation in annotations"
             :key="`${annotation.position}-${annotation.label}-${annotation.value}`"
-            class="absolute z-[60] max-w-44 text-xs text-text-primary before:absolute before:top-3 before:h-px before:bg-text-primary/80"
-            :class="annotationClasses[annotation.position]"
+            class="style-annotation absolute z-[60] w-28 text-xs text-text-primary sm:w-36 lg:w-40"
+            :class="annotationPositionClasses[annotation.position]"
+            data-testid="style-annotation"
           >
-            <p class="truncate font-light">
-              {{ annotation.label }}
-            </p>
-            <p class="text-text-secondary">
-              {{ annotation.value }}
-            </p>
+            <div
+              class="style-annotation__line-wrap flex items-start"
+              :class="annotationLineClasses[annotation.position]"
+            >
+              <span
+                v-if="annotation.position !== 'left'"
+                class="style-annotation__tail mr-[-1px] mt-px block h-px w-9 origin-right bg-text-primary/80"
+                :class="annotationTailClasses[annotation.position]"
+              />
+              <span class="style-annotation__line h-px flex-1 bg-text-primary/80" />
+              <span
+                v-if="annotation.position === 'left'"
+                class="style-annotation__tail ml-[-1px] mt-px block h-px w-9 origin-left bg-text-primary/80"
+                :class="annotationTailClasses[annotation.position]"
+              />
+            </div>
+            <div
+              class="style-annotation__content mt-3"
+              :class="annotationContentClasses[annotation.position]"
+            >
+              <p class="truncate font-light">
+                {{ annotation.label }}
+              </p>
+              <p class="mt-1 text-text-secondary">
+                {{ annotation.value }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -64,6 +86,7 @@
           </p>
         </div>
       </div>
+
     </div>
   </section>
 </template>
@@ -78,11 +101,27 @@ defineProps<{
   annotations: StyleDnaAnnotation[];
 }>();
 
-const annotationClasses: Record<StyleDnaAnnotation['position'], string> = {
-  left: 'left-[-36vw] top-[18%] text-left before:left-full before:w-28 sm:left-[-10vw] lg:left-0 lg:top-[42%] lg:-translate-x-1/2 lg:before:w-24',
-  right:
-    'right-[7rem] bottom-[2%] text-right before:right-full before:w-28 sm:right-0 lg:right-0 lg:top-[48%] lg:bottom-auto lg:translate-x-1/3 lg:before:w-24',
-  'top-right':
-    'right-[6.75rem] top-[-6%] text-right before:right-full before:w-24 sm:right-0 lg:right-0 lg:top-[18%] lg:translate-x-1/3 lg:before:w-32'
+const annotationPositionClasses: Record<StyleDnaAnnotation['position'], string> = {
+  left: 'left-[-12vw] top-[20%] sm:left-[6vw] lg:left-[16%] lg:top-[42%] lg:-translate-x-1/2',
+  right: 'right-[4rem] bottom-[-7%] sm:right-[1.5rem] lg:right-[8%] lg:top-[48%] lg:bottom-auto',
+  'top-right': 'right-[2.25rem] top-[1%] sm:right-[1.5rem] lg:right-[7%] lg:top-[18%]'
+};
+
+const annotationLineClasses: Record<StyleDnaAnnotation['position'], string> = {
+  left: 'justify-start',
+  right: 'justify-end',
+  'top-right': 'justify-end'
+};
+
+const annotationTailClasses: Record<StyleDnaAnnotation['position'], string> = {
+  left: 'rotate-[42deg]',
+  right: 'rotate-[42deg]',
+  'top-right': 'rotate-[-42deg]'
+};
+
+const annotationContentClasses: Record<StyleDnaAnnotation['position'], string> = {
+  left: 'text-left',
+  right: 'pr-1 text-right',
+  'top-right': 'text-right'
 };
 </script>
