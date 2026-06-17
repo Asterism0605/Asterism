@@ -1,17 +1,16 @@
 import { fetchImagesApi } from '@/api/image.api';
+import rawStyleImages from '@/data/style-data.json';
 import type { HomeInspirationImage, ImageSpreadNode, StyleImage } from '@/types/image';
 
 interface RelatedImageOptions {
   limit?: number;
   visitedImageIds?: string[];
-}
-
-interface HomeInspirationOptions {
   random?: () => number;
 }
 
 const DEFAULT_RELATED_LIMIT = 4;
-const HOME_INSPIRATION_LIMIT = 5;
+
+const localStyleImages = rawStyleImages as StyleImage[];
 
 let cachedImagesPromise: Promise<StyleImage[]> | null = null;
 
@@ -52,102 +51,98 @@ function toHomeInspirationImage(image: StyleImage): HomeInspirationImage {
   };
 }
 
-function getFirstImagesByStyleGroup(styleImages: StyleImage[]): StyleImage[] {
-  const groups = new Map<string, StyleImage>();
-
-  for (const image of styleImages) {
-    if (!groups.has(image.styleGroup)) {
-      groups.set(image.styleGroup, image);
-    }
-  }
-
-  return [...groups.values()];
+function findById(styleImages: StyleImage[], imageId: string): StyleImage | undefined {
+  return styleImages.find((item) => item.id === imageId);
 }
 
-function getFirstImagesByStyle(styleImages: StyleImage[], excludedImageIds: Set<string>): StyleImage[] {
-  const styles = new Map<string, StyleImage>();
+function shuffle<T>(items: T[], random: () => number): T[] {
+  const result = [...items];
 
-  for (const image of styleImages) {
-    if (excludedImageIds.has(image.id)) {
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+// 同 styleGroup 候選依「共享 style 數」分層（多到少），同分層內洗牌，
+// 這樣相關度高的永遠優先，但同樣相關的圖每次延展（含 F5 重整）順序都不同。
+function sortBySameGroupSharedStyles(
+  baseImage: StyleImage,
+  candidates: StyleImage[],
+  random: () => number = Math.random
+): StyleImage[] {
+  const tiers = new Map<number, StyleImage[]>();
+
+  for (const image of candidates) {
+    if (image.styleGroup !== baseImage.styleGroup) {
       continue;
     }
 
-    for (const style of image.style) {
-      if (!styles.has(style)) {
-        styles.set(style, image);
-      }
-    }
+    const shared = countSharedStyles(baseImage, image);
+    const tier = tiers.get(shared) ?? [];
+    tier.push(image);
+    tiers.set(shared, tier);
   }
 
-  return [...new Map([...styles.values()].map((image) => [image.id, image])).values()];
+  return [...tiers.keys()]
+    .sort((first, second) => second - first)
+    .flatMap((shared) => shuffle(tiers.get(shared) as StyleImage[], random));
 }
 
-function pickRandomImages(
-  candidates: StyleImage[],
-  count: number,
-  random: () => number
-): StyleImage[] {
-  const pool = [...candidates];
-  const selectedImages: StyleImage[] = [];
-
-  while (pool.length > 0 && selectedImages.length < count) {
-    const index = Math.min(Math.floor(random() * pool.length), pool.length - 1);
-    const [image] = pool.splice(index, 1);
-    selectedImages.push(image);
-  }
-
-  return selectedImages;
-}
-
+// 本地 61 張（含概念照與素材照）優先查找，本地查不到才打 API 找外部延展圖池，
+// 避免首頁概念照（只在本地）點進去因為不在 API 圖池而找不到。
 export async function getImageById(imageId: string): Promise<ImageSpreadNode | undefined> {
-  const styleImages = await loadImages();
-  const image = styleImages.find((item) => item.id === imageId);
+  const localImage = findById(localStyleImages, imageId);
 
-  return image ? toSpreadNode(image) : undefined;
+  if (localImage) {
+    return toSpreadNode(localImage);
+  }
+
+  const apiImage = findById(await loadImages(), imageId);
+
+  return apiImage ? toSpreadNode(apiImage) : undefined;
 }
 
 export async function getRelatedImages(
   imageId: string,
   options: RelatedImageOptions = {}
 ): Promise<ImageSpreadNode[]> {
-  const styleImages = await loadImages();
-  const baseImage = styleImages.find((item) => item.id === imageId);
+  const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
+  const random = options.random ?? Math.random;
+  const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
+
+  const baseImage = findById(localStyleImages, imageId) ?? findById(await loadImages(), imageId);
 
   if (!baseImage) {
     return [];
   }
 
-  const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
-  const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
-  const candidates = styleImages.filter((image) => !excludedIds.has(image.id));
-  const sameGroupImages = candidates
-    .filter((image) => image.styleGroup === baseImage.styleGroup)
-    .sort(
-      (first, second) => countSharedStyles(baseImage, second) - countSharedStyles(baseImage, first)
-    );
-
-  return sameGroupImages.slice(0, limit).map(toSpreadNode);
-}
-
-export async function getHomeInspirationImages(
-  options: HomeInspirationOptions = {}
-): Promise<HomeInspirationImage[]> {
-  const styleImages = await loadImages();
-  const random = options.random ?? Math.random;
-  const groupLeadImages = getFirstImagesByStyleGroup(styleImages);
-
-  if (groupLeadImages.length >= HOME_INSPIRATION_LIMIT) {
-    return groupLeadImages.slice(0, HOME_INSPIRATION_LIMIT).map(toHomeInspirationImage);
-  }
-
-  const selectedIds = new Set(groupLeadImages.map((image) => image.id));
-  const fillerImages = pickRandomImages(
-    getFirstImagesByStyle(styleImages, selectedIds),
-    HOME_INSPIRATION_LIMIT - groupLeadImages.length,
+  const localMatches = sortBySameGroupSharedStyles(
+    baseImage,
+    localStyleImages.filter((image) => !excludedIds.has(image.id)),
     random
   );
+  const selectedImages = localMatches.slice(0, limit);
 
-  return [...groupLeadImages, ...fillerImages]
-    .slice(0, HOME_INSPIRATION_LIMIT)
-    .map(toHomeInspirationImage);
+  if (selectedImages.length < limit) {
+    const selectedIds = new Set([...excludedIds, ...selectedImages.map((image) => image.id)]);
+    const apiImages = await loadImages();
+    const apiMatches = sortBySameGroupSharedStyles(
+      baseImage,
+      apiImages.filter((image) => !selectedIds.has(image.id)),
+      random
+    );
+
+    selectedImages.push(...apiMatches.slice(0, limit - selectedImages.length));
+  }
+
+  return selectedImages.map(toSpreadNode);
+}
+
+// 首頁只放團體概念照（沒有 medium 的圖），資料源固定為本地 style-data.json，
+// 不走 loadImages()/外部 API，避免跟 getRelatedImages 共用延展圖池。
+export async function getHomeInspirationImages(): Promise<HomeInspirationImage[]> {
+  return localStyleImages.filter((image) => !image.medium).map(toHomeInspirationImage);
 }

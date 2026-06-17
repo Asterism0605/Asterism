@@ -4,7 +4,7 @@
  * 負責管理生命週期、互動狀態與畫面渲染，
  * 並在 mounted 時呼叫外部 layout 工具產生圖片卡片座標。
  */
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import { AMBIENT_DOTS, MAX_IMAGES, type ImageItem, type NodePosition } from './config';
 import {
@@ -56,7 +56,7 @@ function deactivateCard(index: number) {
   }
 }
 
-onMounted(() => {
+function recomputeLayout() {
   const container = containerRef.value;
   if (!container) return;
 
@@ -67,6 +67,13 @@ onMounted(() => {
     height,
     resolveLayoutPreset(layoutKey.value)
   );
+}
+
+onMounted(() => {
+  recomputeLayout();
+  // images 常是 mount 後才非同步抓回來（例如 Home 的 getHomeInspirationImages），
+  // 只在 onMounted 算一次 positions 會卡在初始的 0 張，圖片到位後仍 opacity:0。
+  watch(visibleImages, recomputeLayout);
 });
 </script>
 

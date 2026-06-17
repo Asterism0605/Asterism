@@ -21,12 +21,12 @@ describe('image.service', () => {
     expect(await getImageById('missing-image')).toBeUndefined();
   });
 
-  it('returns five home inspiration images led by every style group', async () => {
-    const images = await getHomeInspirationImages({ random: () => 0 });
+  it('returns only local concept images (no medium) regardless of the api pool', async () => {
+    const images = await getHomeInspirationImages();
     const styleGroups = images.map((image) => image.styleGroup);
 
-    expect(images).toHaveLength(5);
-    expect(new Set(styleGroups.slice(0, 3))).toEqual(
+    expect(images).toHaveLength(3);
+    expect(new Set(styleGroups)).toEqual(
       new Set([
         'Y2K & Internet Aesthetics',
         'Future Tech & Digital Psychedelia',
@@ -65,5 +65,36 @@ describe('image.service', () => {
     expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
       true
     );
+  });
+
+  it('shuffles images within equal shared-style tiers so refreshes can differ', async () => {
+    const idsWithLowRandom = (
+      await getRelatedImages('y2k-main-001', { random: () => 0 })
+    ).map((image) => image.id);
+    const idsWithHighRandom = (
+      await getRelatedImages('y2k-main-001', { random: () => 0.99 })
+    ).map((image) => image.id);
+
+    expect(idsWithLowRandom).not.toEqual(idsWithHighRandom);
+  });
+
+  it('always keeps the most shared-style images regardless of random (relevance preserved)', async () => {
+    const idsWithLowRandom = new Set(
+      (await getRelatedImages('y2k-main-001', { random: () => 0 })).map((image) => image.id)
+    );
+    const idsWithHighRandom = new Set(
+      (await getRelatedImages('y2k-main-001', { random: () => 0.99 })).map((image) => image.id)
+    );
+
+    // 這 3 張與基準圖共享全部 4 個 style，是相關度最高的一層；
+    // limit 為 4 時不論怎麼洗牌，它們都必須佔滿前段。
+    for (const mostRelatedId of [
+      'y2k-graphic-001',
+      'y2k-graphic-editorial-001',
+      'y2k-graphic-brand-001'
+    ]) {
+      expect(idsWithLowRandom).toContain(mostRelatedId);
+      expect(idsWithHighRandom).toContain(mostRelatedId);
+    }
   });
 });

@@ -111,8 +111,8 @@ describe('Home', () => {
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 
-    expect(images).toHaveLength(5);
-    expect(new Set(images.slice(0, 3).map((image) => image.styleGroup))).toEqual(
+    expect(images).toHaveLength(3);
+    expect(new Set(images.map((image) => image.styleGroup))).toEqual(
       new Set([
         'Y2K & Internet Aesthetics',
         'Future Tech & Digital Psychedelia',
