@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { Lock, MoveDownLeft } from '@lucide/vue';
 import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
@@ -13,6 +13,11 @@ const router = useRouter();
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
 const inspirationImages = ref<HomeInspirationImage[]>([]);
+
+const HOME_DENSITY_PER_100VH = 5;
+const containerHeight = computed(
+  () => `${(inspirationImages.value.length / HOME_DENSITY_PER_100VH) * 100}vh`
+);
 
 function openLimitModal() {
   if (hasTriggeredLimit.value) {
@@ -74,17 +79,22 @@ onBeforeUnmount(() => {
 
 <template>
   <main
-    class="home-page relative min-h-[160vh] overflow-hidden bg-void text-text-primary [--app-header-height:60px]"
+    class="home-page relative overflow-hidden bg-void text-text-primary [--app-header-height:60px]"
+    :style="{ minHeight: containerHeight }"
   >
     <div class="pointer-events-none absolute inset-0 z-0 home-page__wash" aria-hidden="true" />
 
-    <section class="relative z-10 min-h-[150vh] pt-[var(--app-header-height)]">
+    <section
+      class="relative z-10 pt-[var(--app-header-height)]"
+      :style="{ minHeight: containerHeight }"
+    >
       <div
-        class="absolute inset-x-0 top-[var(--app-header-height)] z-10 h-[calc(112vh-var(--app-header-height))]"
+        class="absolute inset-x-0 top-[var(--app-header-height)] z-10"
+        :style="{ height: containerHeight }"
       >
         <FloatingImageNetwork
           :images="inspirationImages"
-          height="calc(200vh - var(--app-header-height))"
+          :height="containerHeight"
           layout="home"
           show-constellations
           @click="openImageSpread"

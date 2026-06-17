@@ -14,7 +14,7 @@ vi.mock('@/api/image.api', () => ({
 }));
 
 const floatingImageNetworkStub = {
-  props: ['images'],
+  props: ['images', 'height'],
   template: '<button data-test="floating-image-network" @click="$emit(\'click\', 0)" />'
 };
 
@@ -111,6 +111,7 @@ describe('Home', () => {
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 
+    expect(floatingNetwork.props('height')).toBe('900vh');
     expect(images).toHaveLength(45);
     expect(new Set(images.map((image) => image.styleGroup)).size).toBe(9);
     const perGroup = images.reduce<Record<string, number>>((acc, image) => {
