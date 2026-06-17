@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import DnaLoadingState from '@/components/feature/dna/DnaLoadingState.vue';
 import StyleAnnotationDisplay from '@/components/feature/dna/StyleAnnotationDisplay.vue';
-import { computeStyleDnaResult, type StyleDnaSelection } from '@/utils/computeStyleDnaResult';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 
-const props = withDefaults(
-  defineProps<{
-    selectionHistory?: StyleDnaSelection[];
-  }>(),
-  { selectionHistory: () => [] }
-);
+const { result } = storeToRefs(useStyleDnaStore());
 
 const isLoading = ref(true);
-const result = computed(() => computeStyleDnaResult(props.selectionHistory));
 
 let loadingTimer: ReturnType<typeof window.setTimeout> | null = null;
 
@@ -42,7 +37,9 @@ onBeforeUnmount(() => {
             <span class="lg:hidden">Your aesthetic asterism has emerged</span>
             <span class="hidden lg:inline">Click to choose your preferred style</span>
           </p>
-          <h1 class="font-title text-[2.35rem] font-extralight leading-[1.2] text-text-primary sm:text-[3.25rem] lg:text-display lg:leading-[1.02]">
+          <h1
+            class="font-title text-[2.35rem] font-extralight leading-[1.2] text-text-primary sm:text-[3.25rem] lg:text-display lg:leading-[1.02]"
+          >
             Your<br />
             <span class="whitespace-nowrap">Style DNA</span>
           </h1>
