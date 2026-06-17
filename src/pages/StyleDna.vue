@@ -1,52 +1,64 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from 'vue'
-import AppHeader from '@/layouts/AppHeader.vue'
-import StyleComparisonPicker from '@/components/feature/dna/StyleComparisonPicker.vue'
-import { useStyleDnaQuiz } from '@/composables/useStyleDnaQuiz'
+import { onBeforeUnmount, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import AppHeader from '@/layouts/AppHeader.vue';
+import StyleComparisonPicker from '@/components/feature/dna/StyleComparisonPicker.vue';
+import { useStyleDnaQuiz } from '@/composables/useStyleDnaQuiz';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 
-const quiz = useStyleDnaQuiz()
-const { currentQuestion, currentQuestionIndex, isCompleted, questions, resetQuiz, selectAnswer } = quiz
-const selectedId = ref<string | null>(null)
-const isTransitioning = ref(false)
-const isHoverSuppressed = ref(false)
-const completedTargetPath = '/style-dna/result'
-let hoverSuppressTimer: number | undefined
+const router = useRouter();
+const styleDnaStore = useStyleDnaStore();
+const quiz = useStyleDnaQuiz();
+const {
+  answers,
+  currentQuestion,
+  currentQuestionIndex,
+  isCompleted,
+  questions,
+  resetQuiz,
+  selectAnswer
+} = quiz;
+const selectedId = ref<string | null>(null);
+const isTransitioning = ref(false);
+const isHoverSuppressed = ref(false);
+const completedTargetPath = '/style-dna/result';
+let hoverSuppressTimer: number | undefined;
 
-resetQuiz()
+resetQuiz();
 
 const handleSelect = (optionId: string) => {
   if (isTransitioning.value) {
-    return
+    return;
   }
 
   if (document.activeElement instanceof HTMLElement) {
-    document.activeElement.blur()
+    document.activeElement.blur();
   }
 
-  selectedId.value = optionId
-  isTransitioning.value = true
+  selectedId.value = optionId;
+  isTransitioning.value = true;
 
   window.setTimeout(() => {
-    selectAnswer(optionId)
-    selectedId.value = null
-    isTransitioning.value = false
-    isHoverSuppressed.value = true
+    selectAnswer(optionId);
+    selectedId.value = null;
+    isTransitioning.value = false;
+    isHoverSuppressed.value = true;
 
-    window.clearTimeout(hoverSuppressTimer)
+    window.clearTimeout(hoverSuppressTimer);
     hoverSuppressTimer = window.setTimeout(() => {
-      isHoverSuppressed.value = false
-    }, 260)
+      isHoverSuppressed.value = false;
+    }, 260);
 
     if (isCompleted.value) {
-      // TODO: 導入 Vue Router 後改為 router.push(completedTargetPath)
-      console.info(`Style DNA quiz completed. Next route: ${completedTargetPath}`)
+      styleDnaStore.completeQuiz([...answers]);
+      void router.push(completedTargetPath);
     }
-  }, 500)
-}
+  }, 500);
+};
 
 onBeforeUnmount(() => {
-  window.clearTimeout(hoverSuppressTimer)
-})
+  window.clearTimeout(hoverSuppressTimer);
+});
 </script>
 
 <template>
@@ -136,7 +148,7 @@ onBeforeUnmount(() => {
 
 .quiz-slash {
   position: absolute;
-  left:37px;
+  left: 37px;
   top: 154px;
   width: 64px;
   height: 1px;
