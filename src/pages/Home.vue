@@ -153,10 +153,10 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: 0;
   content: '';
-  opacity: 0.16;
+  opacity: 0.3;
   background-image:
-    linear-gradient(rgb(240 237 230 / 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(240 237 230 / 0.05) 1px, transparent 1px);
+    linear-gradient(rgb(240 237 230 / 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(240 237 230 / 0.6) 1px, transparent 1px);
   background-size: 118px 118px;
   mask-image: linear-gradient(180deg, transparent, black 12%, black 78%, transparent);
 }

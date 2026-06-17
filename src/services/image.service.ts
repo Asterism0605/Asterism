@@ -144,5 +144,10 @@ export async function getRelatedImages(
 // 首頁只放團體概念照（沒有 medium 的圖），資料源固定為本地 style-data.json，
 // 不走 loadImages()/外部 API，避免跟 getRelatedImages 共用延展圖池。
 export async function getHomeInspirationImages(): Promise<HomeInspirationImage[]> {
+  // 隨機打散
+  // const concepts = localStyleImages.filter((image) => !image.medium);
+  // return shuffle(concepts, Math.random).map(toHomeInspirationImage);
+
+  // 照風格排列
   return localStyleImages.filter((image) => !image.medium).map(toHomeInspirationImage);
 }
