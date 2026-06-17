@@ -75,8 +75,8 @@ export const SUBMEDIUM_BY_MEDIUM: Record<string, string[]> = {
 };
 
 export const THRESHOLDS = {
-  styleGroup: 0.25,
-  medium: 0.3,
+  styleGroup: 0.6,
+  medium: 0.5,
   subMedium: 0.35
 } as const;
 

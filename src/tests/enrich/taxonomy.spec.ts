@@ -25,8 +25,13 @@ describe('taxonomy', () => {
     }
   });
 
-  it('門檻越細越嚴：styleGroup < medium < subMedium', () => {
-    expect(THRESHOLDS.styleGroup).toBeLessThan(THRESHOLDS.medium);
-    expect(THRESHOLDS.medium).toBeLessThan(THRESHOLDS.subMedium);
+  it('三層門檻都是合法機率值（0~1）', () => {
+    // 原本假設「越細的層信心越低、門檻要越高」→ styleGroup < medium < subMedium，
+    // 但實機 239 張顯示三層信心分布沒有這種固定順序（styleGroup 中位數 0.95 反而最高、
+    // medium 0.74 最低），門檻應各自照自己的分布獨立校準，不該強加大小關係。
+    for (const value of Object.values(THRESHOLDS)) {
+      expect(value).toBeGreaterThan(0);
+      expect(value).toBeLessThanOrEqual(1);
+    }
   });
 });
