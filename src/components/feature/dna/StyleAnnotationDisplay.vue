@@ -70,7 +70,7 @@
     </div>
 
     <div
-      class="glass-panel absolute bottom-0 left-0 z-20 h-[52vh] w-[74vw] rounded-none rounded-tr-[4.5rem] border-b-0 border-l-0 px-4 py-9 sm:px-12 lg:h-[24vh] lg:w-[92%] lg:px-14 lg:py-9"
+      class="glass-panel absolute bottom-0 left-0 z-20 h-[52vh] w-[74vw] rounded-none rounded-tr-[4.5rem] border-b-0 border-l-0 px-4 py-9 sm:px-12 lg:h-[24vh] lg:w-[92%] lg:px-[7.5rem] lg:py-9"
     >
       <div class="grid gap-5 lg:max-w-2xl lg:grid-cols-3 lg:gap-5">
         <div v-for="style in styles" :key="style.label" class="min-w-0">
@@ -115,7 +115,7 @@ const annotationLineClasses: Record<StyleDnaAnnotation['position'], string> = {
 
 const annotationTailClasses: Record<StyleDnaAnnotation['position'], string> = {
   left: 'rotate-[42deg]',
-  right: 'rotate-[42deg]',
+  right: 'rotate-[42deg] lg:rotate-[-42deg]',
   'top-right': 'rotate-[-42deg]'
 };
 
