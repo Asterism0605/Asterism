@@ -63,16 +63,43 @@ const focusOptions = [
   'Visual concept'
 ];
 
+const datePattern = /^(0[1-9]|1[0-2]) \/ (0[1-9]|[12]\d|3[01]) \/ (\d{4})$/;
+
+function getDateError(value: string) {
+  const trimmedDate = value.trim();
+
+  if (!trimmedDate) {
+    return 'Date is required.';
+  }
+
+  const match = trimmedDate.match(datePattern);
+
+  if (!match) {
+    return 'Use MM / DD / YYYY format.';
+  }
+
+  const month = Number(match[1]);
+  const day = Number(match[2]);
+  const year = Number(match[3]);
+  const date = new Date(year, month - 1, day);
+  const isRealDate =
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day;
+
+  return isRealDate ? '' : 'Enter a real calendar date.';
+}
+
 const fieldErrors = computed(() => {
   if (!hasSubmitted.value) {
     return {};
   }
 
   return {
-    date: form.date.trim() ? '' : 'Date is required.',
+    date: getDateError(form.date),
     timeSlot: form.timeSlot ? '' : 'Time slot is required.',
-    designField: form.designField ? '' : 'Design field is required.',
-    designFocus: form.designFocus ? '' : 'Design focus is required.',
+    designField: '',
+    designFocus: '',
     name: form.name.trim() ? '' : 'Name is required.',
     email: form.email.trim().includes('@') ? '' : 'A valid email is required.'
   };
@@ -272,11 +299,13 @@ function handleSubmit() {
 .recommendation-panel__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
   gap: 32px;
 }
 
 .recommendation-panel__field {
   display: grid;
+  align-content: start;
   gap: 8px;
   min-width: 0;
 }
@@ -285,12 +314,12 @@ function handleSubmit() {
 .recommendation-panel__textarea {
   width: 100%;
   border-radius: 8px;
-  background: rgb(255 255 255 / 0.07);
+  background-color: rgb(255 255 255 / 0.07);
   color: var(--color-text-primary);
   font-size: var(--text-caption);
   font-weight: 500;
   outline: none;
-  transition: background 200ms ease;
+  transition: background-color 200ms ease;
 }
 
 .recommendation-panel__select {
@@ -331,7 +360,7 @@ function handleSubmit() {
 
 .recommendation-panel__select:focus,
 .recommendation-panel__textarea:focus {
-  background: rgb(255 255 255 / 0.11);
+  background-color: rgb(255 255 255 / 0.11);
 }
 
 .recommendation-panel__account {

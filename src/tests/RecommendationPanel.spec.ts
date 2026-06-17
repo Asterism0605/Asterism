@@ -63,6 +63,47 @@ describe('RecommendationPanel', () => {
     })
   })
 
+  it('allows design field and focus to be omitted', async () => {
+    const wrapper = mountPanel()
+    const inputs = wrapper.findAll('input.overlay-input')
+
+    await inputs[0].setValue('06 / 30 / 2026')
+    await wrapper.findAll('select')[0].setValue('pm')
+    await inputs[1].setValue('Ruwen Hsieh')
+    await inputs[2].setValue('ruwen@example.com')
+
+    await wrapper.get('form').trigger('submit')
+
+    expect(wrapper.emitted('submit')).toHaveLength(1)
+    expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({
+      designField: '',
+      designFocus: '',
+    })
+  })
+
+  it('validates date format and real calendar dates', async () => {
+    const wrapper = mountPanel()
+    const inputs = wrapper.findAll('input.overlay-input')
+
+    await inputs[0].setValue('2026-06-30')
+    await wrapper.findAll('select')[0].setValue('am')
+    await wrapper.findAll('select')[1].setValue('Interior Design')
+    await wrapper.findAll('select')[2].setValue('Spatial mood')
+    await inputs[1].setValue('Ruwen Hsieh')
+    await inputs[2].setValue('ruwen@example.com')
+
+    await wrapper.get('form').trigger('submit')
+
+    expect(wrapper.emitted('submit')).toBeUndefined()
+    expect(wrapper.text()).toContain('Use MM / DD / YYYY format.')
+
+    await inputs[0].setValue('02 / 31 / 2026')
+    await wrapper.get('form').trigger('submit')
+
+    expect(wrapper.emitted('submit')).toBeUndefined()
+    expect(wrapper.text()).toContain('Enter a real calendar date.')
+  })
+
   it('resets form state', async () => {
     const wrapper = mountPanel()
     const inputs = wrapper.findAll('input.overlay-input')
