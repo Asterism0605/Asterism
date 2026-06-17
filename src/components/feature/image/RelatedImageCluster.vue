@@ -3,6 +3,7 @@ import type { ImageSpreadNode } from '@/types/image';
 
 defineProps<{
   images: ImageSpreadNode[];
+  getImageLabel?: (image: ImageSpreadNode) => string | undefined;
 }>();
 
 const emit = defineEmits<{
@@ -39,9 +40,10 @@ function getPositionClass(index: number) {
         class="aspect-[4/5] w-full cursor-pointer object-cover transition duration-300 group-hover:scale-[1.03]"
       />
       <span
+        v-if="getImageLabel?.(image)"
         class="absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] rounded-full bg-void/78 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-primary backdrop-blur-md"
       >
-        {{ image.style[0] ?? image.styleGroup }}
+        {{ getImageLabel(image) }}
       </span>
     </button>
   </div>

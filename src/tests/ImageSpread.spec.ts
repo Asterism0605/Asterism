@@ -46,6 +46,38 @@ describe('ImageSpread', () => {
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4);
   });
 
+  it('labels first-depth related images by medium', async () => {
+    const { wrapper } = await mountImageSpread();
+    const labels = wrapper
+      .findAll('[data-testid="related-image-card"]')
+      .map((card) => card.text());
+
+    expect(labels).toEqual([
+      'Graphic Design',
+      'Outfit',
+      'Interior Design',
+      'Architecture'
+    ]);
+  });
+
+  it('labels second-depth related images by subMedium', async () => {
+    const { wrapper } = await mountImageSpread();
+
+    await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click');
+    await flushPromises();
+
+    const labels = wrapper
+      .findAll('[data-testid="related-image-card"]')
+      .map((card) => card.text());
+
+    expect(labels).toEqual([
+      'Poster Design',
+      'Editorial Design',
+      'Brand Identity',
+      'Packaging Design'
+    ]);
+  });
+
   it('marks every image surface as cursor pointer', async () => {
     const { wrapper } = await mountImageSpread();
 
@@ -77,6 +109,17 @@ describe('ImageSpread', () => {
     );
     expect(routeImage?.src).toBe(firstRelatedSrc);
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4);
+  });
+
+  it('hides the center label for main and medium entry images', async () => {
+    const { wrapper } = await mountImageSpread();
+
+    expect(wrapper.find('[data-testid="spread-main-image-label"]').exists()).toBe(false);
+
+    await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click');
+    await flushPromises();
+
+    expect(wrapper.find('[data-testid="spread-main-image-label"]').exists()).toBe(false);
   });
 
   it('routes to the future detail page on second-depth related click', async () => {

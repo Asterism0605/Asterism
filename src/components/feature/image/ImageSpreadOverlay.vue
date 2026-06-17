@@ -1,16 +1,28 @@
 <script setup lang="ts">
 import { ArrowLeft, Bookmark } from '@lucide/vue';
+import { computed } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import Button from '@/components/ui/Button.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
-defineProps<{
+const props = defineProps<{
   image: ImageSpreadNode;
 }>();
 
 const emit = defineEmits<{
   return: [];
 }>();
+
+const mainImageLabel = computed(() => {
+  const isMainEntryImage = props.image.src.includes('main');
+  const isMediumEntryImage = props.image.medium && !props.image.subMedium;
+
+  if (isMainEntryImage || isMediumEntryImage) {
+    return undefined;
+  }
+
+  return props.image.style[0] ?? props.image.styleGroup;
+});
 </script>
 
 <template>
@@ -40,9 +52,11 @@ const emit = defineEmits<{
         class="aspect-[4/5] w-full cursor-pointer object-cover"
       />
       <figcaption
+        v-if="mainImageLabel"
+        data-testid="spread-main-image-label"
         class="absolute bottom-4 left-4 rounded-full bg-void/80 px-4 py-2 text-sm font-semibold text-text-primary backdrop-blur-md"
       >
-        {{ image.style[0] ?? image.styleGroup }}
+        {{ mainImageLabel }}
       </figcaption>
     </figure>
 

@@ -35,6 +35,10 @@ function refreshRelatedImages(imageId: string) {
   });
 }
 
+function getRelatedImageLabel(image: ImageSpreadNode) {
+  return spreadDepth.value === 0 ? image.medium : image.subMedium;
+}
+
 function loadImageSpread(imageId: string | undefined) {
   if (!imageId) {
     centerImage.value = undefined;
@@ -152,6 +156,7 @@ watch(
         <RelatedImageCluster
           class="hidden lg:block"
           :images="relatedImages"
+          :get-image-label="getRelatedImageLabel"
           @select="handleRelatedSelect"
         />
 
@@ -174,9 +179,10 @@ watch(
             class="aspect-[4/5] w-full cursor-pointer object-cover"
           />
           <span
+            v-if="getRelatedImageLabel(image)"
             class="absolute bottom-2 left-2 max-w-[calc(100%-1rem)] rounded-full bg-void/78 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-text-primary"
           >
-            {{ image.style[0] ?? image.styleGroup }}
+            {{ getRelatedImageLabel(image) }}
           </span>
         </button>
       </div>
