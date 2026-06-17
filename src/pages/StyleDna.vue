@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import AppHeader from '@/layouts/AppHeader.vue';
 import StyleComparisonPicker from '@/components/feature/dna/StyleComparisonPicker.vue';
 import { useStyleDnaQuiz } from '@/composables/useStyleDnaQuiz';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
@@ -63,8 +62,6 @@ onBeforeUnmount(() => {
 
 <template>
   <main class="style-dna-page">
-    <AppHeader />
-
     <StyleComparisonPicker
       v-if="currentQuestion"
       :left-option="currentQuestion.options[0]"

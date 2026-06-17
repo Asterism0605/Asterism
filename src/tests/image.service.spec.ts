@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   getHomeInspirationImages,
   getImageById,
-  getRelatedImages
+  getMediumGroupImages,
+  getRelatedImages,
+  getSubMediumGroupImages
 } from '@/services/image.service';
 
 describe('image.service', () => {
@@ -11,18 +13,18 @@ describe('image.service', () => {
     expect(getImageById('missing-image')).toBeUndefined();
   });
 
-  it('returns five home inspiration images led by every style group', () => {
-    const images = getHomeInspirationImages({ random: () => 0 });
+  it('returns home inspiration images limited to main images per style group', () => {
+    const images = getHomeInspirationImages();
     const styleGroups = images.map((image) => image.styleGroup);
 
-    expect(images).toHaveLength(5);
-    expect(new Set(styleGroups.slice(0, 3))).toEqual(
+    expect(new Set(styleGroups)).toEqual(
       new Set([
         'Y2K & Internet Aesthetics',
         'Future Tech & Digital Psychedelia',
         'Decorative & Opulent Art'
       ])
     );
+    expect(images.every((image) => image.id.includes('main'))).toBe(true);
     expect(images[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
@@ -33,27 +35,75 @@ describe('image.service', () => {
     );
   });
 
-  it('returns related images from the same style group without current or visited images', () => {
-    const relatedImages = getRelatedImages('y2k-main-001', {
-      visitedImageIds: ['y2k-graphic-001']
+  describe('getMediumGroupImages', () => {
+    it('returns one image per medium in the same style group', () => {
+      const images = getMediumGroupImages('y2k-main-001');
+
+      expect(images).toHaveLength(4);
+      expect(images.map((image) => image.medium).sort()).toEqual([
+        'Architecture',
+        'Graphic Design',
+        'Interior Design',
+        'Outfit'
+      ]);
     });
 
-    expect(relatedImages).toHaveLength(4);
-    expect(relatedImages.map((image) => image.id)).not.toContain('y2k-main-001');
-    expect(relatedImages.map((image) => image.id)).not.toContain('y2k-graphic-001');
-    expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
-      true
-    );
+    it('excludes current and visited images', () => {
+      const images = getMediumGroupImages('y2k-main-001', {
+        visitedImageIds: ['y2k-graphic-001']
+      });
+
+      expect(images).toHaveLength(3);
+      expect(images.map((image) => image.id)).not.toContain('y2k-graphic-001');
+    });
   });
 
-  it('does not fill related images from another style group', () => {
-    const relatedImages = getRelatedImages('y2k-main-001', {
-      limit: 50
+  describe('getSubMediumGroupImages', () => {
+    it('returns one image per subMedium within the same medium', () => {
+      const images = getSubMediumGroupImages('y2k-graphic-001');
+
+      expect(images).toHaveLength(4);
+      expect(images.every((image) => image.medium === 'Graphic Design')).toBe(true);
+      expect(images.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(true);
     });
 
-    expect(relatedImages).toHaveLength(19);
-    expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
-      true
-    );
+    it('returns empty array when image has no medium', () => {
+      const images = getSubMediumGroupImages('y2k-main-001');
+
+      expect(images).toHaveLength(0);
+    });
+  });
+
+  describe('getRelatedImages', () => {
+    it('returns related images from the same style group without current or visited images', () => {
+      const relatedImages = getRelatedImages('y2k-main-001', {
+        visitedImageIds: ['y2k-graphic-001']
+      });
+
+      expect(relatedImages).toHaveLength(4);
+      expect(relatedImages.map((image) => image.id)).not.toContain('y2k-main-001');
+      expect(relatedImages.map((image) => image.id)).not.toContain('y2k-graphic-001');
+      expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
+        true
+      );
+    });
+
+    it('does not fill related images from another style group', () => {
+      const relatedImages = getRelatedImages('y2k-main-001', {
+        limit: 50
+      });
+
+      expect(relatedImages).toHaveLength(19);
+      expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
+        true
+      );
+    });
+
+    it('prefers same subMedium over medium when available', () => {
+      const images = getRelatedImages('y2k-graphic-poster-001');
+
+      expect(images.length).toBeGreaterThan(0);
+      expect(images[0].subMedium).toBe('Poster Design');
+    });
   });
 });

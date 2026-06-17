@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AppHeader from '@/layouts/AppHeader.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import LoginOverlay from '@/components/overlay/LoginOverlay.vue';
 import { useAuthStore } from '@/stores/auth.store';
@@ -55,7 +54,7 @@ async function handleSubmit(payload: LoginPayload) {
       <div class="absolute top-[39%] left-[74%] -translate-x-1/2 -translate-y-1/2">
         <ConstellationBackground
           :size="580"
-          class-name="login-constellation"
+          class-name="constellation-pulse"
           :node-size="6"
           :center-size="12"
           :spacing="50"
@@ -70,7 +69,7 @@ async function handleSubmit(payload: LoginPayload) {
       <div class="absolute top-[89%] left-[10%] -translate-x-1/2 -translate-y-1/2">
         <ConstellationBackground
           :size="560"
-          class-name="login-constellation"
+          class-name="constellation-pulse"
           :node-size="6"
           :center-size="12"
           :spacing="48"
@@ -84,8 +83,6 @@ async function handleSubmit(payload: LoginPayload) {
       </div>
     </div>
 
-    <AppHeader />
-
     <!-- 卡片 -->
     <div
       class="relative z-30 flex min-h-screen items-center justify-center px-4 pt-(--app-header-height)"
@@ -98,31 +95,3 @@ async function handleSubmit(payload: LoginPayload) {
     </div>
   </main>
 </template>
-
-<style scoped>
-:deep(.login-constellation) {
-  animation: cs-fade-in 1500ms ease infinite alternate;
-}
-
-:deep(.login-constellation .constellation-background__canvas) {
-  animation: cs-scale-in 620ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes cs-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes cs-scale-in {
-  from {
-    transform: scale(0.82);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-</style>
