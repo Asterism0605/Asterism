@@ -98,7 +98,7 @@ function buildLayoutNodes(
   aspects?: (string | undefined)[]
 ) {
   // 均勻分帶從頂/底內縮一個卡片半高 + 緩衝，避免頭尾卡片被 clamp 擠在邊界疊在一起。
-  const margin = preset.evenYDistribution ? getPresetMaxHalfHeight(preset) + 24 : 0;
+  const margin = preset.evenYDistribution ? getPresetMaxHalfHeight(preset) + 60 : 0;
   const evenYs = preset.evenYDistribution
     ? computeEvenYPositions(count, height, Math.random, margin)
     : null;
