@@ -33,3 +33,6 @@ vue3-team-guideline.md
 
 # Env
 .env
+
+# 手動 review 用的暫存圖檔
+tmp_review/
