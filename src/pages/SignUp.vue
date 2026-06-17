@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AppHeader from '@/layouts/AppHeader.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import SignUpOverlay from '@/components/overlay/SignUpOverlay.vue';
 import { useAuthStore } from '@/stores/auth.store';
@@ -55,7 +54,7 @@ async function handleSubmit(payload: RegisterPayload) {
       <div class="absolute top-[22%] left-[20%] -translate-x-1/2 -translate-y-1/2">
         <ConstellationBackground
           :size="580"
-          class-name="signup-constellation"
+          class-name="constellation-pulse"
           :node-size="6"
           :center-size="12"
           :spacing="50"
@@ -70,7 +69,7 @@ async function handleSubmit(payload: RegisterPayload) {
       <div class="absolute top-[80%] left-[88%] -translate-x-1/2 -translate-y-1/2">
         <ConstellationBackground
           :size="560"
-          class-name="signup-constellation"
+          class-name="constellation-pulse"
           :node-size="6"
           :center-size="12"
           :spacing="48"
@@ -84,8 +83,6 @@ async function handleSubmit(payload: RegisterPayload) {
       </div>
     </div>
 
-    <AppHeader />
-
     <!-- 卡片 -->
     <div
       class="relative z-30 flex min-h-screen items-center justify-center px-4 pt-(--app-header-height)"
@@ -98,31 +95,3 @@ async function handleSubmit(payload: RegisterPayload) {
     </div>
   </main>
 </template>
-
-<style scoped>
-:deep(.signup-constellation) {
-  animation: cs-fade-in 1500ms ease infinite alternate;
-}
-
-:deep(.signup-constellation .constellation-background__canvas) {
-  animation: cs-scale-in 620ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes cs-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes cs-scale-in {
-  from {
-    transform: scale(0.82);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-</style>

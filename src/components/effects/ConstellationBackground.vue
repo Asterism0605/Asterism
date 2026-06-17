@@ -332,4 +332,30 @@ watch(
     transition-duration: 1ms;
   }
 }
+
+.constellation-pulse {
+  animation: cs-fade-in 1500ms ease infinite alternate !important;
+}
+
+.constellation-pulse .constellation-background__canvas {
+  animation: cs-scale-in 620ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+@keyframes cs-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cs-scale-in {
+  from {
+    transform: scale(0.82);
+  }
+  to {
+    transform: scale(1);
+  }
+}
 </style>

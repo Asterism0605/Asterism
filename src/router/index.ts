@@ -9,6 +9,11 @@ import PictureDetail from '@/pages/PictureDetail.vue';
 import SignUp from '@/pages/SignUp.vue';
 import StyleDna from '@/pages/StyleDna.vue';
 import StyleDnaResult from '@/pages/StyleDnaResult.vue';
+import { getImageById } from '@/services/image.service';
+
+function getRouteImageId(value: string | string[]): string {
+  return Array.isArray(value) ? value[0] : value;
+}
 
 const router = createRouter({
   history: createWebHistory(),
@@ -54,11 +59,6 @@ const router = createRouter({
       component: PictureDetail
     },
     {
-      path: '/sign-up',
-      name: 'sign-up',
-      component: SignUp
-    },
-    {
       path: '/style-dna',
       name: 'style-dna',
       component: StyleDna
@@ -67,8 +67,35 @@ const router = createRouter({
       path: '/style-dna/result',
       name: 'style-dna-result',
       component: StyleDnaResult
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/pages/Error.vue'),
+      meta: { errorType: '404' }
     }
   ]
+});
+
+router.beforeEach((to) => {
+  if (to.name !== 'picture-detail') {
+    return true;
+  }
+
+  const rawImageId = to.params.imageId;
+  const imageId =
+    typeof rawImageId === 'string' || Array.isArray(rawImageId) ? getRouteImageId(rawImageId) : '';
+
+  if (imageId && getImageById(imageId)) {
+    return true;
+  }
+
+  return {
+    name: 'not-found',
+    params: { pathMatch: to.path.replace(/^\//, '').split('/') },
+    query: to.query,
+    hash: to.hash
+  };
 });
 
 export default router;

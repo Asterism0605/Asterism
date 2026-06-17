@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, it, vi, expect } from 'vitest'
 import router from '@/router'
 
 vi.mock('@/layouts/AppHeader.vue', () => ({ default: { template: '<header />' } }))
