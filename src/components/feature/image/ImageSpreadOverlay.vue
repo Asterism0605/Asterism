@@ -2,6 +2,7 @@
 import { ArrowLeft, Bookmark } from '@lucide/vue';
 import { computed } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
+import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
 import Button from '@/components/ui/Button.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
@@ -15,10 +16,13 @@ const emit = defineEmits<{
 
 const mainImageLabel = computed(() => {
   const isMainEntryImage = props.image.src.includes('main');
-  const isMediumEntryImage = props.image.medium && !props.image.subMedium;
 
-  if (isMainEntryImage || isMediumEntryImage) {
+  if (isMainEntryImage) {
     return undefined;
+  }
+
+  if (props.image.medium && !props.image.subMedium) {
+    return props.image.medium;
   }
 
   return props.image.style[0] ?? props.image.styleGroup;
@@ -26,7 +30,11 @@ const mainImageLabel = computed(() => {
 </script>
 
 <template>
-  <section class="relative mx-auto flex w-full max-w-[460px] flex-col items-center gap-5">
+  <ImageSpreadEntrance
+    as="section"
+    kind="center"
+    class="relative mx-auto flex w-full max-w-[460px] flex-col items-center gap-5"
+  >
     <ConstellationBackground
       active
       class-name="absolute left-1/2 top-[20%] -z-10 -translate-x-1/2 -translate-y-1/2"
@@ -41,7 +49,9 @@ const mainImageLabel = computed(() => {
       :spacing="70"
     />
 
-    <figure
+    <ImageSpreadEntrance
+      as="figure"
+      kind="centerFrame"
       data-testid="spread-main-image-frame"
       class="relative w-full max-w-[min(72vw,360px)] cursor-pointer overflow-hidden rounded-lg border border-white/12 bg-elevated/60 shadow-[0_30px_90px_rgba(0,0,0,0.45)]"
     >
@@ -58,9 +68,13 @@ const mainImageLabel = computed(() => {
       >
         {{ mainImageLabel }}
       </figcaption>
-    </figure>
+    </ImageSpreadEntrance>
 
-    <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
+    <ImageSpreadEntrance
+      kind="actions"
+      :delay="180"
+      class="flex flex-wrap items-center justify-center gap-3 pt-1"
+    >
       <Button variant="primary" type="button" data-testid="return-home" @click="emit('return')">
         <span class="inline-flex items-center gap-2">
           <ArrowLeft class="size-4" aria-hidden="true" />
@@ -73,6 +87,6 @@ const mainImageLabel = computed(() => {
           Add to moodboard
         </span>
       </Button>
-    </div>
-  </section>
+    </ImageSpreadEntrance>
+  </ImageSpreadEntrance>
 </template>

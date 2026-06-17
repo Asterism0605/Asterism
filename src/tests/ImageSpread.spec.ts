@@ -111,7 +111,7 @@ describe('ImageSpread', () => {
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4);
   });
 
-  it('hides the center label for main and medium entry images', async () => {
+  it('hides the center label for main images and labels medium entry images', async () => {
     const { wrapper } = await mountImageSpread();
 
     expect(wrapper.find('[data-testid="spread-main-image-label"]').exists()).toBe(false);
@@ -119,7 +119,7 @@ describe('ImageSpread', () => {
     await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click');
     await flushPromises();
 
-    expect(wrapper.find('[data-testid="spread-main-image-label"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="spread-main-image-label"]').text()).toBe('Graphic Design');
   });
 
   it('routes to the future detail page on second-depth related click', async () => {

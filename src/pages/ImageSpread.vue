@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
 import ImageSpreadOverlay from '@/components/feature/image/ImageSpreadOverlay.vue';
 import RelatedImageCluster from '@/components/feature/image/RelatedImageCluster.vue';
 import Button from '@/components/ui/Button.vue';
@@ -143,10 +144,16 @@ watch(
 </script>
 
 <template>
-  <main
+  <ImageSpreadEntrance
+    as="main"
+    kind="page"
     class="relative min-h-screen overflow-hidden bg-void pt-[92px] text-text-primary"
   >
-    <div class="pointer-events-none absolute inset-0 z-0 image-spread__wash" aria-hidden="true" />
+    <ImageSpreadEntrance
+      kind="wash"
+      class="pointer-events-none absolute inset-0 z-0 image-spread__wash"
+      aria-hidden="true"
+    />
 
     <section
       v-if="centerImage"
@@ -164,9 +171,12 @@ watch(
       </div>
 
       <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
-        <button
-          v-for="image in relatedImages"
+        <ImageSpreadEntrance
+          v-for="(image, index) in relatedImages"
           :key="image.id"
+          as="button"
+          kind="relatedCard"
+          :spread-index="index"
           data-testid="related-image-card-mobile"
           type="button"
           class="relative cursor-pointer overflow-hidden rounded-lg border border-white/12 bg-elevated/70 text-left"
@@ -184,7 +194,7 @@ watch(
           >
             {{ getRelatedImageLabel(image) }}
           </span>
-        </button>
+        </ImageSpreadEntrance>
       </div>
     </section>
 
@@ -203,7 +213,7 @@ watch(
         Return home
       </Button>
     </section>
-  </main>
+  </ImageSpreadEntrance>
 </template>
 
 <style scoped>
@@ -226,4 +236,5 @@ watch(
   background-size: 128px 128px;
   mask-image: linear-gradient(180deg, transparent, black 16%, black 82%, transparent);
 }
+
 </style>
