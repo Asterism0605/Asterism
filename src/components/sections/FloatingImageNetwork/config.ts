@@ -38,6 +38,7 @@ export interface LayoutPreset {
   collideMultiplier: number;
   ticks: number;
   avoidAreas?: AvoidArea[];
+  evenYDistribution?: boolean;
   clampPosition: (node: NodePosition, width: number, height: number) => NodePosition;
 }
 
@@ -74,6 +75,7 @@ export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
     chargeStrength: -90,
     collideMultiplier: 0.72,
     ticks: 240,
+    evenYDistribution: true,
     avoidAreas: [
       {
         left: 0,

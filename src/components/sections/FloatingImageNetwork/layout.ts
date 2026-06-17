@@ -44,10 +44,22 @@ function getRandomPosition(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
+export function computeEvenYPositions(
+  count: number,
+  height: number,
+  random: () => number = Math.random
+): number[] {
+  const slot = height / count;
+
+  return Array.from({ length: count }, (_, i) => (i + random()) * slot);
+}
+
 function buildLayoutNodes(count: number, width: number, height: number, preset: LayoutPreset) {
+  const evenYs = preset.evenYDistribution ? computeEvenYPositions(count, height) : null;
+
   return Array.from({ length: count }, (_, i) => ({
     x: getRandomPosition(width * preset.randomX[0], width * preset.randomX[1]),
-    y: getRandomPosition(height * preset.randomY[0], height * preset.randomY[1]),
+    y: evenYs ? evenYs[i] : getRandomPosition(height * preset.randomY[0], height * preset.randomY[1]),
     width: preset.widths[i % preset.widths.length],
     aspect: preset.aspects[i % preset.aspects.length],
     constellationSize: preset.constellationSizes?.[i % preset.constellationSizes.length]
