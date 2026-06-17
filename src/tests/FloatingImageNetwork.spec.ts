@@ -87,13 +87,13 @@ describe('FloatingImageNetwork', () => {
     expect(imgs[1].attributes('src')).toBe('/img2.jpg');
   });
 
-  it('ignores images beyond index 5 (max 6)', () => {
+  it('renders all provided images without a hardcoded cap', () => {
     const sevenImages = Array.from({ length: 7 }, (_, i) => ({
       src: `/img${i}.jpg`,
       alt: `image ${i}`
     }));
     const wrapper = mount(FloatingImageNetwork, { props: { images: sevenImages } });
-    expect(wrapper.findAll('img').length).toBe(6);
+    expect(wrapper.findAll('img').length).toBe(7);
   });
 
   it('emits click event with image index when image card is clicked', async () => {
@@ -138,7 +138,7 @@ describe('FloatingImageNetwork', () => {
     expect(firstStyle).toContain('opacity: 1');
   });
 
-  it('still limits home layout images to six items', () => {
+  it('renders all home layout images without a hardcoded cap', () => {
     const sevenImages = Array.from({ length: 7 }, (_, i) => ({
       src: `/img${i}.jpg`,
       alt: `image ${i}`
@@ -147,7 +147,7 @@ describe('FloatingImageNetwork', () => {
       props: { images: sevenImages, layout: 'home' }
     });
 
-    expect(wrapper.findAll('[data-testid="image-card"]').length).toBe(6);
+    expect(wrapper.findAll('[data-testid="image-card"]').length).toBe(7);
   });
 
   it('activates each constellation background after its own image hover', async () => {
@@ -247,5 +247,18 @@ describe('FloatingImageNetwork', () => {
     );
 
     expect(position).toEqual({ x: 300, y: 150, width: 96, aspect: '1/1' });
+  });
+
+  it('renders every provided image without a hardcoded cap', () => {
+    const manyImages = Array.from({ length: 45 }, (_, i) => ({
+      src: `/img-${i}.webp`,
+      alt: `img ${i}`
+    }));
+    const wrapper = mount(FloatingImageNetwork, {
+      props: { images: manyImages, layout: 'home' },
+      global: { stubs: { ConstellationBackground: true } }
+    });
+
+    expect(wrapper.findAll('[data-testid="image-card"]')).toHaveLength(45);
   });
 });

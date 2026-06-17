@@ -6,7 +6,7 @@
  */
 import { computed, onMounted, ref, watch } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
-import { AMBIENT_DOTS, MAX_IMAGES, type ImageItem, type NodePosition } from './config';
+import { AMBIENT_DOTS, type ImageItem, type NodePosition } from './config';
 import {
   buildFloatingImageLayout,
   getConstellationSize,
@@ -29,7 +29,7 @@ const emit = defineEmits<{
 const containerRef = ref<HTMLElement | null>(null);
 const positions = ref<NodePosition[]>([]);
 const hoveredIndex = ref<number | null>(null);
-const visibleImages = computed(() => props.images.slice(0, MAX_IMAGES));
+const visibleImages = computed(() => props.images);
 const isHomeLayout = computed(() => props.layout === 'home');
 const layoutKey = computed<'auto' | 'home'>(() => (props.layout === 'home' ? 'home' : 'auto'));
 
