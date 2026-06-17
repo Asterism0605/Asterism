@@ -69,7 +69,7 @@ describe('StyleDnaResult', () => {
 
     expect(wrapper.text()).toContain('Y2K');
     expect(wrapper.text()).toContain('67%');
-    expect(wrapper.find('img[alt*="Y2K"]').attributes('src')).toBe('/images/y2k.png');
+    expect(wrapper.find('img[alt*="Y2K"]').attributes('src')).toBe('/images/astronaut-dna.png');
     expect(wrapper.find('a[href="/discover-dna"]').exists()).toBe(false);
   });
 });

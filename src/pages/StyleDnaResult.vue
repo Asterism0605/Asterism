@@ -7,6 +7,7 @@ import { useStyleDnaStore } from '@/stores/style-dna.store';
 
 const { result } = storeToRefs(useStyleDnaStore());
 
+const HERO_IMAGE = '/images/astronaut-dna.png';
 const isLoading = ref(true);
 
 let loadingTimer: ReturnType<typeof window.setTimeout> | null = null;
@@ -47,7 +48,7 @@ onBeforeUnmount(() => {
 
         <StyleAnnotationDisplay
           :primary-style="result.primaryStyle"
-          :hero-image="result.heroImage"
+          :hero-image="HERO_IMAGE"
           :styles="result.styles"
           :annotations="result.annotations"
         />
