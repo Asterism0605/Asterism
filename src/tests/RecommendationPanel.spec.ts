@@ -11,6 +11,19 @@ function mountPanel() {
   })
 }
 
+async function pickFirstAvailableDate(wrapper: ReturnType<typeof mountPanel>) {
+  await wrapper.get('button.recommendation-panel__date-trigger').trigger('click')
+
+  const availableDate = wrapper
+    .findAll('button.recommendation-panel__calendar-day')
+    .find((button) => !(button.element as HTMLButtonElement).disabled)
+
+  expect(availableDate).toBeTruthy()
+  await availableDate!.trigger('click')
+
+  return wrapper.get('button.recommendation-panel__date-trigger').text()
+}
+
 describe('RecommendationPanel', () => {
   it('renders the required booking fields', () => {
     const wrapper = mountPanel()
@@ -30,8 +43,8 @@ describe('RecommendationPanel', () => {
     await wrapper.get('button.recommendation-panel__account').trigger('click')
 
     const inputs = wrapper.findAll('input.overlay-input')
-    expect((inputs[1].element as HTMLInputElement).value).toBe('Ruwen Hsieh')
-    expect((inputs[2].element as HTMLInputElement).value).toBe('ruwen@example.com')
+    expect((inputs[0].element as HTMLInputElement).value).toBe('Ruwen Hsieh')
+    expect((inputs[1].element as HTMLInputElement).value).toBe('ruwen@example.com')
   })
 
   it('blocks incomplete submissions and emits valid payloads', async () => {
@@ -42,19 +55,20 @@ describe('RecommendationPanel', () => {
     expect(wrapper.text()).toContain('Date is required.')
 
     const inputs = wrapper.findAll('input.overlay-input')
-    await inputs[0].setValue('06 / 30 / 2026')
-    await wrapper.findAll('select')[0].setValue('am')
-    await wrapper.findAll('select')[1].setValue('Interior Design')
-    await wrapper.findAll('select')[2].setValue('Spatial mood')
-    await inputs[1].setValue('Ruwen Hsieh')
-    await inputs[2].setValue('ruwen@example.com')
+    const selects = wrapper.findAll('select')
+    const selectedDate = await pickFirstAvailableDate(wrapper)
+    await selects[0].setValue('am')
+    await selects[1].setValue('Interior Design')
+    await selects[2].setValue('Spatial mood')
+    await inputs[0].setValue('Ruwen Hsieh')
+    await inputs[1].setValue('ruwen@example.com')
 
     await wrapper.get('form').trigger('submit')
 
     expect(wrapper.emitted('submit')).toHaveLength(1)
     expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({
       method: 'online',
-      date: '06 / 30 / 2026',
+      date: selectedDate,
       timeSlot: 'am',
       designField: 'Interior Design',
       designFocus: 'Spatial mood',
@@ -66,11 +80,12 @@ describe('RecommendationPanel', () => {
   it('allows design field and focus to be omitted', async () => {
     const wrapper = mountPanel()
     const inputs = wrapper.findAll('input.overlay-input')
+    const selects = wrapper.findAll('select')
 
-    await inputs[0].setValue('06 / 30 / 2026')
-    await wrapper.findAll('select')[0].setValue('pm')
-    await inputs[1].setValue('Ruwen Hsieh')
-    await inputs[2].setValue('ruwen@example.com')
+    await pickFirstAvailableDate(wrapper)
+    await selects[0].setValue('pm')
+    await inputs[0].setValue('Ruwen Hsieh')
+    await inputs[1].setValue('ruwen@example.com')
 
     await wrapper.get('form').trigger('submit')
 
@@ -81,41 +96,30 @@ describe('RecommendationPanel', () => {
     })
   })
 
-  it('validates date format and real calendar dates', async () => {
+  it('renders date choices in a monthly date picker', async () => {
     const wrapper = mountPanel()
-    const inputs = wrapper.findAll('input.overlay-input')
 
-    await inputs[0].setValue('2026-06-30')
-    await wrapper.findAll('select')[0].setValue('am')
-    await wrapper.findAll('select')[1].setValue('Interior Design')
-    await wrapper.findAll('select')[2].setValue('Spatial mood')
-    await inputs[1].setValue('Ruwen Hsieh')
-    await inputs[2].setValue('ruwen@example.com')
+    expect(wrapper.get('button.recommendation-panel__date-trigger').text()).toBe('Select a date')
 
-    await wrapper.get('form').trigger('submit')
+    await wrapper.get('button.recommendation-panel__date-trigger').trigger('click')
 
-    expect(wrapper.emitted('submit')).toBeUndefined()
-    expect(wrapper.text()).toContain('Use MM / DD / YYYY format.')
-
-    await inputs[0].setValue('02 / 31 / 2026')
-    await wrapper.get('form').trigger('submit')
-
-    expect(wrapper.emitted('submit')).toBeUndefined()
-    expect(wrapper.text()).toContain('Enter a real calendar date.')
+    expect(wrapper.text()).toMatch(/[A-Za-z]+ \d{4}/)
+    expect(wrapper.findAll('.recommendation-panel__calendar-weekdays span')).toHaveLength(7)
+    expect(wrapper.findAll('button.recommendation-panel__calendar-day')).toHaveLength(42)
   })
 
   it('resets form state', async () => {
     const wrapper = mountPanel()
     const inputs = wrapper.findAll('input.overlay-input')
 
-    await inputs[0].setValue('06 / 30 / 2026')
-    await inputs[1].setValue('Ruwen Hsieh')
+    await pickFirstAvailableDate(wrapper)
+    await inputs[0].setValue('Ruwen Hsieh')
     const resetButton = wrapper.findAll('button').find((button) => button.text() === 'RESET')
     expect(resetButton).toBeTruthy()
     await resetButton!.trigger('click')
 
+    expect(wrapper.get('button.recommendation-panel__date-trigger').text()).toBe('Select a date')
     expect((inputs[0].element as HTMLInputElement).value).toBe('')
-    expect((inputs[1].element as HTMLInputElement).value).toBe('')
     expect(wrapper.emitted('reset')).toHaveLength(1)
   })
 })
