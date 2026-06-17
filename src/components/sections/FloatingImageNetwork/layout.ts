@@ -58,15 +58,17 @@ function buildLayoutNodes(count: number, width: number, height: number, preset: 
   const evenYs = preset.evenYDistribution ? computeEvenYPositions(count, height) : null;
 
   return Array.from({ length: count }, (_, i) => {
+    const x = getRandomPosition(width * preset.randomX[0], width * preset.randomX[1]);
     const y = evenYs
       ? evenYs[i]
       : getRandomPosition(height * preset.randomY[0], height * preset.randomY[1]);
     return {
-      x: getRandomPosition(width * preset.randomX[0], width * preset.randomX[1]),
+      x,
       y,
       width: preset.widths[i % preset.widths.length],
       aspect: preset.aspects[i % preset.aspects.length],
       constellationSize: preset.constellationSizes?.[i % preset.constellationSizes.length],
+      targetX: evenYs ? x : undefined,
       targetY: evenYs ? y : undefined
     };
   });
@@ -87,8 +89,13 @@ function runLayoutSimulation(
     .stop();
 
   if (preset.evenYDistribution) {
+    // X 錨在每張自己的隨機初始位置（不是畫面中央），配合 charge 斥力 + collide
+    // 把每 100vh 的卡片橫向隨機散開，而不是擠成中間一條直欄。
     simulation
-      .force('x', forceX(width * preset.center[0]).strength(preset.centerStrength))
+      .force(
+        'x',
+        forceX((node: NodePosition) => node.targetX ?? width * preset.center[0]).strength(0.12)
+      )
       .force(
         'y',
         forceY((node: NodePosition) => node.targetY ?? node.y).strength(0.12)

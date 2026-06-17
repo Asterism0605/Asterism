@@ -14,6 +14,7 @@ export interface NodePosition {
   width: number;
   aspect: string;
   constellationSize?: number;
+  targetX?: number;
   targetY?: number;
 }
 

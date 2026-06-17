@@ -34,4 +34,19 @@ describe('buildFloatingImageLayout (home)', () => {
     const span = Math.max(...ys) - Math.min(...ys);
     expect(span).toBeGreaterThan(height * 0.7);
   });
+
+  it('scatters nodes horizontally across the width instead of a centered column', () => {
+    const width = 1440;
+    const height = 9000;
+    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home);
+
+    const xs = nodes.map((n) => n.x);
+    const inLeftThird = xs.filter((x) => x < width / 3).length;
+    const inRightThird = xs.filter((x) => x > (width * 2) / 3).length;
+
+    // 左右兩側都要有卡片，且整體橫向跨幅夠大（不是擠在中間一條直欄）
+    expect(inLeftThird).toBeGreaterThan(0);
+    expect(inRightThird).toBeGreaterThan(0);
+    expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(width * 0.5);
+  });
 });
