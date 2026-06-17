@@ -4,7 +4,7 @@
  * 負責管理生命週期、互動狀態與畫面渲染，
  * 並在 mounted 時呼叫外部 layout 工具產生圖片卡片座標。
  */
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import { AMBIENT_DOTS, type ImageItem, type NodePosition } from './config';
 import {
@@ -30,6 +30,31 @@ const containerRef = ref<HTMLElement | null>(null);
 const positions = ref<NodePosition[]>([]);
 const hoveredIndex = ref<number | null>(null);
 const visibleImages = computed(() => props.images);
+
+// 記住每張圖載入後的「真實寬高比」（src -> "w/h"），餵給 layout 算間距，
+// 讓卡片照原圖比例顯示又不重疊。
+const naturalAspects = new Map<string, string>();
+let recomputeTimer: ReturnType<typeof setTimeout> | undefined;
+
+function scheduleRecompute() {
+  if (typeof window === 'undefined') {
+    recomputeLayout();
+    return;
+  }
+  clearTimeout(recomputeTimer);
+  recomputeTimer = setTimeout(recomputeLayout, 120);
+}
+
+function onImageLoad(src: string, event: Event) {
+  const img = event.target as HTMLImageElement;
+  if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+    const aspect = `${img.naturalWidth}/${img.naturalHeight}`;
+    if (naturalAspects.get(src) !== aspect) {
+      naturalAspects.set(src, aspect);
+      scheduleRecompute();
+    }
+  }
+}
 const isHomeLayout = computed(() => props.layout === 'home');
 const layoutKey = computed<'auto' | 'home'>(() => (props.layout === 'home' ? 'home' : 'auto'));
 
@@ -62,12 +87,14 @@ function recomputeLayout() {
 
   const { width, height } = resolveContainerSize(container, props.height);
   const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : height;
+  const aspects = visibleImages.value.map((image) => naturalAspects.get(image.src));
   positions.value = buildFloatingImageLayout(
     visibleImages.value.length,
     width,
     height,
     resolveLayoutPreset(layoutKey.value),
-    viewportHeight
+    viewportHeight,
+    aspects
   );
 }
 
@@ -76,6 +103,10 @@ onMounted(() => {
   // images 常是 mount 後才非同步抓回來（例如 Home 的 getHomeInspirationImages），
   // 只在 onMounted 算一次 positions 會卡在初始的 0 張，圖片到位後仍 opacity:0。
   watch(visibleImages, recomputeLayout);
+});
+
+onBeforeUnmount(() => {
+  clearTimeout(recomputeTimer);
 });
 </script>
 
@@ -134,7 +165,8 @@ onMounted(() => {
             :src="image.src"
             :alt="image.alt ?? ''"
             class="w-full"
-            :style="`aspect-ratio: ${positions[i]?.aspect ?? '3/4'}; object-fit: cover; display: block; border-radius: 4px;`"
+            style="display: block; width: 100%; height: auto; border-radius: 4px"
+            @load="onImageLoad(image.src, $event)"
           />
         </div>
       </div>

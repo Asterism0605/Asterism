@@ -50,6 +50,13 @@ describe('buildFloatingImageLayout (home)', () => {
     expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(width * 0.5);
   });
 
+  it('uses each image real aspect ratio when provided (照原圖比例、不裁切)', () => {
+    const aspects = Array.from({ length: 45 }, () => '1000/500');
+    const nodes = buildFloatingImageLayout(45, 1440, 9000, LAYOUT_PRESETS.home, 900, aspects);
+
+    expect(nodes.every((node) => node.aspect === '1000/500')).toBe(true);
+  });
+
   it('does not overlap home cards with each other', () => {
     const width = 1440;
     const height = 9000;

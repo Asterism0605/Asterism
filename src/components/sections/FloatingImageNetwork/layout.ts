@@ -90,7 +90,13 @@ function getPresetMaxHalfHeight(preset: LayoutPreset) {
   );
 }
 
-function buildLayoutNodes(count: number, width: number, height: number, preset: LayoutPreset) {
+function buildLayoutNodes(
+  count: number,
+  width: number,
+  height: number,
+  preset: LayoutPreset,
+  aspects?: (string | undefined)[]
+) {
   // 均勻分帶從頂/底內縮一個卡片半高 + 緩衝，避免頭尾卡片被 clamp 擠在邊界疊在一起。
   const margin = preset.evenYDistribution ? getPresetMaxHalfHeight(preset) + 24 : 0;
   const evenYs = preset.evenYDistribution
@@ -106,7 +112,8 @@ function buildLayoutNodes(count: number, width: number, height: number, preset: 
       x,
       y,
       width: preset.widths[i % preset.widths.length],
-      aspect: preset.aspects[i % preset.aspects.length],
+      // 有提供圖片真實比例就用它（照原圖顯示、不裁切），否則退回 preset 預設比例
+      aspect: aspects?.[i] ?? preset.aspects[i % preset.aspects.length],
       constellationSize: preset.constellationSizes?.[i % preset.constellationSizes.length],
       targetX: evenYs ? x : undefined,
       targetY: evenYs ? y : undefined
@@ -313,9 +320,10 @@ export function buildFloatingImageLayout(
   width: number,
   height: number,
   preset: LayoutPreset,
-  viewportHeight: number = height
+  viewportHeight: number = height,
+  aspects?: (string | undefined)[]
 ) {
-  const nodes = buildLayoutNodes(count, width, height, preset);
+  const nodes = buildLayoutNodes(count, width, height, preset, aspects);
 
   runLayoutSimulation(nodes, width, height, preset);
 
