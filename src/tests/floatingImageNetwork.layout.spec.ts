@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { computeEvenYPositions } from '@/components/sections/FloatingImageNetwork/layout';
+import {
+  computeEvenYPositions,
+  buildFloatingImageLayout
+} from '@/components/sections/FloatingImageNetwork/layout';
+import { LAYOUT_PRESETS } from '@/components/sections/FloatingImageNetwork/config';
 
 describe('computeEvenYPositions', () => {
   it('spreads nodes evenly across the height, one per slot', () => {
@@ -17,5 +21,17 @@ describe('computeEvenYPositions', () => {
       const inBand = ys.filter((y) => y >= band * 1000 && y < (band + 1) * 1000).length;
       expect(inBand).toBe(5);
     }
+  });
+});
+
+describe('buildFloatingImageLayout (home)', () => {
+  it('keeps nodes spread across the full height instead of clustering at the center', () => {
+    const width = 1200;
+    const height = 9000;
+    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home);
+
+    const ys = nodes.map((n) => n.y);
+    const span = Math.max(...ys) - Math.min(...ys);
+    expect(span).toBeGreaterThan(height * 0.7);
   });
 });

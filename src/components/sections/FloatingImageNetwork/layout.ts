@@ -3,7 +3,7 @@
  * 負責容器尺寸解析、d3-force 佈局運算、fallback 卡片與 constellation 尺寸推導，
  * 不依賴 Vue reactivity，方便獨立維護與測試。
  */
-import { forceSimulation, forceCollide, forceCenter, forceManyBody } from 'd3-force';
+import { forceSimulation, forceCollide, forceCenter, forceManyBody, forceX, forceY } from 'd3-force';
 import { applyAvoidAreas } from './avoidance';
 import { LAYOUT_PRESETS, type LayoutPreset, type NodePosition } from './config';
 
@@ -57,13 +57,19 @@ export function computeEvenYPositions(
 function buildLayoutNodes(count: number, width: number, height: number, preset: LayoutPreset) {
   const evenYs = preset.evenYDistribution ? computeEvenYPositions(count, height) : null;
 
-  return Array.from({ length: count }, (_, i) => ({
-    x: getRandomPosition(width * preset.randomX[0], width * preset.randomX[1]),
-    y: evenYs ? evenYs[i] : getRandomPosition(height * preset.randomY[0], height * preset.randomY[1]),
-    width: preset.widths[i % preset.widths.length],
-    aspect: preset.aspects[i % preset.aspects.length],
-    constellationSize: preset.constellationSizes?.[i % preset.constellationSizes.length]
-  }));
+  return Array.from({ length: count }, (_, i) => {
+    const y = evenYs
+      ? evenYs[i]
+      : getRandomPosition(height * preset.randomY[0], height * preset.randomY[1]);
+    return {
+      x: getRandomPosition(width * preset.randomX[0], width * preset.randomX[1]),
+      y,
+      width: preset.widths[i % preset.widths.length],
+      aspect: preset.aspects[i % preset.aspects.length],
+      constellationSize: preset.constellationSizes?.[i % preset.constellationSizes.length],
+      targetY: evenYs ? y : undefined
+    };
+  });
 }
 
 function runLayoutSimulation(
@@ -73,18 +79,28 @@ function runLayoutSimulation(
   preset: LayoutPreset
 ) {
   const simulation = forceSimulation(nodes)
-    .force(
-      'center',
-      forceCenter(width * preset.center[0], height * preset.center[1]).strength(
-        preset.centerStrength
-      )
-    )
     .force('charge', forceManyBody().strength(preset.chargeStrength))
     .force(
       'collide',
       forceCollide((node: NodePosition) => node.width * preset.collideMultiplier).strength(1)
     )
     .stop();
+
+  if (preset.evenYDistribution) {
+    simulation
+      .force('x', forceX(width * preset.center[0]).strength(preset.centerStrength))
+      .force(
+        'y',
+        forceY((node: NodePosition) => node.targetY ?? node.y).strength(0.12)
+      );
+  } else {
+    simulation.force(
+      'center',
+      forceCenter(width * preset.center[0], height * preset.center[1]).strength(
+        preset.centerStrength
+      )
+    );
+  }
 
   for (let i = 0; i < preset.ticks; i++) simulation.tick();
 }
