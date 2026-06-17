@@ -111,14 +111,13 @@ describe('Home', () => {
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 
-    expect(images).toHaveLength(3);
-    expect(new Set(images.map((image) => image.styleGroup))).toEqual(
-      new Set([
-        'Y2K & Internet Aesthetics',
-        'Future Tech & Digital Psychedelia',
-        'Decorative & Opulent Art'
-      ])
-    );
+    expect(images).toHaveLength(45);
+    expect(new Set(images.map((image) => image.styleGroup)).size).toBe(9);
+    const perGroup = images.reduce<Record<string, number>>((acc, image) => {
+      acc[image.styleGroup] = (acc[image.styleGroup] ?? 0) + 1;
+      return acc;
+    }, {});
+    expect(Object.values(perGroup).every((count) => count === 5)).toBe(true);
   });
 
   it('opens the limit modal when viewport bottom reaches 150vh', async () => {

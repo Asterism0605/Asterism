@@ -25,14 +25,8 @@ describe('image.service', () => {
     const images = await getHomeInspirationImages();
     const styleGroups = images.map((image) => image.styleGroup);
 
-    expect(images).toHaveLength(3);
-    expect(new Set(styleGroups)).toEqual(
-      new Set([
-        'Y2K & Internet Aesthetics',
-        'Future Tech & Digital Psychedelia',
-        'Decorative & Opulent Art'
-      ])
-    );
+    expect(images).toHaveLength(45);
+    expect(new Set(styleGroups).size).toBe(9);
     expect(images[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
@@ -61,18 +55,20 @@ describe('image.service', () => {
       limit: 50
     });
 
-    expect(relatedImages).toHaveLength(19);
+    expect(relatedImages).toHaveLength(23);
     expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
       true
     );
   });
 
   it('shuffles images within equal shared-style tiers so refreshes can differ', async () => {
+    // limit=5：tier1 有 4 張（score=5），tier2 有 14 張（score=4），
+    // 第 5 個位置從 tier2 洗牌選取，不同 random 值會選到不同的圖。
     const idsWithLowRandom = (
-      await getRelatedImages('y2k-main-001', { random: () => 0 })
+      await getRelatedImages('y2k-main-001', { limit: 5, random: () => 0 })
     ).map((image) => image.id);
     const idsWithHighRandom = (
-      await getRelatedImages('y2k-main-001', { random: () => 0.99 })
+      await getRelatedImages('y2k-main-001', { limit: 5, random: () => 0.99 })
     ).map((image) => image.id);
 
     expect(idsWithLowRandom).not.toEqual(idsWithHighRandom);
@@ -86,12 +82,13 @@ describe('image.service', () => {
       (await getRelatedImages('y2k-main-001', { random: () => 0.99 })).map((image) => image.id)
     );
 
-    // 這 3 張與基準圖共享全部 4 個 style，是相關度最高的一層；
-    // limit 為 4 時不論怎麼洗牌，它們都必須佔滿前段。
+    // 這 4 張與基準圖共享全部 5 個 style，是相關度最高的一層；
+    // limit 為 4 時不論怎麼洗牌，它們都必須佔滿全部結果。
     for (const mostRelatedId of [
-      'y2k-graphic-001',
-      'y2k-graphic-editorial-001',
-      'y2k-graphic-brand-001'
+      'y2k-main-002',
+      'y2k-main-003',
+      'y2k-main-004',
+      'y2k-main-005'
     ]) {
       expect(idsWithLowRandom).toContain(mostRelatedId);
       expect(idsWithHighRandom).toContain(mostRelatedId);
