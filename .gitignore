@@ -30,3 +30,5 @@ vue3-team-guideline.md
 # TypeScript
 *.tsbuildinfo
 .superpowers/
+
+.DS_Store

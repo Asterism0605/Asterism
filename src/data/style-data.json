@@ -12,9 +12,9 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#0C0E19",
-      "#24295A",
-      "#6659A1"
+      "#0A0D1B",
+      "#172040",
+      "#26356F"
     ]
   },
   {
@@ -30,9 +30,9 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#08121B",
-      "#324658",
-      "#809CBC"
+      "#03121F",
+      "#1A394B",
+      "#BACBDE"
     ]
   },
   {
@@ -48,9 +48,9 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#1C1D3B",
-      "#304DB5",
-      "#A39BB9"
+      "#101431",
+      "#143188",
+      "#C6BBCB"
     ]
   },
   {
@@ -66,9 +66,9 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#182950",
-      "#425B9F",
-      "#838BC7"
+      "#03193C",
+      "#163C70",
+      "#6E7CB5"
     ]
   },
   {
@@ -84,9 +84,9 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#262736",
-      "#58669A",
-      "#9D98B4"
+      "#171921",
+      "#444D6E",
+      "#767DA6"
     ]
   },
   {
@@ -102,9 +102,9 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#13111B",
-      "#342C58",
-      "#655290"
+      "#0D0B13",
+      "#252644",
+      "#4E4578"
     ]
   },
   {
@@ -121,9 +121,9 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#16181A",
-      "#383B4F",
-      "#4C479A"
+      "#08090B",
+      "#202225",
+      "#32343A"
     ]
   },
   {
@@ -140,9 +140,9 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#201C23",
-      "#4A3E53",
-      "#8574A0"
+      "#171522",
+      "#403852",
+      "#74616F"
     ]
   },
   {
@@ -159,9 +159,9 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#10131E",
-      "#212959",
-      "#233BA7"
+      "#080A13",
+      "#12192B",
+      "#1D2954"
     ]
   },
   {
@@ -177,9 +177,9 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#0E121E",
-      "#3F3E5C",
-      "#8A8AB7"
+      "#080D1C",
+      "#202C49",
+      "#545676"
     ]
   },
   {
@@ -196,9 +196,9 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#373940",
-      "#777490",
-      "#AFAFBA"
+      "#1F2027",
+      "#3A3D46",
+      "#666974"
     ]
   },
   {
@@ -215,9 +215,9 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#1C1E23",
-      "#51535A",
-      "#848A9F"
+      "#101217",
+      "#575960",
+      "#6B6D75"
     ]
   },
   {
@@ -234,9 +234,9 @@
     "medium": "Outfit",
     "subMedium": "Dress",
     "colorPalette": [
-      "#323541",
-      "#747C8C",
-      "#B4BBC7"
+      "#989EA9",
+      "#BAC0CB",
+      "#D8DEE7"
     ]
   },
   {
@@ -253,9 +253,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#2F3447",
-      "#30344F",
-      "#5A64A1"
+      "#262E48",
+      "#434A62",
+      "#606784"
     ]
   },
   {
@@ -271,9 +271,9 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#15131A",
-      "#434056",
-      "#777393"
+      "#0A0A13",
+      "#1F1D2C",
+      "#39374B"
     ]
   },
   {
@@ -290,9 +290,9 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#44484F",
-      "#738199",
-      "#A895AB"
+      "#35383D",
+      "#5B646C",
+      "#B8A2B6"
     ]
   },
   {
@@ -309,9 +309,9 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#3E3B39",
-      "#857F7A",
-      "#ACA6A0"
+      "#272524",
+      "#B3AEA7",
+      "#C5C0BB"
     ]
   },
   {
@@ -328,9 +328,9 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#2D2D33",
-      "#605A5B",
-      "#946F83"
+      "#3A3D44",
+      "#5A555B",
+      "#827778"
     ]
   },
   {
@@ -347,9 +347,9 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#504E4E",
-      "#827F7D",
-      "#9F9D9B"
+      "#8D8A89",
+      "#A6A4A2",
+      "#C1BFBE"
     ]
   },
   {
@@ -365,9 +365,9 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#154D8F",
-      "#232243",
-      "#97428B"
+      "#19112B",
+      "#22305C",
+      "#0E5A98"
     ]
   },
   {
@@ -384,9 +384,9 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#18191F",
-      "#474C5F",
-      "#828CA5"
+      "#11141B",
+      "#5E6679",
+      "#8691A8"
     ]
   },
   {
@@ -403,9 +403,9 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#181B48",
-      "#4142B0",
-      "#8E8DD3"
+      "#0B123E",
+      "#30376F",
+      "#6669C7"
     ]
   },
   {
@@ -422,9 +422,9 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#1B2250",
-      "#3642A3",
-      "#7886E2"
+      "#0C163C",
+      "#384CA8",
+      "#576CCB"
     ]
   },
   {
@@ -441,9 +441,9 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#1E1317",
-      "#592729",
-      "#A14A43"
+      "#120C10",
+      "#352228",
+      "#612E30"
     ]
   },
   {
@@ -459,9 +459,9 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#3D3844",
-      "#6E88B6",
-      "#AAB1CD"
+      "#AEA1AE",
+      "#88B0E0",
+      "#CAD1E6"
     ]
   },
   {
@@ -477,9 +477,9 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#605A65",
-      "#B7A5AE",
-      "#DED8E5"
+      "#BDA9AF",
+      "#D0C7D1",
+      "#ECE7F2"
     ]
   },
   {
@@ -495,9 +495,9 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#2E2A38",
-      "#8A7686",
-      "#C1B6C8"
+      "#181F32",
+      "#D4BABB",
+      "#CED6F3"
     ]
   },
   {
@@ -513,9 +513,9 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#649FE1",
-      "#ACCAF5",
-      "#B3C2E9"
+      "#A4C7F4",
+      "#C6CDE9",
+      "#DAE5FB"
     ]
   },
   {
@@ -531,9 +531,9 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#2E303A",
-      "#74879D",
-      "#B8BAC2"
+      "#8EA1B5",
+      "#CDBCBB",
+      "#C9DEEB"
     ]
   },
   {
@@ -549,14 +549,14 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#6473B3",
-      "#6979B3",
-      "#A2ABD9"
+      "#7E97D5",
+      "#A8B2DD",
+      "#CDD5F0"
     ]
   },
   {
     "id": "y2k-graphic-poster-001",
-    "url": "/style-image/style2-graphic1.jpeg",
+    "url": "/style-image/style2-graphic1.webp",
     "title": "H2O 透明泡泡寫真卡",
     "styleGroup": "Y2K & Internet Aesthetics",
     "style": [
@@ -568,9 +568,9 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#49424F",
-      "#7C719A",
-      "#BEB5C5"
+      "#332B3F",
+      "#9D95AF",
+      "#C5BFCB"
     ]
   },
   {
@@ -587,9 +587,9 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#5F6AA8",
-      "#9FA8D6",
-      "#CFD1E0"
+      "#A1ADD8",
+      "#C4CCE5",
+      "#E6E7ED"
     ]
   },
   {
@@ -606,9 +606,9 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#707085",
-      "#ACAFCC",
-      "#BEBACD"
+      "#B8B9CC",
+      "#CECBE0",
+      "#E5E1EF"
     ]
   },
   {
@@ -625,9 +625,9 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#876C8E",
-      "#AA98B4",
-      "#C1ABC9"
+      "#A78BAD",
+      "#BFABC6",
+      "#E0CFE0"
     ]
   },
   {
@@ -643,9 +643,9 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#596491",
-      "#6C93C8",
-      "#9DA9CC"
+      "#5A85BA",
+      "#85A8D3",
+      "#B8C7E4"
     ]
   },
   {
@@ -662,9 +662,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#B6B2C8",
-      "#D6D8E2",
-      "#D6D8E2"
+      "#767681",
+      "#BAB4CC",
+      "#E1E3EB"
     ]
   },
   {
@@ -681,9 +681,9 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#B3AAD5",
-      "#F2EFF4",
-      "#F2EFF4"
+      "#B1A8D0",
+      "#CBC6E6",
+      "#F4F2F5"
     ]
   },
   {
@@ -700,9 +700,9 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#8073B6",
-      "#B2A3D2",
-      "#F3F2F5"
+      "#B4A7D5",
+      "#CCC0E5",
+      "#F8F8F8"
     ]
   },
   {
@@ -718,9 +718,9 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#6B69A3",
-      "#778DC4",
-      "#9BA4D1"
+      "#8E8EBD",
+      "#A9AAD2",
+      "#90C1E9"
     ]
   },
   {
@@ -737,9 +737,9 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#78678E",
-      "#B7A6CB",
-      "#EFECEE"
+      "#A898BB",
+      "#D2C6E1",
+      "#F6F4F4"
     ]
   },
   {
@@ -756,9 +756,9 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#8673A8",
-      "#A68EB6",
-      "#C7A3C8"
+      "#857DA7",
+      "#BBA3C6",
+      "#EDCDDD"
     ]
   },
   {
@@ -775,9 +775,9 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#83729B",
-      "#B99DC3",
-      "#EEEBF0"
+      "#D1B8D6",
+      "#E6DDEC",
+      "#F6F6F6"
     ]
   },
   {
@@ -794,9 +794,9 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#766489",
-      "#BFA7CC",
-      "#E2DFE1"
+      "#C1ACCD",
+      "#D8C9DF",
+      "#E7E5E6"
     ]
   },
   {
@@ -811,9 +811,9 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#5D678B",
-      "#6394CE",
-      "#C0B7D7"
+      "#689BCF",
+      "#B1B4DA",
+      "#E5DBED"
     ]
   },
   {
@@ -829,9 +829,9 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#6795C8",
-      "#856773",
-      "#CDC5D1"
+      "#7DA9D4",
+      "#CBC5D3",
+      "#EEE7EB"
     ]
   },
   {
@@ -847,9 +847,9 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#5A5669",
-      "#7D778F",
-      "#B0AABD"
+      "#737286",
+      "#B9B5C8",
+      "#D6D2E0"
     ]
   },
   {
@@ -865,9 +865,9 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#8E768C",
-      "#AE91A7",
-      "#C3AEC1"
+      "#C6A4AD",
+      "#AEAACC",
+      "#D7B9C3"
     ]
   },
   {
@@ -883,9 +883,9 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#6C6463",
-      "#88797F",
-      "#C3B4C6"
+      "#8A807C",
+      "#A6999C",
+      "#E9DFEF"
     ]
   },
   {
@@ -900,9 +900,9 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#1A1613",
-      "#5E422B",
-      "#B38562"
+      "#0B0D0F",
+      "#3E2D21",
+      "#A77D57"
     ]
   },
   {
@@ -917,9 +917,9 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#2F2217",
-      "#976B47",
-      "#BB987D"
+      "#19110A",
+      "#B9926F",
+      "#CFB39C"
     ]
   },
   {
@@ -934,9 +934,9 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#18120F",
-      "#5F4839",
-      "#A18674"
+      "#150D09",
+      "#402D20",
+      "#6B5241"
     ]
   },
   {
@@ -951,9 +951,9 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#4D3623",
-      "#513C2C",
-      "#927256"
+      "#503621",
+      "#6D5139",
+      "#8D6F56"
     ]
   },
   {
@@ -968,9 +968,9 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#42301E",
-      "#956C48",
-      "#BA9576"
+      "#19150D",
+      "#896036",
+      "#CCAC91"
     ]
   },
   {
@@ -985,9 +985,9 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#756553",
-      "#AAA29A",
-      "#CABEB6"
+      "#A89E94",
+      "#C5B9B0",
+      "#D5CDC8"
     ]
   },
   {
@@ -1003,9 +1003,9 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#9B7F5A",
-      "#D0BCA3",
-      "#E4D9CD"
+      "#785B32",
+      "#A88A61",
+      "#EAE0D5"
     ]
   },
   {
@@ -1021,9 +1021,9 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#2B2720",
-      "#958169",
-      "#B8AA9A"
+      "#292621",
+      "#B9AA9A",
+      "#DBD0C5"
     ]
   },
   {
@@ -1039,9 +1039,9 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#4F3F2B",
-      "#AF9270",
-      "#D4C2AB"
+      "#B59976",
+      "#D8C5AE",
+      "#EDE0D1"
     ]
   },
   {
@@ -1057,9 +1057,9 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#564B41",
-      "#957F6B",
-      "#CABDB2"
+      "#BCAD9F",
+      "#D3C7BC",
+      "#E9E2DB"
     ]
   },
   {
@@ -1074,9 +1074,9 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#171008",
-      "#5C452F",
-      "#AE8E71"
+      "#150E07",
+      "#39250E",
+      "#654B30"
     ]
   },
   {
@@ -1092,9 +1092,9 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#1A1713",
-      "#A28668",
-      "#C2AE9C"
+      "#0F0C09",
+      "#BFAA94",
+      "#D6C5B5"
     ]
   },
   {
@@ -1110,9 +1110,9 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#19140E",
-      "#503D2B",
-      "#A6825C"
+      "#120D08",
+      "#3B2D1F",
+      "#604D39"
     ]
   },
   {
@@ -1128,9 +1128,9 @@
     "medium": "Outfit",
     "subMedium": "Dress",
     "colorPalette": [
-      "#886E52",
-      "#907456",
-      "#CAB6A3"
+      "#947A5B",
+      "#BBA288",
+      "#CFBCAA"
     ]
   },
   {
@@ -1146,9 +1146,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#14100A",
-      "#5E482E",
-      "#BDA482"
+      "#130E08",
+      "#372817",
+      "#E3CFB4"
     ]
   },
   {
@@ -1163,9 +1163,9 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#736048",
-      "#A68E72",
-      "#C2B3A2"
+      "#AC9981",
+      "#C9B8A6",
+      "#DFD4C8"
     ]
   },
   {
@@ -1181,9 +1181,9 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#8F7356",
-      "#A68C71",
-      "#AC9782"
+      "#9D8265",
+      "#AF967E",
+      "#BDAA96"
     ]
   },
   {
@@ -1199,9 +1199,9 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#7D6241",
-      "#A48C6F",
-      "#BEB2A2"
+      "#8F714B",
+      "#AF997C",
+      "#C5B8A8"
     ]
   },
   {
@@ -1217,9 +1217,9 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#5C5443",
-      "#937F69",
-      "#BFB3A8"
+      "#7D6F59",
+      "#A29483",
+      "#C6BBB1"
     ]
   },
   {
@@ -1235,9 +1235,9 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#837155",
-      "#9E8D73",
-      "#C4B7A4"
+      "#9D8C71",
+      "#B5A690",
+      "#EAE2D5"
     ]
   },
   {
@@ -1252,9 +1252,9 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#52422F",
-      "#A07E5E",
-      "#D4CAC2"
+      "#7D644A",
+      "#B39475",
+      "#D4C0AB"
     ]
   },
   {
@@ -1270,9 +1270,9 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#543F29",
-      "#916E4C",
-      "#B99D80"
+      "#664A26",
+      "#8D7254",
+      "#B4987D"
     ]
   },
   {
@@ -1288,9 +1288,9 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#684A2F",
-      "#906D4D",
-      "#BEA791"
+      "#866441",
+      "#A68464",
+      "#C4AC95"
     ]
   },
   {
@@ -1306,9 +1306,9 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#77634C",
-      "#A48D73",
-      "#CCC1B5"
+      "#927C63",
+      "#B5A18A",
+      "#EEEBE8"
     ]
   },
   {
@@ -1324,9 +1324,9 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#4C3D2E",
-      "#957B68",
-      "#B9B0AD"
+      "#9D8878",
+      "#BBACA4",
+      "#D4CFCF"
     ]
   },
   {
@@ -1341,9 +1341,9 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#3C3E3C",
-      "#947F71",
-      "#B8B1A8"
+      "#131B1E",
+      "#71716B",
+      "#D0CBC4"
     ]
   },
   {
@@ -1358,9 +1358,9 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#252623",
-      "#A0836D",
-      "#CFC1B3"
+      "#1B2120",
+      "#D1BFB0",
+      "#E5DED6"
     ]
   },
   {
@@ -1375,9 +1375,9 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#5E5555",
-      "#B9B3AE",
-      "#CFCFCD"
+      "#423E43",
+      "#AFA098",
+      "#D5D5D3"
     ]
   },
   {
@@ -1392,9 +1392,9 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#6A5747",
-      "#BEB2A7",
-      "#E4DED9"
+      "#CABFB6",
+      "#DFD7D1",
+      "#F2EFEC"
     ]
   },
   {
@@ -1409,9 +1409,9 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#473A33",
-      "#9A7D6A",
-      "#B2A49A"
+      "#755F51",
+      "#A28877",
+      "#B9A699"
     ]
   },
   {
@@ -1426,9 +1426,9 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#474139",
-      "#908271",
-      "#C0B8B0"
+      "#ABA296",
+      "#C6BEB6",
+      "#E4E0DC"
     ]
   },
   {
@@ -1444,9 +1444,9 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#554E45",
-      "#8C8276",
-      "#C4BFBA"
+      "#B1A9A0",
+      "#D0CAC7",
+      "#E6E2E0"
     ]
   },
   {
@@ -1462,9 +1462,9 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#574F43",
-      "#8F8275",
-      "#C3BCB3"
+      "#A79E93",
+      "#CBC3BB",
+      "#DED8D3"
     ]
   },
   {
@@ -1480,9 +1480,9 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#635D4F",
-      "#8B8275",
-      "#C1B9B0"
+      "#B9B0A3",
+      "#CCC5BD",
+      "#E2DEDA"
     ]
   },
   {
@@ -1498,9 +1498,9 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#49443C",
-      "#8E7C6E",
-      "#C2BAB0"
+      "#665B50",
+      "#C0B8AF",
+      "#DFD8D0"
     ]
   },
   {
@@ -1515,9 +1515,9 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#554D46",
-      "#B2A99E",
-      "#CEC4B6"
+      "#BAB1A6",
+      "#CCC4BA",
+      "#E0D6C9"
     ]
   },
   {
@@ -1533,9 +1533,9 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#7B6A59",
-      "#87786A",
-      "#CEC4B6"
+      "#988A7C",
+      "#D2C6B9",
+      "#E6E0D7"
     ]
   },
   {
@@ -1551,9 +1551,9 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#494643",
-      "#837D77",
-      "#D9D2C9"
+      "#484645",
+      "#88827D",
+      "#E4DDD6"
     ]
   },
   {
@@ -1569,9 +1569,9 @@
     "medium": "Outfit",
     "subMedium": "Dress",
     "colorPalette": [
-      "#8E7D6E",
-      "#A89D91",
-      "#D1C2B2"
+      "#A29486",
+      "#B4AA9F",
+      "#CDC1B4"
     ]
   },
   {
@@ -1587,9 +1587,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#675B4E",
-      "#917F6D",
-      "#BEB0A0"
+      "#7E7265",
+      "#988878",
+      "#C3B6A7"
     ]
   },
   {
@@ -1605,9 +1605,9 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#5B4D40",
-      "#908172",
-      "#B5ABA1"
+      "#A4988B",
+      "#BCB2A7",
+      "#D3CDC7"
     ]
   },
   {
@@ -1624,9 +1624,9 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#705E4B",
-      "#A28D76",
-      "#C2B19F"
+      "#97816A",
+      "#B8A591",
+      "#CDBDAD"
     ]
   },
   {
@@ -1643,9 +1643,9 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#7E6B58",
-      "#89745F",
-      "#C7BBAF"
+      "#937F6A",
+      "#AD9C8B",
+      "#C7BCB1"
     ]
   },
   {
@@ -1662,9 +1662,9 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#5E5347",
-      "#8D8072",
-      "#CBC5BE"
+      "#B7AEA5",
+      "#D1CBC5",
+      "#EFEDEA"
     ]
   },
   {
@@ -1681,9 +1681,9 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#27170A",
-      "#5B3C20",
-      "#A77B4F"
+      "#2C1706",
+      "#432A11",
+      "#6E4B29"
     ]
   },
   {
@@ -1698,9 +1698,9 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#454745",
-      "#5C81AC",
-      "#B7B5B4"
+      "#3A3A35",
+      "#B2B0AE",
+      "#D5D3D2"
     ]
   },
   {
@@ -1716,9 +1716,9 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#5F5143",
-      "#8D7E6F",
-      "#B7B0A8"
+      "#6C5C4C",
+      "#8A7B6B",
+      "#ABA195"
     ]
   },
   {
@@ -1734,9 +1734,9 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#494640",
-      "#837F7B",
-      "#C2C3C8"
+      "#252015",
+      "#7E7C7C",
+      "#DBDEE5"
     ]
   },
   {
@@ -1752,9 +1752,9 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#423429",
-      "#97643B",
-      "#C9A275"
+      "#1F150B",
+      "#5B3B20",
+      "#645A55"
     ]
   },
   {
@@ -1770,9 +1770,9 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#4E4A3C",
-      "#B1B2AF",
-      "#CDCDCB"
+      "#1A1B1C",
+      "#6C6751",
+      "#DAD9D7"
     ]
   },
   {
@@ -1787,9 +1787,9 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#554D39",
-      "#94816D",
-      "#B8AFA0"
+      "#756951",
+      "#9F8E7A",
+      "#BAAD9D"
     ]
   },
   {
@@ -1804,9 +1804,9 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#493C2D",
-      "#9B8267",
-      "#CCBDA9"
+      "#A28D74",
+      "#C6B29D",
+      "#E3D9CA"
     ]
   },
   {
@@ -1821,9 +1821,9 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#403024",
-      "#6D5F54",
-      "#9F9187"
+      "#584435",
+      "#796759",
+      "#988A80"
     ]
   },
   {
@@ -1838,9 +1838,9 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#56422E",
-      "#8A7157",
-      "#B1A38D"
+      "#362413",
+      "#664E35",
+      "#8C7358"
     ]
   },
   {
@@ -1855,9 +1855,9 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#433424",
-      "#A29170",
-      "#A89581"
+      "#21180F",
+      "#624C32",
+      "#B3A087"
     ]
   },
   {
@@ -1872,9 +1872,9 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#5D5041",
-      "#907F6F",
-      "#BFB4A7"
+      "#7A6C5A",
+      "#A29384",
+      "#C2B7AA"
     ]
   },
   {
@@ -1890,9 +1890,9 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#645A4F",
-      "#8B8176",
-      "#C3BAB0"
+      "#A59B91",
+      "#C9C0B7",
+      "#DCD5CE"
     ]
   },
   {
@@ -1908,9 +1908,9 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#726451",
-      "#BEB1A4",
-      "#E0D9D1"
+      "#C5B8AA",
+      "#DBD1C9",
+      "#E9E4DE"
     ]
   },
   {
@@ -1926,9 +1926,9 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#272018",
-      "#605345",
-      "#9C8C7C"
+      "#251B11",
+      "#43382B",
+      "#6F6152"
     ]
   },
   {
@@ -1944,9 +1944,9 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#64584D",
-      "#897D71",
-      "#B9B2AC"
+      "#7A6D61",
+      "#9A8E84",
+      "#D2CDCA"
     ]
   },
   {
@@ -1961,9 +1961,9 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#473829",
-      "#9F8C75",
-      "#A99988"
+      "#352210",
+      "#5F4E3A",
+      "#B1A08C"
     ]
   },
   {
@@ -1979,9 +1979,9 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#7A6B55",
-      "#948874",
-      "#CCC4B6"
+      "#948772",
+      "#A59A87",
+      "#E3DDD4"
     ]
   },
   {
@@ -1997,9 +1997,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#8F7054",
-      "#957D66",
-      "#A08A72"
+      "#5D3613",
+      "#A6917B",
+      "#BDA993"
     ]
   },
   {
@@ -2015,9 +2015,9 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#796955",
-      "#897862",
-      "#A89E91"
+      "#856E4F",
+      "#9C8D79",
+      "#B0A597"
     ]
   },
   {
@@ -2033,9 +2033,9 @@
     "medium": "Outfit",
     "subMedium": "Dress",
     "colorPalette": [
-      "#615340",
-      "#8C8072",
-      "#C0B2A2"
+      "#7B6B55",
+      "#9B8F81",
+      "#B1A69A"
     ]
   },
   {
@@ -2051,15 +2051,15 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#584431",
-      "#8B735D",
-      "#A89886"
+      "#604931",
+      "#7F6A55",
+      "#A5917D"
     ]
   },
   {
     "id": "eoh-interior-chair-001",
     "url": "/style-image/style5-interior1.webp",
-    "title": "大地有機人文椅款室內設計",
+    "title": "大地有機藝術塗漆",
     "styleGroup": "Earth & Organic Humanism",
     "style": [
       "Wabi-Sabi",
@@ -2068,11 +2068,11 @@
       "Organic Modern"
     ],
     "medium": "Interior Design",
-    "subMedium": "Chair",
+    "subMedium": "Wall Paint",
     "colorPalette": [
-      "#68543F",
-      "#897662",
-      "#AFA192"
+      "#836F58",
+      "#9D8B78",
+      "#B7A898"
     ]
   },
   {
@@ -2089,9 +2089,9 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#291A0D",
-      "#594029",
-      "#AD8761"
+      "#261304",
+      "#432B13",
+      "#63482F"
     ]
   },
   {
@@ -2108,9 +2108,9 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#4D3723",
-      "#8D7057",
-      "#B7A38A"
+      "#351C09",
+      "#5E4328",
+      "#82664A"
     ]
   },
   {
@@ -2127,9 +2127,9 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#665139",
-      "#94826B",
-      "#BFAF9D"
+      "#867259",
+      "#A89883",
+      "#C4B5A6"
     ]
   },
   {
@@ -2144,9 +2144,9 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#504231",
-      "#8E7D6E",
-      "#C1BAB4"
+      "#3A2812",
+      "#64543E",
+      "#B8AA9E"
     ]
   },
   {
@@ -2162,9 +2162,9 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#57493C",
-      "#8E7968",
-      "#BDB7B4"
+      "#352717",
+      "#645140",
+      "#8B7D71"
     ]
   },
   {
@@ -2180,9 +2180,9 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#272315",
-      "#5B4E3B",
-      "#9A8874"
+      "#1C1708",
+      "#3D351D",
+      "#5E513B"
     ]
   },
   {
@@ -2198,9 +2198,9 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#4A3827",
-      "#4F4131",
-      "#9E8C7B"
+      "#4E3B27",
+      "#6B5744",
+      "#8D7B6A"
     ]
   },
   {
@@ -2216,9 +2216,9 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#554836",
-      "#907E6C",
-      "#C0B2A4"
+      "#3E2D16",
+      "#61543E",
+      "#867563"
     ]
   },
   {
@@ -2233,9 +2233,9 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#87745D",
-      "#907357",
-      "#A98D6F"
+      "#7E654A",
+      "#A58B6F",
+      "#C1A88F"
     ]
   },
   {
@@ -2250,9 +2250,9 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#67503C",
-      "#AE9072",
-      "#CEB59E"
+      "#BA9D82",
+      "#D5BDA6",
+      "#E8D9C8"
     ]
   },
   {
@@ -2267,9 +2267,9 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#715D49",
-      "#A58D70",
-      "#C7B5A6"
+      "#8D795E",
+      "#B69D87",
+      "#D1C1B3"
     ]
   },
   {
@@ -2284,9 +2284,9 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#725F45",
-      "#A38E71",
-      "#C4B9A7"
+      "#B09B80",
+      "#C9B8A4",
+      "#E2DCD6"
     ]
   },
   {
@@ -2301,9 +2301,9 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#40301F",
-      "#B4906E",
-      "#B6987D"
+      "#2D2011",
+      "#AF8B6A",
+      "#CEB092"
     ]
   },
   {
@@ -2318,9 +2318,9 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#63533D",
-      "#957E67",
-      "#BFAFA6"
+      "#836F57",
+      "#AA9786",
+      "#CEBCAE"
     ]
   },
   {
@@ -2336,9 +2336,9 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#83643C",
-      "#B0936D",
-      "#D9CBB9"
+      "#CDBA9F",
+      "#DED1C2",
+      "#F0E7DD"
     ]
   },
   {
@@ -2354,9 +2354,9 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#655949",
-      "#8D7E6E",
-      "#BDB4AC"
+      "#83786B",
+      "#C2B8AE",
+      "#D3CCC6"
     ]
   },
   {
@@ -2372,9 +2372,9 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#52452F",
-      "#9D8A72",
-      "#A79481"
+      "#33240A",
+      "#887960",
+      "#B09D89"
     ]
   },
   {
@@ -2390,9 +2390,9 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#846C57",
-      "#8F715A",
-      "#BCA99B"
+      "#977A63",
+      "#B49E8B",
+      "#CAB9AD"
     ]
   },
   {
@@ -2407,9 +2407,9 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#4B4536",
-      "#987F68",
-      "#BEB2A8"
+      "#5F5845",
+      "#8E7E6C",
+      "#B7A799"
     ]
   },
   {
@@ -2425,9 +2425,9 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#4A3C28",
-      "#907457",
-      "#BEA48C"
+      "#352D17",
+      "#A08569",
+      "#C2A890"
     ]
   },
   {
@@ -2443,9 +2443,9 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#6A5845",
-      "#89745E",
-      "#B3A395"
+      "#8D7A64",
+      "#A4917E",
+      "#BDAD9F"
     ]
   },
   {
@@ -2461,9 +2461,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#886F57",
-      "#B9A998",
-      "#C4B6A7"
+      "#8E7559",
+      "#B19B86",
+      "#D0C4B7"
     ]
   },
   {
@@ -2479,9 +2479,9 @@
     "medium": "Outfit",
     "subMedium": "Dress",
     "colorPalette": [
-      "#836C57",
-      "#8B745F",
-      "#C6B7A7"
+      "#947D68",
+      "#A5927E",
+      "#C3B19F"
     ]
   },
   {
@@ -2496,15 +2496,15 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#4A3728",
-      "#8B725C",
-      "#B6AA9A"
+      "#281408",
+      "#78624C",
+      "#A08B78"
     ]
   },
   {
     "id": "rpl-interior-lighting-001",
     "url": "/style-image/style6-interior1.webp",
-    "title": "浪漫田園生活燈光室內設計",
+    "title": "浪漫田園生活燈光設計",
     "styleGroup": "Romantic & Pastoral Living",
     "style": [
       "Grandmillennial",
@@ -2514,15 +2514,15 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#735D46",
-      "#8B755C",
-      "#B69875"
+      "#907B62",
+      "#AC9479",
+      "#E3C49C"
     ]
   },
   {
     "id": "rpl-interior-wall-paint-001",
     "url": "/style-image/style6-interior2.webp",
-    "title": "浪漫田園生活牆面色彩室內設計",
+    "title": "浪漫田園生活壁紙",
     "styleGroup": "Romantic & Pastoral Living",
     "style": [
       "Grandmillennial",
@@ -2532,15 +2532,15 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#61563E",
-      "#8B7F66",
-      "#918871"
+      "#6B5A3C",
+      "#7B7159",
+      "#8E866F"
     ]
   },
   {
     "id": "rpl-interior-chair-001",
     "url": "/style-image/style6-interior3.webp",
-    "title": "浪漫田園生活椅款室內設計",
+    "title": "浪漫田園生活椅款",
     "styleGroup": "Romantic & Pastoral Living",
     "style": [
       "Grandmillennial",
@@ -2550,15 +2550,15 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#7B5C42",
-      "#A88B72",
-      "#C3B6A8"
+      "#B49B83",
+      "#C5B5A7",
+      "#D5CABF"
     ]
   },
   {
     "id": "rpl-interior-table-001",
     "url": "/style-image/style6-interior4.webp",
-    "title": "浪漫田園生活桌几室內設計",
+    "title": "浪漫田園生活桌几",
     "styleGroup": "Romantic & Pastoral Living",
     "style": [
       "Grandmillennial",
@@ -2568,9 +2568,9 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#5B4B35",
-      "#897259",
-      "#B8B49B"
+      "#412709",
+      "#6B573A",
+      "#8D7E68"
     ]
   },
   {
@@ -2585,9 +2585,9 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#504A30",
-      "#938365",
-      "#BEB7AD"
+      "#2D2B0D",
+      "#5C5333",
+      "#897C5F"
     ]
   },
   {
@@ -2603,9 +2603,9 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#534538",
-      "#8C7463",
-      "#B99B87"
+      "#655342",
+      "#8C7767",
+      "#B59D8D"
     ]
   },
   {
@@ -2621,9 +2621,9 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#54482E",
-      "#897554",
-      "#AC9978"
+      "#33290C",
+      "#5B4C29",
+      "#7D6E4F"
     ]
   },
   {
@@ -2639,9 +2639,9 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#76634F",
-      "#988975",
-      "#B4AA9C"
+      "#816C55",
+      "#A1927F",
+      "#B8AB9C"
     ]
   },
   {
@@ -2657,9 +2657,9 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#574A3A",
-      "#8B8271",
-      "#BABAAE"
+      "#6A5B47",
+      "#867B6A",
+      "#ADA99B"
     ]
   },
   {
@@ -2674,9 +2674,9 @@
       "Americana"
     ],
     "colorPalette": [
-      "#3C342C",
-      "#936D55",
-      "#B49781"
+      "#162120",
+      "#43382F",
+      "#765C48"
     ]
   },
   {
@@ -2691,9 +2691,9 @@
       "Americana"
     ],
     "colorPalette": [
-      "#7C5133",
-      "#A56233",
-      "#D79A5E"
+      "#884B1B",
+      "#B77842",
+      "#DCA05F"
     ]
   },
   {
@@ -2708,9 +2708,9 @@
       "Americana"
     ],
     "colorPalette": [
-      "#3E2D23",
-      "#9C6246",
-      "#CEA175"
+      "#48372B",
+      "#83523A",
+      "#DDB58E"
     ]
   },
   {
@@ -2725,9 +2725,9 @@
       "Americana"
     ],
     "colorPalette": [
-      "#4A372B",
-      "#8D6341",
-      "#D2B9A4"
+      "#282627",
+      "#5A4133",
+      "#936B47"
     ]
   },
   {
@@ -2742,9 +2742,9 @@
       "Americana"
     ],
     "colorPalette": [
-      "#3E2B31",
-      "#965747",
-      "#BEA185"
+      "#102037",
+      "#914A40",
+      "#D3BDA4"
     ]
   },
   {
@@ -2759,9 +2759,9 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#483D2D",
-      "#987C5C",
-      "#C9BDAC"
+      "#2E271A",
+      "#5B4D37",
+      "#DCD2C5"
     ]
   },
   {
@@ -2777,15 +2777,15 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#503D28",
-      "#92704D",
-      "#B7A68B"
+      "#664828",
+      "#927656",
+      "#AA9579"
     ]
   },
   {
     "id": "retro-graphic-brand-001",
     "url": "/style-image/style7-graphic2.webp",
-    "title": "復古懷舊品牌識別平面設計",
+    "title": "復古懷舊品牌識別",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Vintage",
@@ -2795,15 +2795,15 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#766748",
-      "#AF5B28",
-      "#CEBBA0"
+      "#C46A29",
+      "#CDB799",
+      "#DED0BD"
     ]
   },
   {
     "id": "retro-graphic-packaging-001",
     "url": "/style-image/style7-graphic3.webp",
-    "title": "復古懷舊包裝平面設計",
+    "title": "復古懷舊包裝設計",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Vintage",
@@ -2813,15 +2813,15 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#4B361F",
-      "#926C45",
-      "#BD9F7B"
+      "#53371A",
+      "#83623A",
+      "#AC8A63"
     ]
   },
   {
     "id": "retro-graphic-editorial-001",
     "url": "/style-image/style7-graphic4.webp",
-    "title": "復古懷舊編輯版面平面設計",
+    "title": "復古懷舊書籍編排設計",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Vintage",
@@ -2831,9 +2831,9 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#4A4032",
-      "#968571",
-      "#BDB0A1"
+      "#594C3A",
+      "#7E715E",
+      "#BEB1A1"
     ]
   },
   {
@@ -2848,15 +2848,15 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#52372A",
-      "#8F6041",
-      "#BDA685"
+      "#703E22",
+      "#8B674D",
+      "#D3BFA4"
     ]
   },
   {
     "id": "retro-outfit-top-001",
     "url": "/style-image/style7-outfit1.webp",
-    "title": "復古懷舊上身單品穿搭",
+    "title": "復古懷舊上衣",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Vintage",
@@ -2866,15 +2866,15 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#41372C",
-      "#9D886B",
-      "#B49A7D"
+      "#382616",
+      "#55615F",
+      "#AC987D"
     ]
   },
   {
     "id": "retro-outfit-bottom-001",
     "url": "/style-image/style7-outfit2.webp",
-    "title": "復古懷舊下身單品穿搭",
+    "title": "復古懷舊褲裝",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Vintage",
@@ -2884,9 +2884,9 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#543621",
-      "#A98A69",
-      "#B89578"
+      "#4C2A12",
+      "#B69979",
+      "#D6BFA5"
     ]
   },
   {
@@ -2902,9 +2902,9 @@
     "medium": "Outfit",
     "subMedium": "Dress",
     "colorPalette": [
-      "#807366",
-      "#B7A793",
-      "#CBC2B5"
+      "#C2B19C",
+      "#CFC4B6",
+      "#E0E1DE"
     ]
   },
   {
@@ -2920,9 +2920,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#613A26",
-      "#B49370",
-      "#C7A88B"
+      "#88583D",
+      "#CCB191",
+      "#E4CFB6"
     ]
   },
   {
@@ -2937,15 +2937,15 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#24190E",
-      "#5A4029",
-      "#AF9882"
+      "#1D120A",
+      "#4B2E15",
+      "#6D5131"
     ]
   },
   {
     "id": "retro-interior-lighting-001",
     "url": "/style-image/style7-interior1.webp",
-    "title": "復古懷舊燈光室內設計",
+    "title": "復古懷舊燈光設計",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Retro",
@@ -2955,15 +2955,15 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#201008",
-      "#613B22",
-      "#A56F41"
+      "#210C04",
+      "#6D492D",
+      "#976741"
     ]
   },
   {
     "id": "retro-interior-wall-paint-001",
     "url": "/style-image/style7-interior2.webp",
-    "title": "復古懷舊牆面色彩室內設計",
+    "title": "復古懷舊牆面色彩設計",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Retro",
@@ -2973,15 +2973,15 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#43341C",
-      "#8E7045",
-      "#B8A27C"
+      "#2A1B06",
+      "#4D3A19",
+      "#A1855A"
     ]
   },
   {
     "id": "retro-interior-table-001",
     "url": "/style-image/style7-interior3.webp",
-    "title": "復古懷舊桌几室內設計",
+    "title": "復古懷舊桌几",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Retro",
@@ -2991,9 +2991,9 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#221910",
-      "#5B3F28",
-      "#AD8B6A"
+      "#21170C",
+      "#493019",
+      "#6E5135"
     ]
   },
   {
@@ -3009,9 +3009,9 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#4D3A26",
-      "#8E6F51",
-      "#BCA786"
+      "#573C20",
+      "#7A6246",
+      "#A79070"
     ]
   },
   {
@@ -3026,15 +3026,15 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#655441",
-      "#947354",
-      "#BABDBB"
+      "#4A3E2D",
+      "#927B63",
+      "#BBC4C7"
     ]
   },
   {
     "id": "retro-architecture-facade-001",
     "url": "/style-image/style7-architecture1.webp",
-    "title": "復古懷舊立面建築",
+    "title": "復古懷舊建築立面",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Retro",
@@ -3044,15 +3044,15 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#484640",
-      "#827C7F",
-      "#C7B7A4"
+      "#3B3832",
+      "#766D62",
+      "#EBDECC"
     ]
   },
   {
     "id": "retro-architecture-staircase-001",
     "url": "/style-image/style7-architecture2.webp",
-    "title": "復古懷舊樓梯建築",
+    "title": "復古懷舊樓梯",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Retro",
@@ -3062,15 +3062,15 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#2B2217",
-      "#574632",
-      "#B8A896"
+      "#261D13",
+      "#463623",
+      "#63523B"
     ]
   },
   {
     "id": "retro-architecture-entrance-001",
     "url": "/style-image/style7-architecture3.webp",
-    "title": "復古懷舊入口建築",
+    "title": "復古懷舊入口",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Retro",
@@ -3080,15 +3080,15 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#4B3221",
-      "#996241",
-      "#C39E7F"
+      "#261709",
+      "#633E21",
+      "#866349"
     ]
   },
   {
     "id": "retro-architecture-window-001",
     "url": "/style-image/style7-architecture4.webp",
-    "title": "復古懷舊窗景建築",
+    "title": "復古懷舊窗景",
     "styleGroup": "Retro & Nostalgia",
     "style": [
       "Retro",
@@ -3098,9 +3098,9 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#4A463D",
-      "#8B7863",
-      "#A3ACB7"
+      "#534739",
+      "#948B7D",
+      "#B4BDC7"
     ]
   },
   {
@@ -3115,9 +3115,9 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#171819",
-      "#605E5E",
-      "#A09A96"
+      "#0F1013",
+      "#2D2F31",
+      "#8B8988"
     ]
   },
   {
@@ -3132,9 +3132,9 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#444247",
-      "#887B7A",
-      "#A2999B"
+      "#13171E",
+      "#706D71",
+      "#BCB4B5"
     ]
   },
   {
@@ -3149,9 +3149,9 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#2D3034",
-      "#887C79",
-      "#BBB9BA"
+      "#0E151E",
+      "#40454A",
+      "#BCB9BA"
     ]
   },
   {
@@ -3166,9 +3166,9 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#26292C",
-      "#595C60",
-      "#A2A3A7"
+      "#191B1E",
+      "#383C40",
+      "#5D6165"
     ]
   },
   {
@@ -3183,15 +3183,15 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#45433F",
-      "#8B7F75",
-      "#A09C97"
+      "#898179",
+      "#A6A19B",
+      "#C1BDBA"
     ]
   },
   {
     "id": "eag-graphic-001",
     "url": "/style-image/style8-graphic.webp",
-    "title": "實驗前衛平面設計代表圖",
+    "title": "實驗前衛平面設計",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Anti-Design",
@@ -3201,15 +3201,15 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#454343",
-      "#9B543E",
-      "#A6A3A0"
+      "#302F30",
+      "#A9A7A5",
+      "#CDCAC7"
     ]
   },
   {
     "id": "eag-graphic-brand-001",
     "url": "/style-image/style8-graphic1.webp",
-    "title": "實驗前衛品牌識別平面設計",
+    "title": "實驗前衛品牌識別設計",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Anti-Design",
@@ -3220,9 +3220,9 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#4B4B4C",
-      "#566395",
-      "#BEBBB8"
+      "#535355",
+      "#7B7979",
+      "#D5D3D1"
     ]
   },
   {
@@ -3239,15 +3239,15 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#555250",
-      "#7E7A84",
-      "#ADAAA8"
+      "#393734",
+      "#878484",
+      "#B0ACAC"
     ]
   },
   {
     "id": "eag-graphic-packaging-001",
     "url": "/style-image/style8-graphic3.webp",
-    "title": "實驗前衛包裝平面設計",
+    "title": "實驗前衛包裝設計",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Anti-Design",
@@ -3258,15 +3258,15 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#201E1A",
-      "#534C42",
-      "#AA9F89"
+      "#1B1915",
+      "#5B554D",
+      "#C0B6AC"
     ]
   },
   {
     "id": "eag-graphic-poster-001",
     "url": "/style-image/style8-graphic4.webp",
-    "title": "實驗前衛海報平面設計",
+    "title": "實驗前衛海報設計",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Anti-Design",
@@ -3277,9 +3277,9 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#372D2A",
-      "#87746E",
-      "#B2ACA6"
+      "#161210",
+      "#56362F",
+      "#CDC8C3"
     ]
   },
   {
@@ -3294,15 +3294,15 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#524D49",
-      "#867E77",
-      "#AEAAA5"
+      "#141313",
+      "#8B857E",
+      "#C2BEBA"
     ]
   },
   {
     "id": "eag-outfit-top-001",
     "url": "/style-image/style8-outfit1.webp",
-    "title": "實驗前衛上身單品穿搭",
+    "title": "實驗前衛上衣",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Avant-Garde",
@@ -3312,15 +3312,15 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#655C52",
-      "#8C7F73",
-      "#B4ACA2"
+      "#867C72",
+      "#B3AAA1",
+      "#D5CEC7"
     ]
   },
   {
     "id": "eag-outfit-bottom-001",
     "url": "/style-image/style8-outfit2.webp",
-    "title": "實驗前衛下身單品穿搭",
+    "title": "實驗前衛褲裝",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Avant-Garde",
@@ -3330,15 +3330,15 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#1A1817",
-      "#686460",
-      "#A6A29F"
+      "#110F0F",
+      "#2F2B29",
+      "#7E7B77"
     ]
   },
   {
     "id": "eag-outfit-dress-001",
     "url": "/style-image/style8-outfit3.webp",
-    "title": "實驗前衛洋裝穿搭",
+    "title": "實驗前衛洋裝",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Avant-Garde",
@@ -3348,15 +3348,15 @@
     "medium": "Outfit",
     "subMedium": "Dress",
     "colorPalette": [
-      "#292927",
-      "#5C5A5A",
-      "#9B999C"
+      "#383735",
+      "#4C4A48",
+      "#ACABAD"
     ]
   },
   {
     "id": "eag-outfit-accessory-001",
     "url": "/style-image/style8-outfit4.webp",
-    "title": "實驗前衛配件穿搭",
+    "title": "實驗前衛配件",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Avant-Garde",
@@ -3366,9 +3366,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#6A6661",
-      "#837D76",
-      "#A49E98"
+      "#7E7870",
+      "#918C87",
+      "#C7C1BC"
     ]
   },
   {
@@ -3383,15 +3383,15 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#423B33",
-      "#8D8071",
-      "#B2A99D"
+      "#211D18",
+      "#4B433A",
+      "#796D5F"
     ]
   },
   {
     "id": "eag-interior-wall-paint-001",
     "url": "/style-image/style8-interior1.webp",
-    "title": "實驗前衛牆面色彩室內設計",
+    "title": "實驗前衛牆面色彩設計",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Brutalism",
@@ -3401,15 +3401,15 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#4C4034",
-      "#8A725E",
-      "#AD9F8F"
+      "#2A241C",
+      "#907C69",
+      "#AE9E8F"
     ]
   },
   {
     "id": "eag-interior-lighting-001",
     "url": "/style-image/style8-interior2.webp",
-    "title": "實驗前衛燈光室內設計",
+    "title": "實驗前衛燈光",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Brutalism",
@@ -3419,15 +3419,15 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#4A433D",
-      "#8A7E74",
-      "#BBB4AF"
+      "#8A7F77",
+      "#ACA39C",
+      "#D7D3D0"
     ]
   },
   {
     "id": "eag-interior-table-001",
     "url": "/style-image/style8-interior3.webp",
-    "title": "實驗前衛桌几室內設計",
+    "title": "實驗前衛桌几",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Brutalism",
@@ -3437,15 +3437,15 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#443B32",
-      "#8D7F70",
-      "#C5BBB2"
+      "#54483C",
+      "#7D7165",
+      "#A89D92"
     ]
   },
   {
     "id": "eag-interior-chair-001",
     "url": "/style-image/style8-interior4.webp",
-    "title": "實驗前衛椅款室內設計",
+    "title": "實驗前衛椅款",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Brutalism",
@@ -3455,9 +3455,9 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#453932",
-      "#92776A",
-      "#B5AAA1"
+      "#2F2A25",
+      "#695147",
+      "#B2A69B"
     ]
   },
   {
@@ -3472,9 +3472,9 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#474645",
-      "#7D7E7F",
-      "#A1A3AA"
+      "#807F80",
+      "#A2A3A6",
+      "#C3C7CE"
     ]
   },
   {
@@ -3490,15 +3490,15 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#444548",
-      "#777E89",
-      "#ACB0B7"
+      "#323336",
+      "#525355",
+      "#9EA2AA"
     ]
   },
   {
     "id": "eag-architecture-facade-001",
     "url": "/style-image/style8-architecture2.webp",
-    "title": "實驗前衛立面建築",
+    "title": "實驗前衛窗戶設計",
     "styleGroup": "Experimental & Avant-Garde",
     "style": [
       "Brutalism",
@@ -3506,11 +3506,11 @@
       "Avant-Garde"
     ],
     "medium": "Architecture",
-    "subMedium": "Facade",
+    "subMedium": "Window",
     "colorPalette": [
-      "#201A14",
-      "#5C4F43",
-      "#A88B6E"
+      "#19130C",
+      "#3F3224",
+      "#6C6054"
     ]
   },
   {
@@ -3526,9 +3526,9 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#574D43",
-      "#857D78",
-      "#A1A7AE"
+      "#847B74",
+      "#9FA2A6",
+      "#D0D7E0"
     ]
   },
   {
@@ -3544,9 +3544,9 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#413E3B",
-      "#818283",
-      "#B1B6BE"
+      "#201C17",
+      "#7E7D7B",
+      "#D0D4DA"
     ]
   },
   {
@@ -3562,9 +3562,9 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#16191C",
-      "#4E5254",
-      "#949C9B"
+      "#0E1116",
+      "#2D363B",
+      "#B1B9B8"
     ]
   },
   {
@@ -3580,9 +3580,9 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#333836",
-      "#89837C",
-      "#BDBEBC"
+      "#0F1E1C",
+      "#B7B5B0",
+      "#E2E5E4"
     ]
   },
   {
@@ -3598,9 +3598,9 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#322E35",
-      "#88757C",
-      "#B0A3A7"
+      "#17151B",
+      "#34333F",
+      "#A5989D"
     ]
   },
   {
@@ -3616,9 +3616,9 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#4B4E55",
-      "#787C89",
-      "#9EABC1"
+      "#2B3239",
+      "#7A7C86",
+      "#B9CAE1"
     ]
   },
   {
@@ -3634,9 +3634,9 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#111518",
-      "#5A4F50",
-      "#AB9A97"
+      "#0C131A",
+      "#B29991",
+      "#D5CECE"
     ]
   },
   {
@@ -3646,86 +3646,86 @@
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Graffiti",
-      "Streetwear",
+      "Hypebeast",
       "Urban Contemporary"
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#403C36",
-      "#A56B4E",
-      "#B3ABA5"
+      "#1B1B16",
+      "#B3866A",
+      "#CBC4C0"
     ]
   },
   {
     "id": "syc-graphic-poster-001",
     "url": "/style-image/style9-graphic1.webp",
-    "title": "街頭青年文化海報平面設計",
+    "title": "街頭青年文化海報設計",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Graffiti",
-      "Streetwear",
+      "Hypebeast",
       "Urban Contemporary"
     ],
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#1F1E1B",
-      "#5E584E",
-      "#A09978"
+      "#DDFF19",
+      "#000000",
+      "#5D5E54"
     ]
   },
   {
     "id": "syc-graphic-brand-001",
     "url": "/style-image/style9-graphic2.webp",
-    "title": "街頭青年文化品牌識別平面設計",
+    "title": "街頭青年文化品牌識別設計",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Graffiti",
-      "Streetwear",
+      "Hypebeast",
       "Urban Contemporary"
     ],
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#353535",
-      "#858079",
-      "#ADACAD"
+      "#383A3B",
+      "#9E9A96",
+      "#C8C9CB"
     ]
   },
   {
     "id": "syc-graphic-packaging-001",
     "url": "/style-image/style9-graphic3.webp",
-    "title": "街頭青年文化包裝平面設計",
+    "title": "街頭青年文化包裝設計",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Graffiti",
-      "Streetwear",
+      "Hypebeast",
       "Urban Contemporary"
     ],
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#1F1D1C",
-      "#5E5750",
-      "#AC9D92"
+      "#151513",
+      "#3A3632",
+      "#706760"
     ]
   },
   {
     "id": "syc-graphic-editorial-001",
     "url": "/style-image/style9-graphic4.webp",
-    "title": "街頭青年文化編輯版面平面設計",
+    "title": "街頭青年文化編輯版面設計",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Graffiti",
-      "Streetwear",
+      "Hypebeast",
       "Urban Contemporary"
     ],
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#45413D",
-      "#8B8074",
-      "#B7B1AC"
+      "#4A453E",
+      "#A59E97",
+      "#D6D1CE"
     ]
   },
   {
@@ -3741,15 +3741,15 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#22221E",
-      "#585752",
-      "#84999B"
+      "#151713",
+      "#3F3E37",
+      "#61615C"
     ]
   },
   {
     "id": "syc-outfit-top-001",
     "url": "/style-image/style9-outfit1.webp",
-    "title": "街頭青年文化上身單品穿搭",
+    "title": "街頭青年文化上身",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Streetwear",
@@ -3760,15 +3760,15 @@
     "medium": "Outfit",
     "subMedium": "Top",
     "colorPalette": [
-      "#222121",
-      "#484848",
-      "#85888B"
+      "#222222",
+      "#3B3B3A",
+      "#515151"
     ]
   },
   {
     "id": "syc-outfit-bottom-001",
     "url": "/style-image/style9-outfit2.webp",
-    "title": "街頭青年文化下身單品穿搭",
+    "title": "街頭青年文化褲裝",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Streetwear",
@@ -3779,15 +3779,15 @@
     "medium": "Outfit",
     "subMedium": "Bottom",
     "colorPalette": [
-      "#4A4848",
-      "#87807B",
-      "#B7B3AE"
+      "#747270",
+      "#A39E9B",
+      "#C1BDB7"
     ]
   },
   {
     "id": "syc-outfit-dress-001",
     "url": "/style-image/style9-outfit3.webp",
-    "title": "街頭青年文化洋裝穿搭",
+    "title": "街頭青年文化洋裝",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Streetwear",
@@ -3798,15 +3798,15 @@
     "medium": "Outfit",
     "subMedium": "Dress",
     "colorPalette": [
-      "#353537",
-      "#898279",
-      "#C2C0BC"
+      "#AAA6A0",
+      "#CBC9C6",
+      "#E6E6E5"
     ]
   },
   {
     "id": "syc-outfit-accessory-001",
     "url": "/style-image/style9-outfit4.webp",
-    "title": "街頭青年文化配件穿搭",
+    "title": "街頭青年文化配件",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Streetwear",
@@ -3817,9 +3817,9 @@
     "medium": "Outfit",
     "subMedium": "Accessory",
     "colorPalette": [
-      "#343335",
-      "#999798",
-      "#F4F4F4"
+      "#232225",
+      "#545254",
+      "#F6F6F6"
     ]
   },
   {
@@ -3830,21 +3830,23 @@
     "style": [
       "Urban Contemporary",
       "Graffiti",
-      "Skate Culture"
+      "Skate Culture",
+      "Hypebeast"
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#26211B",
-      "#615243",
-      "#A28E7E"
+      "#4C4132",
+      "#786551",
+      "#96867A"
     ]
   },
   {
     "id": "syc-interior-table-001",
     "url": "/style-image/style9-interior1.webp",
-    "title": "街頭青年文化桌几室內設計",
+    "title": "街頭青年文化桌几",
     "styleGroup": "Street & Youth Culture",
     "style": [
+      "Hypebeast",
       "Urban Contemporary",
       "Graffiti",
       "Skate Culture"
@@ -3852,17 +3854,18 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#34302C",
-      "#68635D",
-      "#AFA298"
+      "#4F4943",
+      "#6F6962",
+      "#89837D"
     ]
   },
   {
     "id": "syc-interior-chair-001",
     "url": "/style-image/style9-interior2.webp",
-    "title": "街頭青年文化椅款室內設計",
+    "title": "街頭青年文化椅款",
     "styleGroup": "Street & Youth Culture",
     "style": [
+      "Hypebeast",
       "Urban Contemporary",
       "Graffiti",
       "Skate Culture"
@@ -3870,15 +3873,15 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#423F3C",
-      "#857F78",
-      "#9B9894"
+      "#45403B",
+      "#6E6963",
+      "#908D8B"
     ]
   },
   {
     "id": "syc-interior-lighting-001",
     "url": "/style-image/style9-interior3.webp",
-    "title": "街頭青年文化燈光室內設計",
+    "title": "街頭青年文化落地燈",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Urban Contemporary",
@@ -3888,15 +3891,15 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#221D18",
-      "#594E44",
-      "#A68F7B"
+      "#17120D",
+      "#362E26",
+      "#574C41"
     ]
   },
   {
     "id": "syc-interior-wall-paint-001",
     "url": "/style-image/style9-interior4.webp",
-    "title": "街頭青年文化牆面色彩室內設計",
+    "title": "街頭青年文化牆面設計",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Urban Contemporary",
@@ -3906,9 +3909,9 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#231F1A",
-      "#5C4838",
-      "#987B64"
+      "#1A1510",
+      "#393028",
+      "#5F4C3C"
     ]
   },
   {
@@ -3919,67 +3922,67 @@
     "style": [
       "Urban Contemporary",
       "Graffiti",
-      "Streetwear"
+      "Hypebeast"
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#46403D",
-      "#8C7868",
-      "#BEC5D1"
+      "#1F1911",
+      "#6A625F",
+      "#CCD3DE"
     ]
   },
   {
     "id": "syc-architecture-facade-001",
     "url": "/style-image/style9-architecture1.webp",
-    "title": "街頭青年文化立面建築",
+    "title": "街頭青年文化建築立面",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Urban Contemporary",
       "Graffiti",
-      "Streetwear"
+      "Hypebeast"
     ],
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#44433E",
-      "#84817D",
-      "#A6B0BA"
+      "#232319",
+      "#878582",
+      "#BED5E9"
     ]
   },
   {
     "id": "syc-architecture-entrance-001",
     "url": "/style-image/style9-architecture2.webp",
-    "title": "街頭青年文化入口建築",
+    "title": "街頭青年文化建築入口",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Urban Contemporary",
       "Graffiti",
-      "Streetwear"
+      "Hypebeast"
     ],
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#1E1A19",
-      "#4F4847",
-      "#8B807E"
+      "#181310",
+      "#2E2B2B",
+      "#666062"
     ]
   },
   {
     "id": "syc-architecture-staircase-001",
     "url": "/style-image/style9-architecture3.webp",
-    "title": "街頭青年文化樓梯建築",
+    "title": "街頭青年文化樓梯設計",
     "styleGroup": "Street & Youth Culture",
     "style": [
       "Urban Contemporary",
       "Graffiti",
-      "Streetwear"
+      "Hypebeast"
     ],
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#23211C",
-      "#595750",
-      "#A7A193"
+      "#1E1B15",
+      "#46433A",
+      "#66645C"
     ]
   },
   {
@@ -3990,14 +3993,14 @@
     "style": [
       "Urban Contemporary",
       "Graffiti",
-      "Streetwear"
+      "Hypebeast"
     ],
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#313031",
-      "#7A8289",
-      "#BDB4AE"
+      "#191715",
+      "#38383A",
+      "#D3CBC5"
     ]
   }
 ]
