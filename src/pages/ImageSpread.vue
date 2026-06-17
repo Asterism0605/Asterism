@@ -15,6 +15,7 @@ const rootImage = ref<ImageSpreadNode | undefined>();
 const relatedImages = ref<ImageSpreadNode[]>([]);
 const visitedImageIds = ref<string[]>([]);
 const spreadDepth = ref(0);
+const isLoading = ref(true);
 let syncedRouteImageId: string | undefined;
 
 const routeImageId = computed(() => {
@@ -36,9 +37,11 @@ async function loadImageSpread(imageId: string | undefined) {
     relatedImages.value = [];
     visitedImageIds.value = [];
     spreadDepth.value = 0;
+    isLoading.value = false;
     return;
   }
 
+  isLoading.value = true;
   const image = await getImageById(imageId);
   centerImage.value = image;
   rootImage.value = image;
@@ -49,6 +52,8 @@ async function loadImageSpread(imageId: string | undefined) {
   if (image) {
     await refreshRelatedImages(image.id);
   }
+
+  isLoading.value = false;
 }
 
 function syncSpreadRoute(imageId: string) {
@@ -151,6 +156,13 @@ watch(
           </span>
         </button>
       </div>
+    </section>
+
+    <section
+      v-else-if="isLoading"
+      class="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] max-w-xl flex-col items-center justify-center gap-5 px-6 text-center"
+    >
+      <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">Loading…</p>
     </section>
 
     <section

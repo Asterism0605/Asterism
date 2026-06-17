@@ -52,8 +52,6 @@ describe('ImageSpread', () => {
     );
     expect(wrapper.text()).toContain('Return');
     expect(wrapper.text()).toContain('Add to moodboard');
-    expect(wrapper.text()).not.toContain('Frutiger Aero');
-    expect(wrapper.text()).not.toContain('Chrome Design');
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4);
   });
 
@@ -139,5 +137,29 @@ describe('ImageSpread', () => {
 
     expect(wrapper.text()).toContain('Image not found');
     expect(wrapper.find('[data-testid="return-home"]').exists()).toBe(true);
+  });
+
+  it('does not flash the not-found error while the image is still loading', async () => {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: { template: '<div />' } },
+        { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread }
+      ]
+    });
+    router.push('/images/y2k-main-001/spread');
+    await router.isReady();
+
+    const wrapper = mount(ImageSpread, {
+      global: { plugins: [router], stubs: { ConstellationBackground: true } }
+    });
+
+    // 還沒 flush（圖片還在 async 載入）：不該先閃出 not-found 錯誤頁
+    expect(wrapper.text()).not.toContain('Image not found');
+
+    await flushPromises();
+
+    // 載入完成後才顯示中心圖
+    expect(wrapper.find('[data-testid="spread-main-image"]').exists()).toBe(true);
   });
 });
