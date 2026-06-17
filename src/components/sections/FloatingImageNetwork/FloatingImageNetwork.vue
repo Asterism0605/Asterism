@@ -34,7 +34,12 @@ const visibleImages = computed(() => props.images);
 // 記住每張圖載入後的「真實寬高比」（src -> "w/h"），餵給 layout 算間距，
 // 讓卡片照原圖比例顯示又不重疊。
 const naturalAspects = new Map<string, string>();
+// 圖片載入前用 preset 假比例排的第一版先不顯示，等拿到真實比例排好的版本才淡入，
+// 避免使用者看到「假比例 → 真比例」跳動兩次的感覺。
+const isReady = ref(false);
+let loadedCount = 0;
 let recomputeTimer: ReturnType<typeof setTimeout> | undefined;
+let readyTimer: ReturnType<typeof setTimeout> | undefined;
 
 function scheduleRecompute() {
   if (typeof window === 'undefined') {
@@ -54,6 +59,28 @@ function onImageLoad(src: string, event: Event) {
       scheduleRecompute();
     }
   }
+
+  loadedCount += 1;
+  if (loadedCount >= visibleImages.value.length) {
+    // 全部載入完：用真實比例做最後一次排版，然後一次淡入
+    clearTimeout(recomputeTimer);
+    recomputeLayout();
+    isReady.value = true;
+  }
+}
+
+function startLoadCycle() {
+  isReady.value = false;
+  loadedCount = 0;
+  recomputeLayout();
+  if (typeof window !== 'undefined') {
+    // 後備：就算有圖片載不出來，最多等一下也要顯示
+    clearTimeout(readyTimer);
+    readyTimer = setTimeout(() => {
+      recomputeLayout();
+      isReady.value = true;
+    }, 1000);
+  }
 }
 const isHomeLayout = computed(() => props.layout === 'home');
 const layoutKey = computed<'auto' | 'home'>(() => (props.layout === 'home' ? 'home' : 'auto'));
@@ -67,7 +94,7 @@ function getCardStyle(position: NodePosition | undefined, index: number) {
     width: `${item.width}px`,
     zIndex: 2,
     '--float-delay': `${index * 0.8}s`,
-    opacity: positions.value.length ? 1 : 0
+    opacity: isReady.value ? 1 : 0
   };
 }
 
@@ -99,14 +126,15 @@ function recomputeLayout() {
 }
 
 onMounted(() => {
-  recomputeLayout();
+  startLoadCycle();
   // images 常是 mount 後才非同步抓回來（例如 Home 的 getHomeInspirationImages），
-  // 只在 onMounted 算一次 positions 會卡在初始的 0 張，圖片到位後仍 opacity:0。
-  watch(visibleImages, recomputeLayout);
+  // 圖片陣列一變就重置載入週期：先用 preset 排版（隱藏），等真實比例排好才淡入。
+  watch(visibleImages, startLoadCycle);
 });
 
 onBeforeUnmount(() => {
   clearTimeout(recomputeTimer);
+  clearTimeout(readyTimer);
 });
 </script>
 

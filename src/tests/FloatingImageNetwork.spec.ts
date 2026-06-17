@@ -127,6 +127,15 @@ describe('FloatingImageNetwork', () => {
     });
     await wrapper.vm.$nextTick();
 
+    // 觸發圖片載入，讓卡片從隱藏淡入（isReady=true）
+    for (const img of wrapper.findAll('img')) {
+      const el = img.element as HTMLImageElement;
+      Object.defineProperty(el, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(el, 'naturalHeight', { value: 600, configurable: true });
+      await img.trigger('load');
+    }
+    await wrapper.vm.$nextTick();
+
     const cards = wrapper.findAll('[data-testid="image-card"]');
     const firstStyle = cards[0].attributes('style');
 
@@ -232,8 +241,10 @@ describe('FloatingImageNetwork', () => {
   });
 
   it('keeps generated home layout image cards out of the h1 title area', () => {
-    // 稀疏版面（6 張、3000px 容器、viewport 900）下，標題帶（第一個 viewport）不該被卡片壓到
-    const positions = buildFloatingImageLayout(6, 1200, 3000, resolveLayoutPreset('home'), 900);
+    // 稀疏版面（6 張、3000px 容器、viewport 900）+ 真實圖片比例下，
+    // 標題帶（第一個 viewport）不該被卡片壓到
+    const aspects = ['1122/1402', '1536/1024', '3/4', '1402/1122', '4/3', '1/1'];
+    const positions = buildFloatingImageLayout(6, 1200, 3000, resolveLayoutPreset('home'), 900, aspects);
 
     expect(positions.some(overlapsTitleArea)).toBe(false);
   });

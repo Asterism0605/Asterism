@@ -268,7 +268,26 @@ function resolveOverlaps(
           { axis: 'y' as const, delta: obstacle.top - bottom },
           { axis: 'y' as const, delta: obstacle.bottom - top }
         ];
-        const best = exits.reduce((a, b) => (Math.abs(a.delta) <= Math.abs(b.delta) ? a : b));
+        // 只考慮「推出去後（含邊界 clamp）真的逃出障礙物」的方向，
+        // 避免把太高/太寬的卡片往空間不足的一側推、被 clamp 拉回又卡在障礙物裡。
+        const escapable = exits.filter((exit) => {
+          const nx =
+            exit.axis === 'x'
+              ? Math.max(node.width / 2, Math.min(width - node.width / 2, node.x + exit.delta))
+              : node.x;
+          const ny =
+            exit.axis === 'y'
+              ? Math.max(nodeHeight / 2, Math.min(height - nodeHeight / 2, node.y + exit.delta))
+              : node.y;
+          return (
+            nx - node.width / 2 >= obstacle.right ||
+            nx + node.width / 2 <= obstacle.left ||
+            ny - nodeHeight / 2 >= obstacle.bottom ||
+            ny + nodeHeight / 2 <= obstacle.top
+          );
+        });
+        const candidates = escapable.length ? escapable : exits;
+        const best = candidates.reduce((a, b) => (Math.abs(a.delta) <= Math.abs(b.delta) ? a : b));
 
         if (best.axis === 'x') {
           node.x += best.delta;
