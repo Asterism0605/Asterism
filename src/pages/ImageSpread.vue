@@ -4,7 +4,11 @@ import { useRoute, useRouter } from 'vue-router';
 import ImageSpreadOverlay from '@/components/feature/image/ImageSpreadOverlay.vue';
 import RelatedImageCluster from '@/components/feature/image/RelatedImageCluster.vue';
 import Button from '@/components/ui/Button.vue';
-import { getImageById, getRelatedImages } from '@/services/image.service';
+import {
+  getImageById,
+  getMediumGroupImages,
+  getSubMediumGroupImages
+} from '@/services/image.service';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
@@ -15,7 +19,6 @@ const rootImage = ref<ImageSpreadNode | undefined>();
 const relatedImages = ref<ImageSpreadNode[]>([]);
 const visitedImageIds = ref<string[]>([]);
 const spreadDepth = ref(0);
-const isLoading = ref(true);
 let syncedRouteImageId: string | undefined;
 
 const routeImageId = computed(() => {
@@ -24,48 +27,69 @@ const routeImageId = computed(() => {
   return Array.isArray(rawImageId) ? rawImageId[0] : rawImageId;
 });
 
-async function refreshRelatedImages(imageId: string) {
-  relatedImages.value = await getRelatedImages(imageId, {
+function refreshRelatedImages(imageId: string) {
+  const fn = spreadDepth.value === 0 ? getMediumGroupImages : getSubMediumGroupImages;
+
+  relatedImages.value = fn(imageId, {
     visitedImageIds: visitedImageIds.value
   });
 }
 
-async function loadImageSpread(imageId: string | undefined) {
+function loadImageSpread(imageId: string | undefined) {
   if (!imageId) {
     centerImage.value = undefined;
     rootImage.value = undefined;
     relatedImages.value = [];
     visitedImageIds.value = [];
     spreadDepth.value = 0;
-    isLoading.value = false;
     return;
   }
 
-  isLoading.value = true;
-  const image = await getImageById(imageId);
-  centerImage.value = image;
-  rootImage.value = image;
-  relatedImages.value = [];
-  visitedImageIds.value = image ? [image.id] : [];
-  spreadDepth.value = 0;
+  const image = getImageById(imageId);
+  const rawRootId = route.query.rootId;
+  const rootId = Array.isArray(rawRootId) ? rawRootId[0] : rawRootId;
 
   if (image) {
-    await refreshRelatedImages(image.id);
-  }
+    if (rootId && typeof rootId === 'string' && rootId !== imageId) {
+      const rImage = getImageById(rootId);
+      if (rImage && rImage.styleGroup === image.styleGroup) {
+        rootImage.value = rImage;
+        centerImage.value = image;
+        spreadDepth.value = 1;
+        visitedImageIds.value = [rImage.id, image.id];
+        refreshRelatedImages(image.id);
+        return;
+      }
+    }
 
-  isLoading.value = false;
+    centerImage.value = image;
+    rootImage.value = image;
+    spreadDepth.value = 0;
+    visitedImageIds.value = [image.id];
+    refreshRelatedImages(image.id);
+  } else {
+    centerImage.value = undefined;
+    rootImage.value = undefined;
+    relatedImages.value = [];
+    visitedImageIds.value = [];
+    spreadDepth.value = 0;
+  }
 }
 
 function syncSpreadRoute(imageId: string) {
-  if (routeImageId.value === imageId) {
+  const currentRootId = spreadDepth.value === 1 ? rootImage.value?.id : undefined;
+  if (routeImageId.value === imageId && route.query.rootId === currentRootId) {
     return;
   }
 
   syncedRouteImageId = imageId;
+  const query = currentRootId ? { rootId: currentRootId } : undefined;
+
   void router
     .replace({
       name: 'image-spread',
-      params: { imageId }
+      params: { imageId },
+      query
     })
     .catch(() => {
       if (syncedRouteImageId === imageId) {
@@ -79,7 +103,7 @@ function returnToPreviousLayer() {
     centerImage.value = rootImage.value;
     visitedImageIds.value = [rootImage.value.id];
     spreadDepth.value = 0;
-    void refreshRelatedImages(rootImage.value.id);
+    refreshRelatedImages(rootImage.value.id);
     syncSpreadRoute(rootImage.value.id);
     return;
   }
@@ -89,14 +113,14 @@ function returnToPreviousLayer() {
 
 function handleRelatedSelect(image: ImageSpreadNode) {
   if (spreadDepth.value >= 1) {
-    void router.push({ path: `/images/${image.id}` });
+    void router.push({ name: 'picture-detail', params: { imageId: image.id } });
     return;
   }
 
   centerImage.value = image;
   visitedImageIds.value = [...visitedImageIds.value, image.id];
   spreadDepth.value = 1;
-  void refreshRelatedImages(image.id);
+  refreshRelatedImages(image.id);
   syncSpreadRoute(image.id);
 }
 
@@ -108,7 +132,7 @@ watch(
       return;
     }
 
-    void loadImageSpread(imageId);
+    loadImageSpread(imageId);
   },
   { immediate: true }
 );
@@ -156,13 +180,6 @@ watch(
           </span>
         </button>
       </div>
-    </section>
-
-    <section
-      v-else-if="isLoading"
-      class="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] max-w-xl flex-col items-center justify-center gap-5 px-6 text-center"
-    >
-      <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">Loading…</p>
     </section>
 
     <section

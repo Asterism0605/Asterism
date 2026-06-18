@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
 import { getImageById } from '@/services/image.service';
@@ -7,14 +7,8 @@ import { getImageById } from '@/services/image.service';
 const siteLogoSrc = '/sitelogo.png';
 const route = useRoute();
 
-const isPictureDetail = ref(false);
-watch(
-  () => [route.name, route.params.imageId] as const,
-  async ([name, imageId]) => {
-    isPictureDetail.value =
-      name === 'picture-detail' && !!(await getImageById(imageId as string));
-  },
-  { immediate: true }
+const isPictureDetail = computed(
+  () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
 );
 </script>
 

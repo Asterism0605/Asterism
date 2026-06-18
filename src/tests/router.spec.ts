@@ -1,14 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
-import rawStyleImages from '@/data/style-data.json'
-import type { StyleImage } from '@/types/image'
-
-vi.mock('@/api/image.api', () => ({
-  fetchImagesApi: vi.fn(async () => ({
-    data: rawStyleImages as StyleImage[],
-    meta: { timestamp: new Date().toISOString() }
-  }))
-}))
-
+import { describe, expect, it } from 'vitest'
 import router from '@/router'
 
 describe('router', () => {

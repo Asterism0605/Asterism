@@ -3,15 +3,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import ImageSpread from '@/pages/ImageSpread.vue';
 import { getImageById } from '@/services/image.service';
-import rawStyleImages from '@/data/style-data.json';
-import type { StyleImage } from '@/types/image';
-
-vi.mock('@/api/image.api', () => ({
-  fetchImagesApi: vi.fn(async () => ({
-    data: rawStyleImages as StyleImage[],
-    meta: { timestamp: new Date().toISOString() }
-  }))
-}));
 
 async function mountImageSpread(imageId = 'y2k-main-001') {
   const router = createRouter({
@@ -35,7 +26,6 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
       }
     }
   });
-  await flushPromises();
 
   return { wrapper, push, router };
 }
@@ -80,7 +70,7 @@ describe('ImageSpread', () => {
     await firstRelatedImage.trigger('click');
     await flushPromises();
     const routeImageId = router.currentRoute.value.params.imageId;
-    const routeImage = await getImageById(Array.isArray(routeImageId) ? routeImageId[0] : routeImageId);
+    const routeImage = getImageById(Array.isArray(routeImageId) ? routeImageId[0] : routeImageId);
 
     expect(wrapper.find('[data-testid="spread-main-image"]').attributes('src')).toBe(
       firstRelatedSrc
@@ -116,7 +106,7 @@ describe('ImageSpread', () => {
     await wrapper.find('[data-testid="return-home"]').trigger('click');
     await flushPromises();
     const routeImageId = router.currentRoute.value.params.imageId;
-    const routeImage = await getImageById(Array.isArray(routeImageId) ? routeImageId[0] : routeImageId);
+    const routeImage = getImageById(Array.isArray(routeImageId) ? routeImageId[0] : routeImageId);
 
     expect(wrapper.find('[data-testid="spread-main-image"]').attributes('src')).toBe(initialSrc);
     expect(routeImage?.src).toBe(initialSrc);
@@ -139,29 +129,5 @@ describe('ImageSpread', () => {
 
     expect(wrapper.text()).toContain('Image not found');
     expect(wrapper.find('[data-testid="return-home"]').exists()).toBe(true);
-  });
-
-  it('does not flash the not-found error while the image is still loading', async () => {
-    const router = createRouter({
-      history: createMemoryHistory(),
-      routes: [
-        { path: '/', name: 'home', component: { template: '<div />' } },
-        { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread }
-      ]
-    });
-    router.push('/images/y2k-main-001/spread');
-    await router.isReady();
-
-    const wrapper = mount(ImageSpread, {
-      global: { plugins: [router], stubs: { ConstellationBackground: true } }
-    });
-
-    // 還沒 flush（圖片還在 async 載入）：不該先閃出 not-found 錯誤頁
-    expect(wrapper.text()).not.toContain('Image not found');
-
-    await flushPromises();
-
-    // 載入完成後才顯示中心圖
-    expect(wrapper.find('[data-testid="spread-main-image"]').exists()).toBe(true);
   });
 });

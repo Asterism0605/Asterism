@@ -1,27 +1,19 @@
-import { describe, expect, it, vi } from 'vitest';
-import rawStyleImages from '@/data/style-data.json';
-import type { StyleImage } from '@/types/image';
-
-vi.mock('@/api/image.api', () => ({
-  fetchImagesApi: vi.fn(async () => ({
-    data: rawStyleImages as StyleImage[],
-    meta: { timestamp: new Date().toISOString() }
-  }))
-}));
-
+import { describe, expect, it } from 'vitest';
 import {
   getHomeInspirationImages,
   getImageById,
-  getRelatedImages
+  getMediumGroupImages,
+  getRelatedImages,
+  getSubMediumGroupImages
 } from '@/services/image.service';
 
 describe('image.service', () => {
-  it('finds an image by id and returns undefined for unknown ids', async () => {
-    expect((await getImageById('y2k-main-001'))?.id).toBe('y2k-main-001');
-    expect(await getImageById('missing-image')).toBeUndefined();
+  it('finds an image by id and returns undefined for unknown ids', () => {
+    expect(getImageById('y2k-main-001')?.id).toBe('y2k-main-001');
+    expect(getImageById('missing-image')).toBeUndefined();
   });
 
-  it('returns only local concept images (no medium) regardless of the api pool', async () => {
+  it('returns local concept images (no medium) across every style group for the home page', async () => {
     const images = await getHomeInspirationImages();
     const styleGroups = images.map((image) => image.styleGroup);
 
@@ -37,61 +29,75 @@ describe('image.service', () => {
     );
   });
 
-  it('returns related images from the same style group without current or visited images', async () => {
-    const relatedImages = await getRelatedImages('y2k-main-001', {
-      visitedImageIds: ['y2k-graphic-001']
+  describe('getMediumGroupImages', () => {
+    it('returns one image per medium in the same style group', () => {
+      const images = getMediumGroupImages('y2k-main-001');
+
+      expect(images).toHaveLength(4);
+      expect(images.map((image) => image.medium).sort()).toEqual([
+        'Architecture',
+        'Graphic Design',
+        'Interior Design',
+        'Outfit'
+      ]);
     });
 
-    expect(relatedImages).toHaveLength(4);
-    expect(relatedImages.map((image) => image.id)).not.toContain('y2k-main-001');
-    expect(relatedImages.map((image) => image.id)).not.toContain('y2k-graphic-001');
-    expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
-      true
-    );
+    it('excludes current and visited images', () => {
+      const images = getMediumGroupImages('y2k-main-001', {
+        visitedImageIds: ['y2k-graphic-001']
+      });
+
+      expect(images).toHaveLength(3);
+      expect(images.map((image) => image.id)).not.toContain('y2k-graphic-001');
+    });
   });
 
-  it('does not fill related images from another style group', async () => {
-    const relatedImages = await getRelatedImages('y2k-main-001', {
-      limit: 50
+  describe('getSubMediumGroupImages', () => {
+    it('returns one image per subMedium within the same medium', () => {
+      const images = getSubMediumGroupImages('y2k-graphic-001');
+
+      expect(images).toHaveLength(4);
+      expect(images.every((image) => image.medium === 'Graphic Design')).toBe(true);
+      expect(images.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(true);
     });
 
-    expect(relatedImages).toHaveLength(23);
-    expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
-      true
-    );
+    it('returns empty array when image has no medium', () => {
+      const images = getSubMediumGroupImages('y2k-main-001');
+
+      expect(images).toHaveLength(0);
+    });
   });
 
-  it('shuffles images within equal shared-style tiers so refreshes can differ', async () => {
-    // limit=5：tier1 有 4 張（score=5），tier2 有 14 張（score=4），
-    // 第 5 個位置從 tier2 洗牌選取，不同 random 值會選到不同的圖。
-    const idsWithLowRandom = (
-      await getRelatedImages('y2k-main-001', { limit: 5, random: () => 0 })
-    ).map((image) => image.id);
-    const idsWithHighRandom = (
-      await getRelatedImages('y2k-main-001', { limit: 5, random: () => 0.99 })
-    ).map((image) => image.id);
+  describe('getRelatedImages', () => {
+    it('returns related images from the same style group without current or visited images', () => {
+      const relatedImages = getRelatedImages('y2k-main-001', {
+        visitedImageIds: ['y2k-graphic-001']
+      });
 
-    expect(idsWithLowRandom).not.toEqual(idsWithHighRandom);
-  });
+      expect(relatedImages).toHaveLength(4);
+      expect(relatedImages.map((image) => image.id)).not.toContain('y2k-main-001');
+      expect(relatedImages.map((image) => image.id)).not.toContain('y2k-graphic-001');
+      expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
+        true
+      );
+    });
 
-  it('always keeps the most shared-style images regardless of random (relevance preserved)', async () => {
-    const idsWithLowRandom = new Set(
-      (await getRelatedImages('y2k-main-001', { random: () => 0 })).map((image) => image.id)
-    );
-    const idsWithHighRandom = new Set(
-      (await getRelatedImages('y2k-main-001', { random: () => 0.99 })).map((image) => image.id)
-    );
+    it('does not fill related images from another style group', () => {
+      const relatedImages = getRelatedImages('y2k-main-001', {
+        limit: 50
+      });
 
-    // 這 4 張與基準圖共享全部 5 個 style，是相關度最高的一層；
-    // limit 為 4 時不論怎麼洗牌，它們都必須佔滿全部結果。
-    for (const mostRelatedId of [
-      'y2k-main-002',
-      'y2k-main-003',
-      'y2k-main-004',
-      'y2k-main-005'
-    ]) {
-      expect(idsWithLowRandom).toContain(mostRelatedId);
-      expect(idsWithHighRandom).toContain(mostRelatedId);
-    }
+      expect(relatedImages).toHaveLength(23);
+      expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
+        true
+      );
+    });
+
+    it('prefers same subMedium over medium when available', () => {
+      const images = getRelatedImages('y2k-graphic-poster-001');
+
+      expect(images.length).toBeGreaterThan(0);
+      expect(images[0].subMedium).toBe('Poster Design');
+    });
   });
 });

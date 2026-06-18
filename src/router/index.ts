@@ -77,7 +77,7 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach(async (to) => {
+router.beforeEach((to) => {
   if (to.name !== 'picture-detail') {
     return true;
   }
@@ -86,7 +86,7 @@ router.beforeEach(async (to) => {
   const imageId =
     typeof rawImageId === 'string' || Array.isArray(rawImageId) ? getRouteImageId(rawImageId) : '';
 
-  if (imageId && (await getImageById(imageId))) {
+  if (imageId && getImageById(imageId)) {
     return true;
   }
 

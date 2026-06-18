@@ -10,14 +10,13 @@ const route = useRoute();
 const router = useRouter();
 
 const imageId = computed(() => route.params.imageId as string);
-const currentImage = ref<ImageSpreadNode | undefined>();
+const currentImage = computed(() => getImageById(imageId.value));
 
 const relatedImages = ref<ImageSpreadNode[]>([]);
 watch(
   imageId,
-  async (newId) => {
-    currentImage.value = await getImageById(newId);
-    relatedImages.value = await getRelatedImages(newId, { limit: 6 });
+  (newId) => {
+    relatedImages.value = getRelatedImages(newId, { limit: 6 });
   },
   { immediate: true }
 );

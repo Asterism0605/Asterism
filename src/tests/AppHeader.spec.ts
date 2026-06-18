@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import router from '@/router';
 import AppHeader from '@/layouts/AppHeader.vue';
@@ -13,8 +13,6 @@ describe('AppHeader', () => {
         plugins: [router]
       }
     });
-
-    await flushPromises();
 
     const headerClasses = wrapper.find('header').classes();
 
