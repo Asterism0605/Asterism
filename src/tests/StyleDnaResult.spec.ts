@@ -5,7 +5,14 @@ import StyleDnaResult from '@/pages/StyleDnaResult.vue';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { StyleDnaAnswer } from '@/types/style-dna';
 
-// Produces Y2K 67%, Minimalism 33% — equivalent to the old selectionHistory fixture
+const { showToast } = vi.hoisted(() => ({
+  showToast: vi.fn()
+}));
+
+vi.mock('@/composables/useToast', () => ({
+  showToast
+}));
+
 const y2kAnswers: StyleDnaAnswer[] = [
   {
     questionId: 'q1',
@@ -37,9 +44,10 @@ describe('StyleDnaResult', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    showToast.mockReset();
   });
 
-  it('shows the loading state before revealing the fallback result when the store has no answers', async () => {
+  it('shows the loading state before rendering the fallback result when the store has no answers', async () => {
     vi.useFakeTimers();
 
     const wrapper = mountStyleDnaResult();
@@ -53,11 +61,17 @@ describe('StyleDnaResult', () => {
     expect(wrapper.text()).toContain('Your');
     expect(wrapper.text()).toContain('Style DNA');
     expect(wrapper.text()).toContain('Minimalism');
-    expect(wrapper.text()).toContain('Retake quiz');
-    expect(wrapper.get('a[href="/discover-dna"]').text()).toContain('Retake quiz');
+    expect(wrapper.text()).not.toContain('Retake quiz');
+    expect(showToast).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'info',
+        message: 'We do not have quiz result yet, so this is a sample Style DNA result.',
+        actionText: 'Retake quiz'
+      })
+    );
   });
 
-  it('renders the real quiz result from the store and hides the fallback CTA when answers exist', async () => {
+  it('renders the real quiz result from the store and does not show the fallback toast', async () => {
     vi.useFakeTimers();
 
     const store = useStyleDnaStore();
@@ -69,7 +83,8 @@ describe('StyleDnaResult', () => {
 
     expect(wrapper.text()).toContain('Y2K');
     expect(wrapper.text()).toContain('67%');
-    expect(wrapper.find('img[alt*="Y2K"]').attributes('src')).toBe('/images/astronaut-dna.png');
-    expect(wrapper.find('a[href="/discover-dna"]').exists()).toBe(false);
+    expect(wrapper.find('img[alt*="Y2K"]').attributes('src')).toBe('/images/y2k.png');
+    expect(wrapper.text()).not.toContain('No quiz data found');
+    expect(showToast).not.toHaveBeenCalled();
   });
 });

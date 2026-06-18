@@ -41,10 +41,16 @@ function toHomeInspirationImage(image: StyleImage): HomeInspirationImage {
 }
 
 function getFirstImagesByStyleGroup(): StyleImage[] {
+  const featuredGroups = new Set([
+    'Y2K & Internet Aesthetics',
+    'Future Tech & Digital Psychedelia',
+    'Decorative & Opulent Art'
+  ]);
   const groups = new Map<string, StyleImage>();
 
   for (const image of styleImages) {
     if (!image.id.includes('main')) continue;
+    if (!featuredGroups.has(image.styleGroup)) continue;
     if (!groups.has(image.styleGroup)) {
       groups.set(image.styleGroup, image);
     }
@@ -181,7 +187,9 @@ export function getRelatedImages(
 
   const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
   const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
-  const candidates = styleImages.filter((image) => !excludedIds.has(image.id));
+  const candidates = styleImages.filter(
+    (image) => !image.id.includes('main') && !excludedIds.has(image.id)
+  );
 
   return pickRelatedCandidates(candidates, baseImage, limit).map(toSpreadNode);
 }

@@ -20,6 +20,7 @@ describe('router', () => {
         { name: 'sign-up', path: '/sign-up' },
         { name: 'style-dna', path: '/style-dna' },
         { name: 'style-dna-result', path: '/style-dna/result' },
+        { name: 'consultant', path: '/consultant' },
         { name: 'not-found', path: '/:pathMatch(.*)*' }
       ])
     )
