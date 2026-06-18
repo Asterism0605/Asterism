@@ -71,7 +71,7 @@ describe('StyleDnaResult', () => {
     );
   });
 
-  it('renders the real quiz result from the store and does not show the fallback toast', async () => {
+  it('renders the real quiz result from the store with the fixed hero image and does not show the fallback toast', async () => {
     vi.useFakeTimers();
 
     const store = useStyleDnaStore();
@@ -83,7 +83,7 @@ describe('StyleDnaResult', () => {
 
     expect(wrapper.text()).toContain('Y2K');
     expect(wrapper.text()).toContain('67%');
-    expect(wrapper.find('img[alt*="Y2K"]').attributes('src')).toBe('/images/y2k.png');
+    expect(wrapper.find('img[alt*="Y2K"]').attributes('src')).toBe('/images/astronaut-dna.png');
     expect(wrapper.text()).not.toContain('No quiz data found');
     expect(showToast).not.toHaveBeenCalled();
   });

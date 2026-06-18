@@ -9,6 +9,7 @@ import { useStyleDnaStore } from '@/stores/style-dna.store';
 
 const { result } = storeToRefs(useStyleDnaStore());
 
+const HERO_IMAGE = '/images/astronaut-dna.png';
 const isLoading = ref(true);
 const router = useRouter();
 
@@ -62,7 +63,7 @@ onBeforeUnmount(() => {
 
         <StyleAnnotationDisplay
           :primary-style="result.primaryStyle"
-          :hero-image="result.heroImage"
+          :hero-image="HERO_IMAGE"
           :styles="result.styles"
           :annotations="result.annotations"
         />
