@@ -1,29 +1,16 @@
-import { describe, expect, it, vi } from 'vitest';
-import { httpClient } from '@/api/httpClient';
+import { describe, expect, it } from 'vitest';
+import rawStyleImages from '@/data/style-data.json';
 import { fetchImagesApi } from '@/api/image.api';
+import type { StyleImage } from '@/types/image';
 
-vi.mock('@/api/httpClient', () => ({
-  httpClient: { get: vi.fn() }
-}));
+const styleImages = rawStyleImages as StyleImage[];
 
 describe('image.api', () => {
-  it('fetches images from the demo API and wraps them in the ApiResponse contract', async () => {
-    const mockImages = [
-      {
-        id: 'ext-pexels-1',
-        url: 'https://images.pexels.com/photos/1.jpg',
-        title: 'shiny chrome bubble',
-        styleGroup: 'Y2K & Internet Aesthetics',
-        style: ['Y2K'],
-        colorPalette: ['#8EC9FF']
-      }
-    ];
-    vi.mocked(httpClient.get).mockResolvedValue({ data: mockImages });
-
+  it('returns the shared style image dataset through the mock API contract', async () => {
     const response = await fetchImagesApi();
 
-    expect(httpClient.get).toHaveBeenCalledWith('/api/images');
-    expect(response.data).toEqual(mockImages);
+    expect(response.data).toHaveLength(styleImages.length);
+    expect(response.data[0]).toEqual(styleImages[0]);
     expect(response.meta.timestamp).toEqual(expect.any(String));
   });
 });

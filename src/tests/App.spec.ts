@@ -1,15 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, it, vi, expect } from 'vitest'
 import router from '@/router'
-import rawStyleImages from '@/data/style-data.json'
-import type { StyleImage } from '@/types/image'
-
-vi.mock('@/api/image.api', () => ({
-  fetchImagesApi: vi.fn(async () => ({
-    data: rawStyleImages as StyleImage[],
-    meta: { timestamp: new Date().toISOString() }
-  }))
-}))
 
 vi.mock('@/layouts/AppHeader.vue', () => ({ default: { template: '<header />' } }))
 vi.mock('@/layouts/PageContainer.vue', () => ({ default: { template: '<main><slot /></main>' } }))
