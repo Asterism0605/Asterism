@@ -29,7 +29,10 @@ vue3-team-guideline.md
 
 # TypeScript
 *.tsbuildinfo
+
+# Superpowers 工作筆記／設計文件（不進版控）
 .superpowers/
+docs/superpowers/
 
 # Env
 .env
