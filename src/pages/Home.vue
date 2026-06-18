@@ -6,9 +6,11 @@ import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import { getHomeInspirationImages } from '@/services/image.service';
+import { useAuthStore } from '@/stores/auth.store';
 
 const scrollLimitVh = 150;
 const router = useRouter();
+const authStore = useAuthStore();
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
 const inspirationImages = getHomeInspirationImages();
@@ -23,7 +25,7 @@ function openLimitModal() {
 }
 
 function handleScrollLimit() {
-  if (typeof window === 'undefined') {
+  if (typeof window === 'undefined' || authStore.isAuthenticated) {
     return;
   }
 
