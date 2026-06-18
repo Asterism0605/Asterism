@@ -1,4 +1,14 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+import rawStyleImages from '@/data/style-data.json'
+import type { StyleImage } from '@/types/image'
+
+vi.mock('@/api/image.api', () => ({
+  fetchImagesApi: vi.fn(async () => ({
+    data: rawStyleImages as StyleImage[],
+    meta: { timestamp: new Date().toISOString() }
+  }))
+}))
+
 import router from '@/router'
 
 describe('router', () => {
@@ -16,10 +26,31 @@ describe('router', () => {
         { name: 'moodboard', path: '/moodboard/:slug?' },
         { name: 'playground', path: '/playground' },
         { name: 'image-spread', path: '/images/:imageId/spread' },
+        { name: 'picture-detail', path: '/images/:imageId' },
         { name: 'sign-up', path: '/sign-up' },
         { name: 'style-dna', path: '/style-dna' },
-        { name: 'style-dna-result', path: '/style-dna/result' }
+        { name: 'style-dna-result', path: '/style-dna/result' },
+        { name: 'not-found', path: '/:pathMatch(.*)*' }
       ])
     )
+  })
+
+  it('keeps one image detail path and falls back only when the image id is missing', async () => {
+    const imageDetailRoutes = router
+      .getRoutes()
+      .filter((route) => route.path === '/images/:imageId')
+
+    expect(imageDetailRoutes).toHaveLength(1)
+
+    await router.push('/images/y2k-main-001')
+    await router.isReady()
+
+    expect(router.currentRoute.value.name).toBe('picture-detail')
+
+    await router.push('/images/missing-image')
+    await router.isReady()
+
+    expect(router.currentRoute.value.name).toBe('not-found')
+    expect(router.currentRoute.value.meta.errorType).toBe('404')
   })
 })

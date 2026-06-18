@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import DnaLoadingState from '@/components/feature/dna/DnaLoadingState.vue';
 import StyleAnnotationDisplay from '@/components/feature/dna/StyleAnnotationDisplay.vue';
+import { showToast } from '@/composables/useToast';
 import { computeStyleDnaResult, type StyleDnaSelection } from '@/utils/computeStyleDnaResult';
 
 const props = withDefaults(
@@ -13,12 +15,25 @@ const props = withDefaults(
 
 const isLoading = ref(true);
 const result = computed(() => computeStyleDnaResult(props.selectionHistory));
+const router = useRouter();
 
 let loadingTimer: ReturnType<typeof window.setTimeout> | null = null;
 
 onMounted(() => {
   loadingTimer = window.setTimeout(() => {
     isLoading.value = false;
+
+    if (result.value.isFallback) {
+      showToast({
+        type: 'info',
+        message: 'We do not have quiz result yet, so this is a sample Style DNA result.',
+        actionText: 'Retake quiz',
+        duration: 5000,
+        onAction: () => {
+          void router.push('/style-dna');
+        }
+      });
+    }
   }, 1500);
 });
 
@@ -36,7 +51,7 @@ onBeforeUnmount(() => {
     <section class="h-screen overflow-hidden">
       <div class="relative h-screen overflow-hidden bg-void">
         <div
-          class="pointer-events-none absolute left-8 top-[5.75rem] z-20 max-w-[18rem] sm:left-12 lg:left-14 lg:top-24 lg:max-w-[min(32rem,82vw)]"
+          class="pointer-events-none absolute left-8 top-[5.75rem] z-20 max-w-[18rem] sm:left-12 lg:left-[7.5rem] lg:top-24 lg:max-w-[min(32rem,82vw)]"
         >
           <p class="mb-4 text-xs text-text-secondary lg:mb-8">
             <span class="lg:hidden">Your aesthetic asterism has emerged</span>
@@ -54,21 +69,6 @@ onBeforeUnmount(() => {
           :styles="result.styles"
           :annotations="result.annotations"
         />
-
-        <div
-          v-if="result.isFallback"
-          class="relative z-30 mt-6 hidden flex-col gap-4 rounded-lg border border-white/10 bg-white/[0.04] p-5 sm:flex-row sm:items-center sm:justify-between lg:absolute lg:bottom-8 lg:right-8 lg:mt-0 lg:flex lg:max-w-md lg:bg-void/55 lg:backdrop-blur-md"
-        >
-          <p class="max-w-xl text-sm leading-6 text-text-secondary">
-            We do not have quiz data yet, so this is a sample Style DNA result.
-          </p>
-          <a
-            class="inline-flex min-h-11 items-center justify-center rounded-lg border border-gold-dim/55 px-5 text-sm font-semibold text-text-primary transition-colors hover:border-gold-dim hover:bg-gold-dim/10"
-            href="/discover-dna"
-          >
-            Retake quiz
-          </a>
-        </div>
       </div>
     </section>
   </main>

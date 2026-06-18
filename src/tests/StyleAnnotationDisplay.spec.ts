@@ -43,4 +43,40 @@ describe('StyleAnnotationDisplay', () => {
     expect(wrapper.text()).not.toContain('Click to choose')
     expect(wrapper.text()).not.toContain('Your Style DNA')
   })
+
+  it('renders each annotation with a horizontal line, bent tail, and text content below', () => {
+    const wrapper = mount(StyleAnnotationDisplay, {
+      props: {
+        primaryStyle: 'Minimalism',
+        heroImage: '/images/minimalism.png',
+        styles,
+        annotations,
+      },
+    })
+
+    const annotationNodes = wrapper.findAll('[data-testid="style-annotation"]')
+    expect(annotationNodes).toHaveLength(annotations.length)
+
+    annotationNodes.forEach((annotationNode, index) => {
+      annotationNode.get('.style-annotation__line')
+      annotationNode.get('.style-annotation__tail')
+
+      const content = annotationNode.get('.style-annotation__content')
+      expect(content.text()).toContain(annotations[index].label)
+      expect(content.text()).toContain(annotations[index].value)
+    })
+  })
+
+  it('does not render a decorative bottom line beneath the style score panel', () => {
+    const wrapper = mount(StyleAnnotationDisplay, {
+      props: {
+        primaryStyle: 'Minimalism',
+        heroImage: '/images/minimalism.png',
+        styles,
+        annotations,
+      },
+    })
+
+    expect(wrapper.find('[data-testid="style-panel-bottom-line"]').exists()).toBe(false)
+  })
 })
