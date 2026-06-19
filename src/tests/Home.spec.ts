@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
@@ -6,9 +6,18 @@ import Home from '@/pages/Home.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import type { AuthSession } from '@/types/auth';
 import type { HomeInspirationImage } from '@/types/image';
+import rawStyleImages from '@/data/style-data.json';
+import type { StyleImage } from '@/types/image';
+
+vi.mock('@/api/image.api', () => ({
+  fetchImagesApi: vi.fn(async () => ({
+    data: rawStyleImages as StyleImage[],
+    meta: { timestamp: new Date().toISOString() }
+  }))
+}));
 
 const floatingImageNetworkStub = {
-  props: ['images'],
+  props: ['images', 'height'],
   template: '<button data-test="floating-image-network" @click="$emit(\'click\', 0)" />'
 };
 
@@ -78,6 +87,7 @@ describe('Home', () => {
       }
     });
 
+    await flushPromises();
     await wrapper.find('[data-test="floating-image-network"]').trigger('click');
 
     expect(push).toHaveBeenCalledWith({
@@ -101,19 +111,18 @@ describe('Home', () => {
         }
       }
     });
+    await flushPromises();
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
-    const styleGroups = images.map((image) => image.styleGroup);
 
-    expect(images).toHaveLength(new Set(styleGroups).size);
-    expect(styleGroups).toEqual(
-      expect.arrayContaining([
-        'Y2K & Internet Aesthetics',
-        'Future Tech & Digital Psychedelia',
-        'Decorative & Opulent Art'
-      ])
-    );
-    expect(images.every((image) => image.id.includes('main'))).toBe(true);
+    expect(floatingNetwork.props('height')).toBe('900vh');
+    expect(images).toHaveLength(45);
+    expect(new Set(images.map((image) => image.styleGroup)).size).toBe(9);
+    const perGroup = images.reduce<Record<string, number>>((acc, image) => {
+      acc[image.styleGroup] = (acc[image.styleGroup] ?? 0) + 1;
+      return acc;
+    }, {});
+    expect(Object.values(perGroup).every((count) => count === 5)).toBe(true);
   });
 
   it('opens the limit modal for guests when viewport bottom reaches 150vh', async () => {

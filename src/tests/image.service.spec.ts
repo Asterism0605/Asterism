@@ -13,18 +13,12 @@ describe('image.service', () => {
     expect(getImageById('missing-image')).toBeUndefined();
   });
 
-  it('returns home inspiration images limited to main images per style group', () => {
-    const images = getHomeInspirationImages();
+  it('returns local concept images (no medium) across every style group for the home page', async () => {
+    const images = await getHomeInspirationImages();
     const styleGroups = images.map((image) => image.styleGroup);
 
-    expect(new Set(styleGroups)).toEqual(
-      new Set([
-        'Y2K & Internet Aesthetics',
-        'Future Tech & Digital Psychedelia',
-        'Decorative & Opulent Art'
-      ])
-    );
-    expect(images.every((image) => image.id.includes('main'))).toBe(true);
+    expect(images).toHaveLength(45);
+    expect(new Set(styleGroups).size).toBe(9);
     expect(images[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),

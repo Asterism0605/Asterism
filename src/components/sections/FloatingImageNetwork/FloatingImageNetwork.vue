@@ -4,9 +4,9 @@
  * 負責管理生命週期、互動狀態與畫面渲染，
  * 並在 mounted 時呼叫外部 layout 工具產生圖片卡片座標。
  */
-import { computed, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
-import { AMBIENT_DOTS, MAX_IMAGES, type ImageItem, type NodePosition } from './config';
+import { AMBIENT_DOTS, type ImageItem, type NodePosition } from './config';
 import {
   buildFloatingImageLayout,
   getConstellationSize,
@@ -29,7 +29,61 @@ const emit = defineEmits<{
 const containerRef = ref<HTMLElement | null>(null);
 const positions = ref<NodePosition[]>([]);
 const hoveredIndex = ref<number | null>(null);
-const visibleImages = computed(() => props.images.slice(0, MAX_IMAGES));
+const visibleImages = computed(() => props.images);
+
+// 記住每張圖載入後的「真實寬高比」（src -> "w/h"），餵給 layout 算間距，
+// 讓卡片照原圖比例顯示又不重疊。
+const naturalAspects = new Map<string, string>();
+// 圖片載入前用 preset 假比例排的第一版先不顯示，等拿到真實比例排好的版本才淡入，
+// 避免使用者看到「假比例 → 真比例」跳動兩次的感覺。
+const isReady = ref(false);
+let loadedCount = 0;
+let recomputeTimer: ReturnType<typeof setTimeout> | undefined;
+let readyTimer: ReturnType<typeof setTimeout> | undefined;
+
+function scheduleRecompute() {
+  if (typeof window === 'undefined') {
+    recomputeLayout();
+    return;
+  }
+  clearTimeout(recomputeTimer);
+  recomputeTimer = setTimeout(recomputeLayout, 120);
+}
+
+function onImageLoad(src: string, event: Event) {
+  const img = event.target as HTMLImageElement;
+  if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+    const aspect = `${img.naturalWidth}/${img.naturalHeight}`;
+    if (naturalAspects.get(src) !== aspect) {
+      naturalAspects.set(src, aspect);
+      scheduleRecompute();
+    }
+  }
+
+  loadedCount += 1;
+  if (loadedCount >= visibleImages.value.length) {
+    // 全部載入完：用真實比例做最後一次排版，然後一次淡入。
+    // 同時清掉 1 秒後備計時器，否則它會在卡片已顯示後再重算一次隨機排版，造成二次跳動。
+    clearTimeout(recomputeTimer);
+    clearTimeout(readyTimer);
+    recomputeLayout();
+    isReady.value = true;
+  }
+}
+
+function startLoadCycle() {
+  isReady.value = false;
+  loadedCount = 0;
+  recomputeLayout();
+  if (typeof window !== 'undefined') {
+    // 後備：就算有圖片載不出來，最多等一下也要顯示
+    clearTimeout(readyTimer);
+    readyTimer = setTimeout(() => {
+      recomputeLayout();
+      isReady.value = true;
+    }, 1000);
+  }
+}
 const isHomeLayout = computed(() => props.layout === 'home');
 const layoutKey = computed<'auto' | 'home'>(() => (props.layout === 'home' ? 'home' : 'auto'));
 
@@ -42,7 +96,7 @@ function getCardStyle(position: NodePosition | undefined, index: number) {
     width: `${item.width}px`,
     zIndex: 2,
     '--float-delay': `${index * 0.8}s`,
-    opacity: positions.value.length ? 1 : 0
+    opacity: isReady.value ? 1 : 0
   };
 }
 
@@ -56,17 +110,33 @@ function deactivateCard(index: number) {
   }
 }
 
-onMounted(() => {
+function recomputeLayout() {
   const container = containerRef.value;
   if (!container) return;
 
   const { width, height } = resolveContainerSize(container, props.height);
+  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : height;
+  const aspects = visibleImages.value.map((image) => naturalAspects.get(image.src));
   positions.value = buildFloatingImageLayout(
     visibleImages.value.length,
     width,
     height,
-    resolveLayoutPreset(layoutKey.value)
+    resolveLayoutPreset(layoutKey.value),
+    viewportHeight,
+    aspects
   );
+}
+
+onMounted(() => {
+  startLoadCycle();
+  // images 常是 mount 後才非同步抓回來（例如 Home 的 getHomeInspirationImages），
+  // 圖片陣列一變就重置載入週期：先用 preset 排版（隱藏），等真實比例排好才淡入。
+  watch(visibleImages, startLoadCycle);
+});
+
+onBeforeUnmount(() => {
+  clearTimeout(recomputeTimer);
+  clearTimeout(readyTimer);
 });
 </script>
 
@@ -125,7 +195,8 @@ onMounted(() => {
             :src="image.src"
             :alt="image.alt ?? ''"
             class="w-full"
-            :style="`aspect-ratio: ${positions[i]?.aspect ?? '3/4'}; object-fit: cover; display: block; border-radius: 4px;`"
+            style="display: block; width: 100%; height: auto; border-radius: 4px"
+            @load="onImageLoad(image.src, $event)"
           />
         </div>
       </div>

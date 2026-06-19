@@ -45,11 +45,12 @@ function overlapsTitleArea(node: { x: number; y: number; width: number; aspect: 
     right: node.x + node.width / 2,
     bottom: node.y + nodeHeight / 2
   };
+  // 標題避讓區改成相對第一個 viewport（0.28~0.64），對應 Home.vue 的 pt-40vh 標題位置
   const titleRect = {
     left: 0,
-    top: 900 * 0.14,
+    top: 900 * 0.28,
     right: 1200 * 0.62,
-    bottom: 900 * 0.32
+    bottom: 900 * 0.64
   };
 
   return (
@@ -87,13 +88,13 @@ describe('FloatingImageNetwork', () => {
     expect(imgs[1].attributes('src')).toBe('/img2.jpg');
   });
 
-  it('ignores images beyond index 5 (max 6)', () => {
+  it('renders all provided images without a hardcoded cap', () => {
     const sevenImages = Array.from({ length: 7 }, (_, i) => ({
       src: `/img${i}.jpg`,
       alt: `image ${i}`
     }));
     const wrapper = mount(FloatingImageNetwork, { props: { images: sevenImages } });
-    expect(wrapper.findAll('img').length).toBe(6);
+    expect(wrapper.findAll('img').length).toBe(7);
   });
 
   it('emits click event with image index when image card is clicked', async () => {
@@ -126,6 +127,15 @@ describe('FloatingImageNetwork', () => {
     });
     await wrapper.vm.$nextTick();
 
+    // 觸發圖片載入，讓卡片從隱藏淡入（isReady=true）
+    for (const img of wrapper.findAll('img')) {
+      const el = img.element as HTMLImageElement;
+      Object.defineProperty(el, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(el, 'naturalHeight', { value: 600, configurable: true });
+      await img.trigger('load');
+    }
+    await wrapper.vm.$nextTick();
+
     const cards = wrapper.findAll('[data-testid="image-card"]');
     const firstStyle = cards[0].attributes('style');
 
@@ -138,7 +148,49 @@ describe('FloatingImageNetwork', () => {
     expect(firstStyle).toContain('opacity: 1');
   });
 
-  it('still limits home layout images to six items', () => {
+  it('does not re-shuffle visible cards after all images have loaded', async () => {
+    vi.useFakeTimers();
+    // 每次呼叫回傳不同值：若載入完成後又重算一次，位置就會變、Math.random 會被再呼叫。
+    let seed = 0;
+    const random = vi.spyOn(Math, 'random').mockImplementation(() => {
+      seed += 0.137;
+      return seed % 1;
+    });
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, {
+        attachTo: document.body,
+        props: { images: mockImages, layout: 'home' }
+      });
+      await wrapper.vm.$nextTick();
+
+      // 觸發全部圖片載入 -> isReady=true，卡片淡入定位
+      for (const img of wrapper.findAll('img')) {
+        const el = img.element as HTMLImageElement;
+        Object.defineProperty(el, 'naturalWidth', { value: 800, configurable: true });
+        Object.defineProperty(el, 'naturalHeight', { value: 600, configurable: true });
+        await img.trigger('load');
+      }
+      await wrapper.vm.$nextTick();
+
+      const styleAfterLoad = wrapper.findAll('[data-testid="image-card"]')[0].attributes('style');
+      const randomCallsAfterLoad = random.mock.calls.length;
+
+      // 卡片已顯示後，1 秒後備計時器不該再重算一次隨機排版（否則畫面會二次跳動）
+      vi.advanceTimersByTime(1000);
+      await wrapper.vm.$nextTick();
+
+      const styleAfterTimer = wrapper.findAll('[data-testid="image-card"]')[0].attributes('style');
+      expect(random.mock.calls.length).toBe(randomCallsAfterLoad);
+      expect(styleAfterTimer).toBe(styleAfterLoad);
+
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('renders all home layout images without a hardcoded cap', () => {
     const sevenImages = Array.from({ length: 7 }, (_, i) => ({
       src: `/img${i}.jpg`,
       alt: `image ${i}`
@@ -147,7 +199,7 @@ describe('FloatingImageNetwork', () => {
       props: { images: sevenImages, layout: 'home' }
     });
 
-    expect(wrapper.findAll('[data-testid="image-card"]').length).toBe(6);
+    expect(wrapper.findAll('[data-testid="image-card"]').length).toBe(7);
   });
 
   it('activates each constellation background after its own image hover', async () => {
@@ -231,9 +283,10 @@ describe('FloatingImageNetwork', () => {
   });
 
   it('keeps generated home layout image cards out of the h1 title area', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.05);
-
-    const positions = buildFloatingImageLayout(6, 1200, 900, resolveLayoutPreset('home'));
+    // 稀疏版面（6 張、3000px 容器、viewport 900）+ 真實圖片比例下，
+    // 標題帶（第一個 viewport）不該被卡片壓到
+    const aspects = ['1122/1402', '1536/1024', '3/4', '1402/1122', '4/3', '1/1'];
+    const positions = buildFloatingImageLayout(6, 1200, 3000, resolveLayoutPreset('home'), 900, aspects);
 
     expect(positions.some(overlapsTitleArea)).toBe(false);
   });
@@ -243,9 +296,23 @@ describe('FloatingImageNetwork', () => {
       [{ x: 300, y: 150, width: 96, aspect: '1/1' }],
       360,
       900,
-      resolveLayoutPreset('home').avoidAreas
+      resolveLayoutPreset('home').avoidAreas,
+      900
     );
 
     expect(position).toEqual({ x: 300, y: 150, width: 96, aspect: '1/1' });
+  });
+
+  it('renders every provided image without a hardcoded cap', () => {
+    const manyImages = Array.from({ length: 45 }, (_, i) => ({
+      src: `/img-${i}.webp`,
+      alt: `img ${i}`
+    }));
+    const wrapper = mount(FloatingImageNetwork, {
+      props: { images: manyImages, layout: 'home' },
+      global: { stubs: { ConstellationBackground: true } }
+    });
+
+    expect(wrapper.findAll('[data-testid="image-card"]')).toHaveLength(45);
   });
 });
