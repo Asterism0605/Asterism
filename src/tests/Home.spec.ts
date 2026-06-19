@@ -1,7 +1,10 @@
 import { flushPromises, mount } from '@vue/test-utils';
+import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import Home from '@/pages/Home.vue';
+import { useAuthStore } from '@/stores/auth.store';
+import type { AuthSession } from '@/types/auth';
 import type { HomeInspirationImage } from '@/types/image';
 import rawStyleImages from '@/data/style-data.json';
 import type { StyleImage } from '@/types/image';
@@ -44,6 +47,7 @@ async function openLimitModal(wrapper: { vm: { $nextTick: () => Promise<void> } 
 describe('Home', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    setActivePinia(createPinia());
   });
 
   it('uses the shared app header and renders the hero section', async () => {
@@ -121,7 +125,7 @@ describe('Home', () => {
     expect(Object.values(perGroup).every((count) => count === 5)).toBe(true);
   });
 
-  it('opens the limit modal when viewport bottom reaches 150vh', async () => {
+  it('opens the limit modal for guests when viewport bottom reaches 150vh', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
@@ -151,6 +155,54 @@ describe('Home', () => {
     await wrapper.vm.$nextTick();
 
     expect(wrapper.text()).toContain('Your daily inspiration limit has been reached.');
+
+    wrapper.unmount();
+  });
+
+  it('does not open the limit modal for authenticated users when viewport bottom reaches 150vh', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+    const authStore = useAuthStore();
+    const session: AuthSession = {
+      accessToken: 'test-token',
+      expiresAt: '2099-01-01T00:00:00.000Z',
+      user: {
+        id: 'user-1',
+        email: 'user@example.com',
+        displayName: 'Ada Lovelace',
+        createdAt: '2026-01-01T00:00:00.000Z'
+      }
+    };
+
+    authStore.session = session;
+    authStore.user = session.user;
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: 1000
+    });
+    Object.defineProperty(window, 'scrollY', {
+      configurable: true,
+      value: 501
+    });
+
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
 
     wrapper.unmount();
   });

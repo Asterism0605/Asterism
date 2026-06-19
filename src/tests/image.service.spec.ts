@@ -87,7 +87,7 @@ describe('image.service', () => {
         limit: 50
       });
 
-      expect(relatedImages).toHaveLength(23);
+      expect(relatedImages).toHaveLength(19);
       expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
         true
       );

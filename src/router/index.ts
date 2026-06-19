@@ -9,6 +9,7 @@ import PictureDetail from '@/pages/PictureDetail.vue';
 import SignUp from '@/pages/SignUp.vue';
 import StyleDna from '@/pages/StyleDna.vue';
 import StyleDnaResult from '@/pages/StyleDnaResult.vue';
+import StyleConsultant from '@/pages/StyleConsultant.vue';
 import { getImageById } from '@/services/image.service';
 
 function getRouteImageId(value: string | string[]): string {
@@ -67,6 +68,11 @@ const router = createRouter({
       path: '/style-dna/result',
       name: 'style-dna-result',
       component: StyleDnaResult
+    },
+    {
+      path: '/consultant',
+      name: 'consultant',
+      component: StyleConsultant
     },
     {
       path: '/:pathMatch(.*)*',
