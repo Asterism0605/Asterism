@@ -62,8 +62,10 @@ function onImageLoad(src: string, event: Event) {
 
   loadedCount += 1;
   if (loadedCount >= visibleImages.value.length) {
-    // 全部載入完：用真實比例做最後一次排版，然後一次淡入
+    // 全部載入完：用真實比例做最後一次排版，然後一次淡入。
+    // 同時清掉 1 秒後備計時器，否則它會在卡片已顯示後再重算一次隨機排版，造成二次跳動。
     clearTimeout(recomputeTimer);
+    clearTimeout(readyTimer);
     recomputeLayout();
     isReady.value = true;
   }

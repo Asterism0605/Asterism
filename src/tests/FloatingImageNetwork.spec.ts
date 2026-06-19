@@ -148,6 +148,48 @@ describe('FloatingImageNetwork', () => {
     expect(firstStyle).toContain('opacity: 1');
   });
 
+  it('does not re-shuffle visible cards after all images have loaded', async () => {
+    vi.useFakeTimers();
+    // 每次呼叫回傳不同值：若載入完成後又重算一次，位置就會變、Math.random 會被再呼叫。
+    let seed = 0;
+    const random = vi.spyOn(Math, 'random').mockImplementation(() => {
+      seed += 0.137;
+      return seed % 1;
+    });
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, {
+        attachTo: document.body,
+        props: { images: mockImages, layout: 'home' }
+      });
+      await wrapper.vm.$nextTick();
+
+      // 觸發全部圖片載入 -> isReady=true，卡片淡入定位
+      for (const img of wrapper.findAll('img')) {
+        const el = img.element as HTMLImageElement;
+        Object.defineProperty(el, 'naturalWidth', { value: 800, configurable: true });
+        Object.defineProperty(el, 'naturalHeight', { value: 600, configurable: true });
+        await img.trigger('load');
+      }
+      await wrapper.vm.$nextTick();
+
+      const styleAfterLoad = wrapper.findAll('[data-testid="image-card"]')[0].attributes('style');
+      const randomCallsAfterLoad = random.mock.calls.length;
+
+      // 卡片已顯示後，1 秒後備計時器不該再重算一次隨機排版（否則畫面會二次跳動）
+      vi.advanceTimersByTime(1000);
+      await wrapper.vm.$nextTick();
+
+      const styleAfterTimer = wrapper.findAll('[data-testid="image-card"]')[0].attributes('style');
+      expect(random.mock.calls.length).toBe(randomCallsAfterLoad);
+      expect(styleAfterTimer).toBe(styleAfterLoad);
+
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('renders all home layout images without a hardcoded cap', () => {
     const sevenImages = Array.from({ length: 7 }, (_, i) => ({
       src: `/img${i}.jpg`,
