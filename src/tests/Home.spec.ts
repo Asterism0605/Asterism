@@ -4,10 +4,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import Home from '@/pages/Home.vue';
 import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { AuthSession } from '@/types/auth';
 import type { HomeInspirationImage } from '@/types/image';
 import rawStyleImages from '@/data/style-data.json';
 import type { StyleImage } from '@/types/image';
+import type { StyleDnaAnswer } from '@/types/style-dna';
 
 vi.mock('@/api/image.api', () => ({
   fetchImagesApi: vi.fn(async () => ({
@@ -44,10 +46,24 @@ async function openLimitModal(wrapper: { vm: { $nextTick: () => Promise<void> } 
   await wrapper.vm.$nextTick();
 }
 
+function createStyleDnaAnswer(id: string, style: string, weight: number): StyleDnaAnswer {
+  return {
+    questionId: `question-${id}`,
+    selectedOptionId: `option-${id}`,
+    selectedImage: {
+      id: `image-${id}`,
+      url: `/image-${id}.webp`,
+      style: [style]
+    },
+    weights: { [style]: weight }
+  };
+}
+
 describe('Home', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     setActivePinia(createPinia());
+    localStorage.clear();
   });
 
   it('uses the shared app header and renders the hero section', async () => {
@@ -123,6 +139,41 @@ describe('Home', () => {
       return acc;
     }, {});
     expect(Object.values(perGroup).every((count) => count === 5)).toBe(true);
+  });
+
+  it('passes Style DNA preferred styles to the home inspiration image service', async () => {
+    const router = createTestRouter();
+    const styleDnaStore = useStyleDnaStore();
+
+    styleDnaStore.completeQuiz([
+      createStyleDnaAnswer('1', 'Art Deco', 2),
+      createStyleDnaAnswer('2', 'Baroque', 1)
+    ]);
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+    await flushPromises();
+    const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
+    const images = floatingNetwork.props('images') as HomeInspirationImage[];
+
+    expect(floatingNetwork.props('height')).toBe('900vh');
+    expect(images[0]).toEqual(
+      expect.objectContaining({
+        id: 'doa-main-001',
+        styleGroup: 'Decorative & Opulent Art'
+      })
+    );
+    expect(images).toHaveLength(45);
   });
 
   it('opens the limit modal for guests when viewport bottom reaches 150vh', async () => {
