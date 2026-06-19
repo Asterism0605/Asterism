@@ -29,6 +29,29 @@ describe('image.service', () => {
     );
   });
 
+  it('preserves the default home inspiration order without preferred styles', async () => {
+    const defaultImages = await getHomeInspirationImages();
+    const emptyPreferenceImages = await getHomeInspirationImages({ preferredStyles: [] });
+
+    expect(emptyPreferenceImages.map((image) => image.id)).toEqual(
+      defaultImages.map((image) => image.id)
+    );
+  });
+
+  it('prioritizes concept images that match preferred styles', async () => {
+    const images = await getHomeInspirationImages({
+      preferredStyles: ['Art Deco', 'Baroque']
+    });
+
+    expect(images).toHaveLength(45);
+    expect(images[0]).toEqual(
+      expect.objectContaining({
+        id: 'doa-main-001',
+        styleGroup: 'Decorative & Opulent Art'
+      })
+    );
+  });
+
   describe('getMediumGroupImages', () => {
     it('returns one image per medium in the same style group', () => {
       const images = getMediumGroupImages('y2k-main-001');

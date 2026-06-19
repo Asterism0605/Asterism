@@ -1,5 +1,10 @@
 import rawStyleImages from '@/data/style-data.json';
-import type { HomeInspirationImage, ImageSpreadNode, StyleImage } from '@/types/image';
+import type {
+  HomeInspirationImage,
+  HomeInspirationOptions,
+  ImageSpreadNode,
+  StyleImage
+} from '@/types/image';
 
 
 interface RelatedImageOptions {
@@ -38,6 +43,30 @@ function toHomeInspirationImage(image: StyleImage): HomeInspirationImage {
     alt: image.title || image.style.join(', '),
     styleGroup: image.styleGroup
   };
+}
+
+function countPreferredStyleMatches(image: StyleImage, preferredStyles: Set<string>): number {
+  return image.style.filter((style) => preferredStyles.has(style)).length;
+}
+
+function sortByPreferredStyles(
+  images: StyleImage[],
+  preferredStyles: string[] = []
+): StyleImage[] {
+  const preferredStyleSet = new Set(preferredStyles.filter(Boolean));
+
+  if (preferredStyleSet.size === 0) {
+    return images;
+  }
+
+  return images
+    .map((image, index) => ({
+      image,
+      index,
+      matchCount: countPreferredStyleMatches(image, preferredStyleSet)
+    }))
+    .sort((first, second) => second.matchCount - first.matchCount || first.index - second.index)
+    .map(({ image }) => image);
 }
 
 function getFirstImagePerMedium(styleGroup: string): StyleImage[] {
@@ -176,6 +205,10 @@ export function getRelatedImages(
 }
 
 // 首頁放團體概念照（沒有 medium 的圖），資料源為本地 style-data.json。
-export async function getHomeInspirationImages(): Promise<HomeInspirationImage[]> {
-  return styleImages.filter((image) => !image.medium).map(toHomeInspirationImage);
+export async function getHomeInspirationImages(
+  options: HomeInspirationOptions = {}
+): Promise<HomeInspirationImage[]> {
+  const conceptImages = styleImages.filter((image) => !image.medium);
+
+  return sortByPreferredStyles(conceptImages, options.preferredStyles).map(toHomeInspirationImage);
 }
