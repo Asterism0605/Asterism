@@ -1,0 +1,137 @@
+import { describe, expect, it } from 'vitest';
+import {
+  computeEvenYPositions,
+  buildFloatingImageLayout
+} from '@/components/sections/FloatingImageNetwork/layout';
+import { LAYOUT_PRESETS } from '@/components/sections/FloatingImageNetwork/config';
+
+describe('computeEvenYPositions', () => {
+  it('spreads nodes evenly across the height, one per slot', () => {
+    const height = 9000; // 900vh @ 1000px viewport
+    const count = 45;
+    const ys = computeEvenYPositions(count, height, () => 0.5);
+
+    expect(ys).toHaveLength(count);
+    expect(ys[0]).toBeCloseTo(100, 5);
+    expect(ys[count - 1]).toBeCloseTo(height - 100, 5);
+    for (let i = 1; i < ys.length; i++) {
+      expect(ys[i]).toBeGreaterThan(ys[i - 1]);
+    }
+    for (let band = 0; band < height / 1000; band++) {
+      const inBand = ys.filter((y) => y >= band * 1000 && y < (band + 1) * 1000).length;
+      expect(inBand).toBe(5);
+    }
+  });
+});
+
+describe('buildFloatingImageLayout (home)', () => {
+  it('keeps nodes spread across the full height instead of clustering at the center', () => {
+    const width = 1200;
+    const height = 9000;
+    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home, 900);
+
+    const ys = nodes.map((n) => n.y);
+    const span = Math.max(...ys) - Math.min(...ys);
+    expect(span).toBeGreaterThan(height * 0.7);
+  });
+
+  it('scatters nodes horizontally across the width instead of a centered column', () => {
+    const width = 1440;
+    const height = 9000;
+    const nodes = buildFloatingImageLayout(45, width, height, LAYOUT_PRESETS.home, 900);
+
+    const xs = nodes.map((n) => n.x);
+    const inLeftThird = xs.filter((x) => x < width / 3).length;
+    const inRightThird = xs.filter((x) => x > (width * 2) / 3).length;
+
+    // 左右兩側都要有卡片，且整體橫向跨幅夠大（不是擠在中間一條直欄）
+    expect(inLeftThird).toBeGreaterThan(0);
+    expect(inRightThird).toBeGreaterThan(0);
+    expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(width * 0.5);
+  });
+
+  it('uses each image real aspect ratio when provided (照原圖比例、不裁切)', () => {
+    const aspects = Array.from({ length: 45 }, () => '1000/500');
+    const nodes = buildFloatingImageLayout(45, 1440, 9000, LAYOUT_PRESETS.home, 900, aspects);
+
+    expect(nodes.every((node) => node.aspect === '1000/500')).toBe(true);
+  });
+
+  it('does not overlap home cards with each other (合理尺寸 + 真實比例)', () => {
+    // 測演算法本身不重疊：用合理寬度 + 多種真實圖片比例（直/橫/方）。
+    // 不直接綁 LAYOUT_PRESETS.home 的 widths，因為那是視覺調校值（卡片越大越擠是密度取捨，非演算法問題）。
+    const width = 1440;
+    const height = 9000;
+    const viewportHeight = 900;
+    const preset = { ...LAYOUT_PRESETS.home, widths: [180, 260, 200, 240, 260, 210] };
+    const aspects = Array.from({ length: 45 }, (_, i) =>
+      ['1122/1402', '1536/1024', '3/4', '1402/1122', '4/3'][i % 5]
+    );
+    const nodes = buildFloatingImageLayout(45, width, height, preset, viewportHeight, aspects);
+
+    expect(countOverlappingPairs(nodes)).toBe(0);
+  });
+
+  it('keeps home cards clear of the title area in the first viewport', () => {
+    const width = 1440;
+    const height = 9000;
+    const viewportHeight = 900;
+    // 合理尺寸 + 真實比例（測演算法的標題避讓，不綁視覺調校用的 widths）
+    const preset = { ...LAYOUT_PRESETS.home, widths: [180, 260, 200, 240, 260, 210] };
+    const aspects = Array.from({ length: 45 }, (_, i) =>
+      ['1122/1402', '1536/1024', '3/4', '1402/1122', '4/3'][i % 5]
+    );
+    const nodes = buildFloatingImageLayout(45, width, height, preset, viewportHeight, aspects);
+
+    // 標題在第一個 viewport 左側（桌機 avoid 區 ~0.28~0.64 viewport、左 0~0.62 寬）
+    const titleBox = {
+      left: 0,
+      right: width * 0.5,
+      top: viewportHeight * 0.28,
+      bottom: viewportHeight * 0.64
+    };
+    const offenders = nodes.filter((node) => rectsOverlap(nodeRect(node), titleBox));
+
+    expect(offenders).toHaveLength(0);
+  });
+});
+
+function nodeRect(node: { x: number; y: number; width: number; aspect: string }) {
+  const [w, h] = node.aspect.split('/').map(Number);
+  const aspectRatio = w && h ? w / h : 3 / 4;
+  const nodeHeight = node.width / aspectRatio;
+  return {
+    left: node.x - node.width / 2,
+    right: node.x + node.width / 2,
+    top: node.y - nodeHeight / 2,
+    bottom: node.y + nodeHeight / 2
+  };
+}
+
+function rectsOverlap(
+  a: { left: number; right: number; top: number; bottom: number },
+  b: { left: number; right: number; top: number; bottom: number }
+) {
+  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+}
+
+// 容許 8px 以下的接觸（視覺看不出、且 floatY 動畫本來就會 ±6px 飄動），
+// 只把「穿透超過 8px」視為真正的重疊。
+function countOverlappingPairs(
+  nodes: { x: number; y: number; width: number; aspect: string }[],
+  tolerance = 8
+) {
+  let overlaps = 0;
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodeRect(nodes[i]);
+      const b = nodeRect(nodes[j]);
+      const penetrationX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+      const penetrationY = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+      if (Math.min(penetrationX, penetrationY) > tolerance) {
+        overlaps++;
+      }
+    }
+  }
+  return overlaps;
+}

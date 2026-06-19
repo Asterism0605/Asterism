@@ -40,25 +40,6 @@ function toHomeInspirationImage(image: StyleImage): HomeInspirationImage {
   };
 }
 
-function getFirstImagesByStyleGroup(): StyleImage[] {
-  const featuredGroups = new Set([
-    'Y2K & Internet Aesthetics',
-    'Future Tech & Digital Psychedelia',
-    'Decorative & Opulent Art'
-  ]);
-  const groups = new Map<string, StyleImage>();
-
-  for (const image of styleImages) {
-    if (!image.id.includes('main')) continue;
-    if (!featuredGroups.has(image.styleGroup)) continue;
-    if (!groups.has(image.styleGroup)) {
-      groups.set(image.styleGroup, image);
-    }
-  }
-
-  return [...groups.values()];
-}
-
 function getFirstImagePerMedium(styleGroup: string): StyleImage[] {
   const mediums = new Map<string, StyleImage>();
 
@@ -194,6 +175,7 @@ export function getRelatedImages(
   return pickRelatedCandidates(candidates, baseImage, limit).map(toSpreadNode);
 }
 
-export function getHomeInspirationImages(): HomeInspirationImage[] {
-  return getFirstImagesByStyleGroup().map(toHomeInspirationImage);
+// 首頁放團體概念照（沒有 medium 的圖），資料源為本地 style-data.json。
+export async function getHomeInspirationImages(): Promise<HomeInspirationImage[]> {
+  return styleImages.filter((image) => !image.medium).map(toHomeInspirationImage);
 }

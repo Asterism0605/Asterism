@@ -1,6 +1,6 @@
 import type { AvoidArea, NodePosition } from './config';
 
-interface PixelRect {
+export interface PixelRect {
   left: number;
   top: number;
   right: number;
@@ -32,12 +32,21 @@ function getNodeRect(node: NodePosition): PixelRect {
   };
 }
 
-function getPixelAvoidArea(area: AvoidArea, width: number, height: number): PixelRect {
+function getPixelAvoidArea(
+  area: AvoidArea,
+  width: number,
+  height: number,
+  viewportHeight: number
+): PixelRect {
+  // viewportRelative 的避讓區（標題）以第一個 viewport 高度為基準，
+  // 不隨總容器高度放大，確保固定落在第一螢幕。
+  const verticalBase = area.viewportRelative ? viewportHeight : height;
+
   return {
     left: area.left * width,
-    top: area.top * height,
+    top: area.top * verticalBase,
     right: area.right * width,
-    bottom: area.bottom * height
+    bottom: area.bottom * verticalBase
   };
 }
 
@@ -65,9 +74,10 @@ function moveNodeOutsideAvoidArea(
   node: NodePosition,
   area: AvoidArea,
   width: number,
-  height: number
+  height: number,
+  viewportHeight: number
 ) {
-  const avoidRect = getPixelAvoidArea(area, width, height);
+  const avoidRect = getPixelAvoidArea(area, width, height, viewportHeight);
   const nodeRect = getNodeRect(node);
 
   if (!rectsOverlap(nodeRect, avoidRect)) {
@@ -104,11 +114,32 @@ function moveNodeOutsideAvoidArea(
   return bestCandidate ? { ...node, ...bestCandidate } : node;
 }
 
+// 取得啟用中的避讓矩形（含 padding 外擴），給 layout 的去重疊鬆弛當「不可移動障礙物」用。
+export function getActiveAvoidRects(
+  avoidAreas: AvoidArea[] | undefined,
+  width: number,
+  height: number,
+  viewportHeight: number
+): PixelRect[] {
+  return (avoidAreas ?? [])
+    .filter((area) => shouldUseAvoidArea(area, width))
+    .map((area) => {
+      const rect = getPixelAvoidArea(area, width, height, viewportHeight);
+      return {
+        left: rect.left - area.padding,
+        top: rect.top - area.padding,
+        right: rect.right + area.padding,
+        bottom: rect.bottom + area.padding
+      };
+    });
+}
+
 export function applyAvoidAreas(
   nodes: NodePosition[],
   width: number,
   height: number,
-  avoidAreas: AvoidArea[] | undefined
+  avoidAreas: AvoidArea[] | undefined,
+  viewportHeight: number
 ) {
   const activeAvoidAreas = avoidAreas?.filter((area) => shouldUseAvoidArea(area, width)) ?? [];
 
@@ -118,7 +149,7 @@ export function applyAvoidAreas(
 
   return nodes.map((node) =>
     activeAvoidAreas.reduce(
-      (currentNode, area) => moveNodeOutsideAvoidArea(currentNode, area, width, height),
+      (currentNode, area) => moveNodeOutsideAvoidArea(currentNode, area, width, height, viewportHeight),
       node
     )
   );
