@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Lock, MoveDownLeft } from '@lucide/vue';
 import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
@@ -7,16 +7,21 @@ import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import { getHomeInspirationImages } from '@/services/image.service';
 import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { HomeInspirationImage } from '@/types/image';
 
 const scrollLimitVh = 150;
 const router = useRouter();
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
 const inspirationImages = ref<HomeInspirationImage[]>([]);
 
 const HOME_DENSITY_PER_100VH = 5;
+const homePreferredStyles = computed(() =>
+  styleDnaStore.hasCompletedQuiz ? styleDnaStore.preferredStyles : []
+);
 const containerHeight = computed(
   () => `${(inspirationImages.value.length / HOME_DENSITY_PER_100VH) * 100}vh`
 );
@@ -65,7 +70,9 @@ function openImageSpread(index: number) {
 }
 
 async function loadInspirationImages() {
-  inspirationImages.value = await getHomeInspirationImages();
+  inspirationImages.value = await getHomeInspirationImages({
+    preferredStyles: homePreferredStyles.value
+  });
 }
 
 onMounted(() => {
@@ -76,6 +83,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScrollLimit);
+});
+
+watch(homePreferredStyles, () => {
+  void loadInspirationImages();
 });
 </script>
 

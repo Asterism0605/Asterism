@@ -27,3 +27,7 @@ export interface HomeInspirationImage {
   alt: string;
   styleGroup: string;
 }
+
+export interface HomeInspirationOptions {
+  preferredStyles?: string[];
+}
