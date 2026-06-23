@@ -70,17 +70,17 @@
     </div>
 
     <div
-      class="glass-panel absolute bottom-0 left-0 z-20 h-[52vh] w-[74vw] rounded-none rounded-tr-[4.5rem] border-b-0 border-l-0 px-4 py-9 sm:px-12 lg:h-[24vh] lg:w-[92%] lg:px-[7.5rem] lg:py-9"
+      class="glass-panel font-title absolute bottom-0 left-0 z-20 h-[52vh] w-[74vw] rounded-none rounded-tr-[4.5rem] border-b-0 border-l-0 px-4 py-9 sm:px-12 lg:h-[24vh] lg:w-[92%] lg:px-[7.5rem] lg:py-9"
     >
       <div class="grid gap-5 lg:max-w-2xl lg:grid-cols-3 lg:gap-5">
         <div v-for="style in styles" :key="style.label" class="min-w-0">
           <p
-            class="max-w-[calc(74vw-2rem)] whitespace-normal break-words text-[13px] font-light leading-snug text-text-secondary lg:max-w-full lg:truncate lg:text-lg"
+            class="max-w-[calc(74vw-2rem)] whitespace-normal break-words text-[13px] font-extralight leading-snug text-text-secondary lg:max-w-full lg:truncate lg:text-lg"
           >
             {{ style.label }}
           </p>
           <p
-            class="mt-2 font-title text-5xl font-extralight leading-none text-text-primary lg:text-6xl"
+            class="mt-2 text-5xl font-extralight leading-none text-text-primary lg:text-6xl"
           >
             {{ style.percentage }}<span class="ml-1 text-lg text-text-secondary">%</span>
           </p>
