@@ -58,10 +58,12 @@ onBeforeUnmount(() => {
     <section class="h-screen overflow-hidden">
       <div class="relative h-screen overflow-hidden bg-void">
         <div
-          class="absolute left-8 top-[4.75rem] z-[70] max-w-[18rem] lg:left-[7.5rem] lg:top-[5.25rem] lg:max-w-[min(34rem,42vw)]"
+          class="absolute left-6 top-10 z-[70] max-w-[16.5rem] 
+          lg:left-[7.5rem] lg:top-[5.25rem] lg:max-w-[min(34rem,42vw)]"
         >
           <p
-            class="mb-5 inline-flex items-center gap-3 text-xs font-medium text-text-secondary lg:mb-7"
+            class="mb-3 inline-flex items-center gap-2.5 text-xs font-medium text-text-secondary 
+            lg:mb-7 lg:gap-3"
           >
             <span
               class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
@@ -73,35 +75,39 @@ onBeforeUnmount(() => {
           </p>
 
           <h1
-            class="font-title text-[2.35rem] font-extralight leading-[1.16] text-text-primary lg:text-display lg:leading-[1.02]"
-          >
+            class="font-title text-[3rem] font-extralight leading-[1.12] text-text-primary 
+            lg:text-display lg:leading-[1.02]">
             Your<br />
             <span class="whitespace-nowrap">Style DNA</span>
           </h1>
 
-          <div class="mt-8 lg:mt-10">
-            <p class="mt-4 max-w-[34rem] text-sm font-medium leading-relaxed text-text-secondary">
+          <div 
+            class="hidden 
+            lg:mt-10 lg:block">
+            <p class="mt-3 max-w-[15.5rem] text-xs font-medium leading-relaxed text-text-secondary lg:mt-4 lg:max-w-[34rem] lg:text-sm">
               Your homepage is now personalized based on your Style DNA.
             </p>
           </div>
 
-          <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 lg:mt-11 lg:-translate-y-5">
+          <div
+            class="hidden flex-wrap items-center gap-x-5 gap-y-3 
+            lg:mt-11 lg:flex lg:-translate-y-5 lg:gap-x-8 lg:gap-y-4">
             <Button
               type="button"
               variant="light"
-              class="min-w-[13.5rem] px-9 py-3 text-base"
+              class="min-w-[11.5rem] px-7 py-2.5 text-sm 
+              lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
               data-testid="start-exploring"
-              @click="startExploring"
-            >
+              @click="startExploring">
               Start Exploring
             </Button>
 
             <button
               type="button"
-              class="inline-flex cursor-pointer items-center gap-3 rounded-full py-3 text-sm font-medium text-text-secondary transition-colors duration-200 hover:text-text-primary"
+              class="inline-flex cursor-pointer items-center gap-2.5 rounded-full py-2 text-xs font-medium text-text-secondary transition-colors duration-200 hover:text-text-primary 
+              lg:gap-3 lg:py-3 lg:text-sm"
               data-testid="retake-quiz"
-              @click="retakeQuiz"
-            >
+              @click="retakeQuiz">
               <span>Retake Quiz</span>
               <ChevronRight class="size-4" :stroke-width="1.8" aria-hidden="true" />
             </button>
@@ -113,7 +119,37 @@ onBeforeUnmount(() => {
           :hero-image="HERO_IMAGE"
           :styles="result.styles"
           :annotations="result.annotations"
-        />
+        >
+          <template #mobile-panel>
+            <div class="flex h-full flex-col justify-center pr-5">
+              <p class="max-w-[15rem] text-xs font-medium leading-relaxed text-text-secondary">
+                Your homepage is now personalized based on your Style DNA.
+              </p>
+
+              <div class="mt-5 flex flex-col items-start gap-3">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  class="min-w-[11.5rem] px-7 py-2.5 text-sm active:bg-text-primary active:text-deep"
+                  data-testid="start-exploring"
+                  @click="startExploring"
+                >
+                  Start Exploring
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  class="min-w-[11.5rem] px-7 py-2.5 text-sm active:bg-text-primary active:text-deep"
+                  data-testid="retake-quiz"
+                  @click="retakeQuiz"
+                >
+                  Retake Quiz
+                </Button>
+              </div>
+            </div>
+          </template>
+        </StyleAnnotationDisplay>
       </div>
     </section>
   </main>
