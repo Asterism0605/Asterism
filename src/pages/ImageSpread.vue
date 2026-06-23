@@ -147,7 +147,7 @@ watch(
   <ImageSpreadEntrance
     as="main"
     kind="page"
-    class="relative min-h-screen overflow-hidden bg-void pt-[92px] text-text-primary"
+    class="relative min-h-screen overflow-hidden bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:92px]"
   >
     <ImageSpreadEntrance
       kind="wash"
@@ -157,7 +157,7 @@ watch(
 
     <section
       v-if="centerImage"
-      class="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-[1600px] flex-col items-center justify-center gap-8 px-6 pb-10 lg:px-10"
+      class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] w-full max-w-[1600px] flex-col items-center justify-center gap-8 px-6 pb-10 pt-6 lg:px-10 lg:pt-8"
     >
       <div class="relative flex w-full flex-1 items-center justify-center">
         <RelatedImageCluster
@@ -200,7 +200,7 @@ watch(
 
     <section
       v-else
-      class="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] max-w-xl flex-col items-center justify-center gap-5 px-6 text-center"
+      class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] max-w-xl flex-col items-center justify-center gap-5 px-6 text-center"
     >
       <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">Image not found</p>
       <h1 class="text-3xl font-bold tracking-normal sm:text-5xl">

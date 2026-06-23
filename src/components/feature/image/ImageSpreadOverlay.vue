@@ -35,40 +35,42 @@ const mainImageLabel = computed(() => {
     kind="center"
     class="relative mx-auto flex w-full max-w-[460px] flex-col items-center gap-5"
   >
-    <ConstellationBackground
-      active
-      class-name="absolute left-1/2 top-[20%] -z-10 -translate-x-1/2 -translate-y-1/2"
-      size="min(104vw, 760px)"
-      :line-length="320"
-      :line-width="1.2"
-      :line-opacity="0.85"
-      :inactive-node-opacity="0.25"
-      :active-node-opacity="0.5"
-      :glow-opacity="0.04"
-      :node-size="5"
-      :spacing="70"
-    />
-
-    <ImageSpreadEntrance
-      as="figure"
-      kind="centerFrame"
-      data-testid="spread-main-image-frame"
-      class="relative w-full max-w-[min(72vw,360px)] cursor-pointer overflow-hidden rounded-lg border border-white/12 bg-elevated/60 shadow-[0_30px_90px_rgba(0,0,0,0.45)]"
-    >
-      <img
-        data-testid="spread-main-image"
-        :src="image.src"
-        :alt="image.alt"
-        class="aspect-[4/5] w-full cursor-pointer object-cover"
+    <div class="relative flex w-full justify-center">
+      <ConstellationBackground
+        active
+        class-name="absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2"
+        size="min(104vw, 760px)"
+        :line-length="320"
+        :line-width="1.2"
+        :line-opacity="0.85"
+        :inactive-node-opacity="0.25"
+        :active-node-opacity="0.5"
+        :glow-opacity="0.04"
+        :node-size="5"
+        :spacing="70"
       />
-      <figcaption
-        v-if="mainImageLabel"
-        data-testid="spread-main-image-label"
-        class="absolute bottom-4 left-4 rounded-full bg-void/80 px-4 py-2 text-sm font-semibold text-text-primary backdrop-blur-md"
+
+      <ImageSpreadEntrance
+        as="figure"
+        kind="centerFrame"
+        data-testid="spread-main-image-frame"
+        class="relative w-full max-w-[min(72vw,360px)] cursor-pointer overflow-hidden rounded-lg border border-white/12 bg-elevated/60 shadow-[0_30px_90px_rgba(0,0,0,0.45)]"
       >
-        {{ mainImageLabel }}
-      </figcaption>
-    </ImageSpreadEntrance>
+        <img
+          data-testid="spread-main-image"
+          :src="image.src"
+          :alt="image.alt"
+          class="aspect-[4/5] w-full cursor-pointer object-cover"
+        />
+        <figcaption
+          v-if="mainImageLabel"
+          data-testid="spread-main-image-label"
+          class="absolute bottom-4 left-4 rounded-full bg-void/80 px-4 py-2 text-sm font-semibold text-text-primary backdrop-blur-md"
+        >
+          {{ mainImageLabel }}
+        </figcaption>
+      </ImageSpreadEntrance>
+    </div>
 
     <ImageSpreadEntrance
       kind="actions"
@@ -81,7 +83,7 @@ const mainImageLabel = computed(() => {
           Return
         </span>
       </Button>
-      <Button variant="secondary" type="button">
+      <Button variant="secondary" type="button" class="!bg-black hover:!bg-[#111111]">
         <span class="inline-flex items-center gap-2">
           <Bookmark class="size-4" aria-hidden="true" />
           Add to moodboard
