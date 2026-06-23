@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => {
   const hydrateResult = vi.fn();
-  const useStyleDnaStore = vi.fn(() => ({ hydrateResult }));
+  const useStyleDnaStore = vi.fn((_pinia?: unknown) => ({ hydrateResult }));
   const app = {
     use: vi.fn(),
     mount: vi.fn()

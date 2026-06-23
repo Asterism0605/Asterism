@@ -98,7 +98,7 @@ onBeforeUnmount(() => {
 
             <button
               type="button"
-              class="inline-flex items-center gap-3 rounded-full py-3 text-sm font-medium text-text-secondary transition-colors duration-200 hover:text-text-primary"
+              class="inline-flex cursor-pointer items-center gap-3 rounded-full py-3 text-sm font-medium text-text-secondary transition-colors duration-200 hover:text-text-primary"
               data-testid="retake-quiz"
               @click="retakeQuiz"
             >

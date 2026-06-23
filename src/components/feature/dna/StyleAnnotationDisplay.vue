@@ -27,13 +27,13 @@
           <img
             :src="heroImage"
             :alt="`${primaryStyle} style DNA hero image`"
-            class="relative z-50 h-full w-auto max-w-none object-contain drop-shadow-[0_28px_60px_rgba(0,0,0,0.5)] lg:h-auto lg:max-h-[82vh] lg:max-w-full lg:-translate-y-5"
+            class="relative z-50 h-full w-auto max-w-none object-contain drop-shadow-[0_28px_60px_rgba(0,0,0,0.5)] lg:h-[115vh] lg:max-h-none lg:max-w-none lg:translate-y-[200px]"
           />
 
           <div
             v-for="annotation in annotations"
             :key="`${annotation.position}-${annotation.label}-${annotation.value}`"
-            class="style-annotation absolute z-[60] w-28 text-xs text-text-primary sm:w-36 lg:w-40"
+            class="style-annotation absolute z-[60] w-28 text-xs text-text-primary sm:w-36 lg:w-40 lg:text-base"
             :class="annotationPositionClasses[annotation.position]"
             data-testid="style-annotation"
           >
@@ -46,7 +46,7 @@
                 class="style-annotation__tail mr-[-1px] mt-px block h-px w-9 origin-right bg-text-primary/80"
                 :class="annotationTailClasses[annotation.position]"
               />
-              <span class="style-annotation__line h-px flex-1 bg-text-primary/80" />
+              <span class="style-annotation__line h-0.5 flex-1 bg-text-primary/80" />
               <span
                 v-if="annotation.position === 'left'"
                 class="style-annotation__tail ml-[-1px] mt-px block h-px w-9 origin-left bg-text-primary/80"
