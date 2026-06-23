@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import AppToast from './components/ui/AppToast.vue';
 import AppHeader from './layouts/AppHeader.vue';
 
 const route = useRoute();
@@ -10,4 +11,5 @@ const showHeader = computed(() => !headerlessRouteNames.has(String(route.name)))
 <template>
   <AppHeader v-if="showHeader" />
   <RouterView />
+  <AppToast />
 </template>

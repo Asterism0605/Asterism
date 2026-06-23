@@ -13,24 +13,41 @@ describe('image.service', () => {
     expect(getImageById('missing-image')).toBeUndefined();
   });
 
-  it('returns home inspiration images limited to main images per style group', () => {
-    const images = getHomeInspirationImages();
+  it('returns local concept images (no medium) across every style group for the home page', async () => {
+    const images = await getHomeInspirationImages();
     const styleGroups = images.map((image) => image.styleGroup);
 
-    expect(new Set(styleGroups)).toEqual(
-      new Set([
-        'Y2K & Internet Aesthetics',
-        'Future Tech & Digital Psychedelia',
-        'Decorative & Opulent Art'
-      ])
-    );
-    expect(images.every((image) => image.id.includes('main'))).toBe(true);
+    expect(images).toHaveLength(45);
+    expect(new Set(styleGroups).size).toBe(9);
     expect(images[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
         src: expect.stringContaining('/style-image/'),
         alt: expect.any(String),
         styleGroup: expect.any(String)
+      })
+    );
+  });
+
+  it('preserves the default home inspiration order without preferred styles', async () => {
+    const defaultImages = await getHomeInspirationImages();
+    const emptyPreferenceImages = await getHomeInspirationImages({ preferredStyles: [] });
+
+    expect(emptyPreferenceImages.map((image) => image.id)).toEqual(
+      defaultImages.map((image) => image.id)
+    );
+  });
+
+  it('prioritizes concept images that match preferred styles', async () => {
+    const images = await getHomeInspirationImages({
+      preferredStyles: ['Art Deco', 'Baroque']
+    });
+
+    expect(images).toHaveLength(45);
+    expect(images[0]).toEqual(
+      expect.objectContaining({
+        id: 'doa-main-001',
+        styleGroup: 'Decorative & Opulent Art'
       })
     );
   });

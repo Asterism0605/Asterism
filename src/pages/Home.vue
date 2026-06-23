@@ -1,17 +1,30 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Lock, MoveDownLeft } from '@lucide/vue';
 import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import { getHomeInspirationImages } from '@/services/image.service';
+import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
+import type { HomeInspirationImage } from '@/types/image';
 
 const scrollLimitVh = 150;
 const router = useRouter();
+const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
-const inspirationImages = getHomeInspirationImages();
+const inspirationImages = ref<HomeInspirationImage[]>([]);
+
+const HOME_DENSITY_PER_100VH = 5;
+const homePreferredStyles = computed(() =>
+  styleDnaStore.hasCompletedQuiz ? styleDnaStore.preferredStyles : []
+);
+const containerHeight = computed(
+  () => `${(inspirationImages.value.length / HOME_DENSITY_PER_100VH) * 100}vh`
+);
 
 function openLimitModal() {
   if (hasTriggeredLimit.value) {
@@ -23,7 +36,7 @@ function openLimitModal() {
 }
 
 function handleScrollLimit() {
-  if (typeof window === 'undefined') {
+  if (typeof window === 'undefined' || authStore.isAuthenticated) {
     return;
   }
 
@@ -44,7 +57,7 @@ function goToLogin() {
 }
 
 function openImageSpread(index: number) {
-  const image = inspirationImages[index];
+  const image = inspirationImages.value[index];
 
   if (!image) {
     return;
@@ -56,29 +69,45 @@ function openImageSpread(index: number) {
   });
 }
 
+async function loadInspirationImages() {
+  inspirationImages.value = await getHomeInspirationImages({
+    preferredStyles: homePreferredStyles.value
+  });
+}
+
 onMounted(() => {
   handleScrollLimit();
   window.addEventListener('scroll', handleScrollLimit, { passive: true });
+  void loadInspirationImages();
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScrollLimit);
 });
+
+watch(homePreferredStyles, () => {
+  void loadInspirationImages();
+});
 </script>
 
 <template>
   <main
-    class="home-page relative min-h-[160vh] overflow-hidden bg-void text-text-primary [--app-header-height:60px]"
+    class="home-page relative overflow-hidden bg-void text-text-primary [--app-header-height:60px]"
+    :style="{ minHeight: containerHeight }"
   >
     <div class="pointer-events-none absolute inset-0 z-0 home-page__wash" aria-hidden="true" />
 
-    <section class="relative z-10 min-h-[150vh] pt-[var(--app-header-height)]">
+    <section
+      class="relative z-10 pt-[var(--app-header-height)]"
+      :style="{ minHeight: containerHeight }"
+    >
       <div
-        class="absolute inset-x-0 top-[var(--app-header-height)] z-10 h-[calc(112vh-var(--app-header-height))]"
+        class="absolute inset-x-0 top-[var(--app-header-height)] z-10"
+        :style="{ height: containerHeight }"
       >
         <FloatingImageNetwork
           :images="inspirationImages"
-          height="calc(200vh - var(--app-header-height))"
+          :height="containerHeight"
           layout="home"
           show-constellations
           @click="openImageSpread"
@@ -137,10 +166,10 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: 0;
   content: '';
-  opacity: 0.16;
+  opacity: 0.3;
   background-image:
-    linear-gradient(rgb(240 237 230 / 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(240 237 230 / 0.05) 1px, transparent 1px);
+    linear-gradient(rgb(240 237 230 / 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(240 237 230 / 0.6) 1px, transparent 1px);
   background-size: 118px 118px;
   mask-image: linear-gradient(180deg, transparent, black 12%, black 78%, transparent);
 }

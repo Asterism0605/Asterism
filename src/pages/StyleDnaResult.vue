@@ -1,24 +1,35 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 import DnaLoadingState from '@/components/feature/dna/DnaLoadingState.vue';
 import StyleAnnotationDisplay from '@/components/feature/dna/StyleAnnotationDisplay.vue';
-import { computeStyleDnaResult, type StyleDnaSelection } from '@/utils/computeStyleDnaResult';
+import { showToast } from '@/composables/useToast';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 
-const props = withDefaults(
-  defineProps<{
-    selectionHistory?: StyleDnaSelection[];
-  }>(),
-  { selectionHistory: () => [] }
-);
+const { result } = storeToRefs(useStyleDnaStore());
 
+const HERO_IMAGE = '/images/astronaut-dna.png';
 const isLoading = ref(true);
-const result = computed(() => computeStyleDnaResult(props.selectionHistory));
+const router = useRouter();
 
 let loadingTimer: ReturnType<typeof window.setTimeout> | null = null;
 
 onMounted(() => {
   loadingTimer = window.setTimeout(() => {
     isLoading.value = false;
+
+    if (result.value.isFallback) {
+      showToast({
+        type: 'info',
+        message: 'We do not have quiz result yet, so this is a sample Style DNA result.',
+        actionText: 'Retake quiz',
+        duration: 5000,
+        onAction: () => {
+          void router.push('/style-dna');
+        }
+      });
+    }
   }, 1500);
 });
 
@@ -36,13 +47,15 @@ onBeforeUnmount(() => {
     <section class="h-screen overflow-hidden">
       <div class="relative h-screen overflow-hidden bg-void">
         <div
-          class="pointer-events-none absolute left-8 top-[5.75rem] z-20 max-w-[18rem] sm:left-12 lg:left-14 lg:top-24 lg:max-w-[min(32rem,82vw)]"
+          class="pointer-events-none absolute left-8 top-[5.75rem] z-20 max-w-[18rem] sm:left-12 lg:left-[7.5rem] lg:top-24 lg:max-w-[min(32rem,82vw)]"
         >
           <p class="mb-4 text-xs text-text-secondary lg:mb-8">
             <span class="lg:hidden">Your aesthetic asterism has emerged</span>
             <span class="hidden lg:inline">Click to choose your preferred style</span>
           </p>
-          <h1 class="font-title text-[2.35rem] font-extralight leading-[1.2] text-text-primary sm:text-[3.25rem] lg:text-display lg:leading-[1.02]">
+          <h1
+            class="font-title text-[2.35rem] font-extralight leading-[1.2] text-text-primary sm:text-[3.25rem] lg:text-display lg:leading-[1.02]"
+          >
             Your<br />
             <span class="whitespace-nowrap">Style DNA</span>
           </h1>
@@ -50,25 +63,10 @@ onBeforeUnmount(() => {
 
         <StyleAnnotationDisplay
           :primary-style="result.primaryStyle"
-          :hero-image="result.heroImage"
+          :hero-image="HERO_IMAGE"
           :styles="result.styles"
           :annotations="result.annotations"
         />
-
-        <div
-          v-if="result.isFallback"
-          class="relative z-30 mt-6 hidden flex-col gap-4 rounded-lg border border-white/10 bg-white/[0.04] p-5 sm:flex-row sm:items-center sm:justify-between lg:absolute lg:bottom-8 lg:right-8 lg:mt-0 lg:flex lg:max-w-md lg:bg-void/55 lg:backdrop-blur-md"
-        >
-          <p class="max-w-xl text-sm leading-6 text-text-secondary">
-            We do not have quiz data yet, so this is a sample Style DNA result.
-          </p>
-          <a
-            class="inline-flex min-h-11 items-center justify-center rounded-lg border border-gold-dim/55 px-5 text-sm font-semibold text-text-primary transition-colors hover:border-gold-dim hover:bg-gold-dim/10"
-            href="/discover-dna"
-          >
-            Retake quiz
-          </a>
-        </div>
       </div>
     </section>
   </main>

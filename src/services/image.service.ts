@@ -1,5 +1,10 @@
 import rawStyleImages from '@/data/style-data.json';
-import type { HomeInspirationImage, ImageSpreadNode, StyleImage } from '@/types/image';
+import type {
+  HomeInspirationImage,
+  HomeInspirationOptions,
+  ImageSpreadNode,
+  StyleImage
+} from '@/types/image';
 
 
 interface RelatedImageOptions {
@@ -40,17 +45,28 @@ function toHomeInspirationImage(image: StyleImage): HomeInspirationImage {
   };
 }
 
-function getFirstImagesByStyleGroup(): StyleImage[] {
-  const groups = new Map<string, StyleImage>();
+function countPreferredStyleMatches(image: StyleImage, preferredStyles: Set<string>): number {
+  return image.style.filter((style) => preferredStyles.has(style)).length;
+}
 
-  for (const image of styleImages) {
-    if (!image.id.includes('main')) continue;
-    if (!groups.has(image.styleGroup)) {
-      groups.set(image.styleGroup, image);
-    }
+function sortByPreferredStyles(
+  images: StyleImage[],
+  preferredStyles: string[] = []
+): StyleImage[] {
+  const preferredStyleSet = new Set(preferredStyles.filter(Boolean));
+
+  if (preferredStyleSet.size === 0) {
+    return images;
   }
 
-  return [...groups.values()];
+  return images
+    .map((image, index) => ({
+      image,
+      index,
+      matchCount: countPreferredStyleMatches(image, preferredStyleSet)
+    }))
+    .sort((first, second) => second.matchCount - first.matchCount || first.index - second.index)
+    .map(({ image }) => image);
 }
 
 function getFirstImagePerMedium(styleGroup: string): StyleImage[] {
@@ -181,11 +197,18 @@ export function getRelatedImages(
 
   const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
   const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
-  const candidates = styleImages.filter((image) => !excludedIds.has(image.id));
+  const candidates = styleImages.filter(
+    (image) => !image.id.includes('main') && !excludedIds.has(image.id)
+  );
 
   return pickRelatedCandidates(candidates, baseImage, limit).map(toSpreadNode);
 }
 
-export function getHomeInspirationImages(): HomeInspirationImage[] {
-  return getFirstImagesByStyleGroup().map(toHomeInspirationImage);
+// 首頁放團體概念照（沒有 medium 的圖），資料源為本地 style-data.json。
+export async function getHomeInspirationImages(
+  options: HomeInspirationOptions = {}
+): Promise<HomeInspirationImage[]> {
+  const conceptImages = styleImages.filter((image) => !image.medium);
+
+  return sortByPreferredStyles(conceptImages, options.preferredStyles).map(toHomeInspirationImage);
 }

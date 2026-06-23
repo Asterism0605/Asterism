@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import StyleComparisonPicker from '@/components/feature/dna/StyleComparisonPicker.vue';
 import { useStyleDnaQuiz } from '@/composables/useStyleDnaQuiz';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 
+const router = useRouter();
+const styleDnaStore = useStyleDnaStore();
 const quiz = useStyleDnaQuiz();
-const { currentQuestion, currentQuestionIndex, isCompleted, questions, resetQuiz, selectAnswer } =
-  quiz;
+const {
+  answers,
+  currentQuestion,
+  currentQuestionIndex,
+  isCompleted,
+  questions,
+  resetQuiz,
+  selectAnswer
+} = quiz;
 const selectedId = ref<string | null>(null);
 const isTransitioning = ref(false);
 const isHoverSuppressed = ref(false);
@@ -38,8 +49,8 @@ const handleSelect = (optionId: string) => {
     }, 260);
 
     if (isCompleted.value) {
-      // TODO: 導入 Vue Router 後改為 router.push(completedTargetPath)
-      console.info(`Style DNA quiz completed. Next route: ${completedTargetPath}`);
+      styleDnaStore.completeQuiz([...answers]);
+      void router.push(completedTargetPath);
     }
   }, 500);
 };
