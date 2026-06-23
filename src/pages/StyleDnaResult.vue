@@ -58,12 +58,12 @@ onBeforeUnmount(() => {
     <section class="h-screen overflow-hidden">
       <div class="relative h-screen overflow-hidden bg-void">
         <div
-          class="absolute left-6 top-10 z-[70] max-w-[16.5rem] 
+          class="absolute left-6 top-[4.375rem] z-[70] max-w-[16.5rem] 
           lg:left-[7.5rem] lg:top-[5.25rem] lg:max-w-[min(34rem,42vw)]"
         >
           <p
-            class="mb-3 inline-flex items-center gap-2.5 text-xs font-medium text-text-secondary 
-            lg:mb-7 lg:gap-3"
+            class="mb-3 hidden items-center gap-2.5 text-xs font-medium text-text-secondary 
+            lg:mb-7 lg:inline-flex lg:gap-3"
           >
             <span
               class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
@@ -75,8 +75,8 @@ onBeforeUnmount(() => {
           </p>
 
           <h1
-            class="font-title text-[3rem] font-extralight leading-[1.12] text-text-primary 
-            lg:text-display lg:leading-[1.02]">
+            class="translate-y-5 font-title text-[3rem] font-extralight leading-[1.12] text-text-primary 
+            lg:translate-y-0 lg:text-display lg:leading-[1.02]">
             Your<br />
             <span class="whitespace-nowrap">Style DNA</span>
           </h1>
@@ -122,6 +122,16 @@ onBeforeUnmount(() => {
         >
           <template #mobile-panel>
             <div class="flex h-full flex-col justify-center pr-5">
+              <p class="mb-4 inline-flex items-center gap-2.5 text-xs font-medium text-text-primary">
+                <span>Style DNA Complete</span>
+                <span
+                  class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
+                  aria-hidden="true"
+                >
+                  <Check class="size-2.5" :stroke-width="2.4" />
+                </span>
+              </p>
+
               <p class="max-w-[15rem] text-xs font-medium leading-relaxed text-text-secondary">
                 Your homepage is now personalized based on your Style DNA.
               </p>
