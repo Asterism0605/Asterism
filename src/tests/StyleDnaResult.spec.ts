@@ -69,7 +69,7 @@ describe('StyleDnaResult', () => {
     expect(wrapper.text()).toContain('Style DNA Complete');
     expect(wrapper.text()).toContain('Minimalism');
     expect(wrapper.text()).toContain('70%');
-    expect(wrapper.text()).toContain('Your feed is now personalized based on your Style DNA.');
+    expect(wrapper.text()).toContain('Your homepage is now personalized based on your Style DNA.');
     expect(wrapper.text()).toContain('Retake Quiz');
     expect(showToast).toHaveBeenCalledWith(
       expect.objectContaining({

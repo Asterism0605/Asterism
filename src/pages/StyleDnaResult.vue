@@ -64,10 +64,10 @@ onBeforeUnmount(() => {
             class="mb-5 inline-flex items-center gap-3 text-xs font-medium text-text-secondary lg:mb-7"
           >
             <span
-              class="inline-flex size-6 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
+              class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
               aria-hidden="true"
             >
-              <Check class="size-3.5" :stroke-width="2.4" />
+              <Check class="size-2.5" :stroke-width="2.4" />
             </span>
             <span>Style DNA Complete</span>
           </p>
@@ -81,11 +81,11 @@ onBeforeUnmount(() => {
 
           <div class="mt-8 lg:mt-10">
             <p class="mt-4 max-w-[34rem] text-sm font-medium leading-relaxed text-text-secondary">
-              Your feed is now personalized based on your Style DNA.
+              Your homepage is now personalized based on your Style DNA.
             </p>
           </div>
 
-          <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 lg:mt-11">
+          <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 lg:mt-11 lg:-translate-y-5">
             <Button
               type="button"
               variant="light"
