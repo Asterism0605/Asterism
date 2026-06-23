@@ -57,3 +57,16 @@ export interface MoodboardPackOptions {
   fillRatio?: number;
   idPrefix?: string;
 }
+
+export interface SavedImage {
+  id: string;
+  src: string;
+}
+
+export interface MoodboardFolder {
+  id: string;
+  name: string;
+  images: SavedImage[];
+}
+
+export type MoodboardItem = SavedImage;
