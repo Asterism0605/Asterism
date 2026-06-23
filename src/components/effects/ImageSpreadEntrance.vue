@@ -66,23 +66,23 @@ const animationStyle = {
 }
 
 .image-spread-entrance--center {
-  animation: spread-overlay-enter 700ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
+  animation: spread-overlay-enter 1000ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
 }
 
 .image-spread-entrance--centerFrame {
   transform-origin: center;
-  animation: spread-frame-enter 760ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
+  animation: spread-frame-enter 1060ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
 }
 
 .image-spread-entrance--actions {
-  animation: spread-actions-enter 620ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
+  animation: spread-actions-enter 920ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
 }
 
 .image-spread-entrance--relatedCard {
   opacity: 0;
   transform: translate3d(var(--spread-enter-x), var(--spread-enter-y), 0) scale(0.42);
   transform-origin: center;
-  animation: related-card-spread-enter 860ms cubic-bezier(0.16, 0.86, 0.28, 1) forwards;
+  animation: related-card-spread-enter 1160ms cubic-bezier(0.16, 0.86, 0.28, 1) forwards;
 }
 
 @keyframes image-spread-page-enter {

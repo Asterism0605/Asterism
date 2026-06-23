@@ -219,9 +219,9 @@ onBeforeUnmount(() => {
   overflow: visible;
   transform-origin: center;
   transition:
-    scale 0.3s ease,
-    border-color 0.3s ease,
-    opacity 0.4s ease;
+    scale 0.6s ease,
+    border-color 0.6s ease,
+    opacity 0.7s ease;
 }
 
 .image-card--home {
@@ -229,16 +229,16 @@ onBeforeUnmount(() => {
 }
 
 .image-card__float {
-  animation: floatY 4s ease-in-out infinite;
+  animation: floatY 4.3s ease-in-out infinite;
   animation-delay: var(--float-delay, 0s);
-  transition: scale 0.3s ease;
+  transition: scale 0.6s ease;
 }
 
 .image-card__frame {
   border: 1px solid rgba(240, 237, 230, 0.12);
   border-radius: 4px;
   overflow: hidden;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.6s ease;
 }
 
 .image-card:hover .image-card__float {
