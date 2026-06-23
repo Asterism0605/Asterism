@@ -61,8 +61,6 @@ export interface MoodboardPackOptions {
 export interface SavedImage {
   id: string;
   src: string;
-  alt: string;
-  styleGroup: string;
 }
 
 export interface MoodboardFolder {
