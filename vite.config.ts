@@ -11,14 +11,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3001',
+    },
+  },
   test: {
     environment: 'jsdom',
-    environmentOptions: {
-      jsdom: {
-        url: 'http://localhost:3000',
-      },
-    },
     globals: true,
-    setupFiles: ['./src/tests/setup.ts'],
   },
 })

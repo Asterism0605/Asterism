@@ -29,8 +29,6 @@ vue3-team-guideline.md
 
 # TypeScript
 *.tsbuildinfo
-
-# Superpowers 工作筆記／設計文件（不進版控）
 .superpowers/
 docs/superpowers/
 
@@ -39,5 +37,3 @@ docs/superpowers/
 
 # 手動 review 用的暫存圖檔
 tmp_review/
-
-.DS_Store
