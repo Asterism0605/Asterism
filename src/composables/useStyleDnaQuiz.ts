@@ -1,7 +1,6 @@
 import { computed, reactive, ref } from 'vue'
 import {
   STYLE_DNA_IMAGES,
-  STYLE_DNA_OPTIONS_PER_QUESTION,
   STYLE_DNA_QUESTION_COUNT,
 } from '@/constants/style-dna.constants'
 import { computeStyleDnaResult } from '@/utils/computeStyleDnaResult'
@@ -25,8 +24,8 @@ const createWeightsFromStyles = (styles: string[]) => {
   }, {})
 }
 
-const shuffleImages = (images: StyleDnaImage[]) => {
-  const shuffled = [...images]
+const shuffleItems = <T>(items: T[]) => {
+  const shuffled = [...items]
 
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
     const randomIndex = Math.floor(Math.random() * (index + 1))
@@ -34,6 +33,41 @@ const shuffleImages = (images: StyleDnaImage[]) => {
   }
 
   return shuffled
+}
+
+const hasPairingMetadata = (
+  image: StyleDnaImage,
+): image is StyleDnaImage & { styleGroup: string; subMedium: string } =>
+  Boolean(image.styleGroup?.trim() && image.subMedium?.trim())
+
+const groupImagesBySubMedium = (images: StyleDnaImage[]) =>
+  shuffleItems(images)
+    .filter(hasPairingMetadata)
+    .reduce<Record<string, StyleDnaImage[]>>((groups, image) => {
+      const subMedium = image.subMedium.trim()
+      groups[subMedium] = groups[subMedium] ?? []
+      groups[subMedium].push(image)
+      return groups
+    }, {})
+
+const takeStyleGroupPair = (images: StyleDnaImage[]): [StyleDnaImage, StyleDnaImage] | null => {
+  for (let firstIndex = 0; firstIndex < images.length; firstIndex += 1) {
+    const firstImage = images[firstIndex]
+    const secondIndex = images.findIndex(
+      (image, index) => index > firstIndex && image.styleGroup !== firstImage.styleGroup,
+    )
+
+    if (secondIndex === -1) {
+      continue
+    }
+
+    const [secondImage] = images.splice(secondIndex, 1)
+    const [selectedFirstImage] = images.splice(firstIndex, 1)
+
+    return [selectedFirstImage, secondImage]
+  }
+
+  return null
 }
 
 const createOption = (image: StyleDnaImage): StyleDnaOption => ({
@@ -46,22 +80,38 @@ export const createStyleDnaQuestions = (
   images: StyleDnaImage[] = STYLE_DNA_IMAGES,
   questionCount = STYLE_DNA_QUESTION_COUNT,
 ) => {
-  const requiredImageCount = questionCount * STYLE_DNA_OPTIONS_PER_QUESTION
-  const availableImages = shuffleImages(images).slice(0, requiredImageCount)
+  const groupedImages = groupImagesBySubMedium(images)
+  const imageGroups = shuffleItems(Object.values(groupedImages))
+  const questions: StyleDnaQuestion[] = []
 
-  return Array.from(
-    { length: Math.floor(availableImages.length / STYLE_DNA_OPTIONS_PER_QUESTION) },
-    (_, index) => {
-      const firstImage = availableImages[index * STYLE_DNA_OPTIONS_PER_QUESTION]
-      const secondImage = availableImages[index * STYLE_DNA_OPTIONS_PER_QUESTION + 1]
+  while (questions.length < questionCount) {
+    let didCreateQuestion = false
 
-      return {
-        id: `style-dna-question-${index + 1}`,
-        question: 'Click to choose your preferred style',
-        options: [createOption(firstImage), createOption(secondImage)] as [StyleDnaOption, StyleDnaOption],
+    for (const imageGroup of imageGroups) {
+      if (questions.length >= questionCount) {
+        break
       }
-    },
-  )
+
+      const pair = takeStyleGroupPair(imageGroup)
+
+      if (!pair) {
+        continue
+      }
+
+      questions.push({
+        id: `style-dna-question-${questions.length + 1}`,
+        question: 'Click to choose your preferred style',
+        options: [createOption(pair[0]), createOption(pair[1])] as [StyleDnaOption, StyleDnaOption],
+      })
+      didCreateQuestion = true
+    }
+
+    if (!didCreateQuestion) {
+      break
+    }
+  }
+
+  return questions
 }
 
 const currentQuestionIndex = ref(0)
@@ -111,4 +161,3 @@ export const useStyleDnaQuiz = () => {
     resetQuiz,
   }
 }
-
