@@ -67,7 +67,7 @@ describe('SignUp', () => {
 
     const wrapper = mountSignUp(router);
     await fillForm(wrapper, 'new-user@example.com', 'password123');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
     await flushAuth();
 
     expect(push).toHaveBeenCalledWith('/login');
@@ -81,7 +81,7 @@ describe('SignUp', () => {
 
     const wrapper = mountSignUp(router);
     await fillForm(wrapper, 'new-user@example.com', 'password123');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
     await flushAuth();
 
     expect(push).toHaveBeenCalledWith('/discover-dna');
@@ -95,7 +95,7 @@ describe('SignUp', () => {
 
     const wrapper = mountSignUp(router);
     await fillForm(wrapper, 'new-user@example.com', 'password123');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
     await flushAuth();
 
     expect(push).toHaveBeenCalledWith('/discover-dna');
@@ -110,7 +110,7 @@ describe('SignUp', () => {
     const wrapper = mountSignUp(router);
     supaAuth.signUp.mockResolvedValue({ data: { session: null }, error: { message: 'Password should be at least 6 characters' } });
     await fillForm(wrapper, 'new-user@example.com', 'short');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
     await flushAuth();
 
     expect(wrapper.find('[data-testid="auth-error"]').exists()).toBe(true);
@@ -124,7 +124,7 @@ describe('SignUp', () => {
 
     const wrapper = mountSignUp(router);
     await fillForm(wrapper, 'new-user@example.com', 'password123');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
 
     expect(wrapper.find('[data-testid="auth-submit"]').attributes('disabled')).toBeDefined();
 

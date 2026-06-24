@@ -40,41 +40,47 @@ function handleSubmit() {
   >
     <h2 class="overlay-title">Login</h2>
 
-    <div class="overlay-fields">
-      <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
-      <FormInput
-        v-model="password"
-        type="password"
-        placeholder="PASSWORD"
-        autocomplete="current-password"
-      />
+    <form class="overlay-form-body" @submit.prevent="handleSubmit">
+      <div class="overlay-fields">
+        <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
+        <FormInput
+          v-model="password"
+          type="password"
+          placeholder="PASSWORD"
+          autocomplete="current-password"
+        />
 
-      <div class="overlay-helper">
-        <button type="button" class="overlay-link">FORGOT PASSWORD?</button>
+        <div class="overlay-helper">
+          <button type="button" class="overlay-link">FORGOT PASSWORD?</button>
+        </div>
       </div>
-    </div>
 
-    <p v-if="errorMessage" class="overlay-error" data-testid="auth-error" role="alert">
-      {{ errorMessage }}
-    </p>
+      <p v-if="errorMessage" class="overlay-error" data-testid="auth-error" role="alert">
+        {{ errorMessage }}
+      </p>
 
-    <div class="overlay-actions">
-      <span class="overlay-submit">
-        <Button
-          variant="secondary"
-          type="button"
-          data-testid="auth-submit"
-          :disabled="isSubmitting"
-          @click="handleSubmit"
-        >
-          {{ isSubmitting ? 'SENDING…' : 'SEND' }}
-        </Button>
-      </span>
-    </div>
+      <div class="overlay-actions">
+        <span class="overlay-submit">
+          <Button
+            variant="secondary"
+            type="submit"
+            data-testid="auth-submit"
+            :disabled="isSubmitting"
+          >
+            {{ isSubmitting ? 'SENDING…' : 'SEND' }}
+          </Button>
+        </span>
+      </div>
+    </form>
   </section>
 </template>
 
 <style scoped>
+/* form 只為語意/把密碼欄包進表單（消除 Chrome 警告），不影響 flex 版面 */
+.overlay-form-body {
+  display: contents;
+}
+
 @media (max-width: 640px) {
   .overlay-title {
     font-size: 24px;

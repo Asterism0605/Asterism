@@ -64,7 +64,7 @@ describe('Login', () => {
 
     const wrapper = mountLogin(router);
     await fillForm(wrapper, 'member@example.com', 'password123');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
     await flushAuth();
 
     expect(push).toHaveBeenCalledWith('/');
@@ -79,7 +79,7 @@ describe('Login', () => {
     const wrapper = mountLogin(router);
     supaAuth.signInWithPassword.mockResolvedValue({ data: { session: null }, error: { message: 'Invalid login credentials' } });
     await fillForm(wrapper, 'member@example.com', 'short');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
     await flushAuth();
 
     expect(wrapper.find('[data-testid="auth-error"]').exists()).toBe(true);
@@ -93,7 +93,7 @@ describe('Login', () => {
 
     const wrapper = mountLogin(router);
     await fillForm(wrapper, 'member@example.com', 'password123');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
 
     expect(wrapper.find('[data-testid="auth-submit"]').attributes('disabled')).toBeDefined();
 
