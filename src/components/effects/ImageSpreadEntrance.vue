@@ -55,27 +55,29 @@ const animationStyle = {
 .image-spread-entrance {
   --spread-enter-x: 0;
   --spread-enter-y: 18px;
+  --spread-enter-easing: cubic-bezier(0.2, 0.78, 0.22, 1);
+  --spread-enter-fill-mode: both;
 }
 
 .image-spread-entrance--page {
-  animation: image-spread-page-enter 520ms ease-out both;
+  animation: spread-fade-in 520ms ease-out var(--spread-enter-fill-mode);
 }
 
 .image-spread-entrance--wash {
-  animation: image-spread-wash-enter 900ms ease-out both;
+  animation: spread-fade-in 900ms ease-out var(--spread-enter-fill-mode);
 }
 
 .image-spread-entrance--center {
-  animation: spread-overlay-enter 1000ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
+  animation: spread-fade-in 1000ms var(--spread-enter-easing) var(--spread-enter-fill-mode);
 }
 
 .image-spread-entrance--centerFrame {
   transform-origin: center;
-  animation: spread-frame-enter 1060ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
+  animation: spread-frame-enter 1060ms var(--spread-enter-easing) var(--spread-enter-fill-mode);
 }
 
 .image-spread-entrance--actions {
-  animation: spread-actions-enter 920ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
+  animation: spread-actions-enter 920ms var(--spread-enter-easing) var(--spread-enter-fill-mode);
 }
 
 .image-spread-entrance--relatedCard {
@@ -85,27 +87,7 @@ const animationStyle = {
   animation: related-card-spread-enter 1160ms cubic-bezier(0.16, 0.86, 0.28, 1) forwards;
 }
 
-@keyframes image-spread-page-enter {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes image-spread-wash-enter {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes spread-overlay-enter {
+@keyframes spread-fade-in {
   from {
     opacity: 0;
   }
