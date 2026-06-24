@@ -1,0 +1,54 @@
+import { setActivePinia, createPinia } from 'pinia';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+const auth = { signOut: vi.fn().mockResolvedValue({ error: null }), getSession: vi.fn() };
+const single = vi.fn();
+const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth, from }) }));
+
+import { useAuthStore } from '@/stores/auth.store';
+
+const fakeSession = {
+  access_token: 'tok',
+  expires_at: 1000,
+  user: { id: 'u1', email: 'admin@b.com', created_at: '2026-01-01T00:00:00Z' }
+};
+
+describe('auth.store', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia());
+    vi.clearAllMocks();
+    single.mockResolvedValue({ data: { display_name: 'Admin', username: null, is_admin: true }, error: null });
+  });
+
+  it('hydrate 從現有 session 還原並帶 isAdmin', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    const store = useAuthStore();
+
+    await store.hydrate();
+
+    expect(store.isAuthenticated).toBe(true);
+    expect(store.isAdmin).toBe(true);
+  });
+
+  it('沒有 session 時 hydrate 不登入', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: null }, error: null });
+    const store = useAuthStore();
+
+    await store.hydrate();
+
+    expect(store.isAuthenticated).toBe(false);
+    expect(store.isAdmin).toBe(false);
+  });
+
+  it('logout 清狀態並呼叫 signOut', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    const store = useAuthStore();
+    await store.hydrate();
+
+    await store.logout();
+
+    expect(auth.signOut).toHaveBeenCalled();
+    expect(store.isAuthenticated).toBe(false);
+  });
+});
