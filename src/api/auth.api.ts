@@ -1,82 +1,88 @@
-import { createMockError, createMockSuccess, withMockDelay } from '@/api/mockAdapter';
-import type { ApiResponse } from '@/types/api';
+import type { Session } from '@supabase/supabase-js';
+import { getSupabase } from '@/api/supabaseClient';
+import type { ApiError, ApiResponse } from '@/types/api';
 import type { AuthSession, LoginPayload, RegisterPayload, UserProfile } from '@/types/auth';
 
-// 用於初始引導流程（onboarding）的模擬身分驗證 API 契約。
-// 當後端的身分驗證端點（endpoints）準備就緒時，請將 mockAdapter 替換為 httpClient 呼叫；
-// 並保持服務層（service）與狀態管理（store）等呼叫端的穩定（無需修改）。
-const MOCK_AUTH_DELAY_MS = 0;
-const MOCK_SESSION_HOURS = 2;
-
-function normalizeEmail(email: string): string {
-  return email.trim().toLowerCase();
+function apiError(message: string, code: string, status: number): ApiError {
+  return { code, message, status };
 }
 
-function createUserId(email: string): string {
-  return `mock_user_${email.replace(/[^a-z0-9]/g, '_')}`;
+function mapSupabaseAuthError(error: { message?: string; status?: number } | null): ApiError {
+  const raw = error?.message ?? '';
+  if (/invalid login credentials/i.test(raw)) return apiError('帳號或密碼錯誤', 'INVALID_CREDENTIALS', 401);
+  if (/already registered|already exists|user already/i.test(raw)) return apiError('此 email 已註冊', 'EMAIL_EXISTS', 409);
+  if (/password/i.test(raw)) return apiError('密碼不符合規則（至少 6 碼）', 'INVALID_PASSWORD', 400);
+  return apiError(raw || '驗證失敗，請稍後再試', 'AUTH_ERROR', error?.status ?? 400);
 }
 
-function createDisplayName(email: string, displayName?: string): string {
-  const normalizedName = displayName?.trim();
-
-  if (normalizedName) {
-    return normalizedName;
-  }
-
-  return email.split('@')[0] || 'Asterism User';
+interface ProfileRow {
+  display_name: string | null;
+  username: string | null;
+  is_admin: boolean;
 }
 
-function createMockSession(payload: RegisterPayload | LoginPayload): AuthSession {
-  const email = normalizeEmail(payload.email);
-  const now = new Date();
-  const expiresAt = new Date(now.getTime() + MOCK_SESSION_HOURS * 60 * 60 * 1000);
+async function fetchProfile(userId: string): Promise<{ displayName: string | null; isAdmin: boolean }> {
+  const { data } = await getSupabase()
+    .from('profiles')
+    .select('display_name, username, is_admin')
+    .eq('id', userId)
+    .single();
+  const row = data as ProfileRow | null;
+  return { displayName: row?.display_name ?? null, isAdmin: row?.is_admin ?? false };
+}
+
+async function toAuthSession(session: Session, fallbackDisplayName: string): Promise<AuthSession> {
+  const profile = await fetchProfile(session.user.id);
+  const email = session.user.email ?? '';
   const user: UserProfile = {
-    id: createUserId(email),
+    id: session.user.id,
     email,
-    displayName: createDisplayName(
-      email,
-      'displayName' in payload ? payload.displayName : undefined
-    ),
-    createdAt: now.toISOString()
+    displayName: profile.displayName || fallbackDisplayName || email.split('@')[0] || 'Asterism User',
+    isAdmin: profile.isAdmin,
+    createdAt: session.user.created_at ?? new Date().toISOString()
   };
-
   return {
     user,
-    accessToken: `mock_access_token_${user.id}`,
-    expiresAt: expiresAt.toISOString()
+    accessToken: session.access_token,
+    expiresAt: new Date((session.expires_at ?? 0) * 1000).toISOString()
   };
 }
 
-function validateAuthPayload(payload: RegisterPayload | LoginPayload): void {
-  if (!normalizeEmail(payload.email).includes('@')) {
-    throw createMockError({
-      code: 'INVALID_EMAIL',
-      message: 'Please enter a valid email address.',
-      status: 400,
-      details: { field: 'email' }
-    });
-  }
-
-  if (payload.password.length < 8) {
-    throw createMockError({
-      code: 'INVALID_PASSWORD',
-      message: 'Password must be at least 8 characters.',
-      status: 400,
-      details: { field: 'password' }
-    });
-  }
+function envelope(session: AuthSession): ApiResponse<AuthSession> {
+  return { data: session, meta: { timestamp: new Date().toISOString() } };
 }
 
-export async function registerApi(
-  payload: RegisterPayload
-): Promise<ApiResponse<AuthSession>> {
-  validateAuthPayload(payload);
-
-  return withMockDelay(createMockSuccess(createMockSession(payload)), MOCK_AUTH_DELAY_MS);
+export async function registerApi(payload: RegisterPayload): Promise<ApiResponse<AuthSession>> {
+  const { data, error } = await getSupabase().auth.signUp({
+    email: payload.email,
+    password: payload.password,
+    options: { data: { display_name: payload.displayName ?? '' } }
+  });
+  if (error || !data.session) {
+    throw mapSupabaseAuthError(error ?? { message: 'No session（請確認 Supabase Email 驗證已關閉）' });
+  }
+  return envelope(await toAuthSession(data.session, payload.displayName ?? ''));
 }
 
 export async function loginApi(payload: LoginPayload): Promise<ApiResponse<AuthSession>> {
-  validateAuthPayload(payload);
+  const { data, error } = await getSupabase().auth.signInWithPassword({
+    email: payload.email,
+    password: payload.password
+  });
+  if (error || !data.session) {
+    throw mapSupabaseAuthError(error ?? { message: 'No session' });
+  }
+  return envelope(await toAuthSession(data.session, ''));
+}
 
-  return withMockDelay(createMockSuccess(createMockSession(payload)), MOCK_AUTH_DELAY_MS);
+export async function logoutApi(): Promise<void> {
+  await getSupabase().auth.signOut();
+}
+
+export async function currentSessionApi(): Promise<AuthSession | null> {
+  const { data } = await getSupabase().auth.getSession();
+  if (!data.session) {
+    return null;
+  }
+  return toAuthSession(data.session, '');
 }
