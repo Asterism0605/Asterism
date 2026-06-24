@@ -7,9 +7,7 @@ const STORAGE_KEY = 'asterism:moodboard:v1';
 
 const createSavedImage = (id: string): SavedImage => ({
   id,
-  src: `/style-image/${id}.webp`,
-  alt: `Image ${id}`,
-  styleGroup: 'Y2K & Internet Aesthetics'
+  src: `/style-image/${id}.webp`
 });
 
 describe('moodboard store', () => {
