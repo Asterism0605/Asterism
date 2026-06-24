@@ -19,7 +19,7 @@ const primaryPercentage = computed(() => result.value.styles[0]?.percentage ?? 0
 let loadingTimer: ReturnType<typeof window.setTimeout> | null = null;
 
 function startExploring(): void {
-  void router.push({ name: 'home' });
+  void router.push({ name: 'home', query: { source: 'style-dna' } });
 }
 
 function retakeQuiz(): void {

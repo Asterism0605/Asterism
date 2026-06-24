@@ -107,17 +107,17 @@ describe('StyleDnaResult', () => {
     await wrapper.get('[data-testid="start-exploring"]').trigger('click');
     await wrapper.get('[data-testid="retake-quiz"]').trigger('click');
 
-    expect(push).toHaveBeenNthCalledWith(1, { name: 'home' });
+    expect(push).toHaveBeenNthCalledWith(1, { name: 'home', query: { source: 'style-dna' } });
     expect(push).toHaveBeenNthCalledWith(2, { name: 'style-dna' });
   });
 
-  it('uses the light Button variant for the primary CTA', async () => {
+  it('uses the sand Button style for the primary CTA', async () => {
     vi.useFakeTimers();
 
     const wrapper = mountStyleDnaResult();
 
     await vi.advanceTimersByTimeAsync(1600);
 
-    expect(wrapper.get('[data-testid="start-exploring"]').classes()).toContain('bg-text-primary');
+    expect(wrapper.get('[data-testid="start-exploring"]').classes()).toContain('bg-text-secondary');
   });
 });
