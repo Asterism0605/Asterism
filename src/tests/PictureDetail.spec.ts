@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import PictureDetail from '@/pages/PictureDetail.vue';
 import { saveImage } from '@/services/moodboard.service';
@@ -41,6 +41,10 @@ describe('PictureDetail', () => {
     vi.clearAllMocks();
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('calls saveImage with the current image when 儲存到既有資料夾 is clicked', async () => {
     const { wrapper } = await mountPictureDetail();
 
@@ -57,11 +61,15 @@ describe('PictureDetail', () => {
   it('shows a success toast after saving', async () => {
     const { wrapper } = await mountPictureDetail();
 
+    vi.useFakeTimers();
+
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
 
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('儲存到既有資料夾'));
     await saveBtn!.trigger('click');
+
+    await vi.runAllTimersAsync();
 
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'success' }));
   });

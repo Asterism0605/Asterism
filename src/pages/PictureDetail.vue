@@ -36,12 +36,13 @@ function handleCreateFolder() {
   // TODO: 開啟新建資料夾 modal
 }
 
-function handleSaveToFolder() {
+async function handleSaveToFolder() {
   if (!currentImage.value || isSaving.value) return;
   isSaving.value = true;
   saveError.value = null;
   try {
     saveImage(currentImage.value);
+    await new Promise((resolve) => setTimeout(resolve, 300));
     showToast({ type: 'success', message: '已加入收藏' });
   } catch {
     saveError.value = '儲存失敗，請再試一次';
