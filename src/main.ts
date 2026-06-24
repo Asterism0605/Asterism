@@ -8,6 +8,8 @@ import { useAuthStore } from './stores/auth.store'
 
 const pinia = createPinia()
 useStyleDnaStore(pinia).hydrateResult()
-void useAuthStore(pinia).hydrate()
 
-createApp(App).use(pinia).use(router).mount('#app')
+void (async () => {
+  await useAuthStore(pinia).hydrate()
+  createApp(App).use(pinia).use(router).mount('#app')
+})()

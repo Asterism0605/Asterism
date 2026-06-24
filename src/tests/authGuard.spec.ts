@@ -12,6 +12,11 @@ describe('resolveAuthGuard', () => {
     expect(r).toEqual({ name: 'home' });
   });
 
+  it('requiresAdmin 且未登入 → 導 login 帶 next', () => {
+    const r = resolveAuthGuard({ requiresAdmin: true }, '/review', { isAuthenticated: false, isAdmin: false });
+    expect(r).toEqual({ name: 'login', query: { next: '/review' } });
+  });
+
   it('條件都滿足 → true', () => {
     expect(resolveAuthGuard({ requiresAdmin: true }, '/review', { isAuthenticated: true, isAdmin: true })).toBe(true);
   });

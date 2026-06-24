@@ -51,4 +51,16 @@ describe('auth.store', () => {
     expect(auth.signOut).toHaveBeenCalled();
     expect(store.isAuthenticated).toBe(false);
   });
+
+  it('signOut reject 時 logout() 向上拋出例外，state 維持登入（現況：clear 不執行）', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    auth.signOut.mockRejectedValueOnce(new Error('network error'));
+    const store = useAuthStore();
+    await store.hydrate();
+
+    // store.logout() 會 reject，呼叫端應自行 catch（如 AppHeader handleLogout）
+    await expect(store.logout()).rejects.toThrow('network error');
+    // 現況：signOut 失敗時 clear() 未執行，session 仍保留（設計待議）
+    expect(store.isAuthenticated).toBe(true);
+  });
 });

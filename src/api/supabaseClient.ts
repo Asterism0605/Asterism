@@ -12,7 +12,7 @@ export function getSupabase(): SupabaseClient {
       throw new Error('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY 未設定');
     }
 
-    client = createClient(url, key);
+    client = createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true } });
   }
 
   return client;

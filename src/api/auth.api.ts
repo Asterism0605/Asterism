@@ -11,22 +11,25 @@ function mapSupabaseAuthError(error: { message?: string; status?: number } | nul
   const raw = error?.message ?? '';
   if (/invalid login credentials/i.test(raw)) return apiError('帳號或密碼錯誤', 'INVALID_CREDENTIALS', 401);
   if (/already registered|already exists|user already/i.test(raw)) return apiError('此 email 已註冊', 'EMAIL_EXISTS', 409);
-  if (/password/i.test(raw)) return apiError('密碼不符合規則（至少 6 碼）', 'INVALID_PASSWORD', 400);
-  return apiError(raw || '驗證失敗，請稍後再試', 'AUTH_ERROR', error?.status ?? 400);
+  if (/password should be at least/i.test(raw)) return apiError('密碼不符合規則（至少 6 碼）', 'INVALID_PASSWORD', 400);
+  console.warn('[auth] 未分類錯誤：', raw);
+  return apiError('驗證失敗，請稍後再試', 'AUTH_ERROR', error?.status ?? 400);
 }
 
 interface ProfileRow {
   display_name: string | null;
-  username: string | null;
   is_admin: boolean;
 }
 
 async function fetchProfile(userId: string): Promise<{ displayName: string | null; isAdmin: boolean }> {
-  const { data } = await getSupabase()
+  const { data, error } = await getSupabase()
     .from('profiles')
-    .select('display_name, username, is_admin')
+    .select('display_name, is_admin')
     .eq('id', userId)
     .single();
+  if (error && error.code !== 'PGRST116') {
+    console.warn('[auth] fetchProfile 失敗，降級為非 admin：', error.code);
+  }
   const row = data as ProfileRow | null;
   return { displayName: row?.display_name ?? null, isAdmin: row?.is_admin ?? false };
 }

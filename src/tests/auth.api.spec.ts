@@ -57,4 +57,14 @@ describe('auth.api (supabase)', () => {
     });
     expect(res.data.user.isAdmin).toBe(false);
   });
+
+  it('fetchProfile 非 PGRST116 錯誤 → login 仍成功且 isAdmin=false（fail-closed 降級）', async () => {
+    auth.signInWithPassword.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    single.mockResolvedValue({ data: null, error: { code: 'XYZ', message: 'unexpected db error' } });
+
+    const res = await loginApi({ email: 'a@b.com', password: 'password123' });
+
+    expect(res.data.user.isAdmin).toBe(false);
+    expect(res.data.accessToken).toBe('tok');
+  });
 });

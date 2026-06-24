@@ -16,7 +16,7 @@ export function resolveAuthGuard(
   fullPath: string,
   state: AuthState
 ): true | RouteLocationRaw {
-  if (meta.requiresAuth && !state.isAuthenticated) {
+  if ((meta.requiresAuth || meta.requiresAdmin) && !state.isAuthenticated) {
     return { name: 'login', query: { next: fullPath } };
   }
   if (meta.requiresAdmin && !state.isAdmin) {
