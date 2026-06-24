@@ -11,6 +11,8 @@ import StyleDna from '@/pages/StyleDna.vue';
 import StyleDnaResult from '@/pages/StyleDnaResult.vue';
 import StyleConsultant from '@/pages/StyleConsultant.vue';
 import { getImageById } from '@/services/image.service';
+import { resolveAuthGuard } from '@/router/authGuard';
+import { useAuthStore } from '@/stores/auth.store';
 
 function getRouteImageId(value: string | string[]): string {
   return Array.isArray(value) ? value[0] : value;
@@ -102,6 +104,23 @@ router.beforeEach((to) => {
     query: to.query,
     hash: to.hash
   };
+});
+
+// 路由型別擴充：讓 meta.requiresAuth / requiresAdmin 有型別
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth?: boolean;
+    requiresAdmin?: boolean;
+  }
+}
+
+router.beforeEach((to) => {
+  const auth = useAuthStore();
+  return resolveAuthGuard(
+    { requiresAuth: to.meta.requiresAuth, requiresAdmin: to.meta.requiresAdmin },
+    to.fullPath,
+    { isAuthenticated: auth.isAuthenticated, isAdmin: auth.isAdmin }
+  );
 });
 
 export default router;
