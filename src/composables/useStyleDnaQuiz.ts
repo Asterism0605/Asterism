@@ -16,6 +16,7 @@ const createWeightsFromStyles = (styles: string[]) => {
     return {}
   }
 
+  // 每張被選中的圖片總分為 1，平均分配到它擁有的所有 style tag。
   const weightPerTag = 1 / styles.length
 
   return styles.reduce<Record<string, number>>((weights, style) => {
@@ -40,6 +41,7 @@ const hasPairingMetadata = (
 ): image is StyleDnaImage & { styleGroup: string; subMedium: string } =>
   Boolean(image.styleGroup?.trim() && image.subMedium?.trim())
 
+// 題目選項必須同類型比較，所以只有帶有 subMedium metadata 的圖片能進入題庫。
 const groupImagesBySubMedium = (images: StyleDnaImage[]) =>
   shuffleItems(images)
     .filter(hasPairingMetadata)
@@ -50,6 +52,7 @@ const groupImagesBySubMedium = (images: StyleDnaImage[]) =>
       return groups
     }, {})
 
+// 從同一個 subMedium 中取出不同 styleGroup 的兩張圖，並移除它們以避免重複出題。
 const takeStyleGroupPair = (images: StyleDnaImage[]): [StyleDnaImage, StyleDnaImage] | null => {
   for (let firstIndex = 0; firstIndex < images.length; firstIndex += 1) {
     const firstImage = images[firstIndex]
@@ -80,6 +83,7 @@ export const createStyleDnaQuestions = (
   images: StyleDnaImage[] = STYLE_DNA_IMAGES,
   questionCount = STYLE_DNA_QUESTION_COUNT,
 ) => {
+  // 依 subMedium 分組產題，確保每題都是 Top vs Top、Chair vs Chair 這類同型比較。
   const groupedImages = groupImagesBySubMedium(images)
   const imageGroups = shuffleItems(Object.values(groupedImages))
   const questions: StyleDnaQuestion[] = []
@@ -114,6 +118,7 @@ export const createStyleDnaQuestions = (
   return questions
 }
 
+// 測驗進行中的狀態存在這個 composable；完成後的結果才交由 Pinia store 持久化。
 const currentQuestionIndex = ref(0)
 const answers = reactive<StyleDnaAnswer[]>([])
 const questions = ref<StyleDnaQuestion[]>(createStyleDnaQuestions())
