@@ -4,6 +4,8 @@ import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
 import { getImageById, getRelatedImages } from '@/services/image.service';
+import { saveImage } from '@/services/moodboard.service';
+import { showToast } from '@/composables/useToast';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
@@ -34,12 +36,13 @@ function handleCreateFolder() {
   // TODO: 開啟新建資料夾 modal
 }
 
-async function handleSaveToFolder() {
+function handleSaveToFolder() {
+  if (!currentImage.value || isSaving.value) return;
   isSaving.value = true;
   saveError.value = null;
   try {
-    // TODO: 接入實際 API
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    saveImage(currentImage.value);
+    showToast({ type: 'success', message: '已加入收藏' });
   } catch {
     saveError.value = '儲存失敗，請再試一次';
   } finally {

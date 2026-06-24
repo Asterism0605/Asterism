@@ -6,10 +6,12 @@ import type { ImageSpreadNode } from '@/types/image';
 
 defineProps<{
   image: ImageSpreadNode;
+  saving?: boolean;
 }>();
 
 const emit = defineEmits<{
   return: [];
+  save: [];
 }>();
 </script>
 
@@ -53,10 +55,10 @@ const emit = defineEmits<{
           Return
         </span>
       </Button>
-      <Button variant="secondary" type="button">
+      <Button variant="secondary" type="button" :disabled="saving" @click="emit('save')">
         <span class="inline-flex items-center gap-2">
           <Bookmark class="size-4" aria-hidden="true" />
-          Add to moodboard
+          {{ saving ? 'Saving…' : 'Add to moodboard' }}
         </span>
       </Button>
     </div>
