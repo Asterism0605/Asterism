@@ -2,6 +2,9 @@ export interface DNAImage {
   id: string
   url: string
   title?: string
+  styleGroup?: string
+  medium?: string
+  subMedium?: string
   style: string[]
 }
 
@@ -34,4 +37,3 @@ export interface DNAResult {
   topStyles: DNAStyleScore[]
   totalScore: number
 }
-
