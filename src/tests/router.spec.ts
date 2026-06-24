@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, beforeEach } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
 import router from '@/router'
 
 describe('router', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('registers every page in src/pages', () => {
     const routes = router.getRoutes().map((route) => ({
       name: route.name,
