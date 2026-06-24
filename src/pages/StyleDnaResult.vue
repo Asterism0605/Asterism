@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Check } from '@lucide/vue';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import DnaLoadingState from '@/components/feature/dna/DnaLoadingState.vue';
@@ -14,7 +14,6 @@ const { result } = storeToRefs(useStyleDnaStore());
 const HERO_IMAGE = '/images/astronaut-dna.png';
 const isLoading = ref(true);
 const router = useRouter();
-const primaryPercentage = computed(() => result.value.styles[0]?.percentage ?? 0);
 
 let loadingTimer: ReturnType<typeof window.setTimeout> | null = null;
 
