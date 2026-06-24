@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Check, ChevronRight } from '@lucide/vue';
+import { Check } from '@lucide/vue';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
@@ -75,9 +75,9 @@ onBeforeUnmount(() => {
           </p>
 
           <h1
-            class="translate-y-5 font-title text-[3rem] font-extralight leading-[1.12] text-text-primary 
+            class="translate-y-7 font-title text-[3.2rem] font-extralight leading-[1.12] text-text-primary 
             lg:translate-y-0 lg:text-display lg:leading-[1.02]">
-            Your<br />
+            Your<br/>
             <span class="whitespace-nowrap">Style DNA</span>
           </h1>
 
@@ -94,23 +94,23 @@ onBeforeUnmount(() => {
             lg:mt-11 lg:flex lg:-translate-y-5 lg:gap-x-8 lg:gap-y-4">
             <Button
               type="button"
-              variant="light"
-              class="min-w-[11.5rem] px-7 py-2.5 text-sm 
+              variant="secondary"
+              class="min-w-[11.5rem] border-0 bg-text-secondary px-7 py-2.5 text-sm tracking-[1px] text-deep hover:bg-text-secondary hover:opacity-85 
               lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
               data-testid="start-exploring"
               @click="startExploring">
               Start Exploring
             </Button>
 
-            <button
+            <Button
               type="button"
-              class="inline-flex cursor-pointer items-center gap-2.5 rounded-full py-2 text-xs font-medium text-text-secondary transition-colors duration-200 hover:text-text-primary 
-              lg:gap-3 lg:py-3 lg:text-sm"
+              variant="secondary"
+              class="min-w-[11.5rem] px-7 py-2.5 text-sm 
+              lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
               data-testid="retake-quiz"
               @click="retakeQuiz">
-              <span>Retake Quiz</span>
-              <ChevronRight class="size-4" :stroke-width="1.8" aria-hidden="true" />
-            </button>
+              Retake Quiz
+            </Button>
           </div>
         </div>
 
@@ -133,14 +133,16 @@ onBeforeUnmount(() => {
               </p>
 
               <p class="max-w-[15rem] text-xs font-medium leading-relaxed text-text-secondary">
-                Your homepage is now personalized based on your Style DNA.
+                Your homepage<br/>
+                is now personalized<br/>
+                based on your Style DNA.
               </p>
 
               <div class="mt-5 flex flex-col items-start gap-3">
                 <Button
                   type="button"
                   variant="secondary"
-                  class="min-w-[11.5rem] px-7 py-2.5 text-sm active:bg-text-primary active:text-deep"
+                  class="min-w-[11.5rem] border-0 bg-text-secondary px-7 py-2.5 text-sm tracking-[1px] text-deep hover:bg-text-secondary hover:opacity-85"
                   data-testid="start-exploring"
                   @click="startExploring"
                 >
