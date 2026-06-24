@@ -42,8 +42,11 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function logout(): Promise<void> {
-    await logoutService();
-    clear();
+    try {
+      await logoutService();
+    } finally {
+      clear();
+    }
   }
 
   return { user, session, isAuthenticated, isAdmin, register, login, hydrate, logout };

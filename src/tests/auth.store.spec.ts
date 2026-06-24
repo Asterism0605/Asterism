@@ -52,15 +52,15 @@ describe('auth.store', () => {
     expect(store.isAuthenticated).toBe(false);
   });
 
-  it('signOut reject 時 logout() 向上拋出例外，state 維持登入（現況：clear 不執行）', async () => {
+  it('signOut reject 時 logout() 仍清本機 session（finally clear）', async () => {
     auth.getSession.mockResolvedValue({ data: { session: fakeSession }, error: null });
     auth.signOut.mockRejectedValueOnce(new Error('network error'));
     const store = useAuthStore();
     await store.hydrate();
 
-    // store.logout() 會 reject，呼叫端應自行 catch（如 AppHeader handleLogout）
+    // logout() 會 reject（reject 從 finally 後往上傳遞，呼叫端如 AppHeader 已有 try/catch 接住）
     await expect(store.logout()).rejects.toThrow('network error');
-    // 現況：signOut 失敗時 clear() 未執行，session 仍保留（設計待議）
-    expect(store.isAuthenticated).toBe(true);
+    // 但本機 session 一律被清除：登出觀感應一律成功
+    expect(store.isAuthenticated).toBe(false);
   });
 });
