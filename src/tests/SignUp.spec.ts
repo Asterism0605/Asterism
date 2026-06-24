@@ -4,6 +4,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter, type Router } from 'vue-router';
 import SignUp from '@/pages/SignUp.vue';
 
+const supaAuth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn() };
+const single = vi.fn();
+const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth: supaAuth, from }) }));
+
+const fakeSession = {
+  access_token: 'tok',
+  expires_at: 1000,
+  user: { id: 'u1', email: 'new-user@example.com', created_at: '2026-01-01T00:00:00Z' }
+};
+
 function createTestRouter(): Router {
   return createRouter({
     history: createMemoryHistory(),
@@ -43,6 +54,9 @@ async function fillForm(
 describe('SignUp', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    single.mockResolvedValue({ data: { display_name: 'New User', username: null, is_admin: false }, error: null });
+    supaAuth.signUp.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    supaAuth.signInWithPassword.mockResolvedValue({ data: { session: fakeSession }, error: null });
   });
 
   it('registers and redirects to a safe next path on success', async () => {
@@ -94,6 +108,7 @@ describe('SignUp', () => {
     const push = vi.spyOn(router, 'push');
 
     const wrapper = mountSignUp(router);
+    supaAuth.signUp.mockResolvedValue({ data: { session: null }, error: { message: 'Password should be at least 6 characters' } });
     await fillForm(wrapper, 'new-user@example.com', 'short');
     await wrapper.find('[data-testid="auth-submit"]').trigger('click');
     await flushAuth();

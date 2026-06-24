@@ -30,6 +30,7 @@ vi.mock('vue', async (importOriginal) => {
 vi.mock('@/App.vue', () => ({ default: { template: '<div />' } }));
 vi.mock('@/router', () => ({ default: mocks.router }));
 vi.mock('@/stores/style-dna.store', () => ({ useStyleDnaStore: mocks.useStyleDnaStore }));
+vi.mock('@/stores/auth.store', () => ({ useAuthStore: () => ({ hydrate: vi.fn() }) }));
 
 describe('main', () => {
   it('hydrates the Style DNA result before mounting the app', async () => {
