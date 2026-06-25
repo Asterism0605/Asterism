@@ -102,3 +102,13 @@ export async function currentSessionApi(): Promise<AuthSession | null> {
   }
   return toAuthSession(data.session, '');
 }
+
+export async function signInWithGoogleApi(redirectTo: string): Promise<void> {
+  const { error } = await getSupabase().auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo }
+  });
+  if (error) {
+    throw mapSupabaseAuthError(error);
+  }
+}
