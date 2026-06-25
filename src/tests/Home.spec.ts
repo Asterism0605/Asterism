@@ -231,7 +231,7 @@ describe('Home', () => {
     wrapper.unmount();
   });
 
-  it('does not reopen the limit modal after guests close it and keep scrolling', async () => {
+  it('reopens the limit modal after guests close it and scroll back to the limit again', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
@@ -256,17 +256,18 @@ describe('Home', () => {
     await wrapper.vm.$nextTick();
 
     expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
+    expect(viewport.getScrollY()).toBe(0);
 
     viewport.setScrollY(900);
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
+    expect(wrapper.text()).toContain('Your daily inspiration limit has been reached.');
 
     wrapper.unmount();
   });
 
-  it('keeps guests within the scroll limit after the limit modal closes', async () => {
+  it('returns guests to the top after the limit modal closes', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
@@ -289,16 +290,10 @@ describe('Home', () => {
     await wrapper.vm.$nextTick();
 
     expect(viewport.scrollTo).toHaveBeenCalledWith({
-      top: 500,
+      top: 0,
       behavior: 'auto'
     });
-    expect(viewport.getScrollY()).toBe(500);
-
-    viewport.setScrollY(900);
-    window.dispatchEvent(new Event('scroll'));
-    await wrapper.vm.$nextTick();
-
-    expect(viewport.getScrollY()).toBeLessThanOrEqual(500);
+    expect(viewport.getScrollY()).toBe(0);
 
     wrapper.unmount();
   });
@@ -325,6 +320,7 @@ describe('Home', () => {
     await firstWrapper.find('.overlay-backdrop').trigger('click');
     await firstWrapper.vm.$nextTick();
     expect(firstWrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
+    expect(firstViewport.getScrollY()).toBe(0);
     firstWrapper.unmount();
     firstViewport.scrollTo.mockRestore();
 
