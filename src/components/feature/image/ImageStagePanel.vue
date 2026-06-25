@@ -30,7 +30,7 @@ defineProps<Props>();
       <img
         :src="mainImageUrl"
         alt=""
-        class="float-img max-h-[52vh] max-w-[55%] object-contain drop-shadow-2xl"
+        class="float-img max-h-[52vh] max-w-[55%] rounded-[4px] object-contain drop-shadow-2xl"
         style="--float-delay: 0s"
       />
 
@@ -38,7 +38,7 @@ defineProps<Props>();
         v-if="smallImages[0]"
         :src="smallImages[0]"
         alt=""
-        class="float-img absolute left-[6%] top-[10%] w-[14%] rounded-sm object-contain opacity-40"
+        class="float-img absolute left-[6%] top-[10%] w-[14%] rounded-[4px] object-contain opacity-40"
         style="--float-delay: 0.5s"
       />
 
@@ -46,7 +46,7 @@ defineProps<Props>();
         v-if="smallImages[1]"
         :src="smallImages[1]"
         alt=""
-        class="float-img absolute bottom-[6%] right-[6%] w-[14%] rounded-sm object-contain opacity-40"
+        class="float-img absolute bottom-[6%] right-[6%] w-[14%] rounded-[4px] object-contain opacity-40"
         style="--float-delay: 0.5s"
       />
     </div>

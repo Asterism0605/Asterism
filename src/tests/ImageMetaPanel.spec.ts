@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
 
 const defaultProps = {
-  title: 'Y2K Aesthetic',
   colorPalette: ['#ffffff', '#000000'],
   styleTags: ['Y2K']
 };

@@ -53,7 +53,7 @@ async function handleSaveToFolder() {
       <ImageMetaPanel
         v-if="currentImage"
         source-url="https://unsplash.com/"
-        source-label="圖片來源網址.com"
+        source-label="Source URL.com"
         :color-palette="currentImage.colorPalette"
         :style-tags="currentImage.style"
         :similar-images="similarImages"
