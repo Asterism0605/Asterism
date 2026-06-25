@@ -53,6 +53,15 @@ function handleCreateFolder() {
   // TODO: 開啟新建資料夾 modal
 }
 
+function handleConsult() {
+  if (!currentImage.value) return;
+
+  router.push({
+    name: 'consultant',
+    query: { sourceImageId: currentImage.value.id }
+  });
+}
+
 async function handleSaveToFolder() {
   if (!currentImage.value) return;
   await saveToMoodboard(currentImage.value);
@@ -82,6 +91,7 @@ async function handleSaveToFolder() {
         :loading="isSaving"
         :error="saveError"
         @back="handleBack"
+        @consult="handleConsult"
         @create-folder="handleCreateFolder"
         @save-to-folder="handleSaveToFolder"
       />

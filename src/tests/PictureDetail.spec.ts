@@ -27,7 +27,8 @@ async function mountPictureDetail(imageId = 'y2k-main-001') {
     history: createMemoryHistory(),
     routes: [
       { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
-      { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } }
+      { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
+      { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
     ]
   });
 
@@ -96,6 +97,17 @@ describe('PictureDetail', () => {
     await vi.runAllTimersAsync();
 
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'success' }));
+  });
+
+  it('routes to consultant with the source image id when consult is clicked', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001');
+
+    const consultBtn = wrapper.findAll('button').find((button) => button.text().includes('CONSULT STYLIST'));
+    await consultBtn!.trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('consultant');
+    expect(router.currentRoute.value.query.sourceImageId).toBe('rpl-interior-lighting-001');
   });
 
   it('returns to the image spread page with the style group root id', async () => {

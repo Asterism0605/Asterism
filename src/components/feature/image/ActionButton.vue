@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
+  consult: [];
   'create-folder': [];
   'save-to-folder': [];
 }>();
@@ -56,6 +57,7 @@ onBeforeUnmount(() => {
       v-else-if="props.variant === 'consult'"
       variant="primary"
       class="w-full !px-3 !py-3 md:!px-4 md:!py-4"
+      @click="emit('consult')"
     >
       <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
         <User class="w-4 h-4 md:w-5.5 md:h-5.5" aria-hidden="true" />

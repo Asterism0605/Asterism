@@ -8,6 +8,17 @@ const defaultProps = {
 };
 
 describe('ImageMetaPanel', () => {
+  it('emits consult when CONSULT STYLIST is clicked', async () => {
+    const wrapper = mount(ImageMetaPanel, { props: defaultProps });
+
+    const consultBtn = wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('CONSULT STYLIST'));
+    await consultBtn!.trigger('click');
+
+    expect(wrapper.emitted('consult')).toHaveLength(1);
+  });
+
   it('emits save-to-folder when SAVE TO FOLDER is clicked', async () => {
     const wrapper = mount(ImageMetaPanel, { props: defaultProps });
 

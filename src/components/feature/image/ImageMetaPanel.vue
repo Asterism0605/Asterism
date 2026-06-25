@@ -24,6 +24,7 @@ defineProps<Props>();
 
 const emit = defineEmits<{
   back: [];
+  consult: [];
   'create-folder': [];
   'save-to-folder': [];
 }>();
@@ -79,7 +80,7 @@ const siteLogoSrc = '/sitelogo.png';
     <ThemeTag :tags="styleTags" compact />
 
     <div class="flex items-center gap-3">
-      <ActionButton class="flex-1" variant="consult" />
+      <ActionButton class="flex-1" variant="consult" @consult="emit('consult')" />
       <ActionButton
         class="flex-1"
         :loading="loading"
