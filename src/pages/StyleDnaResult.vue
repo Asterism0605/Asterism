@@ -91,15 +91,17 @@ onBeforeUnmount(() => {
           <div
             class="hidden flex-wrap items-center gap-x-5 gap-y-3 
             lg:mt-11 lg:flex lg:-translate-y-5 lg:gap-x-8 lg:gap-y-4">
-            <Button
-              type="button"
-              variant="secondary"
-              class="min-w-[11.5rem] border-0 bg-text-secondary px-7 py-2.5 text-sm tracking-[1px] text-deep hover:bg-text-secondary hover:opacity-85 
-              lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
-              data-testid="start-exploring"
-              @click="startExploring">
-              Start Exploring
-            </Button>
+            <span class="result-guide-submit">
+              <Button
+                type="button"
+                variant="secondary"
+                class="min-w-[11.5rem] px-7 py-2.5 text-sm tracking-[1px]
+                lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
+                data-testid="start-exploring"
+                @click="startExploring">
+                Start Exploring
+              </Button>
+            </span>
 
             <Button
               type="button"
@@ -138,15 +140,17 @@ onBeforeUnmount(() => {
               </p>
 
               <div class="mt-5 flex flex-col items-start gap-3">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  class="min-w-[11.5rem] border-0 bg-text-secondary px-7 py-2.5 text-sm tracking-[1px] text-deep hover:bg-text-secondary hover:opacity-85"
-                  data-testid="start-exploring"
-                  @click="startExploring"
-                >
-                  Start Exploring
-                </Button>
+                <span class="result-guide-submit">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    class="min-w-[11.5rem] px-7 py-2.5 text-sm tracking-[1px]"
+                    data-testid="start-exploring"
+                    @click="startExploring"
+                  >
+                    Start Exploring
+                  </Button>
+                </span>
 
                 <Button
                   type="button"
@@ -165,3 +169,16 @@ onBeforeUnmount(() => {
     </section>
   </main>
 </template>
+
+<style scoped>
+.result-guide-submit :deep(button) {
+  border: none;
+  background: var(--color-text-secondary);
+  color: var(--color-text-primary);
+}
+
+.result-guide-submit :deep(button:hover) {
+  background: var(--color-text-secondary);
+  opacity: 0.85;
+}
+</style>

@@ -111,13 +111,19 @@ describe('StyleDnaResult', () => {
     expect(push).toHaveBeenNthCalledWith(2, { name: 'style-dna' });
   });
 
-  it('uses the sand Button style for the primary CTA', async () => {
+  it('uses the sand wrapper without changing the primary CTA typography classes', async () => {
     vi.useFakeTimers();
 
     const wrapper = mountStyleDnaResult();
 
     await vi.advanceTimersByTimeAsync(1600);
 
-    expect(wrapper.get('[data-testid="start-exploring"]').classes()).toContain('bg-text-secondary');
+    const startExploring = wrapper.get('[data-testid="start-exploring"]');
+
+    expect(startExploring.element.parentElement?.classList.contains('result-guide-submit')).toBe(
+      true
+    );
+    expect(startExploring.classes()).toContain('text-sm');
+    expect(startExploring.classes()).toContain('tracking-[1px]');
   });
 });
