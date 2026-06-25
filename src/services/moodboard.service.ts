@@ -8,9 +8,7 @@ export function saveImage(image: ImageSpreadNode): void {
   const store = useMoodboardStore();
   const savedImage: SavedImage = {
     id: image.id,
-    src: image.src,
-    alt: image.alt,
-    styleGroup: image.styleGroup
+    src: image.src
   };
   store.addImage(DEFAULT_FOLDER_ID, savedImage);
 }
