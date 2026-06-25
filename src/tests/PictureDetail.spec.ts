@@ -45,13 +45,15 @@ describe('PictureDetail', () => {
     vi.useRealTimers();
   });
 
-  it('calls saveImage with the current image when 儲存到既有資料夾 is clicked', async () => {
+  it('calls saveImage with the current image when SAVE TO FOLDER is clicked', async () => {
     const { wrapper } = await mountPictureDetail();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
 
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('儲存到既有資料夾'));
+    const saveBtn = wrapper
+      .findAll('button')
+      .find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
 
     expect(saveImage).toHaveBeenCalledOnce();
@@ -65,7 +67,9 @@ describe('PictureDetail', () => {
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
 
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('儲存到既有資料夾'));
+    const saveBtn = wrapper
+      .findAll('button')
+      .find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
     await flushPromises();
 
@@ -81,7 +85,9 @@ describe('PictureDetail', () => {
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
 
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('儲存到既有資料夾'));
+    const saveBtn = wrapper
+      .findAll('button')
+      .find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
 
     await vi.runAllTimersAsync();

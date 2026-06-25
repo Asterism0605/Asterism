@@ -52,7 +52,6 @@ async function handleSaveToFolder() {
     <div class="w-full overflow-y-auto md:w-2/5 md:overflow-hidden">
       <ImageMetaPanel
         v-if="currentImage"
-        :title="currentImage.title"
         source-url="https://unsplash.com/"
         source-label="圖片來源網址.com"
         :color-palette="currentImage.colorPalette"

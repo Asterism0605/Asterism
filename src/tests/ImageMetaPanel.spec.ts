@@ -9,14 +9,16 @@ const defaultProps = {
 };
 
 describe('ImageMetaPanel', () => {
-  it('emits save-to-folder when 儲存到既有資料夾 is clicked', async () => {
+  it('emits save-to-folder when SAVE TO FOLDER is clicked', async () => {
     const wrapper = mount(ImageMetaPanel, { props: defaultProps });
 
     const buttons = wrapper.findAll('button');
     const addBtn = buttons.find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
 
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('儲存到既有資料夾'));
+    const saveBtn = wrapper
+      .findAll('button')
+      .find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
 
     expect(wrapper.emitted('save-to-folder')).toHaveLength(1);
