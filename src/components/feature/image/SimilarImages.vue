@@ -5,10 +5,10 @@ defineProps<{
 </script>
 
 <template>
-  <div>
-    <h2 class="text-h3 text-text-primary mb-2">Similar</h2>
+  <div class="flex flex-col gap-4">
+    <h2 class="text-h3 text-text-primary">Similar</h2>
 
-    <div v-if="images.length" class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+    <div v-if="images.length" class="grid grid-cols-2 gap-4 md:grid-cols-4">
       <img
         v-for="(img, i) in images.slice(0, 4)"
         :key="i"
