@@ -13,7 +13,7 @@ vi.mock('@/api/supabaseClient', () => ({
   getSupabase: () => ({ auth, from })
 }));
 
-import { loginApi, registerApi } from '@/api/auth.api';
+import { loginApi, logoutApi, registerApi } from '@/api/auth.api';
 
 const fakeSession = {
   access_token: 'tok',
@@ -56,6 +56,30 @@ describe('auth.api (supabase)', () => {
       options: { data: { display_name: 'Al' } }
     });
     expect(res.data.user.isAdmin).toBe(false);
+  });
+
+  it('register 成功但無 session（已開信箱驗證）→ 丟 EMAIL_CONFIRMATION_REQUIRED', async () => {
+    auth.signUp.mockResolvedValue({ data: { user: { id: 'u1' }, session: null }, error: null });
+
+    await expect(
+      registerApi({ email: 'a@b.com', password: 'password123', displayName: 'Al' })
+    ).rejects.toMatchObject({ code: 'EMAIL_CONFIRMATION_REQUIRED' });
+  });
+
+  it('logout 遠端 signOut 失敗 → 丟出對應錯誤', async () => {
+    auth.signOut.mockResolvedValue({ error: { message: 'network down' } });
+
+    await expect(logoutApi()).rejects.toMatchObject({ code: 'AUTH_ERROR' });
+  });
+
+  it('session 缺 expires_at → expiresAt 退回未來時間（非 1970）', async () => {
+    const noExpiry = { ...fakeSession, expires_at: undefined };
+    auth.signInWithPassword.mockResolvedValue({ data: { session: noExpiry }, error: null });
+    single.mockResolvedValue({ data: null, error: null });
+
+    const res = await loginApi({ email: 'a@b.com', password: 'password123' });
+
+    expect(new Date(res.data.expiresAt).getTime()).toBeGreaterThan(Date.now());
   });
 
   it('fetchProfile 非 PGRST116 錯誤 → login 仍成功且 isAdmin=false（fail-closed 降級）', async () => {

@@ -9,11 +9,14 @@ function apiError(message: string, code: string, status: number): ApiError {
 
 function mapSupabaseAuthError(error: { message?: string; status?: number } | null): ApiError {
   const raw = error?.message ?? '';
-  if (/invalid login credentials/i.test(raw)) return apiError('帳號或密碼錯誤', 'INVALID_CREDENTIALS', 401);
-  if (/already registered|already exists|user already/i.test(raw)) return apiError('此 email 已註冊', 'EMAIL_EXISTS', 409);
-  if (/password should be at least/i.test(raw)) return apiError('密碼不符合規則（至少 6 碼）', 'INVALID_PASSWORD', 400);
-  console.warn('[auth] 未分類錯誤：', raw);
-  return apiError('驗證失敗，請稍後再試', 'AUTH_ERROR', error?.status ?? 400);
+  if (/invalid login credentials/i.test(raw))
+    return apiError('Incorrect email or password.', 'INVALID_CREDENTIALS', 401);
+  if (/already registered|already exists|user already/i.test(raw))
+    return apiError('This email is already registered.', 'EMAIL_EXISTS', 409);
+  if (/password should be at least/i.test(raw))
+    return apiError('Password must be at least 6 characters.', 'INVALID_PASSWORD', 400);
+  console.warn('[auth] unclassified error:', raw);
+  return apiError('Authentication failed. Please try again later.', 'AUTH_ERROR', error?.status ?? 400);
 }
 
 interface ProfileRow {
@@ -44,10 +47,12 @@ async function toAuthSession(session: Session, fallbackDisplayName: string): Pro
     isAdmin: profile.isAdmin,
     createdAt: session.user.created_at ?? new Date().toISOString()
   };
+  // session.expires_at 缺漏時退回「現在 +1 小時」，避免產生 1970 的誤導時間戳。
+  const expiresAtSec = session.expires_at ?? Math.floor(Date.now() / 1000) + 3600;
   return {
     user,
     accessToken: session.access_token,
-    expiresAt: new Date((session.expires_at ?? 0) * 1000).toISOString()
+    expiresAt: new Date(expiresAtSec * 1000).toISOString()
   };
 }
 
@@ -61,8 +66,13 @@ export async function registerApi(payload: RegisterPayload): Promise<ApiResponse
     password: payload.password,
     options: { data: { display_name: payload.displayName ?? '' } }
   });
-  if (error || !data.session) {
-    throw mapSupabaseAuthError(error ?? { message: 'No session（請確認 Supabase Email 驗證已關閉）' });
+  if (error) {
+    throw mapSupabaseAuthError(error);
+  }
+  // signUp 成功但沒有 session = 已開啟 Confirm email，需先驗證信箱（非錯誤）。
+  // 前端「請至信箱收信」提示頁由 issue #86 接手處理此狀態。
+  if (!data.session) {
+    throw apiError('Please verify your email address to continue.', 'EMAIL_CONFIRMATION_REQUIRED', 200);
   }
   return envelope(await toAuthSession(data.session, payload.displayName ?? ''));
 }
@@ -79,7 +89,10 @@ export async function loginApi(payload: LoginPayload): Promise<ApiResponse<AuthS
 }
 
 export async function logoutApi(): Promise<void> {
-  await getSupabase().auth.signOut();
+  const { error } = await getSupabase().auth.signOut();
+  if (error) {
+    throw mapSupabaseAuthError(error);
+  }
 }
 
 export async function currentSessionApi(): Promise<AuthSession | null> {
