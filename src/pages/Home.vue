@@ -26,6 +26,32 @@ const containerHeight = computed(
   () => `${(inspirationImages.value.length / HOME_DENSITY_PER_100VH) * 100}vh`
 );
 
+function getGuestScrollLimitTop(): number {
+  if (typeof window === 'undefined') {
+    return 0;
+  }
+
+  const limitHeight = window.innerHeight * (scrollLimitVh / 100);
+  return Math.max(0, limitHeight - window.innerHeight);
+}
+
+function clampGuestScrollPosition(): void {
+  if (typeof window === 'undefined' || authStore.isAuthenticated) {
+    return;
+  }
+
+  const limitTop = getGuestScrollLimitTop();
+
+  if (window.scrollY <= limitTop) {
+    return;
+  }
+
+  window.scrollTo({
+    top: limitTop,
+    behavior: 'auto'
+  });
+}
+
 function openLimitModal() {
   if (hasTriggeredLimit.value) {
     return;
@@ -35,16 +61,24 @@ function openLimitModal() {
   isLimitModalOpen.value = true;
 }
 
+function handleLimitModalClose() {
+  clampGuestScrollPosition();
+}
+
 function handleScrollLimit() {
   if (typeof window === 'undefined' || authStore.isAuthenticated) {
     return;
   }
 
-  const limit = window.innerHeight * (scrollLimitVh / 100);
+  const limit = getGuestScrollLimitTop() + window.innerHeight;
   const viewportBottom = window.scrollY + window.innerHeight;
 
   if (viewportBottom >= limit) {
     openLimitModal();
+  }
+
+  if (hasTriggeredLimit.value && !isLimitModalOpen.value) {
+    clampGuestScrollPosition();
   }
 }
 
@@ -128,7 +162,12 @@ watch(homePreferredStyles, () => {
         </div>
       </div>
     </section>
-    <ModalOverlay v-model="isLimitModalOpen" max-width="590px" :close-on-backdrop="true">
+    <ModalOverlay
+      v-model="isLimitModalOpen"
+      max-width="590px"
+      :close-on-backdrop="true"
+      @close="handleLimitModalClose"
+    >
       <template #icon>
         <div
           class="flex size-14 items-center justify-center rounded-full bg-void/70 text-text-primary"
