@@ -106,6 +106,10 @@ function syncSpreadRoute(imageId: string) {
 }
 
 function returnToPreviousLayer() {
+  // 路徑階層：
+  // 詳情頁 Back -> medium spread（?rootId=main）
+  // medium Return -> main spread
+  // main Return -> 首頁
   if (spreadDepth.value > 0 && rootImage.value) {
     centerImage.value = rootImage.value;
     visitedImageIds.value = [rootImage.value.id];
@@ -115,7 +119,7 @@ function returnToPreviousLayer() {
     return;
   }
 
-  router.back();
+  router.push({ name: 'home' });
 }
 
 function handleRelatedSelect(image: ImageSpreadNode) {
