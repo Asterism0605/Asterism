@@ -43,7 +43,7 @@ async function handleSaveToFolder() {
   try {
     saveImage(currentImage.value);
     await new Promise((resolve) => setTimeout(resolve, 300));
-    showToast({ type: 'success', message: '已加入收藏' });
+    showToast({ type: 'success', message: 'Saved to moodboard' });
   } catch {
     saveError.value = '儲存失敗，請再試一次';
   } finally {

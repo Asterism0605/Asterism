@@ -137,7 +137,7 @@ function handleSave() {
   isSaving.value = true;
   try {
     saveImage(centerImage.value);
-    showToast({ type: 'success', message: '已加入收藏' });
+    showToast({ type: 'success', message: 'Saved to moodboard' });
   } finally {
     isSaving.value = false;
   }
