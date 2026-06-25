@@ -10,11 +10,13 @@ import {
   getMediumGroupImages,
   getSubMediumGroupImages
 } from '@/services/image.service';
+import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
 const router = useRouter();
 
+const { isSaving, saveToMoodboard } = useSaveToMoodboard();
 const centerImage = ref<ImageSpreadNode | undefined>();
 const rootImage = ref<ImageSpreadNode | undefined>();
 const relatedImages = ref<ImageSpreadNode[]>([]);
@@ -129,6 +131,11 @@ function handleRelatedSelect(image: ImageSpreadNode) {
   syncSpreadRoute(image.id);
 }
 
+async function handleSave() {
+  if (!centerImage.value) return;
+  await saveToMoodboard(centerImage.value);
+}
+
 watch(
   routeImageId,
   (imageId) => {
@@ -167,7 +174,7 @@ watch(
           @select="handleRelatedSelect"
         />
 
-        <ImageSpreadOverlay :image="centerImage" @return="returnToPreviousLayer" />
+        <ImageSpreadOverlay :image="centerImage" :saving="isSaving" @return="returnToPreviousLayer" @save="handleSave" />
       </div>
 
       <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">

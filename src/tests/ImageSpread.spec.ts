@@ -1,8 +1,23 @@
 import { flushPromises, mount } from '@vue/test-utils';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import ImageSpread from '@/pages/ImageSpread.vue';
 import { getImageById } from '@/services/image.service';
+import { saveImage } from '@/services/moodboard.service';
+import { showToast } from '@/composables/useToast';
+
+vi.mock('@/services/moodboard.service', () => ({
+  saveImage: vi.fn(),
+  unsaveImage: vi.fn(),
+  createFolder: vi.fn(),
+  isImageSaved: vi.fn(() => false)
+}));
+
+vi.mock('@/composables/useToast', () => ({
+  showToast: vi.fn(),
+  hideToast: vi.fn(),
+  useToast: () => ({ toast: { value: null } })
+}));
 
 async function mountImageSpread(imageId = 'y2k-main-001') {
   const router = createRouter({
@@ -32,7 +47,11 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
 
 describe('ImageSpread', () => {
   beforeEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('renders the center image, action buttons, and four related images', async () => {
@@ -172,5 +191,29 @@ describe('ImageSpread', () => {
 
     expect(wrapper.text()).toContain('Image not found');
     expect(wrapper.find('[data-testid="return-home"]').exists()).toBe(true);
+  });
+
+  it('shows an error toast when saveImage throws', async () => {
+    vi.mocked(saveImage).mockImplementationOnce(() => { throw new Error('save failed') });
+    const { wrapper } = await mountImageSpread();
+
+    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('Add to moodboard'));
+    await addBtn!.trigger('click');
+    await flushPromises();
+
+    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
+  });
+
+  it('calls saveImage with the center image when Add to moodboard is clicked', async () => {
+    const { wrapper } = await mountImageSpread();
+    vi.useFakeTimers();
+
+    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('Add to moodboard'));
+    await addBtn!.trigger('click');
+    await vi.runAllTimersAsync();
+
+    expect(saveImage).toHaveBeenCalledOnce();
+    expect(saveImage).toHaveBeenCalledWith(expect.objectContaining({ id: 'y2k-main-001' }));
+    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'success' }));
   });
 });
