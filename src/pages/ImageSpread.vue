@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
 import ImageSpreadOverlay from '@/components/feature/image/ImageSpreadOverlay.vue';
 import RelatedImageCluster from '@/components/feature/image/RelatedImageCluster.vue';
 import Button from '@/components/ui/Button.vue';
@@ -36,6 +37,10 @@ function refreshRelatedImages(imageId: string) {
   relatedImages.value = fn(imageId, {
     visitedImageIds: visitedImageIds.value
   });
+}
+
+function getRelatedImageLabel(image: ImageSpreadNode) {
+  return spreadDepth.value === 0 ? image.medium : image.subMedium;
 }
 
 function loadImageSpread(imageId: string | undefined) {
@@ -153,19 +158,26 @@ watch(
 </script>
 
 <template>
-  <main
-    class="relative min-h-screen overflow-hidden bg-void pt-[92px] text-text-primary"
+  <ImageSpreadEntrance
+    as="main"
+    kind="page"
+    class="relative min-h-screen overflow-hidden bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:92px]"
   >
-    <div class="pointer-events-none absolute inset-0 z-0 image-spread__wash" aria-hidden="true" />
+    <ImageSpreadEntrance
+      kind="wash"
+      class="pointer-events-none absolute inset-0 z-0 image-spread__wash"
+      aria-hidden="true"
+    />
 
     <section
       v-if="centerImage"
-      class="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-[1600px] flex-col items-center justify-center gap-8 px-6 pb-10 lg:px-10"
+      class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] w-full max-w-[1600px] flex-col items-center justify-center gap-8 px-6 pb-10 pt-6 lg:px-10 lg:pt-8"
     >
       <div class="relative flex w-full flex-1 items-center justify-center">
         <RelatedImageCluster
           class="hidden lg:block"
           :images="relatedImages"
+          :get-image-label="getRelatedImageLabel"
           @select="handleRelatedSelect"
         />
 
@@ -173,9 +185,12 @@ watch(
       </div>
 
       <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
-        <button
-          v-for="image in relatedImages"
+        <ImageSpreadEntrance
+          v-for="(image, index) in relatedImages"
           :key="image.id"
+          as="button"
+          kind="relatedCard"
+          :spread-index="index"
           data-testid="related-image-card-mobile"
           type="button"
           class="relative cursor-pointer overflow-hidden rounded-lg border border-white/12 bg-elevated/70 text-left"
@@ -188,17 +203,18 @@ watch(
             class="aspect-[4/5] w-full cursor-pointer object-cover"
           />
           <span
+            v-if="getRelatedImageLabel(image)"
             class="absolute bottom-2 left-2 max-w-[calc(100%-1rem)] rounded-full bg-void/78 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-text-primary"
           >
-            {{ image.style[0] ?? image.styleGroup }}
+            {{ getRelatedImageLabel(image) }}
           </span>
-        </button>
+        </ImageSpreadEntrance>
       </div>
     </section>
 
     <section
       v-else
-      class="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] max-w-xl flex-col items-center justify-center gap-5 px-6 text-center"
+      class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] max-w-xl flex-col items-center justify-center gap-5 px-6 text-center"
     >
       <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">Image not found</p>
       <h1 class="text-3xl font-bold tracking-normal sm:text-5xl">
@@ -211,7 +227,7 @@ watch(
         Return home
       </Button>
     </section>
-  </main>
+  </ImageSpreadEntrance>
 </template>
 
 <style scoped>
@@ -234,4 +250,5 @@ watch(
   background-size: 128px 128px;
   mask-image: linear-gradient(180deg, transparent, black 16%, black 82%, transparent);
 }
+
 </style>
