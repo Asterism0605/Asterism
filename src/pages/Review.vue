@@ -62,6 +62,11 @@ function subMediumOptions(medium: string): string[] {
   return taxonomy.value.subMediumsByMedium[medium] ?? [];
 }
 
+// 改 medium 時把 subMedium 重置成新 medium 的第一個選項，避免送出不相符的舊值。
+function onMediumChange(card: ReviewCard) {
+  card.draftSubMedium = subMediumOptions(card.draftMedium)[0] ?? '';
+}
+
 async function run(card: ReviewCard, action: ReviewAction) {
   const payload =
     action === 'correct'
@@ -98,7 +103,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-void px-6 py-10 text-text-primary">
+  <main class="min-h-screen bg-void px-6 pb-10 pt-24 text-text-primary">
     <div class="mx-auto max-w-6xl">
       <h1 class="mb-2 text-2xl font-bold">圖庫審核</h1>
       <p class="mb-6 text-sm text-text-secondary">
@@ -179,6 +184,7 @@ onMounted(() => {
                     v-model="card.draftMedium"
                     data-testid="review-medium"
                     class="mt-1 w-full rounded-md border border-white/15 bg-void px-2 py-1.5 text-sm text-text-primary"
+                    @change="onMediumChange(card)"
                   >
                     <option v-for="m in taxonomy.mediums" :key="m" :value="m">
                       {{ mediumZh(m) }}
