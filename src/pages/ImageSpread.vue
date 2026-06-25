@@ -10,14 +10,13 @@ import {
   getMediumGroupImages,
   getSubMediumGroupImages
 } from '@/services/image.service';
-import { saveImage } from '@/services/moodboard.service';
-import { showToast } from '@/composables/useToast';
+import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
 const router = useRouter();
 
-const isSaving = ref(false);
+const { isSaving, saveToMoodboard } = useSaveToMoodboard();
 const centerImage = ref<ImageSpreadNode | undefined>();
 const rootImage = ref<ImageSpreadNode | undefined>();
 const relatedImages = ref<ImageSpreadNode[]>([]);
@@ -132,15 +131,9 @@ function handleRelatedSelect(image: ImageSpreadNode) {
   syncSpreadRoute(image.id);
 }
 
-function handleSave() {
-  if (!centerImage.value || isSaving.value) return;
-  isSaving.value = true;
-  try {
-    saveImage(centerImage.value);
-    showToast({ type: 'success', message: 'Saved to moodboard' });
-  } finally {
-    isSaving.value = false;
-  }
+async function handleSave() {
+  if (!centerImage.value) return;
+  await saveToMoodboard(centerImage.value);
 }
 
 watch(

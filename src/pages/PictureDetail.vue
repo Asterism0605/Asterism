@@ -4,8 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
 import { getImageById, getRelatedImages } from '@/services/image.service';
-import { saveImage } from '@/services/moodboard.service';
-import { showToast } from '@/composables/useToast';
+import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
@@ -25,8 +24,7 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2).map((img) => img.src));
 const similarImages = computed(() => relatedImages.value.slice(2, 6).map((img) => img.src));
 
-const isSaving = ref(false);
-const saveError = ref<string | null>(null);
+const { isSaving, saveError, saveToMoodboard } = useSaveToMoodboard();
 
 function handleBack() {
   router.back();
@@ -37,18 +35,8 @@ function handleCreateFolder() {
 }
 
 async function handleSaveToFolder() {
-  if (!currentImage.value || isSaving.value) return;
-  isSaving.value = true;
-  saveError.value = null;
-  try {
-    saveImage(currentImage.value);
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    showToast({ type: 'success', message: 'Saved to moodboard' });
-  } catch {
-    saveError.value = 'Failed to save. Please try again.';
-  } finally {
-    isSaving.value = false;
-  }
+  if (!currentImage.value) return;
+  await saveToMoodboard(currentImage.value);
 }
 </script>
 
