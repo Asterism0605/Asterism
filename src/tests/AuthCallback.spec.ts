@@ -1,0 +1,53 @@
+import { flushPromises, mount } from '@vue/test-utils';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createMemoryHistory, createRouter } from 'vue-router';
+import AuthCallback from '@/pages/AuthCallback.vue';
+
+const store = { hydrate: vi.fn().mockResolvedValue(undefined), isAuthenticated: false };
+vi.mock('@/stores/auth.store', () => ({ useAuthStore: () => store }));
+
+function makeRouter() {
+  return createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/', name: 'home', component: { template: '<div/>' } },
+      { path: '/login', name: 'login', component: { template: '<div/>' } },
+      { path: '/discover-dna', name: 'discover-dna', component: { template: '<div/>' } },
+      { path: '/auth/callback', name: 'auth-callback', component: AuthCallback }
+    ]
+  });
+}
+
+describe('AuthCallback', () => {
+  beforeEach(() => {
+    store.hydrate = vi.fn().mockResolvedValue(undefined);
+    store.isAuthenticated = false;
+  });
+
+  it('還原後已登入 → replace 到 next', async () => {
+    store.isAuthenticated = true;
+    const router = makeRouter();
+    const replace = vi.spyOn(router, 'replace');
+    router.push('/auth/callback?next=/discover-dna');
+    await router.isReady();
+
+    mount(AuthCallback, { global: { plugins: [router] } });
+    await flushPromises();
+
+    expect(replace).toHaveBeenCalledWith('/discover-dna');
+  });
+
+  it('無 session → 顯示失敗態、不導向', async () => {
+    store.isAuthenticated = false;
+    const router = makeRouter();
+    const replace = vi.spyOn(router, 'replace');
+    router.push('/auth/callback');
+    await router.isReady();
+
+    const wrapper = mount(AuthCallback, { global: { plugins: [router] } });
+    await flushPromises();
+
+    expect(replace).not.toHaveBeenCalled();
+    expect(wrapper.text()).toContain('Sign-in failed');
+  });
+});
