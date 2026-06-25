@@ -16,14 +16,14 @@ const content = computed(() => {
     return {
       code: 'COMING SOON',
       title: 'Inspiration Detail is under construction.',
-      desc: '我們正在精心雕琢此靈感詳情頁面，它即將隨著星圖更新一同解鎖。',
+      desc: 'We are carefully crafting this inspiration detail page. It will unlock with a future star map update.',
       actionText: 'Back'
     };
   }
   return {
     code: '404',
     title: 'This constellation does not exist.',
-    desc: '您所造訪的座標不在目前的星圖範圍內，請重新調整您的探索路徑。',
+    desc: 'The coordinates you visited are outside the current star map. Please adjust your exploration path.',
     actionText: 'Back'
   };
 });
