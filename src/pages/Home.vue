@@ -35,19 +35,13 @@ function getGuestScrollLimitTop(): number {
   return Math.max(0, limitHeight - window.innerHeight);
 }
 
-function clampGuestScrollPosition(): void {
+function returnGuestToTop(): void {
   if (typeof window === 'undefined' || authStore.isAuthenticated) {
     return;
   }
 
-  const limitTop = getGuestScrollLimitTop();
-
-  if (window.scrollY <= limitTop) {
-    return;
-  }
-
   window.scrollTo({
-    top: limitTop,
+    top: 0,
     behavior: 'auto'
   });
 }
@@ -62,7 +56,8 @@ function openLimitModal() {
 }
 
 function handleLimitModalClose() {
-  clampGuestScrollPosition();
+  hasTriggeredLimit.value = false;
+  returnGuestToTop();
 }
 
 function handleScrollLimit() {
@@ -75,10 +70,6 @@ function handleScrollLimit() {
 
   if (viewportBottom >= limit) {
     openLimitModal();
-  }
-
-  if (hasTriggeredLimit.value && !isLimitModalOpen.value) {
-    clampGuestScrollPosition();
   }
 }
 
