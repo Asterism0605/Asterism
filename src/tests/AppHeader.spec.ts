@@ -1,10 +1,20 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import router from '@/router';
 import AppHeader from '@/layouts/AppHeader.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import type { AuthSession } from '@/types/auth';
+
+const supaAuth = {
+  signUp: vi.fn(),
+  signInWithPassword: vi.fn(),
+  signOut: vi.fn().mockResolvedValue({ error: null }),
+  getSession: vi.fn().mockResolvedValue({ data: { session: null }, error: null })
+};
+const single = vi.fn().mockResolvedValue({ data: null, error: null });
+const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth: supaAuth, from }) }));
 
 function createAuthenticatedSession(displayName = 'Ada Lovelace'): AuthSession {
   return {
@@ -14,6 +24,7 @@ function createAuthenticatedSession(displayName = 'Ada Lovelace'): AuthSession {
       id: 'user-1',
       email: 'ada@example.com',
       displayName,
+      isAdmin: false,
       createdAt: '2026-01-01T00:00:00.000Z'
     }
   };
@@ -35,6 +46,7 @@ function createMountedHeader() {
 
 describe('AppHeader', () => {
   beforeEach(async () => {
+    setActivePinia(createPinia());
     await router.push('/');
     await router.isReady();
   });
@@ -82,6 +94,7 @@ describe('AppHeader', () => {
     expect(logoutButton).toBeTruthy();
 
     await logoutButton?.trigger('click');
+    await flushPromises();
 
     expect(authStore.isAuthenticated).toBe(false);
     expect(wrapper.text()).toContain('Log in');
