@@ -1,12 +1,20 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
+import type { ImageSpreadNode } from '@/types/image';
 
 interface Props {
   mainImageUrl: string;
-  smallImages: string[];
+  smallImages: ImageSpreadNode[];
 }
 
 defineProps<Props>();
+
+const router = useRouter();
+
+function openImageDetail(imageId: string) {
+  router.push({ name: 'picture-detail', params: { imageId } });
+}
 </script>
 
 <template>
@@ -34,21 +42,25 @@ defineProps<Props>();
         style="--float-delay: 0s"
       />
 
-      <img
+      <button
         v-if="smallImages[0]"
-        :src="smallImages[0]"
-        alt=""
-        class="float-img absolute left-[6%] top-[10%] w-[14%] rounded-[4px] object-contain opacity-40"
+        type="button"
+        class="float-img absolute left-[6%] top-[10%] w-[14%] cursor-pointer overflow-hidden rounded-[4px] opacity-40 transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim"
         style="--float-delay: 0.5s"
-      />
+        @click="openImageDetail(smallImages[0].id)"
+      >
+        <img :src="smallImages[0].src" :alt="smallImages[0].alt" class="w-full object-contain" />
+      </button>
 
-      <img
+      <button
         v-if="smallImages[1]"
-        :src="smallImages[1]"
-        alt=""
-        class="float-img absolute bottom-[6%] right-[6%] w-[14%] rounded-[4px] object-contain opacity-40"
+        type="button"
+        class="float-img absolute bottom-[6%] right-[6%] w-[14%] cursor-pointer overflow-hidden rounded-[4px] opacity-40 transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim"
         style="--float-delay: 0.5s"
-      />
+        @click="openImageDetail(smallImages[1].id)"
+      >
+        <img :src="smallImages[1].src" :alt="smallImages[1].alt" class="w-full object-contain" />
+      </button>
     </div>
   </div>
 </template>

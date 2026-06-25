@@ -5,6 +5,7 @@ import ThemeTag from '@/components/ui/ThemeTag.vue';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
 import { ArrowLeft, ExternalLink } from '@lucide/vue';
 import SimilarImages from '@/components/feature/image/SimilarImages.vue';
+import type { ImageSpreadNode } from '@/types/image';
 
 interface Props {
   sourceUrl?: string;
@@ -14,7 +15,7 @@ interface Props {
   photographerName?: string;
   photographerRole?: string;
   photographerDate?: string;
-  similarImages?: string[];
+  similarImages?: ImageSpreadNode[];
   loading?: boolean;
   error?: string | null;
 }

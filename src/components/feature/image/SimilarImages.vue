@@ -1,7 +1,16 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
+import type { ImageSpreadNode } from '@/types/image';
+
 defineProps<{
-  images: string[];
+  images: ImageSpreadNode[];
 }>();
+
+const router = useRouter();
+
+function openImageDetail(imageId: string) {
+  router.push({ name: 'picture-detail', params: { imageId } });
+}
 </script>
 
 <template>
@@ -9,13 +18,15 @@ defineProps<{
     <h2 class="text-h3 text-text-primary">Similar</h2>
 
     <div v-if="images.length" class="grid grid-cols-2 gap-4 md:grid-cols-4">
-      <img
-        v-for="(img, i) in images.slice(0, 4)"
-        :key="i"
-        :src="img"
-        alt=""
-        class="aspect-square w-full rounded object-cover"
-      />
+      <button
+        v-for="image in images.slice(0, 4)"
+        :key="image.id"
+        type="button"
+        class="cursor-pointer overflow-hidden rounded text-left transition duration-200 hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim"
+        @click="openImageDetail(image.id)"
+      >
+        <img :src="image.src" :alt="image.alt" class="aspect-square w-full object-cover" />
+      </button>
     </div>
   </div>
 </template>

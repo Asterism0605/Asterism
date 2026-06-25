@@ -3,7 +3,12 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
-import { getImageById, getRelatedImages } from '@/services/image.service';
+import {
+  getImageById,
+  getMediumEntryImage,
+  getRelatedImages,
+  getStyleGroupRootImage
+} from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import type { ImageSpreadNode } from '@/types/image';
 
@@ -21,13 +26,27 @@ watch(
   },
   { immediate: true }
 );
-const smallImages = computed(() => relatedImages.value.slice(0, 2).map((img) => img.src));
-const similarImages = computed(() => relatedImages.value.slice(2, 6).map((img) => img.src));
+const smallImages = computed(() => relatedImages.value.slice(0, 2));
+const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
 const { isSaving, saveError, saveToMoodboard } = useSaveToMoodboard();
 
 function handleBack() {
-  router.back();
+  if (!currentImage.value) {
+    router.back();
+    return;
+  }
+
+  const rootImage = getStyleGroupRootImage(currentImage.value.id);
+  const spreadImage = getMediumEntryImage(currentImage.value.id) ?? currentImage.value;
+  const query =
+    rootImage && rootImage.id !== spreadImage.id ? { rootId: rootImage.id } : undefined;
+
+  router.push({
+    name: 'image-spread',
+    params: { imageId: spreadImage.id },
+    query
+  });
 }
 
 function handleCreateFolder() {

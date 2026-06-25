@@ -25,7 +25,10 @@ vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
 async function mountPictureDetail(imageId = 'y2k-main-001') {
   const router = createRouter({
     history: createMemoryHistory(),
-    routes: [{ path: '/images/:imageId', name: 'picture-detail', component: PictureDetail }]
+    routes: [
+      { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
+      { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } }
+    ]
   });
 
   await router.push(`/images/${imageId}`);
@@ -33,7 +36,7 @@ async function mountPictureDetail(imageId = 'y2k-main-001') {
 
   const wrapper = mount(PictureDetail, { global: { plugins: [router] } });
 
-  return { wrapper };
+  return { router, wrapper };
 }
 
 describe('PictureDetail', () => {
@@ -93,5 +96,27 @@ describe('PictureDetail', () => {
     await vi.runAllTimersAsync();
 
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'success' }));
+  });
+
+  it('returns to the image spread page with the style group root id', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-001');
+
+    await wrapper.find('button').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('rpl-interior-001');
+    expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
+  });
+
+  it('returns sub-medium detail images to their medium spread entry', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001');
+
+    await wrapper.find('button').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('rpl-interior-001');
+    expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
   });
 });
