@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Bookmark } from '@lucide/vue';
+import { ArrowLeft, Bookmark, LoaderCircle } from '@lucide/vue';
 import { computed } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
@@ -93,8 +93,9 @@ const mainImageLabel = computed(() => {
         @click="emit('save')"
       >
         <span class="inline-flex items-center gap-2">
-          <Bookmark class="size-4" aria-hidden="true" />
-          {{ saving ? 'Saving…' : 'Add to moodboard' }}
+          <LoaderCircle v-if="saving" class="size-4 animate-spin" aria-hidden="true" />
+          <Bookmark v-else class="size-4" aria-hidden="true" />
+          Add to moodboard
         </span>
       </Button>
     </ImageSpreadEntrance>
