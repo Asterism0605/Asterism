@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
 import { getImageById, getRelatedImages } from '@/services/image.service';
+import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
@@ -23,8 +24,7 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2).map((img) => img.src));
 const similarImages = computed(() => relatedImages.value.slice(2, 6).map((img) => img.src));
 
-const isSaving = ref(false);
-const saveError = ref<string | null>(null);
+const { isSaving, saveError, saveToMoodboard } = useSaveToMoodboard();
 
 function handleBack() {
   router.back();
@@ -35,16 +35,8 @@ function handleCreateFolder() {
 }
 
 async function handleSaveToFolder() {
-  isSaving.value = true;
-  saveError.value = null;
-  try {
-    // TODO: 接入實際 API
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  } catch {
-    saveError.value = '儲存失敗，請再試一次';
-  } finally {
-    isSaving.value = false;
-  }
+  if (!currentImage.value) return;
+  await saveToMoodboard(currentImage.value);
 }
 </script>
 

@@ -9,9 +9,7 @@ function isSavedImage(value: unknown): value is SavedImage {
   const candidate = value as Record<string, unknown>;
   return (
     typeof candidate.id === 'string' &&
-    typeof candidate.src === 'string' &&
-    typeof candidate.alt === 'string' &&
-    typeof candidate.styleGroup === 'string'
+    typeof candidate.src === 'string'
   );
 }
 
