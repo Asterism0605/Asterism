@@ -23,6 +23,36 @@ const floatingImageNetworkStub = {
   template: '<button data-test="floating-image-network" @click="$emit(\'click\', 0)" />'
 };
 
+function mockViewport(initialScrollY = 0, innerHeight = 1000) {
+  let currentScrollY = initialScrollY;
+
+  Object.defineProperty(window, 'innerHeight', {
+    configurable: true,
+    value: innerHeight
+  });
+  Object.defineProperty(window, 'scrollY', {
+    configurable: true,
+    get: () => currentScrollY
+  });
+
+  const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation((options?: ScrollToOptions | number) => {
+    if (typeof options === 'number') {
+      currentScrollY = options;
+      return;
+    }
+
+    currentScrollY = options?.top ?? currentScrollY;
+  });
+
+  return {
+    getScrollY: () => currentScrollY,
+    setScrollY: (value: number) => {
+      currentScrollY = value;
+    },
+    scrollTo
+  };
+}
+
 function createTestRouter() {
   return createRouter({
     history: createMemoryHistory(),
@@ -40,8 +70,6 @@ function createTestRouter() {
 }
 
 async function openLimitModal(wrapper: { vm: { $nextTick: () => Promise<void> } }) {
-  Object.defineProperty(window, 'innerHeight', { configurable: true, value: 1000 });
-  Object.defineProperty(window, 'scrollY', { configurable: true, value: 501 });
   window.dispatchEvent(new Event('scroll'));
   await wrapper.vm.$nextTick();
 }
@@ -180,6 +208,7 @@ describe('Home', () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
+    const viewport = mockViewport(501);
 
     const wrapper = mount(Home, {
       attachTo: document.body,
@@ -193,27 +222,138 @@ describe('Home', () => {
       }
     });
 
-    Object.defineProperty(window, 'innerHeight', {
-      configurable: true,
-      value: 1000
-    });
-    Object.defineProperty(window, 'scrollY', {
-      configurable: true,
-      value: 501
-    });
-
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
     expect(wrapper.text()).toContain('Your daily inspiration limit has been reached.');
+    expect(viewport.scrollTo).not.toHaveBeenCalled();
 
     wrapper.unmount();
+  });
+
+  it('does not reopen the limit modal after guests close it and keep scrolling', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+    const viewport = mockViewport(501);
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await openLimitModal(wrapper);
+    expect(wrapper.text()).toContain('Your daily inspiration limit has been reached.');
+
+    await wrapper.find('.overlay-backdrop').trigger('click');
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
+
+    viewport.setScrollY(900);
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
+
+    wrapper.unmount();
+  });
+
+  it('keeps guests within the scroll limit after the limit modal closes', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+    const viewport = mockViewport(501);
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await openLimitModal(wrapper);
+    await wrapper.find('.overlay-backdrop').trigger('click');
+    await wrapper.vm.$nextTick();
+
+    expect(viewport.scrollTo).toHaveBeenCalledWith({
+      top: 500,
+      behavior: 'auto'
+    });
+    expect(viewport.getScrollY()).toBe(500);
+
+    viewport.setScrollY(900);
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+
+    expect(viewport.getScrollY()).toBeLessThanOrEqual(500);
+
+    wrapper.unmount();
+  });
+
+  it('allows guests to trigger the limit modal again after remounting the page', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+    const firstViewport = mockViewport(501);
+
+    const firstWrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await openLimitModal(firstWrapper);
+    await firstWrapper.find('.overlay-backdrop').trigger('click');
+    await firstWrapper.vm.$nextTick();
+    expect(firstWrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
+    firstWrapper.unmount();
+    firstViewport.scrollTo.mockRestore();
+
+    const secondViewport = mockViewport(501);
+    const secondWrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await openLimitModal(secondWrapper);
+
+    expect(secondWrapper.text()).toContain('Your daily inspiration limit has been reached.');
+    expect(secondViewport.scrollTo).not.toHaveBeenCalled();
+
+    secondWrapper.unmount();
   });
 
   it('does not open the limit modal for authenticated users when viewport bottom reaches 150vh', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
+    const viewport = mockViewport(501);
     const authStore = useAuthStore();
     const session: AuthSession = {
       accessToken: 'test-token',
@@ -241,19 +381,11 @@ describe('Home', () => {
       }
     });
 
-    Object.defineProperty(window, 'innerHeight', {
-      configurable: true,
-      value: 1000
-    });
-    Object.defineProperty(window, 'scrollY', {
-      configurable: true,
-      value: 501
-    });
-
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
     expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
+    expect(viewport.scrollTo).not.toHaveBeenCalled();
 
     wrapper.unmount();
   });
@@ -276,6 +408,7 @@ describe('Home', () => {
       }
     });
 
+    mockViewport(501);
     await openLimitModal(wrapper);
     await wrapper.find('[data-testid="cta-create-account"]').trigger('click');
 
