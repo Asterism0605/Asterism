@@ -1,14 +1,22 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
 
 const route = useRoute();
 const authStore = useAuthStore();
+const error = ref(false);
 
-function signIn() {
+// 成功時瀏覽器會整頁導去 Google；只有「導向前就失敗」（provider 沒開、redirectTo 不在白名單）才會 reject。
+async function signIn() {
+  error.value = false;
   const next = getSafeRedirectPath(route.query.next, '/');
-  void authStore.signInWithGoogle(next);
+  try {
+    await authStore.signInWithGoogle(next);
+  } catch {
+    error.value = true;
+  }
 }
 </script>
 
@@ -39,4 +47,7 @@ function signIn() {
     </svg>
     Continue with Google
   </button>
+  <p v-if="error" class="mt-2 text-center font-mono text-xs text-red-400">
+    Google sign-in failed. Please try again.
+  </p>
 </template>
