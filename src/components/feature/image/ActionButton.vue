@@ -79,7 +79,7 @@ onBeforeUnmount(() => {
 
     <div
       v-if="isOpen && props.variant === 'bookmark'"
-      class="absolute left-0 top-full z-10 mt-2 min-w-full overflow-hidden rounded-xl border border-white/20 bg-[#1e1e1e]/95 shadow-lg backdrop-blur-md"
+      class="absolute left-0 top-full z-10 mt-2 min-w-full overflow-hidden rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
     >
       <button
         type="button"
