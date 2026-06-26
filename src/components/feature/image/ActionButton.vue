@@ -6,13 +6,11 @@ import Button from '@/components/ui/Button.vue';
 interface Props {
   variant?: 'bookmark' | 'consult';
   loading?: boolean;
-  error?: string | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'bookmark',
-  loading: false,
-  error: null
+  loading: false
 });
 
 const emit = defineEmits<{
@@ -49,7 +47,7 @@ onBeforeUnmount(() => {
       v-if="props.loading"
       variant="primary"
       disabled
-      class="w-full !px-3 !py-3 md:!px-4 md:!py-4 opacity-60 cursor-not-allowed"
+      class="w-full !px-3 !py-3 md:!px-4 md:!py-4 cursor-not-allowed"
     >
       <LoaderCircle class="w-4 h-4 md:w-5.5 md:h-5.5 animate-spin" aria-hidden="true" />
     </Button>
@@ -67,7 +65,7 @@ onBeforeUnmount(() => {
     <template v-else>
       <Button
         variant="secondary"
-        class="w-full !px-3 !py-3 md:!px-4 md:!py-4"
+        class="w-full !px-3 !py-3 md:!px-4 md:!py-4 bg-black hover:!bg-[#111111]"
         @click="toggleDropdown"
       >
         <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
@@ -105,8 +103,5 @@ onBeforeUnmount(() => {
         <span class="w-28 text-center md:w-auto md:text-left">SAVE TO FOLDER</span>
       </button>
     </div>
-    <p v-if="props.error" class="mt-2 text-center font-mono text-xs text-red-400">
-      {{ props.error }}
-    </p>
   </div>
 </template>

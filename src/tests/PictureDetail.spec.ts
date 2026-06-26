@@ -68,7 +68,7 @@ describe('PictureDetail', () => {
     expect(saveImage).toHaveBeenCalledWith(expect.objectContaining({ id: 'y2k-main-001' }));
   });
 
-  it('shows an error toast and error message when saveImage throws', async () => {
+  it('shows an error toast when saveImage throws', async () => {
     vi.mocked(saveImage).mockImplementationOnce(() => { throw new Error('save failed') });
     const { wrapper } = await mountPictureDetail();
 
@@ -82,7 +82,6 @@ describe('PictureDetail', () => {
     await flushPromises();
 
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
-    expect(wrapper.text()).toContain('Failed to save. Please try again.');
   });
 
   it('shows a success toast after saving', async () => {

@@ -55,15 +55,6 @@ describe('ImageMetaPanel', () => {
     expect(wrapper.find('.animate-spin').exists()).toBe(true);
   });
 
-  it('shows an error message when error prop is set', () => {
-    const errorMsg = '儲存失敗，請再試一次';
-    const wrapper = mount(ImageMetaPanel, {
-      props: { ...defaultProps, error: errorMsg }
-    });
-
-    expect(wrapper.text()).toContain(errorMsg);
-  });
-
   it('forwards selected similar image ids', async () => {
     const wrapper = mount(ImageMetaPanel, {
       props: { ...defaultProps, similarImages }

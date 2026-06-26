@@ -12,7 +12,7 @@ export function useSaveToMoodboard() {
     isSaving.value = true;
     saveError.value = null;
     try {
-      saveImage(image);
+      await saveImage(image);
       await new Promise((resolve) => setTimeout(resolve, 300));
       showToast({ type: 'success', message: 'Saved to moodboard' });
     } catch {

@@ -10,6 +10,7 @@ import {
   getStyleGroupRootImage
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
+import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
@@ -29,7 +30,8 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { isSaving, saveError, saveToMoodboard } = useSaveToMoodboard();
+const { isSaving, saveToMoodboard } = useSaveToMoodboard();
+const showCreateFolder = ref(false);
 
 function handleBack() {
   if (!currentImage.value) {
@@ -50,7 +52,7 @@ function handleBack() {
 }
 
 function handleCreateFolder() {
-  // TODO: 開啟新建資料夾 modal
+  showCreateFolder.value = true;
 }
 
 function handleConsult() {
@@ -94,7 +96,6 @@ async function handleSaveToFolder() {
         photographer-role="Photographer"
         photographer-date="Aug 19, 2025"
         :loading="isSaving"
-        :error="saveError"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
@@ -103,4 +104,5 @@ async function handleSaveToFolder() {
       />
     </div>
   </div>
+  <CreateNewFolder v-model="showCreateFolder" />
 </template>
