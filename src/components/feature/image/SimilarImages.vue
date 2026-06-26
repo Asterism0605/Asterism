@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
 import type { ImageSpreadNode } from '@/types/image';
 
 defineProps<{
   images: ImageSpreadNode[];
 }>();
 
-const router = useRouter();
-
-function openImageDetail(imageId: string) {
-  router.push({ name: 'picture-detail', params: { imageId } });
-}
+const emit = defineEmits<{
+  select: [imageId: string];
+}>();
 </script>
 
 <template>
@@ -23,7 +20,7 @@ function openImageDetail(imageId: string) {
         :key="image.id"
         type="button"
         class="cursor-pointer overflow-hidden rounded text-left transition duration-200 hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim"
-        @click="openImageDetail(image.id)"
+        @click="emit('select', image.id)"
       >
         <img :src="image.src" :alt="image.alt" class="aspect-square w-full object-cover" />
       </button>

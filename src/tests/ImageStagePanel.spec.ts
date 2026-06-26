@@ -1,6 +1,5 @@
-import { flushPromises, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { createMemoryHistory, createRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
@@ -26,27 +25,16 @@ const smallImages: ImageSpreadNode[] = [
 ];
 
 describe('ImageStagePanel', () => {
-  it('navigates to the clicked floating related image detail page', async () => {
-    const router = createRouter({
-      history: createMemoryHistory(),
-      routes: [{ path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } }]
-    });
-
-    await router.push('/images/current-image');
-    await router.isReady();
-
+  it('emits the clicked floating related image id', async () => {
     const wrapper = mount(ImageStagePanel, {
       props: { mainImageUrl: '/main.webp', smallImages },
       global: {
-        plugins: [router],
         stubs: { ConstellationBackground: true }
       }
     });
 
     await wrapper.findAll('button')[1].trigger('click');
-    await flushPromises();
 
-    expect(router.currentRoute.value.name).toBe('picture-detail');
-    expect(router.currentRoute.value.params.imageId).toBe('related-bottom-right');
+    expect(wrapper.emitted('select')).toEqual([['related-bottom-right']]);
   });
 });

@@ -2,6 +2,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import PictureDetail from '@/pages/PictureDetail.vue';
+import { getRelatedImages } from '@/services/image.service';
 import { saveImage } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 
@@ -19,7 +20,10 @@ vi.mock('@/composables/useToast', () => ({
 }));
 
 vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
-  default: { template: '<div />' }
+  default: {
+    emits: ['select'],
+    template: '<div data-test="image-stage-panel" @click="$emit(\'select\', \'stage-related-001\')" />'
+  }
 }));
 
 async function mountPictureDetail(imageId = 'y2k-main-001') {
@@ -108,6 +112,27 @@ describe('PictureDetail', () => {
 
     expect(router.currentRoute.value.name).toBe('consultant');
     expect(router.currentRoute.value.query.sourceImageId).toBe('rpl-interior-lighting-001');
+  });
+
+  it('routes to the selected stage image detail page', async () => {
+    const { router, wrapper } = await mountPictureDetail();
+
+    await wrapper.find('[data-test="image-stage-panel"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('picture-detail');
+    expect(router.currentRoute.value.params.imageId).toBe('stage-related-001');
+  });
+
+  it('routes to the selected similar image detail page', async () => {
+    const { router, wrapper } = await mountPictureDetail();
+    const expectedImageId = getRelatedImages('y2k-main-001', { limit: 6 })[2].id;
+
+    await wrapper.find('div.grid button').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('picture-detail');
+    expect(router.currentRoute.value.params.imageId).toBe(expectedImageId);
   });
 
   it('returns to the image spread page with the style group root id', async () => {

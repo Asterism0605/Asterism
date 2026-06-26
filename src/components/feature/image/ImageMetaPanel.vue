@@ -27,6 +27,7 @@ const emit = defineEmits<{
   consult: [];
   'create-folder': [];
   'save-to-folder': [];
+  'select-image': [imageId: string];
 }>();
 
 const siteLogoSrc = '/sitelogo.png';
@@ -96,7 +97,11 @@ const siteLogoSrc = '/sitelogo.png';
       <div class="h-0.5 flex-1 bg-white/15" />
     </div>
 
-    <SimilarImages v-if="similarImages?.length" :images="similarImages" />
+    <SimilarImages
+      v-if="similarImages?.length"
+      :images="similarImages"
+      @select="emit('select-image', $event)"
+    />
   </div>
 </template>
 

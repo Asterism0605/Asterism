@@ -1,11 +1,24 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
+import type { ImageSpreadNode } from '@/types/image';
 
 const defaultProps = {
   colorPalette: ['#ffffff', '#000000'],
   styleTags: ['Y2K']
 };
+
+const similarImages: ImageSpreadNode[] = [
+  {
+    id: 'related-001',
+    src: '/related-001.webp',
+    alt: 'Related image',
+    title: 'Related image',
+    styleGroup: 'Y2K & Internet Aesthetics',
+    style: ['Y2K'],
+    colorPalette: ['#ffffff']
+  }
+];
 
 describe('ImageMetaPanel', () => {
   it('emits consult when CONSULT STYLIST is clicked', async () => {
@@ -49,5 +62,15 @@ describe('ImageMetaPanel', () => {
     });
 
     expect(wrapper.text()).toContain(errorMsg);
+  });
+
+  it('forwards selected similar image ids', async () => {
+    const wrapper = mount(ImageMetaPanel, {
+      props: { ...defaultProps, similarImages }
+    });
+
+    await wrapper.find('div.grid button').trigger('click');
+
+    expect(wrapper.emitted('select-image')).toEqual([['related-001']]);
   });
 });

@@ -62,6 +62,10 @@ function handleConsult() {
   });
 }
 
+function handleSelectImage(imageId: string) {
+  router.push({ name: 'picture-detail', params: { imageId } });
+}
+
 async function handleSaveToFolder() {
   if (!currentImage.value) return;
   await saveToMoodboard(currentImage.value);
@@ -75,6 +79,7 @@ async function handleSaveToFolder() {
       class="hidden md:flex"
       :main-image-url="currentImage.src"
       :small-images="smallImages"
+      @select="handleSelectImage"
     />
 
     <div class="w-full overflow-y-auto md:w-2/5 md:overflow-hidden">
@@ -94,6 +99,7 @@ async function handleSaveToFolder() {
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
         @save-to-folder="handleSaveToFolder"
+        @select-image="handleSelectImage"
       />
     </div>
   </div>
