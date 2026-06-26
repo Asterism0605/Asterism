@@ -5,12 +5,17 @@ import StyleDnaResult from '@/pages/StyleDnaResult.vue';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { StyleDnaAnswer } from '@/types/style-dna';
 
-const { showToast } = vi.hoisted(() => ({
+const { push, showToast } = vi.hoisted(() => ({
+  push: vi.fn(),
   showToast: vi.fn()
 }));
 
 vi.mock('@/composables/useToast', () => ({
   showToast
+}));
+
+vi.mock('vue-router', () => ({
+  useRouter: () => ({ push })
 }));
 
 const y2kAnswers: StyleDnaAnswer[] = [
@@ -44,6 +49,7 @@ describe('StyleDnaResult', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    push.mockReset();
     showToast.mockReset();
   });
 
@@ -60,8 +66,11 @@ describe('StyleDnaResult', () => {
 
     expect(wrapper.text()).toContain('Your');
     expect(wrapper.text()).toContain('Style DNA');
+    expect(wrapper.text()).toContain('Style DNA Complete');
     expect(wrapper.text()).toContain('Minimalism');
-    expect(wrapper.text()).not.toContain('Retake quiz');
+    expect(wrapper.text()).toContain('70%');
+    expect(wrapper.text()).toContain('Your homepage is now personalized based on your Style DNA.');
+    expect(wrapper.text()).toContain('Retake Quiz');
     expect(showToast).toHaveBeenCalledWith(
       expect.objectContaining({
         type: 'info',
@@ -83,8 +92,38 @@ describe('StyleDnaResult', () => {
 
     expect(wrapper.text()).toContain('Y2K');
     expect(wrapper.text()).toContain('67%');
+    expect(wrapper.text()).toContain('Style DNA Complete');
     expect(wrapper.find('img[alt*="Y2K"]').attributes('src')).toBe('/images/astronaut-dna.png');
     expect(wrapper.text()).not.toContain('No quiz data found');
     expect(showToast).not.toHaveBeenCalled();
+  });
+
+  it('routes the result CTAs to the personalized feed and quiz restart', async () => {
+    vi.useFakeTimers();
+
+    const wrapper = mountStyleDnaResult();
+
+    await vi.advanceTimersByTimeAsync(1600);
+    await wrapper.get('[data-testid="start-exploring"]').trigger('click');
+    await wrapper.get('[data-testid="retake-quiz"]').trigger('click');
+
+    expect(push).toHaveBeenNthCalledWith(1, { name: 'home', query: { source: 'style-dna' } });
+    expect(push).toHaveBeenNthCalledWith(2, { name: 'style-dna' });
+  });
+
+  it('uses the sand wrapper without changing the primary CTA typography classes', async () => {
+    vi.useFakeTimers();
+
+    const wrapper = mountStyleDnaResult();
+
+    await vi.advanceTimersByTimeAsync(1600);
+
+    const startExploring = wrapper.get('[data-testid="start-exploring"]');
+
+    expect(startExploring.element.parentElement?.classList.contains('result-guide-submit')).toBe(
+      true
+    );
+    expect(startExploring.classes()).toContain('text-sm');
+    expect(startExploring.classes()).toContain('tracking-[1px]');
   });
 });
