@@ -26,4 +26,8 @@ describe('getSafeRedirectPath', () => {
   it('rejects paths that do not start with a slash', () => {
     expect(getSafeRedirectPath('discover-dna', '/')).toBe('/');
   });
+
+  it('rejects paths containing a backslash (browsers treat \\ as /)', () => {
+    expect(getSafeRedirectPath('/\\evil.com', '/')).toBe('/');
+  });
 });

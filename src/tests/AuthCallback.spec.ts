@@ -50,4 +50,18 @@ describe('AuthCallback', () => {
     expect(replace).not.toHaveBeenCalled();
     expect(wrapper.text()).toContain('Sign-in failed');
   });
+
+  it('OAuth 回傳 error → 直接失敗態、不嘗試 hydrate', async () => {
+    const router = makeRouter();
+    const replace = vi.spyOn(router, 'replace');
+    router.push('/auth/callback?error=access_denied');
+    await router.isReady();
+
+    const wrapper = mount(AuthCallback, { global: { plugins: [router] } });
+    await flushPromises();
+
+    expect(store.hydrate).not.toHaveBeenCalled();
+    expect(replace).not.toHaveBeenCalled();
+    expect(wrapper.text()).toContain('Sign-in failed');
+  });
 });
