@@ -1,7 +1,11 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { StyleDnaAnswer } from '@/types/style-dna';
-import { computeStyleDnaResult } from '@/utils/computeStyleDnaResult';
+import {
+  computeStyleDnaResult,
+  type ComputedStyleDnaResult
+} from '@/utils/computeStyleDnaResult';
+import { fetchStyleDnaProfile, saveStyleDnaResult } from '@/services/style-dna.service';
 
 const STORAGE_KEY = 'asterism:style-dna-result:v1';
 
@@ -22,9 +26,13 @@ const isPersistedStyleDnaResult = (value: unknown): value is PersistedStyleDnaRe
 export const useStyleDnaStore = defineStore('style-dna', () => {
   const answers = ref<StyleDnaAnswer[]>([]);
   const completedAt = ref<string | null>(null);
+  const serverResult = ref<ComputedStyleDnaResult | null>(null);
 
-  const result = computed(() => computeStyleDnaResult(answers.value));
-  const hasCompletedQuiz = computed(() => completedAt.value !== null);
+  const hasLocalResult = computed(() => completedAt.value !== null && answers.value.length > 0);
+  const result = computed(() =>
+    hasLocalResult.value ? computeStyleDnaResult(answers.value) : serverResult.value ?? computeStyleDnaResult()
+  );
+  const hasCompletedQuiz = computed(() => completedAt.value !== null || serverResult.value !== null);
   const preferredStyles = computed(() => result.value.styles.map((style) => style.label));
 
   function persist(): void {
@@ -38,6 +46,7 @@ export const useStyleDnaStore = defineStore('style-dna', () => {
   function completeQuiz(nextAnswers: StyleDnaAnswer[]): void {
     answers.value = nextAnswers;
     completedAt.value = new Date().toISOString();
+    serverResult.value = null;
     persist();
   }
 
@@ -57,25 +66,68 @@ export const useStyleDnaStore = defineStore('style-dna', () => {
 
       answers.value = parsed.answers;
       completedAt.value = parsed.completedAt;
+      serverResult.value = null;
     } catch {
       localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+
+  async function hydrateFromServer(userId: string): Promise<void> {
+    try {
+      const profile = await fetchStyleDnaProfile(userId);
+
+      if (profile.result) {
+        serverResult.value = profile.result;
+      }
+    } catch (error) {
+      console.warn('[style-dna] hydrate from Supabase failed:', error);
+    }
+  }
+
+  async function saveCurrentResultToServer(userId: string): Promise<void> {
+    if (!hasCompletedQuiz.value) {
+      return;
+    }
+
+    await saveStyleDnaResult(userId, result.value);
+  }
+
+  async function reconcileWithServer(userId: string): Promise<void> {
+    try {
+      const profile = await fetchStyleDnaProfile(userId);
+
+      if (profile.result) {
+        serverResult.value = profile.result;
+        return;
+      }
+
+      if (hasLocalResult.value) {
+        await saveCurrentResultToServer(userId);
+      }
+    } catch (error) {
+      console.warn('[style-dna] sync with Supabase failed:', error);
     }
   }
 
   function clearResult(): void {
     answers.value = [];
     completedAt.value = null;
+    serverResult.value = null;
     localStorage.removeItem(STORAGE_KEY);
   }
 
   return {
     answers,
     completedAt,
+    serverResult,
     result,
     hasCompletedQuiz,
     preferredStyles,
     completeQuiz,
     hydrateResult,
+    hydrateFromServer,
+    saveCurrentResultToServer,
+    reconcileWithServer,
     clearResult
   };
 });

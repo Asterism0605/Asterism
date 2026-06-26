@@ -1,9 +1,19 @@
 import { setActivePinia, createPinia } from 'pinia';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { StyleDnaAnswer } from '@/types/style-dna';
+import type { ComputedStyleDnaResult } from '@/utils/computeStyleDnaResult';
 
 const STORAGE_KEY = 'asterism:style-dna-result:v1';
+const { fetchStyleDnaProfile, saveStyleDnaResult } = vi.hoisted(() => ({
+  fetchStyleDnaProfile: vi.fn(),
+  saveStyleDnaResult: vi.fn()
+}));
+
+vi.mock('@/services/style-dna.service', () => ({
+  fetchStyleDnaProfile,
+  saveStyleDnaResult
+}));
 
 const createAnswer = (id: string, style: string, weight: number): StyleDnaAnswer => ({
   questionId: `question-${id}`,
@@ -16,10 +26,25 @@ const createAnswer = (id: string, style: string, weight: number): StyleDnaAnswer
   weights: { [style]: weight }
 });
 
+const serverResult: ComputedStyleDnaResult = {
+  isFallback: false,
+  primaryStyle: 'Art Deco',
+  heroImage: '/images/art-deco.png',
+  styles: [
+    { label: 'Art Deco', percentage: 70 },
+    { label: 'Baroque', percentage: 30 }
+  ],
+  annotations: [
+    { label: 'Art Deco', value: '70%', position: 'top-right' },
+    { label: 'Baroque', value: '30%', position: 'left' }
+  ]
+};
+
 describe('style-dna store', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     localStorage.clear();
+    vi.clearAllMocks();
   });
 
   it('completes the quiz by storing answers, completedAt and persisting to localStorage', () => {
@@ -88,5 +113,61 @@ describe('style-dna store', () => {
     expect(store.completedAt).toBeNull();
     expect(store.hasCompletedQuiz).toBe(false);
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+  });
+
+  it('hydrates a server result snapshot without requiring local answers', async () => {
+    fetchStyleDnaProfile.mockResolvedValue({
+      result: serverResult,
+      onboardingStatus: 'completed'
+    });
+    const store = useStyleDnaStore();
+
+    await store.hydrateFromServer('user-1');
+
+    expect(store.answers).toEqual([]);
+    expect(store.completedAt).toBeNull();
+    expect(store.hasCompletedQuiz).toBe(true);
+    expect(store.result).toEqual(serverResult);
+    expect(store.preferredStyles).toEqual(['Art Deco', 'Baroque']);
+  });
+
+  it('does not write local data again when the server already has a result', async () => {
+    fetchStyleDnaProfile.mockResolvedValue({
+      result: serverResult,
+      onboardingStatus: 'completed'
+    });
+    const store = useStyleDnaStore();
+    store.completeQuiz([createAnswer('1', 'Minimalism', 1)]);
+
+    await store.reconcileWithServer('user-1');
+
+    expect(saveStyleDnaResult).not.toHaveBeenCalled();
+    expect(store.serverResult).toEqual(serverResult);
+    expect(store.result.primaryStyle).toBe('Minimalism');
+  });
+
+  it('writes the current local result once when the server has no result', async () => {
+    fetchStyleDnaProfile.mockResolvedValue({
+      result: null,
+      onboardingStatus: 'not_started'
+    });
+    const store = useStyleDnaStore();
+    store.completeQuiz([createAnswer('1', 'Minimalism', 1)]);
+
+    await store.reconcileWithServer('user-1');
+
+    expect(saveStyleDnaResult).toHaveBeenCalledWith('user-1', store.result);
+  });
+
+  it('keeps localStorage intact when server sync fails', async () => {
+    fetchStyleDnaProfile.mockRejectedValue(new Error('network down'));
+    const store = useStyleDnaStore();
+    store.completeQuiz([createAnswer('1', 'Minimalism', 1)]);
+    const persisted = localStorage.getItem(STORAGE_KEY);
+
+    await expect(store.reconcileWithServer('user-1')).resolves.toBeUndefined();
+
+    expect(localStorage.getItem(STORAGE_KEY)).toBe(persisted);
+    expect(store.hasCompletedQuiz).toBe(true);
   });
 });
