@@ -5,9 +5,9 @@ import ThemeTag from '@/components/ui/ThemeTag.vue';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
 import { ArrowLeft, ExternalLink } from '@lucide/vue';
 import SimilarImages from '@/components/feature/image/SimilarImages.vue';
+import type { ImageSpreadNode } from '@/types/image';
 
 interface Props {
-  title: string;
   sourceUrl?: string;
   sourceLabel?: string;
   colorPalette: string[];
@@ -15,7 +15,7 @@ interface Props {
   photographerName?: string;
   photographerRole?: string;
   photographerDate?: string;
-  similarImages?: string[];
+  similarImages?: ImageSpreadNode[];
   loading?: boolean;
   error?: string | null;
 }
@@ -24,8 +24,10 @@ defineProps<Props>();
 
 const emit = defineEmits<{
   back: [];
+  consult: [];
   'create-folder': [];
   'save-to-folder': [];
+  'select-image': [imageId: string];
 }>();
 
 const siteLogoSrc = '/sitelogo.png';
@@ -33,7 +35,7 @@ const siteLogoSrc = '/sitelogo.png';
 
 <template>
   <div
-    class="flex flex-col gap-6 overflow-y-auto px-6 py-6 md:h-full"
+    class="flex flex-col gap-11 overflow-y-auto px-6 py-6 md:h-full"
     style="background: linear-gradient(180deg, #2c2c2c 0%, #1e1e1e 100%)"
   >
     <button
@@ -45,39 +47,41 @@ const siteLogoSrc = '/sitelogo.png';
       Back
     </button>
 
-    <div class="flex items-start justify-between gap-4">
-      <h1 class="text-h2 text-text-primary leading-tight">{{ title }}</h1>
+    <div class="flex items-center justify-between gap-4">
+      <h1 class="text-h1 font-[300] text-text-primary leading-tight">Info</h1>
       <a
         v-if="sourceUrl"
         :href="sourceUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="mt-1 flex shrink-0 items-center gap-1 font-mono text-xs uppercase tracking-widest text-text-secondary underline underline-offset-2 transition-colors duration-150 hover:text-text-primary"
+        class="flex shrink-0 items-center gap-1 font-mono text-xs uppercase tracking-widest text-text-secondary underline underline-offset-2 transition-colors duration-150 hover:text-text-primary"
       >
         {{ sourceLabel ?? sourceUrl }}
         <ExternalLink class="size-2.5" aria-hidden="true" />
       </a>
     </div>
 
-    <p v-if="photographerName" class="text-base text-text-secondary">
-      Photo shared by {{ photographerName
-      }}<span v-if="photographerRole"> | {{ photographerRole }}</span
-      ><span v-if="photographerDate"> · {{ photographerDate }}</span>
-    </p>
+    <div class="flex flex-col gap-[12px]">
+      <p v-if="photographerDate || photographerName" class="text-mono text-text-secondary">
+        Photo shared<span v-if="photographerDate"> on {{ photographerDate }}</span
+        ><span v-if="photographerName"> by</span>
+      </p>
 
-    <ProfileCard
-      v-if="photographerName"
-      :name="photographerName"
-      :subtitle="photographerRole"
-      :show-follow="true"
-    />
+      <ProfileCard
+        v-if="photographerName"
+        class="pt-0!"
+        :name="photographerName"
+        :subtitle="photographerRole"
+        :show-follow="true"
+      />
+    </div>
 
     <ColorPaletteSwatch :colors="colorPalette" class="bg-transparent! p-0!" />
 
     <ThemeTag :tags="styleTags" compact />
 
     <div class="flex items-center gap-3">
-      <ActionButton class="flex-1" variant="consult" />
+      <ActionButton class="flex-1" variant="consult" @consult="emit('consult')" />
       <ActionButton
         class="flex-1"
         :loading="loading"
@@ -93,7 +97,11 @@ const siteLogoSrc = '/sitelogo.png';
       <div class="h-0.5 flex-1 bg-white/15" />
     </div>
 
-    <SimilarImages v-if="similarImages?.length" :images="similarImages" />
+    <SimilarImages
+      v-if="similarImages?.length"
+      :images="similarImages"
+      @select="emit('select-image', $event)"
+    />
   </div>
 </template>
 

@@ -113,6 +113,32 @@ export function getImageById(imageId: string): ImageSpreadNode | undefined {
   return image ? toSpreadNode(image) : undefined;
 }
 
+export function getStyleGroupRootImage(imageId: string): ImageSpreadNode | undefined {
+  const image = styleImages.find((item) => item.id === imageId);
+
+  if (!image) return undefined;
+
+  const rootImage = styleImages.find(
+    (item) => item.styleGroup === image.styleGroup && !item.medium
+  );
+
+  return rootImage ? toSpreadNode(rootImage) : undefined;
+}
+
+export function getMediumEntryImage(imageId: string): ImageSpreadNode | undefined {
+  const image = styleImages.find((item) => item.id === imageId);
+
+  if (!image?.medium) return undefined;
+  if (!image.subMedium) return toSpreadNode(image);
+
+  const mediumEntryImage = styleImages.find(
+    (item) =>
+      item.styleGroup === image.styleGroup && item.medium === image.medium && !item.subMedium
+  );
+
+  return mediumEntryImage ? toSpreadNode(mediumEntryImage) : toSpreadNode(image);
+}
+
 export function getMediumGroupImages(
   imageId: string,
   options: RelatedImageOptions = {}
@@ -153,43 +179,19 @@ function pickRelatedCandidates(
   baseImage: StyleImage,
   limit: number
 ): StyleImage[] {
-  const selectedIds = new Set<string>();
-
-  function takeFrom(predicate: (image: StyleImage) => boolean): StyleImage[] {
-    const picked: StyleImage[] = [];
-
-    for (const image of candidates) {
-      if (picked.length >= limit) break;
-      if (selectedIds.has(image.id)) continue;
-      if (predicate(image)) {
-        selectedIds.add(image.id);
-        picked.push(image);
-      }
-    }
-
-    return picked;
-  }
-
-  const result: StyleImage[] = [];
-
-  if (baseImage.subMedium) {
-    result.push(...takeFrom((image) => image.subMedium === baseImage.subMedium));
-  }
-
-  if (baseImage.medium && result.length < limit) {
-    result.push(...takeFrom((image) => image.medium === baseImage.medium));
-  }
-
-  if (result.length < limit) {
-    result.push(
-      ...takeFrom((image) => image.styleGroup === baseImage.styleGroup)
-        .sort(
-          (first, second) => countSharedStyles(baseImage, second) - countSharedStyles(baseImage, first)
-        )
-    );
-  }
-
-  return result;
+  return candidates
+    .filter((image) => image.styleGroup === baseImage.styleGroup)
+    .map((image, index) => ({
+      image,
+      index,
+      sharedStyleCount: countSharedStyles(baseImage, image)
+    }))
+    .sort(
+      (first, second) =>
+        second.sharedStyleCount - first.sharedStyleCount || first.index - second.index
+    )
+    .slice(0, limit)
+    .map(({ image }) => image);
 }
 
 export function getRelatedImages(
@@ -205,7 +207,7 @@ export function getRelatedImages(
   const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
   const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
   const candidates = styleImages.filter(
-    (image) => !image.id.includes('main') && !excludedIds.has(image.id)
+    (image) => Boolean(image.subMedium) && !excludedIds.has(image.id)
   );
 
   return pickRelatedCandidates(candidates, baseImage, limit).map(toSpreadNode);
