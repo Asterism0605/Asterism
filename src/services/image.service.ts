@@ -1,4 +1,5 @@
 import rawStyleImages from '@/data/style-data.json';
+import { fetchImagesApi } from '@/api/image.api';
 import type {
   HomeInspirationImage,
   HomeInspirationOptions,
@@ -14,7 +15,13 @@ interface RelatedImageOptions {
 
 const DEFAULT_RELATED_LIMIT = 4;
 
-const styleImages = rawStyleImages as StyleImage[];
+// 可變快取，預設＝打包 JSON；啟動時由 loadImages() 換成 Supabase（已 gate）資料。
+// 預設值讓未呼叫 loadImages 的情境（多數單元測試、載入前瞬間）行為與現狀一致。
+let styleImages: StyleImage[] = rawStyleImages as StyleImage[];
+
+export async function loadImages(): Promise<void> {
+  styleImages = await fetchImagesApi();
+}
 
 function toSpreadNode(image: StyleImage): ImageSpreadNode {
   return {

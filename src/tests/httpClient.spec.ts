@@ -4,7 +4,7 @@ import { httpClient, normalizeApiError } from '@/api/httpClient';
 
 describe('httpClient', () => {
   it('creates one configured axios instance for API modules', () => {
-    expect(httpClient.defaults.baseURL).toBe('');
+    expect(httpClient.defaults.baseURL).toBe(import.meta.env.VITE_API_BASE_URL ?? '');
     expect(httpClient.defaults.timeout).toBe(10000);
   });
 
