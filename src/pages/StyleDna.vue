@@ -3,10 +3,12 @@ import { onBeforeUnmount, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import StyleComparisonPicker from '@/components/feature/dna/StyleComparisonPicker.vue';
 import { useStyleDnaQuiz } from '@/composables/useStyleDnaQuiz';
+import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 
 const router = useRouter();
 const styleDnaStore = useStyleDnaStore();
+const authStore = useAuthStore();
 const quiz = useStyleDnaQuiz();
 const {
   answers,
@@ -50,6 +52,11 @@ const handleSelect = (optionId: string) => {
 
     if (isCompleted.value) {
       styleDnaStore.completeQuiz([...answers]);
+      if (authStore.user?.id) {
+        void styleDnaStore.saveCurrentResultToServer(authStore.user.id).catch((error: unknown) => {
+          console.warn('[style-dna] sync after quiz failed:', error);
+        });
+      }
       void router.push(completedTargetPath);
     }
   }, 500);
