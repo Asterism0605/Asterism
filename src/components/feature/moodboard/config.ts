@@ -74,6 +74,7 @@ export const photos: MoodboardPhoto[] = [
 ];
 
 export const IMG_URLS: string[] = photos.map((p) => p.src);
+export const EMPTY_STATE_PREVIEW_PHOTOS: MoodboardPhoto[] = photos;
 
 const mImg = (n: number) => `/images/image${n}.png`;
 

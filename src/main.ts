@@ -5,9 +5,11 @@ import App from './App.vue'
 import router from './router'
 import { useStyleDnaStore } from './stores/style-dna.store'
 import { useAuthStore } from './stores/auth.store'
+import { useMoodboardStore } from './stores/moodboard.store'
 
 const pinia = createPinia()
 useStyleDnaStore(pinia).hydrateResult()
+useMoodboardStore(pinia).hydrate()
 
 void (async () => {
   // hydrate 失敗（Supabase 連不到 / env 未設）也要照常 mount，否則整站白屏。
