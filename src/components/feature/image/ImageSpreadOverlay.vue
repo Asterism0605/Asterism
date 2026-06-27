@@ -16,6 +16,7 @@ const emit = defineEmits<{
   return: [];
   'create-folder': [];
   'save-to-folder': [];
+  remove: [];
 }>();
 
 const mainImageLabel = computed(() => {
@@ -92,6 +93,7 @@ const mainImageLabel = computed(() => {
         :saved="props.saved"
         @create-folder="emit('create-folder')"
         @save-to-folder="emit('save-to-folder')"
+        @remove="emit('remove')"
       />
     </ImageSpreadEntrance>
   </ImageSpreadEntrance>

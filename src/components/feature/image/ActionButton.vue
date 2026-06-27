@@ -16,6 +16,7 @@ const emit = defineEmits<{
   consult: [];
   'create-folder': [];
   'save-to-folder': [];
+  remove: [];
 }>();
 
 const isOpen = ref(false);
@@ -57,7 +58,7 @@ onBeforeUnmount(() => {
       <Button
         variant="secondary"
         class="w-full !px-3 !py-3 md:!px-4 md:!py-4 bg-black hover:!bg-[#111111]"
-        @click="toggleDropdown"
+        @click="props.saved ? emit('remove') : toggleDropdown()"
       >
         <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
           <Bookmark class="w-4 h-4 md:w-5.5 md:h-5.5" :fill="props.saved ? 'currentColor' : 'none'" aria-hidden="true" />
