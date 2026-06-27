@@ -2,8 +2,6 @@ import type { SavedImage } from '@/types/moodboard';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { getImageById } from '@/services/image.service';
 
-const DEFAULT_FOLDER_ID = 'default';
-
 export function addItem(folderId: string, imageId: string): void {
   const store = useMoodboardStore();
   const image = getImageById(imageId);
