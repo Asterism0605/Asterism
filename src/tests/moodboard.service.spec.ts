@@ -42,6 +42,14 @@ describe('moodboard.service', () => {
     expect(store.folders[1].images).toEqual([]);
   });
 
+  it('createFolder throws when folder count reaches 10', () => {
+    for (let i = 0; i < 9; i++) {
+      createFolder(`Folder ${i}`);
+    }
+
+    expect(() => createFolder('One too many')).toThrow('You have reached the maximum of 10 folders.');
+  });
+
   it('isImageSaved returns true when the image is saved', () => {
     addItem('default', 'y2k-001');
 

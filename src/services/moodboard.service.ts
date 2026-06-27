@@ -19,6 +19,9 @@ export function removeItem(folderId: string, imageId: string): void {
 
 export function createFolder(name: string): void {
   const store = useMoodboardStore();
+  if (store.folders.length >= 10) {
+    throw new Error('You have reached the maximum of 10 folders.');
+  }
   store.createFolder(name);
 }
 

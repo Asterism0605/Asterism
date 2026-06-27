@@ -24,7 +24,7 @@ watch(
 );
 
 async function handleSubmit() {
-  if (!folderName.value.trim() || isSubmitting.value) return;
+  if (!folderName.value.trim() || folderName.value.trim().length > 40 || isSubmitting.value) return;
   isSubmitting.value = true;
   try {
     await createFolder(folderName.value.trim());
@@ -50,6 +50,7 @@ async function handleSubmit() {
           :class="{ 'pr-10': isSuccess }"
           type="text"
           placeholder="Folder name"
+          maxlength="40"
           :disabled="isSubmitting || isSuccess"
           @keydown.enter="handleSubmit"
         />
