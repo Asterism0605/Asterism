@@ -1,16 +1,15 @@
-import type { ImageSpreadNode } from '@/types/image';
 import type { SavedImage } from '@/types/moodboard';
 import { useMoodboardStore } from '@/stores/moodboard.store';
+import { getImageById } from '@/services/image.service';
 
 const DEFAULT_FOLDER_ID = 'default';
 
-export function saveImage(image: ImageSpreadNode): void {
+export function addItem(folderId: string, imageId: string): void {
   const store = useMoodboardStore();
-  const savedImage: SavedImage = {
-    id: image.id,
-    src: image.src
-  };
-  store.addImage(DEFAULT_FOLDER_ID, savedImage);
+  const image = getImageById(imageId);
+  if (!image) return;
+  const savedImage: SavedImage = { id: imageId, src: image.src };
+  store.addImage(folderId, savedImage);
 }
 
 export function unsaveImage(imageId: string): void {

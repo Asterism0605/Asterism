@@ -3,11 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import ImageSpread from '@/pages/ImageSpread.vue';
 import { getImageById } from '@/services/image.service';
-import { saveImage } from '@/services/moodboard.service';
+import { addItem } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 
 vi.mock('@/services/moodboard.service', () => ({
-  saveImage: vi.fn(),
+  addItem: vi.fn(),
   unsaveImage: vi.fn(),
   createFolder: vi.fn(),
   isImageSaved: vi.fn(() => false)
@@ -210,8 +210,8 @@ describe('ImageSpread', () => {
     expect(wrapper.find('[data-testid="return-home"]').exists()).toBe(true);
   });
 
-  it('shows an error toast when saveImage throws', async () => {
-    vi.mocked(saveImage).mockImplementationOnce(() => { throw new Error('save failed') });
+  it('shows an error toast when addItem throws', async () => {
+    vi.mocked(addItem).mockImplementationOnce(() => { throw new Error('save failed') });
     const { wrapper } = await mountImageSpread();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
@@ -223,7 +223,7 @@ describe('ImageSpread', () => {
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
   });
 
-  it('calls saveImage with the center image when SAVE TO FOLDER is clicked', async () => {
+  it('calls addItem with the center image id when SAVE TO FOLDER is clicked', async () => {
     const { wrapper } = await mountImageSpread();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
@@ -232,7 +232,7 @@ describe('ImageSpread', () => {
     await saveBtn!.trigger('click');
     await flushPromises();
 
-    expect(saveImage).toHaveBeenCalledOnce();
-    expect(saveImage).toHaveBeenCalledWith(expect.objectContaining({ id: 'y2k-main-001' }));
+    expect(addItem).toHaveBeenCalledOnce();
+    expect(addItem).toHaveBeenCalledWith('default', 'y2k-main-001');
   });
 });

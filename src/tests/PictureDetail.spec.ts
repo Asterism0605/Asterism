@@ -3,11 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import PictureDetail from '@/pages/PictureDetail.vue';
 import { getRelatedImages } from '@/services/image.service';
-import { saveImage } from '@/services/moodboard.service';
+import { addItem } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 
 vi.mock('@/services/moodboard.service', () => ({
-  saveImage: vi.fn(),
+  addItem: vi.fn(),
   unsaveImage: vi.fn(),
   createFolder: vi.fn(),
   isImageSaved: vi.fn(() => false)
@@ -53,7 +53,7 @@ describe('PictureDetail', () => {
     vi.useRealTimers();
   });
 
-  it('calls saveImage with the current image when SAVE TO FOLDER is clicked', async () => {
+  it('calls addItem with the current image id when SAVE TO FOLDER is clicked', async () => {
     const { wrapper } = await mountPictureDetail();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
@@ -64,12 +64,12 @@ describe('PictureDetail', () => {
       .find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
 
-    expect(saveImage).toHaveBeenCalledOnce();
-    expect(saveImage).toHaveBeenCalledWith(expect.objectContaining({ id: 'y2k-main-001' }));
+    expect(addItem).toHaveBeenCalledOnce();
+    expect(addItem).toHaveBeenCalledWith('default', 'y2k-main-001');
   });
 
-  it('shows an error toast when saveImage throws', async () => {
-    vi.mocked(saveImage).mockImplementationOnce(() => { throw new Error('save failed') });
+  it('shows an error toast when addItem throws', async () => {
+    vi.mocked(addItem).mockImplementationOnce(() => { throw new Error('save failed') });
     const { wrapper } = await mountPictureDetail();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
