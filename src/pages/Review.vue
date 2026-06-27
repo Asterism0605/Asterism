@@ -6,7 +6,7 @@ import {
   type ReviewAction,
   type ReviewImage,
   type ReviewTaxonomy
-} from '@/api/review.api';
+} from '@/services/review.service';
 import { mediumZh, styleGroupZh, subMediumZh } from '@/data/styleLabels';
 
 interface ReviewCard extends ReviewImage {
@@ -68,15 +68,16 @@ function onMediumChange(card: ReviewCard) {
 }
 
 async function run(card: ReviewCard, action: ReviewAction) {
-  const payload =
-    action === 'correct'
-      ? { action, medium: card.draftMedium, subMedium: card.draftSubMedium }
-      : { action };
+  error.value = '';
   try {
-    await submitReview(card.id, payload);
+    await submitReview(card.id, action, {
+      needsReview: card.needsReview,
+      draftMedium: card.draftMedium,
+      draftSubMedium: card.draftSubMedium
+    });
     cards.value = cards.value.filter((item) => item.id !== card.id);
-  } catch {
-    error.value = `送出失敗：${card.id}`;
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : `送出失敗：${card.id}`;
   }
 }
 
@@ -179,11 +180,21 @@ onMounted(() => {
                 </p>
 
                 <label class="block text-xs text-text-secondary">
-                  類別 medium
+                  <span class="inline-flex items-center gap-1.5">
+                    類別 medium
+                    <span
+                      v-if="card.needsReview.medium"
+                      data-testid="review-flag-medium"
+                      class="rounded-full bg-gold-dim/20 px-1.5 py-0.5 text-[10px] font-semibold text-gold-dim"
+                    >
+                      需審
+                    </span>
+                  </span>
                   <select
                     v-model="card.draftMedium"
                     data-testid="review-medium"
-                    class="mt-1 w-full rounded-md border border-white/15 bg-void px-2 py-1.5 text-sm text-text-primary"
+                    :disabled="!card.needsReview.medium"
+                    class="mt-1 w-full rounded-md border border-white/15 bg-void px-2 py-1.5 text-sm text-text-primary disabled:opacity-50"
                     @change="onMediumChange(card)"
                   >
                     <option v-for="m in taxonomy.mediums" :key="m" :value="m">
@@ -193,11 +204,21 @@ onMounted(() => {
                 </label>
 
                 <label class="block text-xs text-text-secondary">
-                  子類別 subMedium
+                  <span class="inline-flex items-center gap-1.5">
+                    子類別 subMedium
+                    <span
+                      v-if="card.needsReview.subMedium"
+                      data-testid="review-flag-submedium"
+                      class="rounded-full bg-gold-dim/20 px-1.5 py-0.5 text-[10px] font-semibold text-gold-dim"
+                    >
+                      需審
+                    </span>
+                  </span>
                   <select
                     v-model="card.draftSubMedium"
                     data-testid="review-submedium"
-                    class="mt-1 w-full rounded-md border border-white/15 bg-void px-2 py-1.5 text-sm text-text-primary"
+                    :disabled="!card.needsReview.subMedium"
+                    class="mt-1 w-full rounded-md border border-white/15 bg-void px-2 py-1.5 text-sm text-text-primary disabled:opacity-50"
                   >
                     <option v-for="s in subMediumOptions(card.draftMedium)" :key="s" :value="s">
                       {{ subMediumZh(s) }}

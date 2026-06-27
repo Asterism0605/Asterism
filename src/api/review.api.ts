@@ -23,12 +23,6 @@ export interface ReviewQueueResponse {
   taxonomy: ReviewTaxonomy;
 }
 
-export interface ReviewPayload {
-  action: ReviewAction;
-  medium?: string;
-  subMedium?: string;
-}
-
 interface ImageRow {
   id: string;
   url: string;
@@ -40,10 +34,11 @@ interface ImageRow {
 }
 
 const TAXONOMY: ReviewTaxonomy = { mediums: MEDIUMS, subMediumsByMedium: SUB_MEDIUMS_BY_MEDIUM };
-const CLEARED = { styleGroup: false, medium: false, subMedium: false };
 
-function needsAny(nr: ImageRow['needs_review']): boolean {
-  return Boolean(nr?.styleGroup || nr?.medium || nr?.subMedium);
+// 只撈 medium / subMedium 需審的圖（本工具只審這兩項）。
+// styleGroup 需審但 medium/subMedium 都已審的圖不留在 queue，避免清不掉而卡住。
+function isQueueable(nr: ImageRow['needs_review']): boolean {
+  return Boolean(nr?.medium || nr?.subMedium);
 }
 
 function toReviewImage(row: ImageRow): ReviewImage {
@@ -64,19 +59,12 @@ export async function fetchReviewQueue(): Promise<ReviewQueueResponse> {
     .select('id,url,style_group,medium,sub_medium,confidence,needs_review')
     .eq('excluded', false);
   if (error) throw error;
-  const items = (data as ImageRow[]).filter((r) => needsAny(r.needs_review)).map(toReviewImage);
+  const items = (data as ImageRow[]).filter((r) => isQueueable(r.needs_review)).map(toReviewImage);
   return { items, taxonomy: TAXONOMY };
 }
 
-export async function submitReview(id: string, payload: ReviewPayload): Promise<void> {
-  let patch: Record<string, unknown>;
-  if (payload.action === 'approve') {
-    patch = { needs_review: CLEARED };
-  } else if (payload.action === 'correct') {
-    patch = { medium: payload.medium, sub_medium: payload.subMedium, needs_review: CLEARED };
-  } else {
-    patch = { excluded: true };
-  }
+// 低階更新：patch 由 service 層依 needsReview + draft 組好後傳進來，這裡只負責執行。
+export async function updateImage(id: string, patch: Record<string, unknown>): Promise<void> {
   const { error } = await getSupabase().from('images').update(patch).eq('id', id);
   if (error) throw error;
 }

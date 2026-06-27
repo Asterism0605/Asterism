@@ -1,7 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Review from '@/pages/Review.vue';
-import * as reviewApi from '@/api/review.api';
+import * as reviewService from '@/services/review.service';
 
 const queue = {
   items: [
@@ -44,7 +44,7 @@ async function mountReview() {
 describe('Review.vue', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    vi.spyOn(reviewApi, 'fetchReviewQueue').mockResolvedValue(structuredClone(queue));
+    vi.spyOn(reviewService, 'fetchReviewQueue').mockResolvedValue(structuredClone(queue));
   });
 
   it('進頁即載入並列出待審圖', async () => {
@@ -53,18 +53,22 @@ describe('Review.vue', () => {
   });
 
   it('approve 一鍵送出後該卡離開', async () => {
-    const submit = vi.spyOn(reviewApi, 'submitReview').mockResolvedValue();
+    const submit = vi.spyOn(reviewService, 'submitReview').mockResolvedValue();
     const wrapper = await mountReview();
 
     await wrapper.findAll('[data-testid="review-approve"]')[0].trigger('click');
     await flushPromises();
 
-    expect(submit).toHaveBeenCalledWith('ext-pexels-1', { action: 'approve' });
+    expect(submit).toHaveBeenCalledWith('ext-pexels-1', 'approve', {
+      needsReview: { styleGroup: false, medium: false, subMedium: true },
+      draftMedium: 'Graphic Design',
+      draftSubMedium: 'Poster Design'
+    });
     expect(wrapper.findAll('[data-testid="review-card"]')).toHaveLength(1);
   });
 
   it('correct 需先按修正→確認才送出', async () => {
-    const submit = vi.spyOn(reviewApi, 'submitReview').mockResolvedValue();
+    const submit = vi.spyOn(reviewService, 'submitReview').mockResolvedValue();
     const wrapper = await mountReview();
 
     await wrapper.findAll('[data-testid="review-correct"]')[0].trigger('click');
@@ -73,10 +77,21 @@ describe('Review.vue', () => {
     await wrapper.find('[data-testid="review-correct-confirm"]').trigger('click');
     await flushPromises();
 
-    expect(submit).toHaveBeenCalledWith('ext-pexels-1', {
-      action: 'correct',
-      medium: 'Graphic Design',
-      subMedium: 'Poster Design'
+    expect(submit).toHaveBeenCalledWith('ext-pexels-1', 'correct', {
+      needsReview: { styleGroup: false, medium: false, subMedium: true },
+      draftMedium: 'Graphic Design',
+      draftSubMedium: 'Poster Design'
     });
+  });
+
+  it('每張卡片標出需審欄位（badge）', async () => {
+    const wrapper = await mountReview();
+    const cards = wrapper.findAll('[data-testid="review-card"]');
+    // 第一張只有 subMedium 需審
+    expect(cards[0].find('[data-testid="review-flag-medium"]').exists()).toBe(false);
+    expect(cards[0].find('[data-testid="review-flag-submedium"]').exists()).toBe(true);
+    // 第二張 medium + subMedium 都需審
+    expect(cards[1].find('[data-testid="review-flag-medium"]').exists()).toBe(true);
+    expect(cards[1].find('[data-testid="review-flag-submedium"]').exists()).toBe(true);
   });
 });

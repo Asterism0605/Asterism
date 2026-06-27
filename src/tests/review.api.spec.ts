@@ -7,7 +7,7 @@ const update = vi.fn(() => ({ eq }));
 const from = vi.fn(() => ({ select, update }));
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ from }) }));
 
-import { fetchReviewQueue, submitReview } from '@/api/review.api';
+import { fetchReviewQueue, updateImage } from '@/api/review.api';
 
 const reviewed = {
   id: 'a',
@@ -23,12 +23,18 @@ const pending = {
   id: 'b',
   needs_review: { styleGroup: false, medium: true, subMedium: false }
 };
+// 只有 styleGroup 需審（medium/subMedium 都已審）→ 本工具不該撈進 queue
+const styleGroupOnly = {
+  ...reviewed,
+  id: 'c',
+  needs_review: { styleGroup: true, medium: false, subMedium: false }
+};
 
 describe('review.api', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it('fetchReviewQueue 只回 needs_review 有 true 且 excluded=false，映射 camelCase + 靜態 taxonomy', async () => {
-    selectEq.mockResolvedValue({ data: [reviewed, pending], error: null });
+  it('fetchReviewQueue 只回 medium/subMedium 需審且 excluded=false（styleGroup-only 排除），映射 camelCase + 靜態 taxonomy', async () => {
+    selectEq.mockResolvedValue({ data: [reviewed, pending, styleGroupOnly], error: null });
 
     const res = await fetchReviewQueue();
 
@@ -40,33 +46,15 @@ describe('review.api', () => {
     expect(res.taxonomy.subMediumsByMedium['Graphic Design']).toContain('Poster Design');
   });
 
-  it('approve 寫 needs_review 全 false', async () => {
+  it('updateImage 把傳入的 patch 直接送出', async () => {
     eq.mockResolvedValue({ error: null });
-    await submitReview('b', { action: 'approve' });
-    expect(update).toHaveBeenCalledWith({
-      needs_review: { styleGroup: false, medium: false, subMedium: false }
-    });
+    await updateImage('b', { excluded: true });
+    expect(update).toHaveBeenCalledWith({ excluded: true });
     expect(eq).toHaveBeenCalledWith('id', 'b');
   });
 
-  it('correct 寫 medium/sub_medium + needs_review 全 false', async () => {
-    eq.mockResolvedValue({ error: null });
-    await submitReview('b', { action: 'correct', medium: 'Outfit', subMedium: 'Top' });
-    expect(update).toHaveBeenCalledWith({
-      medium: 'Outfit',
-      sub_medium: 'Top',
-      needs_review: { styleGroup: false, medium: false, subMedium: false }
-    });
-  });
-
-  it('exclude 寫 excluded=true', async () => {
-    eq.mockResolvedValue({ error: null });
-    await submitReview('b', { action: 'exclude' });
-    expect(update).toHaveBeenCalledWith({ excluded: true });
-  });
-
-  it('update 出錯 → throw', async () => {
+  it('updateImage 出錯 → throw', async () => {
     eq.mockResolvedValue({ error: { message: 'rls' } });
-    await expect(submitReview('b', { action: 'approve' })).rejects.toBeTruthy();
+    await expect(updateImage('b', { excluded: true })).rejects.toBeTruthy();
   });
 });
