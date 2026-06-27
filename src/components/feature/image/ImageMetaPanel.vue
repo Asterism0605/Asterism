@@ -16,7 +16,7 @@ interface Props {
   photographerRole?: string;
   photographerDate?: string;
   similarImages?: ImageSpreadNode[];
-  loading?: boolean;
+  saved?: boolean;
 }
 
 defineProps<Props>();
@@ -83,7 +83,7 @@ const siteLogoSrc = '/sitelogo.png';
       <ActionButton class="flex-1" variant="consult" @consult="emit('consult')" />
       <ActionButton
         class="flex-1"
-        :loading="loading"
+        :saved="saved"
         @create-folder="emit('create-folder')"
         @save-to-folder="emit('save-to-folder')"
       />

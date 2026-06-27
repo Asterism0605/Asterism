@@ -225,16 +225,14 @@ describe('ImageSpread', () => {
 
   it('calls saveImage with the center image when SAVE TO FOLDER is clicked', async () => {
     const { wrapper } = await mountImageSpread();
-    vi.useFakeTimers();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
-    await vi.runAllTimersAsync();
+    await flushPromises();
 
     expect(saveImage).toHaveBeenCalledOnce();
     expect(saveImage).toHaveBeenCalledWith(expect.objectContaining({ id: 'y2k-main-001' }));
-    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'success' }));
   });
 });

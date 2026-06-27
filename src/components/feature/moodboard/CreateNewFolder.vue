@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { CircleCheck, LoaderCircle } from '@lucide/vue';
+import { CircleCheck } from '@lucide/vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import Button from '@/components/ui/Button.vue';
 import { createFolder } from '@/services/moodboard.service';
@@ -70,10 +70,7 @@ async function handleSubmit() {
           :disabled="!folderName.trim() || isSubmitting || isSuccess"
           @click="handleSubmit"
         >
-          <span class="inline-flex items-center gap-2">
-            <LoaderCircle v-if="isSubmitting" class="size-4 animate-spin" aria-hidden="true" />
-            SEND
-          </span>
+          SEND
         </Button>
       </div>
     </div>
@@ -93,7 +90,7 @@ async function handleSubmit() {
 .success-icon :deep(path) {
   stroke-dasharray: 20;
   stroke-dashoffset: 20;
-  animation: draw-check 0.25s ease forwards;
+  animation: draw-check 0.4s ease forwards;
 }
 
 .success-icon :deep(circle) {

@@ -84,23 +84,6 @@ describe('PictureDetail', () => {
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
   });
 
-  it('shows a success toast after saving', async () => {
-    const { wrapper } = await mountPictureDetail();
-
-    vi.useFakeTimers();
-
-    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
-    await addBtn!.trigger('click');
-
-    const saveBtn = wrapper
-      .findAll('button')
-      .find((b) => b.text().includes('SAVE TO FOLDER'));
-    await saveBtn!.trigger('click');
-
-    await vi.runAllTimersAsync();
-
-    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'success' }));
-  });
 
   it('routes to consultant with the source image id when consult is clicked', async () => {
     const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001');

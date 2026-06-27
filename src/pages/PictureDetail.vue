@@ -10,6 +10,7 @@ import {
   getStyleGroupRootImage
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
+import { isImageSaved } from '@/services/moodboard.service';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
@@ -30,7 +31,8 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { isSaving, saveToMoodboard } = useSaveToMoodboard();
+const { saveToMoodboard } = useSaveToMoodboard();
+const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
 const showCreateFolder = ref(false);
 
 function handleBack() {
@@ -95,7 +97,7 @@ async function handleSaveToFolder() {
         photographer-name="Zhenya Rukhlov"
         photographer-role="Photographer"
         photographer-date="Aug 19, 2025"
-        :loading="isSaving"
+        :saved="isSaved"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"

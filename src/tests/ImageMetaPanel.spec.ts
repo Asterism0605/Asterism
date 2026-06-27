@@ -47,13 +47,6 @@ describe('ImageMetaPanel', () => {
     expect(wrapper.emitted('save-to-folder')).toHaveLength(1);
   });
 
-  it('shows a spinner when loading is true', () => {
-    const wrapper = mount(ImageMetaPanel, {
-      props: { ...defaultProps, loading: true }
-    });
-
-    expect(wrapper.find('.animate-spin').exists()).toBe(true);
-  });
 
   it('forwards selected similar image ids', async () => {
     const wrapper = mount(ImageMetaPanel, {
