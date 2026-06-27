@@ -11,7 +11,7 @@ import {
   getSubMediumGroupImages
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
-import { isImageSaved, unsaveImage } from '@/services/moodboard.service';
+import { isImageSaved, removeItem } from '@/services/moodboard.service';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
@@ -150,7 +150,7 @@ async function handleSaveToFolder() {
 
 function handleRemove() {
   if (!centerImage.value) return;
-  unsaveImage(centerImage.value.id);
+  removeItem('default', centerImage.value.id);
 }
 
 watch(

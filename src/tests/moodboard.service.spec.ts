@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { addItem, unsaveImage, createFolder, isImageSaved } from '@/services/moodboard.service';
+import { addItem, removeItem, createFolder, isImageSaved } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 
 vi.mock('@/services/image.service', () => ({
@@ -22,9 +22,9 @@ describe('moodboard.service', () => {
     expect(defaultFolder?.images[0]).toMatchObject({ id: 'y2k-001' });
   });
 
-  it('unsaveImage removes the image from the default folder', () => {
+  it('removeItem removes the image from the specified folder', () => {
     addItem('default', 'y2k-001');
-    unsaveImage('y2k-001');
+    removeItem('default', 'y2k-001');
 
     const store = useMoodboardStore();
     const defaultFolder = store.folders.find((f) => f.id === 'default');

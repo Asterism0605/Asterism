@@ -12,9 +12,9 @@ export function addItem(folderId: string, imageId: string): void {
   store.addImage(folderId, savedImage);
 }
 
-export function unsaveImage(imageId: string): void {
+export function removeItem(folderId: string, imageId: string): void {
   const store = useMoodboardStore();
-  store.removeImage(DEFAULT_FOLDER_ID, imageId);
+  store.removeImage(folderId, imageId);
 }
 
 export function createFolder(name: string): void {
