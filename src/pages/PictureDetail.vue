@@ -72,7 +72,7 @@ function handleSelectImage(imageId: string) {
 
 async function handleSaveToFolder() {
   if (!currentImage.value) return;
-  await saveToMoodboard(currentImage.value);
+  await saveToMoodboard('default', currentImage.value.id);
 }
 
 function handleRemove() {

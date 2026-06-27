@@ -145,7 +145,7 @@ function handleCreateFolder() {
 
 async function handleSaveToFolder() {
   if (!centerImage.value) return;
-  await saveToMoodboard(centerImage.value);
+  await saveToMoodboard('default', centerImage.value.id);
 }
 
 function handleRemove() {
