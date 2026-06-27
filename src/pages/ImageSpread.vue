@@ -11,7 +11,7 @@ import {
   getSubMediumGroupImages
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
-import { isImageSaved, removeItem } from '@/services/moodboard.service';
+import { isImageSaved } from '@/services/moodboard.service';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
@@ -148,11 +148,6 @@ async function handleSaveToFolder() {
   await saveToMoodboard('default', centerImage.value.id);
 }
 
-function handleRemove() {
-  if (!centerImage.value) return;
-  removeItem('default', centerImage.value.id);
-}
-
 watch(
   routeImageId,
   (imageId) => {
@@ -191,7 +186,7 @@ watch(
           @select="handleRelatedSelect"
         />
 
-        <ImageSpreadOverlay :image="centerImage" :saved="isSaved" @return="returnToPreviousLayer" @create-folder="handleCreateFolder" @save-to-folder="handleSaveToFolder" @remove="handleRemove" />
+        <ImageSpreadOverlay :image="centerImage" :saved="isSaved" @return="returnToPreviousLayer" @create-folder="handleCreateFolder" @save-to-folder="handleSaveToFolder" />
       </div>
 
       <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">

@@ -10,7 +10,7 @@ import {
   getStyleGroupRootImage
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
-import { isImageSaved, removeItem } from '@/services/moodboard.service';
+import { isImageSaved } from '@/services/moodboard.service';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
@@ -75,10 +75,6 @@ async function handleSaveToFolder() {
   await saveToMoodboard('default', currentImage.value.id);
 }
 
-function handleRemove() {
-  if (!currentImage.value) return;
-  removeItem('default', currentImage.value.id);
-}
 </script>
 
 <template>
@@ -107,7 +103,6 @@ function handleRemove() {
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
         @save-to-folder="handleSaveToFolder"
-        @remove="handleRemove"
         @select-image="handleSelectImage"
       />
     </div>

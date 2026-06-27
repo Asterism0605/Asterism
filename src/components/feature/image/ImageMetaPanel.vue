@@ -26,7 +26,6 @@ const emit = defineEmits<{
   consult: [];
   'create-folder': [];
   'save-to-folder': [];
-  remove: [];
   'select-image': [imageId: string];
 }>();
 
@@ -87,7 +86,6 @@ const siteLogoSrc = '/sitelogo.png';
         :saved="saved"
         @create-folder="emit('create-folder')"
         @save-to-folder="emit('save-to-folder')"
-        @remove="emit('remove')"
       />
     </div>
 

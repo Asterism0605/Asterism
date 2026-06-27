@@ -8,7 +8,6 @@ import { showToast } from '@/composables/useToast';
 
 vi.mock('@/services/moodboard.service', () => ({
   addItem: vi.fn(),
-  removeItem: vi.fn(),
   createFolder: vi.fn(),
   isImageSaved: vi.fn(() => false)
 }));
