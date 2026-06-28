@@ -74,16 +74,6 @@ describe('moodboard store', () => {
     expect(persisted.folders[1].name).toBe('我的最愛');
   });
 
-  it('throws when creating more than 10 folders', () => {
-    const store = useMoodboardStore();
-
-    for (let i = 0; i < 9; i++) {
-      store.createFolder(`Folder ${i}`);
-    }
-
-    expect(() => store.createFolder('One too many')).toThrow('Folder limit reached');
-  });
-
   it('hydrates folders from a valid localStorage entry', () => {
     const writer = useMoodboardStore();
     writer.addImage('default', createSavedImage('y2k-001'));

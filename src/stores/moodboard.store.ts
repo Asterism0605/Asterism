@@ -53,7 +53,6 @@ export const useMoodboardStore = defineStore('moodboard', () => {
   }
 
   function createFolder(name: string): void {
-    if (folders.value.length >= 10) throw new Error('Folder limit reached');
     folders.value.push({ id: crypto.randomUUID(), name, images: [] });
     persist();
   }

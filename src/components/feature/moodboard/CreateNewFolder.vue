@@ -31,8 +31,8 @@ async function handleSubmit() {
     isSuccess.value = true;
     await new Promise((resolve) => setTimeout(resolve, 800));
     emit('update:modelValue', false);
-  } catch {
-    showToast({ type: 'error', message: 'Failed to create folder. Please try again.' });
+  } catch (e) {
+    showToast({ type: 'error', message: (e as Error).message });
   } finally {
     isSubmitting.value = false;
   }

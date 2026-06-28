@@ -94,7 +94,7 @@ describe('CreateNewFolder', () => {
     await flushPromises();
     getSendButton().click();
     await flushPromises();
-    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
+    expect(showToast).toHaveBeenCalledWith({ type: 'error', message: 'fail' });
   });
 
   it('modal 關閉時清空輸入框', async () => {
