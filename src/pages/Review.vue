@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import {
   fetchReviewQueue,
   submitReview,
@@ -20,6 +20,23 @@ const taxonomy = ref<ReviewTaxonomy>({ mediums: [], subMediumsByMedium: {} });
 const activeGroup = ref<string | null>(null);
 const isLoading = ref(false);
 const error = ref('');
+const currentPage = ref(1);
+const perPage = 12;
+
+const visibleCards = computed(() =>
+  activeGroup.value
+    ? cards.value.filter((card) => card.styleGroup === activeGroup.value)
+    : cards.value
+);
+
+const totalPages = computed(() => Math.ceil(visibleCards.value.length / perPage));
+const paginatedCards = computed(() =>
+  visibleCards.value.slice((currentPage.value - 1) * perPage, currentPage.value * perPage)
+);
+
+watch(visibleCards, () => {
+  if (currentPage.value > totalPages.value) currentPage.value = 1;
+});
 
 function toCard(image: ReviewImage): ReviewCard {
   return {
@@ -37,12 +54,6 @@ const groupCounts = computed(() => {
   }
   return [...counts.entries()].map(([group, count]) => ({ group, count }));
 });
-
-const visibleCards = computed(() =>
-  activeGroup.value
-    ? cards.value.filter((card) => card.styleGroup === activeGroup.value)
-    : cards.value
-);
 
 async function loadQueue() {
   isLoading.value = true;
@@ -104,16 +115,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-void px-6 pb-10 pt-24 text-text-primary">
-    <div class="mx-auto max-w-6xl">
-      <h1 class="mb-2 text-2xl font-bold">圖庫審核</h1>
-      <p class="mb-6 text-sm text-text-secondary">
+  <main class="min-h-screen lg:h-screen bg-void px-6 pb-10 pt-24 text-text-primary lg:overflow-hidden flex flex-col">
+    <div class="mx-auto flex w-full max-w-6xl flex-1 flex-col min-h-0">
+      <h1 class="mb-2 shrink-0 text-2xl font-bold">圖庫審核</h1>
+      <p class="mb-6 shrink-0 text-sm text-text-secondary">
         逐筆審分類（medium / subMedium）：核可、修正或排除。待審 {{ cards.length }} 筆。
       </p>
 
-      <p v-if="error" class="mb-4 text-sm text-stellar-red">{{ error }}</p>
+      <p v-if="error" class="mb-4 shrink-0 text-sm text-stellar-red">{{ error }}</p>
 
-      <div class="flex flex-col gap-8 lg:flex-row">
+      <div class="flex-1 flex flex-col gap-8 lg:flex-row min-h-0">
         <!-- 左側：依風格篩選 -->
         <aside class="lg:w-56 lg:shrink-0">
           <p class="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gold-dim">風格</p>
@@ -122,7 +133,7 @@ onMounted(() => {
               <button
                 type="button"
                 data-testid="review-filter"
-                class="flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition"
+                class="flex w-full cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition"
                 :class="
                   activeGroup === null
                     ? 'border-gold-dim/60 bg-gold-dim/15 text-text-primary'
@@ -140,7 +151,7 @@ onMounted(() => {
               <button
                 type="button"
                 data-testid="review-filter"
-                class="flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition"
+                class="flex w-full cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition"
                 :class="
                   activeGroup === entry.group
                     ? 'border-gold-dim/60 bg-gold-dim/15 text-text-primary'
@@ -158,7 +169,7 @@ onMounted(() => {
         </aside>
 
         <!-- 右側：待審圖 -->
-        <section class="flex-1">
+        <section class="flex-1 lg:overflow-y-auto">
           <p v-if="isLoading" class="text-sm text-gold-dim">Loading…</p>
           <p v-else-if="visibleCards.length === 0" class="text-sm text-text-secondary">
             沒有待審圖。
@@ -166,7 +177,7 @@ onMounted(() => {
 
           <ul class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             <li
-              v-for="card in visibleCards"
+              v-for="card in paginatedCards"
               :key="card.id"
               data-testid="review-card"
               class="overflow-hidden rounded-xl border border-white/12 bg-elevated/60"
@@ -194,7 +205,7 @@ onMounted(() => {
                     v-model="card.draftMedium"
                     data-testid="review-medium"
                     :disabled="!card.needsReview.medium"
-                    class="mt-1 w-full rounded-md border border-white/15 bg-void px-2 py-1.5 text-sm text-text-primary disabled:opacity-50"
+                    class="mt-1 w-full cursor-pointer rounded-md border border-white/15 bg-void px-2 py-1.5 text-sm text-text-primary disabled:opacity-50"
                     @change="onMediumChange(card)"
                   >
                     <option v-for="m in taxonomy.mediums" :key="m" :value="m">
@@ -218,7 +229,7 @@ onMounted(() => {
                     v-model="card.draftSubMedium"
                     data-testid="review-submedium"
                     :disabled="!card.needsReview.subMedium"
-                    class="mt-1 w-full rounded-md border border-white/15 bg-void px-2 py-1.5 text-sm text-text-primary disabled:opacity-50"
+                    class="mt-1 w-full cursor-pointer rounded-md border border-white/15 bg-void px-2 py-1.5 text-sm text-text-primary disabled:opacity-50"
                   >
                     <option v-for="s in subMediumOptions(card.draftMedium)" :key="s" :value="s">
                       {{ subMediumZh(s) }}
@@ -231,7 +242,7 @@ onMounted(() => {
                     <button
                       type="button"
                       data-testid="review-approve"
-                      class="flex-1 rounded-md bg-gold-dim/80 px-2 py-1.5 text-xs font-semibold text-void transition hover:bg-gold-dim"
+                      class="flex-1 cursor-pointer rounded-md bg-gold-dim/80 px-2 py-1.5 text-xs font-semibold text-void transition hover:bg-gold-dim"
                       @click="approve(card)"
                     >
                       核可
@@ -239,7 +250,7 @@ onMounted(() => {
                     <button
                       type="button"
                       data-testid="review-correct"
-                      class="flex-1 rounded-md border border-white/25 px-2 py-1.5 text-xs font-semibold transition hover:border-white/45"
+                      class="flex-1 cursor-pointer rounded-md border border-white/25 px-2 py-1.5 text-xs font-semibold transition hover:border-white/45"
                       @click="startCorrect(card)"
                     >
                       修正
@@ -247,7 +258,7 @@ onMounted(() => {
                     <button
                       type="button"
                       data-testid="review-exclude"
-                      class="flex-1 rounded-md border border-stellar-red/50 px-2 py-1.5 text-xs font-semibold text-stellar-red transition hover:border-stellar-red"
+                      class="flex-1 cursor-pointer rounded-md border border-stellar-red/50 px-2 py-1.5 text-xs font-semibold text-stellar-red transition hover:border-stellar-red"
                       @click="exclude(card)"
                     >
                       排除
@@ -257,7 +268,7 @@ onMounted(() => {
                     <button
                       type="button"
                       data-testid="review-correct-confirm"
-                      class="flex-1 rounded-md bg-gold-dim/80 px-2 py-1.5 text-xs font-semibold text-void transition hover:bg-gold-dim"
+                      class="flex-1 cursor-pointer rounded-md bg-gold-dim/80 px-2 py-1.5 text-xs font-semibold text-void transition hover:bg-gold-dim"
                       @click="confirmCorrect(card)"
                     >
                       確認修正
@@ -265,7 +276,7 @@ onMounted(() => {
                     <button
                       type="button"
                       data-testid="review-correct-cancel"
-                      class="flex-1 rounded-md border border-white/25 px-2 py-1.5 text-xs font-semibold transition hover:border-white/45"
+                      class="flex-1 cursor-pointer rounded-md border border-white/25 px-2 py-1.5 text-xs font-semibold transition hover:border-white/45"
                       @click="cancelCorrect(card)"
                     >
                       取消
@@ -275,6 +286,33 @@ onMounted(() => {
               </div>
             </li>
           </ul>
+
+          <div
+            v-if="totalPages > 1"
+            class="mt-8 flex items-center justify-center gap-3"
+          >
+            <button
+              type="button"
+              :disabled="currentPage <= 1"
+              class="cursor-pointer rounded-md border border-white/15 px-3 py-1.5 text-sm transition disabled:opacity-30"
+              :class="currentPage > 1 ? 'hover:border-white/35' : ''"
+              @click="currentPage = Math.max(1, currentPage - 1)"
+            >
+              上一頁
+            </button>
+            <span class="text-sm text-text-secondary">
+              {{ currentPage }} / {{ totalPages }}
+            </span>
+            <button
+              type="button"
+              :disabled="currentPage >= totalPages"
+              class="cursor-pointer rounded-md border border-white/15 px-3 py-1.5 text-sm transition disabled:opacity-30"
+              :class="currentPage < totalPages ? 'hover:border-white/35' : ''"
+              @click="currentPage = Math.min(totalPages, currentPage + 1)"
+            >
+              下一頁
+            </button>
+          </div>
         </section>
       </div>
     </div>
