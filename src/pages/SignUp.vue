@@ -32,6 +32,14 @@ async function handleSubmit(payload: RegisterPayload) {
     isSubmitting.value = false;
   }
 }
+
+function handleLoginClick() {
+  const nextPath = getSafeRedirectPath(route.query.next, '');
+  router.push({
+    name: 'login',
+    query: nextPath ? { next: nextPath } : undefined
+  });
+}
 </script>
 
 <template>
@@ -91,6 +99,7 @@ async function handleSubmit(payload: RegisterPayload) {
         :is-submitting="isSubmitting"
         :error-message="errorMessage"
         @submit="handleSubmit"
+        @login="handleLoginClick"
       />
     </div>
   </main>
