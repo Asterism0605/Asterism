@@ -12,6 +12,7 @@ import StyleDnaResult from '@/pages/StyleDnaResult.vue';
 import StyleConsultant from '@/pages/StyleConsultant.vue';
 import Privacy from '@/pages/Privacy.vue';
 import Terms from '@/pages/Terms.vue';
+import Review from '@/pages/Review.vue';
 import { getImageById } from '@/services/image.service';
 import { resolveAuthGuard } from '@/router/authGuard';
 import { useAuthStore } from '@/stores/auth.store';
@@ -87,6 +88,12 @@ const router = createRouter({
       path: '/terms',
       name: 'terms',
       component: Terms
+    },
+    {
+      path: '/review',
+      name: 'review',
+      component: Review,
+      meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
       path: '/:pathMatch(.*)*',
