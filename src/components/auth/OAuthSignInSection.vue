@@ -36,4 +36,11 @@ import LineSignInButton from '@/components/auth/LineSignInButton.vue';
   gap: 12px;
   align-items: start;
 }
+
+/* iPhone SE 等 ≤380px 窄機兩欄會擠/不對稱，改單欄堆疊 */
+@media (max-width: 380px) {
+  .oauth-buttons {
+    grid-template-columns: 1fr;
+  }
+}
 </style>

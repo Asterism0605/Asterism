@@ -10,7 +10,7 @@ const error = ref(false);
 // 唯一導向前的失敗：VITE_SUPABASE_URL 沒設，無法組出 endpoint。
 function signIn() {
   error.value = false;
-  const base = import.meta.env.VITE_SUPABASE_URL;
+  const base = import.meta.env.VITE_SUPABASE_URL?.replace(/\/$/, '');
   if (!base) {
     error.value = true;
     return;

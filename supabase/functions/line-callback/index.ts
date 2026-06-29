@@ -119,12 +119,16 @@ Deno.serve(async (req) => {
     body: new URLSearchParams({ id_token: token.id_token, client_id: CHANNEL_ID }),
   });
   const profile = await verifyRes.json();
+  // id_token 驗證失敗（竄改/過期）→ profile.sub 會缺，不能往下建帳號。
+  if (!verifyRes.ok || !profile.sub) {
+    return fail("verify");
+  }
 
   // 沒 email → 用 sub 造佔位 email（不擋登入，此帳號獨立不併）
   const email = profile.email ?? `line_${profile.sub}@line.asterism.local`;
 
-  // find-or-create：先試建，已存在代表「併到既有帳號」
-  await admin.auth.admin.createUser({
+  // find-or-create：先試建。「已存在」= 併到既有帳號（預期）；其他錯誤才當真失敗。
+  const { error: createErr } = await admin.auth.admin.createUser({
     email,
     email_confirm: true,
     user_metadata: {
@@ -134,6 +138,9 @@ Deno.serve(async (req) => {
       line_sub: profile.sub,
     },
   });
+  if (createErr && !/registered|already|exists/i.test(createErr.message ?? "")) {
+    return fail("create");
+  }
 
   // 產一次性 magic link token_hash = Supabase session 的鑰匙
   const { data: linkData, error: linkErr } = await admin.auth.admin.generateLink({
