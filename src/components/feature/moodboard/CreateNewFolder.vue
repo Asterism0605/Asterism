@@ -3,39 +3,25 @@ import { ref, watch } from 'vue';
 import { CircleCheck } from '@lucide/vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import Button from '@/components/ui/Button.vue';
-import { createFolder } from '@/services/moodboard.service';
-import { showToast } from '@/composables/useToast';
 
-const props = defineProps<{ modelValue: boolean }>();
-const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>();
+const props = defineProps<{ modelValue: boolean; isSubmitting: boolean; isSuccess: boolean }>();
+const emit = defineEmits<{
+  'update:modelValue': [value: boolean];
+  'submit': [name: string];
+}>();
 
 const folderName = ref('');
-const isSubmitting = ref(false);
-const isSuccess = ref(false);
 
 watch(
   () => props.modelValue,
   (isOpen) => {
-    if (!isOpen) {
-      folderName.value = '';
-      isSuccess.value = false;
-    }
+    if (!isOpen) folderName.value = '';
   }
 );
 
-async function handleSubmit() {
-  if (!folderName.value.trim() || folderName.value.trim().length > 40 || isSubmitting.value) return;
-  isSubmitting.value = true;
-  try {
-    await createFolder(folderName.value.trim());
-    isSuccess.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    emit('update:modelValue', false);
-  } catch (e) {
-    showToast({ type: 'error', message: (e as Error).message });
-  } finally {
-    isSubmitting.value = false;
-  }
+function handleSubmit() {
+  if (!folderName.value.trim() || folderName.value.trim().length > 40 || props.isSubmitting || props.isSuccess) return;
+  emit('submit', folderName.value.trim());
 }
 </script>
 

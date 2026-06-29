@@ -31,7 +31,7 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { saveToMoodboard } = useSaveToMoodboard();
+const { saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
 const showCreateFolder = ref(false);
 
@@ -55,6 +55,11 @@ function handleBack() {
 
 function handleCreateFolder() {
   showCreateFolder.value = true;
+}
+
+async function handleSubmitFolder(name: string) {
+  const success = await createNewFolder(name);
+  if (success) showCreateFolder.value = false;
 }
 
 function handleConsult() {
@@ -107,5 +112,10 @@ async function handleSaveToFolder() {
       />
     </div>
   </div>
-  <CreateNewFolder v-model="showCreateFolder" />
+  <CreateNewFolder
+    v-model="showCreateFolder"
+    :is-submitting="isCreatingFolder"
+    :is-success="isCreateFolderSuccess"
+    @submit="handleSubmitFolder"
+  />
 </template>

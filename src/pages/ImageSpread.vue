@@ -18,7 +18,7 @@ import type { ImageSpreadNode } from '@/types/image';
 const route = useRoute();
 const router = useRouter();
 
-const { saveToMoodboard } = useSaveToMoodboard();
+const { saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(centerImage.value?.id ?? ''));
 const showCreateFolder = ref(false);
 const centerImage = ref<ImageSpreadNode | undefined>();
@@ -143,6 +143,11 @@ function handleCreateFolder() {
   showCreateFolder.value = true;
 }
 
+async function handleSubmitFolder(name: string) {
+  const success = await createNewFolder(name);
+  if (success) showCreateFolder.value = false;
+}
+
 async function handleSaveToFolder() {
   if (!centerImage.value) return;
   await saveToMoodboard('default', centerImage.value.id);
@@ -233,7 +238,12 @@ watch(
       </Button>
     </section>
   </ImageSpreadEntrance>
-  <CreateNewFolder v-model="showCreateFolder" />
+  <CreateNewFolder
+    v-model="showCreateFolder"
+    :is-submitting="isCreatingFolder"
+    :is-success="isCreateFolderSuccess"
+    @submit="handleSubmitFolder"
+  />
 </template>
 
 <style scoped>
