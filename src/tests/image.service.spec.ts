@@ -65,13 +65,33 @@ describe('image.service', () => {
       ]);
     });
 
-    it('excludes current and visited images', () => {
+    it('excludes current and visited images, keeping the medium via another image', () => {
+      // y2k-graphic-001 是 Graphic Design 的入口圖；排除它後該 medium 仍有其他圖，
+      // 應換一張代表、而非讓整個 Graphic Design 消失。
       const images = getMediumGroupImages('y2k-main-001', {
         visitedImageIds: ['y2k-graphic-001']
       });
 
-      expect(images).toHaveLength(3);
+      expect(images).toHaveLength(4);
+      expect(images.map((image) => image.medium).sort()).toEqual([
+        'Architecture',
+        'Graphic Design',
+        'Interior Design',
+        'Outfit'
+      ]);
       expect(images.map((image) => image.id)).not.toContain('y2k-graphic-001');
+    });
+
+    it('selects each medium representative using the injected rng', () => {
+      // Graphic Design 候選依資料序：graphic-001 / poster / editorial / brand / packaging（5 張）。
+      // index = floor(rng * 長度)，故 rng=0 取第一張、rng≈1 取最後一張。
+      const lowest = getMediumGroupImages('y2k-main-001', { rng: () => 0 });
+      expect(lowest.find((image) => image.medium === 'Graphic Design')?.id).toBe('y2k-graphic-001');
+
+      const highest = getMediumGroupImages('y2k-main-001', { rng: () => 0.999 });
+      expect(highest.find((image) => image.medium === 'Graphic Design')?.id).toBe(
+        'y2k-graphic-packaging-001'
+      );
     });
   });
 

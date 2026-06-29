@@ -49,6 +49,9 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
 describe('ImageSpread', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // 代表圖選取已改為隨機（#94）；頁面不注入 rng、走 Math.random。
+    // 固定成 0＝每組取資料序第一張（medium 入口圖），讓標籤/導航斷言維持決定性。
+    vi.spyOn(Math, 'random').mockReturnValue(0);
   });
 
   afterEach(() => {
