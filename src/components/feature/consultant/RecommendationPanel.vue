@@ -278,14 +278,14 @@ function handleSubmit() {
   display: grid;
   gap: 32px;
   padding: clamp(24px, 5vw, 46px);
-  border: 1px solid rgb(255 255 255 / 0.16);
+  border: 1px solid #ffffff29;
   border-radius: 8px;
   background:
-    radial-gradient(circle at 14% 0%, rgb(255 255 255 / 0.18), transparent 34%),
-    rgb(255 255 255 / 0.055);
+    radial-gradient(circle at 14% 0%, #ffffff2e, transparent 34%),
+    #ffffff0e;
   box-shadow:
-    inset 1px 1px 1px rgb(255 255 255 / 0.16),
-    0 24px 80px rgb(0 0 0 / 0.34);
+    inset 1px 1px 1px #ffffff29,
+    0 24px 80px #00000057;
   backdrop-filter: blur(18px);
 }
 
@@ -296,7 +296,7 @@ function handleSubmit() {
 
 .recommendation-panel__label,
 .recommendation-panel__field > span {
-  color: rgb(240 237 230 / 0.84);
+  color: #f0ede6d6;
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -311,7 +311,7 @@ function handleSubmit() {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  color: rgb(240 237 230 / 0.72);
+  color: #f0ede6b8;
   font-size: 0.9rem;
 }
 
@@ -342,7 +342,7 @@ function handleSubmit() {
 .recommendation-panel__textarea {
   width: 100%;
   border-radius: 8px;
-  background-color: rgb(255 255 255 / 0.07);
+  background-color: #ffffff12;
   color: var(--color-text-primary);
   font-size: var(--text-caption);
   font-weight: 500;
@@ -362,7 +362,7 @@ function handleSubmit() {
 }
 
 .recommendation-panel__textarea:focus {
-  background-color: rgb(255 255 255 / 0.11);
+  background-color: #ffffff1c;
 }
 
 .recommendation-panel__field small {
@@ -381,7 +381,7 @@ function handleSubmit() {
   gap: 8px;
   margin-top: 10px;
   padding: 14px 16px;
-  border: 1px solid rgb(255 255 255 / 0.08);
+  border: 1px solid #ffffff14;
   border-radius: 8px;
 }
 
@@ -394,7 +394,7 @@ function handleSubmit() {
 }
 
 .recommendation-panel__fee-copy {
-  color: rgb(240 237 230 / 0.68);
+  color: #f0ede6ad;
   font-size: 0.82rem;
   line-height: 1.55;
 }
@@ -404,7 +404,7 @@ function handleSubmit() {
   align-items: flex-start;
   gap: 10px;
   margin-top: 32px;
-  color: rgb(240 237 230 / 0.82);
+  color: #f0ede6d1;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.45;
@@ -427,7 +427,7 @@ function handleSubmit() {
 
 .recommendation-panel__demo-note {
   margin-top: 14px;
-  color: rgb(240 237 230 / 0.68);
+  color: #f0ede6ad;
   font-size: 12px;
   line-height: 1.55;
 }

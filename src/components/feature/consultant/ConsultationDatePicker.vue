@@ -177,7 +177,7 @@ defineExpose({ resetMonth });
 }
 
 .recommendation-panel__field > span {
-  color: rgb(240 237 230 / 0.84);
+  color: #f0ede6d6;
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -195,7 +195,7 @@ defineExpose({ resetMonth });
   gap: 14px;
   padding: 0 20px;
   border-radius: 8px;
-  background-color: rgb(255 255 255 / 0.07);
+  background-color: #ffffff12;
   color: var(--color-text-primary);
   font-size: var(--text-caption);
   font-weight: 500;
@@ -208,7 +208,7 @@ defineExpose({ resetMonth });
 
 .recommendation-panel__date-trigger:hover,
 .recommendation-panel__date-trigger:focus {
-  background-color: rgb(255 255 255 / 0.11);
+  background-color: #ffffff1c;
 }
 
 .recommendation-panel__date-trigger--placeholder {
@@ -225,10 +225,10 @@ defineExpose({ resetMonth });
   width: min(100%, 360px);
   container-type: inline-size;
   padding: 16px;
-  border: 1px solid rgb(255 255 255 / 0.16);
+  border: 1px solid #ffffff29;
   border-radius: 8px;
   background: #2b2b2f;
-  box-shadow: 0 18px 44px rgb(0 0 0 / 0.34);
+  box-shadow: 0 18px 44px #00000057;
   backdrop-filter: blur(18px);
 }
 
@@ -265,7 +265,7 @@ defineExpose({ resetMonth });
 
 .recommendation-panel__calendar-nav:hover:not(:disabled),
 .recommendation-panel__calendar-nav:focus:not(:disabled) {
-  background-color: rgb(255 255 255 / 0.1);
+  background-color: #ffffff1a;
   color: var(--color-text-primary);
 }
 
@@ -286,7 +286,7 @@ defineExpose({ resetMonth });
 }
 
 .recommendation-panel__calendar-weekdays span {
-  color: rgb(240 237 230 / 0.5);
+  color: #f0ede680;
   font-family: var(--font-family-mono);
   font-size: 0.66rem;
   text-align: center;
@@ -298,7 +298,7 @@ defineExpose({ resetMonth });
   display: grid;
   place-items: center;
   border-radius: 8px;
-  color: rgb(240 237 230 / 0.78);
+  color: #f0ede6c7;
   font-size: 0.82rem;
   font-weight: 600;
   transition:
@@ -309,7 +309,7 @@ defineExpose({ resetMonth });
 
 .recommendation-panel__calendar-day:hover:not(:disabled),
 .recommendation-panel__calendar-day:focus:not(:disabled) {
-  background-color: rgb(255 255 255 / 0.12);
+  background-color: #ffffff1f;
   color: var(--color-text-primary);
 }
 
@@ -319,11 +319,11 @@ defineExpose({ resetMonth });
 }
 
 .recommendation-panel__calendar-day--muted:not(.recommendation-panel__calendar-day--selected) {
-  color: rgb(240 237 230 / 0.38);
+  color: #f0ede661;
 }
 
 .recommendation-panel__calendar-day--today:not(.recommendation-panel__calendar-day--selected) {
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.26);
+  box-shadow: inset 0 0 0 1px #ffffff42;
 }
 
 .recommendation-panel__calendar-day--selected {

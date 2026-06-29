@@ -4,7 +4,7 @@ interface DropdownOption {
   value: string;
 }
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     modelValue: string;
     label: string;
@@ -86,7 +86,7 @@ function selectOption(value: string) {
 }
 
 .recommendation-panel__field > span {
-  color: rgb(240 237 230 / 0.84);
+  color: #f0ede6d6;
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -104,7 +104,7 @@ function selectOption(value: string) {
   gap: 14px;
   padding: 0 20px;
   border-radius: 8px;
-  background-color: rgb(255 255 255 / 0.07);
+  background-color: #ffffff12;
   color: var(--color-text-primary);
   font-size: var(--text-caption);
   font-weight: 500;
@@ -117,7 +117,7 @@ function selectOption(value: string) {
 
 .recommendation-panel__dropdown-trigger:hover,
 .recommendation-panel__dropdown-trigger:focus {
-  background-color: rgb(255 255 255 / 0.11);
+  background-color: #ffffff1c;
 }
 
 .recommendation-panel__dropdown-trigger--placeholder {
@@ -145,10 +145,10 @@ function selectOption(value: string) {
   max-height: 260px;
   overflow-y: auto;
   padding: 8px;
-  border: 1px solid rgb(255 255 255 / 0.16);
+  border: 1px solid #ffffff29;
   border-radius: 8px;
   background: #2b2b2f;
-  box-shadow: 0 18px 44px rgb(0 0 0 / 0.34);
+  box-shadow: 0 18px 44px #00000057;
   backdrop-filter: blur(18px);
 }
 
@@ -158,7 +158,7 @@ function selectOption(value: string) {
   align-items: center;
   border-radius: 6px;
   padding: 8px 12px;
-  color: rgb(240 237 230 / 0.78);
+  color: #f0ede6c7;
   font-size: var(--text-caption);
   font-weight: 600;
   text-align: left;
@@ -169,7 +169,7 @@ function selectOption(value: string) {
 
 .recommendation-panel__dropdown-option:hover,
 .recommendation-panel__dropdown-option:focus {
-  background-color: rgb(255 255 255 / 0.12);
+  background-color: #ffffff1f;
   color: var(--color-text-primary);
 }
 

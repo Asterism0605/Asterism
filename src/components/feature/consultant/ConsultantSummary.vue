@@ -93,7 +93,7 @@ withDefaults(
   max-width: 590px;
   display: grid;
   gap: 12px;
-  color: rgb(240 237 230 / 0.76);
+  color: #f0ede6c2;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -104,9 +104,9 @@ withDefaults(
   margin-top: auto;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.1);
+  border: 1px solid #ffffff1a;
   border-radius: 8px;
-  background: rgb(255 255 255 / 0.045);
+  background: #ffffff0b;
 }
 
 .consultant-summary__profile div {
@@ -114,7 +114,7 @@ withDefaults(
   gap: 8px;
   min-width: 0;
   padding: 18px;
-  border-right: 1px solid rgb(255 255 255 / 0.08);
+  border-right: 1px solid #ffffff14;
 }
 
 .consultant-summary__profile div:last-child {
@@ -160,10 +160,10 @@ withDefaults(
   gap: 18px;
   margin-top: 20px;
   padding: 20px;
-  border: 1px solid rgb(255 255 255 / 0.1);
+  border: 1px solid #ffffff1a;
   border-radius: 8px;
-  background: rgb(255 255 255 / 0.045);
-  color: rgb(240 237 230 / 0.78);
+  background: #ffffff0b;
+  color: #f0ede6c7;
 }
 
 .consultant-summary__actions {
@@ -177,7 +177,7 @@ withDefaults(
   min-height: 38px;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(255 255 255 / 0.2);
+  border: 1px solid #ffffff33;
   border-radius: 9999px;
   padding: 8px 18px;
   color: var(--color-text-primary);
@@ -190,8 +190,8 @@ withDefaults(
 }
 
 .consultant-summary__button:hover {
-  border-color: rgb(255 255 255 / 0.34);
-  background: rgb(255 255 255 / 0.06);
+  border-color: #ffffff57;
+  background: #ffffff0f;
 }
 
 .consultant-summary__button--primary {
@@ -222,7 +222,7 @@ withDefaults(
 
   .consultant-summary__profile div {
     border-right: 0;
-    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    border-bottom: 1px solid #ffffff14;
   }
 
   .consultant-summary__profile div:last-child {
