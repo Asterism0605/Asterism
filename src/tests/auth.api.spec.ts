@@ -4,7 +4,8 @@ const auth = {
   signUp: vi.fn(),
   signInWithPassword: vi.fn(),
   signOut: vi.fn(),
-  getSession: vi.fn()
+  getSession: vi.fn(),
+  signInWithOAuth: vi.fn()
 };
 const single = vi.fn();
 const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
@@ -13,7 +14,7 @@ vi.mock('@/api/supabaseClient', () => ({
   getSupabase: () => ({ auth, from })
 }));
 
-import { loginApi, logoutApi, registerApi } from '@/api/auth.api';
+import { loginApi, logoutApi, registerApi, signInWithGoogleApi } from '@/api/auth.api';
 
 const fakeSession = {
   access_token: 'tok',
@@ -90,5 +91,26 @@ describe('auth.api (supabase)', () => {
 
     expect(res.data.user.isAdmin).toBe(false);
     expect(res.data.accessToken).toBe('tok');
+  });
+});
+
+describe('signInWithGoogleApi', () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it('以 provider google + redirectTo 呼叫 signInWithOAuth', async () => {
+    auth.signInWithOAuth.mockResolvedValue({ data: {}, error: null });
+
+    await signInWithGoogleApi('https://x/auth/callback?next=%2Ffoo');
+
+    expect(auth.signInWithOAuth).toHaveBeenCalledWith({
+      provider: 'google',
+      options: { redirectTo: 'https://x/auth/callback?next=%2Ffoo' }
+    });
+  });
+
+  it('signInWithOAuth 出錯 → throw', async () => {
+    auth.signInWithOAuth.mockResolvedValue({ data: {}, error: { message: 'boom' } });
+
+    await expect(signInWithGoogleApi('r')).rejects.toBeTruthy();
   });
 });
