@@ -1,15 +1,11 @@
 import { getSupabase } from '@/api/supabaseClient';
 import type { ComputedStyleDnaResult } from '@/utils/computeStyleDnaResult';
 
-export type ProfileOnboardingStatus = 'not_started' | 'dna_pending' | 'completed';
-
 export interface StyleDnaProfileRow {
   style_dna_result: unknown;
 }
 
-export async function fetchStyleDnaProfileRow(
-  userId: string
-): Promise<StyleDnaProfileRow | null> {
+export async function fetchStyleDnaProfileRow(userId: string): Promise<StyleDnaProfileRow | null> {
   const { data, error } = await getSupabase()
     .from('profiles')
     .select('style_dna_result')
