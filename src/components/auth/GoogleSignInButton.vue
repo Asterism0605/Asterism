@@ -28,8 +28,9 @@ async function signIn() {
   <button
     type="button"
     data-testid="google-signin"
+    aria-label="Continue with Google"
     :disabled="loading"
-    class="flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-white/20 bg-white/95 px-4 py-3 text-sm font-semibold text-[#1f1f1f] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+    class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
     @click="signIn"
   >
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
@@ -50,7 +51,7 @@ async function signIn() {
         d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58Z"
       />
     </svg>
-    Continue with Google
+    Google
   </button>
   <p v-if="error" class="mt-2 text-center font-mono text-xs text-red-400" role="alert">
     Google sign-in failed. Please try again.

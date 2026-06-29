@@ -1,11 +1,13 @@
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
+import type { EmailOtpType } from '@supabase/supabase-js';
 import {
   getCurrentSession,
   login as loginService,
   logout as logoutService,
   register as registerService,
-  signInWithGoogle as signInWithGoogleService
+  signInWithGoogle as signInWithGoogleService,
+  verifyOtp as verifyOtpService
 } from '@/services/auth.service';
 import type { AuthSession, LoginPayload, RegisterPayload, UserProfile } from '@/types/auth';
 
@@ -58,6 +60,11 @@ export const useAuthStore = defineStore('auth', () => {
     await signInWithGoogleService(redirectTo);
   }
 
+  // LINE 登入 / 信箱驗證回流：用網址帶回的一次性 token_hash 換 session 並套用登入狀態。
+  async function verifyOtp(tokenHash: string, type: EmailOtpType): Promise<AuthSession> {
+    return applySession(await verifyOtpService(tokenHash, type));
+  }
+
   return {
     user,
     session,
@@ -67,6 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     hydrate,
     logout,
-    signInWithGoogle
+    signInWithGoogle,
+    verifyOtp
   };
 });

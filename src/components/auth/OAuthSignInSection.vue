@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton.vue';
+import LineSignInButton from '@/components/auth/LineSignInButton.vue';
 </script>
 
 <template>
   <div class="oauth-divider"><span>or</span></div>
-  <GoogleSignInButton />
+  <div class="oauth-buttons">
+    <div><GoogleSignInButton /></div>
+    <div><LineSignInButton /></div>
+  </div>
 </template>
 
 <style scoped>
@@ -24,5 +28,12 @@ import GoogleSignInButton from '@/components/auth/GoogleSignInButton.vue';
   flex: 1;
   height: 1px;
   background: rgb(255 255 255 / 0.12);
+}
+
+.oauth-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
 }
 </style>
