@@ -19,10 +19,10 @@ async function mountButton(query = '') {
 
 describe('LineSignInButton', () => {
   const originalLocation = window.location;
-  let loc: { href: string };
+  let loc: { href: string; origin: string };
 
   beforeEach(() => {
-    loc = { href: '' };
+    loc = { href: '', origin: 'http://localhost:5173' };
     Object.defineProperty(window, 'location', { value: loc, writable: true, configurable: true });
     vi.stubEnv('VITE_SUPABASE_URL', 'https://proj.supabase.co');
   });
@@ -36,17 +36,19 @@ describe('LineSignInButton', () => {
     vi.unstubAllEnvs();
   });
 
-  it('導去 Edge start endpoint；不安全的 next 被消毒掉（不掛 query）', async () => {
+  it('導去 Edge start endpoint，帶 origin；不安全的 next 被消毒掉（不掛 query）', async () => {
     const wrapper = await mountButton('?next=//evil.com');
     await wrapper.get('[data-testid="line-signin"]').trigger('click');
-    expect(loc.href).toBe('https://proj.supabase.co/functions/v1/line-callback');
+    expect(loc.href).toBe(
+      'https://proj.supabase.co/functions/v1/line-callback?origin=http%3A%2F%2Flocalhost%3A5173'
+    );
   });
 
   it('合法 next 帶入 query', async () => {
     const wrapper = await mountButton('?next=/discover-dna');
     await wrapper.get('[data-testid="line-signin"]').trigger('click');
     expect(loc.href).toBe(
-      'https://proj.supabase.co/functions/v1/line-callback?next=%2Fdiscover-dna'
+      'https://proj.supabase.co/functions/v1/line-callback?origin=http%3A%2F%2Flocalhost%3A5173&next=%2Fdiscover-dna'
     );
   });
 

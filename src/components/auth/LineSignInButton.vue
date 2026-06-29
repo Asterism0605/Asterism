@@ -17,6 +17,8 @@ function signIn() {
   }
   const next = getSafeRedirectPath(route.query.next, '/');
   const start = new URL(`${base}/functions/v1/line-callback`);
+  // origin 讓 Edge 知道要 302 回哪個前端（prod / 本地 dev），Edge 端有白名單把關。
+  start.searchParams.set('origin', window.location.origin);
   if (next !== '/') start.searchParams.set('next', next);
   window.location.href = start.toString();
 }

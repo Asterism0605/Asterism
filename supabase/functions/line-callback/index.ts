@@ -5,15 +5,26 @@
 // 單一 function 兩條路徑：無 code = start（種 state cookie + 導去 LINE 授權頁）、有 code = callback。
 // 部署在 Supabase Dashboard（Verify JWT 已關）；本檔為版本控管來源，改完需重新 deploy。
 //
-// secrets：LINE_CHANNEL_ID、LINE_CHANNEL_SECRET、FRONTEND_ORIGIN（SUPABASE_URL/SERVICE_ROLE_KEY 自動有）。
+// secrets：LINE_CHANNEL_ID、LINE_CHANNEL_SECRET、FRONTEND_ORIGINS（逗號分隔白名單，
+//          如 "https://asterism.pics,http://localhost:5173"；SUPABASE_URL/SERVICE_ROLE_KEY 自動有）。
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const CHANNEL_ID = Deno.env.get("LINE_CHANNEL_ID")!;
 const CHANNEL_SECRET = Deno.env.get("LINE_CHANNEL_SECRET")!;
-const FRONTEND_ORIGIN = Deno.env.get("FRONTEND_ORIGIN") ?? "https://asterism.pics";
 const REDIRECT_URI = "https://lioiaxlkwesthfshtmop.supabase.co/functions/v1/line-callback";
+
+// 前端 origin 白名單：prod + 本地 dev 同時可用，組員 review 不必改 secret。
+const ALLOWED_ORIGINS = (Deno.env.get("FRONTEND_ORIGINS") ?? "https://asterism.pics")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+// 只回白名單內的 origin，否則退回第一個（prod）→ 擋掉用 origin 參數做 open redirect。
+function pickOrigin(requested: string | null): string {
+  return requested && ALLOWED_ORIGINS.includes(requested) ? requested : ALLOWED_ORIGINS[0];
+}
 
 const admin = createClient(
   Deno.env.get("SUPABASE_URL")!,
@@ -49,10 +60,11 @@ Deno.serve(async (req) => {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
 
-  // ── start：無 code → 種 state cookie（CSRF）+ 記住 next → 302 到 LINE 授權頁 ──
+  // ── start：無 code → 種 state cookie（CSRF）+ 記住 next/origin → 302 到 LINE 授權頁 ──
   if (!code) {
     const state = crypto.randomUUID();
     const next = sanitizeNext(url.searchParams.get("next"));
+    const origin = pickOrigin(url.searchParams.get("origin"));
     const authUrl = new URL("https://access.line.me/oauth2/v2.1/authorize");
     authUrl.searchParams.set("response_type", "code");
     authUrl.searchParams.set("client_id", CHANNEL_ID);
@@ -62,14 +74,20 @@ Deno.serve(async (req) => {
     return redirect(authUrl.toString(), [
       cookie("line_state", state, 600),
       cookie("line_next", next, 600),
+      cookie("line_origin", origin, 600),
     ]);
   }
 
   // ── callback：有 code ──
   const next = sanitizeNext(getCookie(req, "line_next"));
-  const clearCookies = [cookie("line_state", "", 0), cookie("line_next", "", 0)];
+  const origin = pickOrigin(getCookie(req, "line_origin"));
+  const clearCookies = [
+    cookie("line_state", "", 0),
+    cookie("line_next", "", 0),
+    cookie("line_origin", "", 0),
+  ];
   const fail = (reason: string) =>
-    redirect(`${FRONTEND_ORIGIN}/auth/callback?error=${reason}`, clearCookies);
+    redirect(`${origin}/auth/callback?error=${reason}`, clearCookies);
 
   // CSRF：網址 state 必須等於 start 種下的 cookie。
   const returnedState = url.searchParams.get("state");
@@ -127,7 +145,7 @@ Deno.serve(async (req) => {
   }
 
   // 302 回前端：verifyOtp 用 token_hash 換 session 後即把網址洗掉。
-  const dest = new URL(`${FRONTEND_ORIGIN}/auth/callback`);
+  const dest = new URL(`${origin}/auth/callback`);
   dest.searchParams.set("token_hash", linkData.properties.hashed_token);
   dest.searchParams.set("type", "magiclink");
   if (next !== "/") dest.searchParams.set("next", next);
