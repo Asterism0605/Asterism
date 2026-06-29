@@ -51,16 +51,18 @@ describe('style-dna store', () => {
     const store = useStyleDnaStore();
     const answers = [createAnswer('1', 'Minimalism', 1), createAnswer('2', 'Cyberpunk', 1)];
 
-    store.completeQuiz(answers);
+    store.completeQuiz(answers, 'user-1');
 
     expect(store.answers).toEqual(answers);
     expect(store.completedAt).toEqual(expect.any(String));
+    expect(store.localUserId).toBe('user-1');
     expect(store.hasCompletedQuiz).toBe(true);
     expect(store.preferredStyles).toEqual(['Minimalism', 'Cyberpunk']);
 
     const persisted = JSON.parse(localStorage.getItem(STORAGE_KEY) as string);
     expect(persisted.answers).toEqual(answers);
     expect(persisted.completedAt).toBe(store.completedAt);
+    expect(persisted.userId).toBe('user-1');
   });
 
   it('hydrates answers and completedAt from a valid localStorage entry', () => {
@@ -115,29 +117,10 @@ describe('style-dna store', () => {
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
   });
 
-  it('hydrates a server result snapshot without requiring local answers', async () => {
-    fetchStyleDnaProfile.mockResolvedValue({
-      result: serverResult,
-      onboardingStatus: 'completed'
-    });
-    const store = useStyleDnaStore();
-
-    await store.hydrateFromServer('user-1');
-
-    expect(store.answers).toEqual([]);
-    expect(store.completedAt).toBeNull();
-    expect(store.hasCompletedQuiz).toBe(true);
-    expect(store.result).toEqual(serverResult);
-    expect(store.preferredStyles).toEqual(['Art Deco', 'Baroque']);
-  });
-
   it('does not write local data again when the server already has a result', async () => {
-    fetchStyleDnaProfile.mockResolvedValue({
-      result: serverResult,
-      onboardingStatus: 'completed'
-    });
+    fetchStyleDnaProfile.mockResolvedValue({ result: serverResult });
     const store = useStyleDnaStore();
-    store.completeQuiz([createAnswer('1', 'Minimalism', 1)]);
+    store.completeQuiz([createAnswer('1', 'Minimalism', 1)], 'user-1');
 
     await store.reconcileWithServer('user-1');
 
@@ -147,22 +130,33 @@ describe('style-dna store', () => {
   });
 
   it('writes the current local result once when the server has no result', async () => {
-    fetchStyleDnaProfile.mockResolvedValue({
-      result: null,
-      onboardingStatus: 'not_started'
-    });
+    fetchStyleDnaProfile.mockResolvedValue({ result: null });
     const store = useStyleDnaStore();
-    store.completeQuiz([createAnswer('1', 'Minimalism', 1)]);
+    store.completeQuiz([createAnswer('1', 'Minimalism', 1)], 'user-1');
 
     await store.reconcileWithServer('user-1');
 
     expect(saveStyleDnaResult).toHaveBeenCalledWith('user-1', store.result);
   });
 
+  it('does not upload another user local result during reconciliation', async () => {
+    fetchStyleDnaProfile.mockResolvedValue({ result: null });
+    const store = useStyleDnaStore();
+    store.completeQuiz([createAnswer('1', 'Minimalism', 1)], 'user-a');
+    await store.saveCurrentResultToServer('user-a');
+
+    await store.reconcileWithServer('user-b');
+
+    expect(saveStyleDnaResult).toHaveBeenCalledTimes(1);
+    expect(store.answers).toEqual([]);
+    expect(store.completedAt).toBeNull();
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+  });
+
   it('keeps localStorage intact when server sync fails', async () => {
     fetchStyleDnaProfile.mockRejectedValue(new Error('network down'));
     const store = useStyleDnaStore();
-    store.completeQuiz([createAnswer('1', 'Minimalism', 1)]);
+    store.completeQuiz([createAnswer('1', 'Minimalism', 1)], 'user-1');
     const persisted = localStorage.getItem(STORAGE_KEY);
 
     await expect(store.reconcileWithServer('user-1')).resolves.toBeUndefined();

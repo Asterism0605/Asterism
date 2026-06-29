@@ -51,7 +51,7 @@ const handleSelect = (optionId: string) => {
     }, 260);
 
     if (isCompleted.value) {
-      styleDnaStore.completeQuiz([...answers]);
+      styleDnaStore.completeQuiz([...answers], authStore.user?.id ?? null);
       if (authStore.user?.id) {
         void styleDnaStore.saveCurrentResultToServer(authStore.user.id).catch((error: unknown) => {
           console.warn('[style-dna] sync after quiz failed:', error);

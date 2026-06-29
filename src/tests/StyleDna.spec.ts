@@ -109,7 +109,7 @@ describe('StyleDna', () => {
     await wrapper.find('[data-testid="select-btn"]').trigger('click');
     await vi.advanceTimersByTimeAsync(500);
 
-    expect(completeQuiz).toHaveBeenCalledWith([mockAnswer]);
+    expect(completeQuiz).toHaveBeenCalledWith([mockAnswer], null);
     expect(push).toHaveBeenCalledWith('/style-dna/result');
   });
 
@@ -148,6 +148,7 @@ describe('StyleDna', () => {
     await wrapper.find('[data-testid="select-btn"]').trigger('click');
     await vi.advanceTimersByTimeAsync(500);
 
+    expect(store.localUserId).toBe('user-1');
     expect(saveCurrentResultToServer).toHaveBeenCalledWith('user-1');
   });
 
