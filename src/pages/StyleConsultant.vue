@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ConsultantSummary from '@/components/feature/consultant/ConsultantSummary.vue';
 import RecommendationPanel from '@/components/feature/consultant/RecommendationPanel.vue';
@@ -25,6 +26,7 @@ interface BookingPayload {
 }
 
 const authStore = useAuthStore();
+const route = useRoute();
 const bookingStatus = ref<'idle' | 'submitted'>('idle');
 const lastBooking = ref<BookingPayload | null>(null);
 
@@ -37,9 +39,14 @@ const mockProfile: ConsultantProfile = {
   consultantLabel: 'Spatial Consultant · Mira Chen'
 };
 
-// 是否帶入 DNA 測驗 mock data &
+// 是否帶入 DNA 測驗 mock data 
 const profile = computed(() => mockProfile);
 const hasSourceData = computed(() => Boolean(profile.value));
+const sourceImageId = computed(() => {
+  const rawSourceImageId = route.query.sourceImageId;
+
+  return typeof rawSourceImageId === 'string' ? rawSourceImageId : '';
+});
 //
 const accountName = computed(() => authStore.user?.displayName ?? '');
 const accountEmail = computed(() => authStore.user?.email ?? '');
@@ -56,7 +63,7 @@ function handleReset() {
 </script>
 
 <template>
-  <main class="style-consultant">
+  <main class="style-consultant" :data-source-image-id="sourceImageId || undefined">
     <div class="style-consultant__background" aria-hidden="true">
       <ConstellationBackground
         class-name="style-consultant__constellation style-consultant__constellation--left consultant-constellation"

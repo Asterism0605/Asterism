@@ -20,6 +20,7 @@ vi.mock('@/composables/useToast', () => ({
 }));
 
 async function mountImageSpread(imageId = 'y2k-main-001') {
+  const [routeImageId, routeQuery] = imageId.split('?');
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
@@ -30,7 +31,7 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
   });
   const push = vi.spyOn(router, 'push');
 
-  router.push(`/images/${imageId}/spread`);
+  router.push(`/images/${routeImageId}/spread${routeQuery ? `?${routeQuery}` : ''}`);
   await router.isReady();
 
   const wrapper = mount(ImageSpread, {
@@ -176,14 +177,30 @@ describe('ImageSpread', () => {
     expect(push).not.toHaveBeenCalledWith({ name: 'home' });
   });
 
-  it('uses browser history when returning from the root spread layer', async () => {
+  it('routes home when returning from the root spread layer', async () => {
     const { wrapper, push } = await mountImageSpread();
     const back = vi.spyOn(wrapper.vm.$router, 'back');
 
     await wrapper.find('[data-testid="return-home"]').trigger('click');
 
-    expect(back).toHaveBeenCalledOnce();
-    expect(push).not.toHaveBeenCalledWith({ name: 'home' });
+    expect(back).not.toHaveBeenCalled();
+    expect(push).toHaveBeenCalledWith({ name: 'home' });
+  });
+
+  it('returns from a medium spread layer to root, then home', async () => {
+    const { wrapper, push, router } = await mountImageSpread('rpl-interior-001?rootId=rpl-main-001');
+
+    await wrapper.find('[data-testid="return-home"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('rpl-main-001');
+    expect(router.currentRoute.value.query.rootId).toBeUndefined();
+
+    await wrapper.find('[data-testid="return-home"]').trigger('click');
+    await flushPromises();
+
+    expect(push).toHaveBeenCalledWith({ name: 'home' });
   });
 
   it('shows an error state for unknown image ids', async () => {

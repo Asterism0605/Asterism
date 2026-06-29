@@ -103,6 +103,7 @@ describe('image.service', () => {
       expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
         true
       );
+      expect(relatedImages.every((image) => image.subMedium)).toBe(true);
     });
 
     it('does not fill related images from another style group', () => {
@@ -110,17 +111,22 @@ describe('image.service', () => {
         limit: 50
       });
 
-      expect(relatedImages).toHaveLength(19);
+      expect(relatedImages).toHaveLength(15);
       expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
         true
       );
+      expect(relatedImages.every((image) => image.subMedium)).toBe(true);
     });
 
-    it('prefers same subMedium over medium when available', () => {
-      const images = getRelatedImages('y2k-graphic-poster-001');
+    it('uses the same style group as the primary recommendation signal', () => {
+      const images = getRelatedImages('ftdp-graphic-001');
 
       expect(images.length).toBeGreaterThan(0);
-      expect(images[0].subMedium).toBe('Poster Design');
+      expect(
+        images.every((image) => image.styleGroup === 'Future Tech & Digital Psychedelia')
+      ).toBe(true);
+      expect(images.every((image) => image.subMedium)).toBe(true);
+      expect(images.some((image) => image.medium !== 'Graphic Design')).toBe(true);
     });
   });
 });

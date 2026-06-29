@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { Bookmark, LoaderCircle, User } from '@lucide/vue';
+import { Bookmark, BookmarkPlus, FolderPlus, LoaderCircle, User } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 
 interface Props {
@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
+  consult: [];
   'create-folder': [];
   'save-to-folder': [];
 }>();
@@ -56,6 +57,7 @@ onBeforeUnmount(() => {
       v-else-if="props.variant === 'consult'"
       variant="primary"
       class="w-full !px-3 !py-3 md:!px-4 md:!py-4"
+      @click="emit('consult')"
     >
       <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
         <User class="w-4 h-4 md:w-5.5 md:h-5.5" aria-hidden="true" />
@@ -77,28 +79,30 @@ onBeforeUnmount(() => {
 
     <div
       v-if="isOpen && props.variant === 'bookmark'"
-      class="absolute left-0 top-full z-10 mt-2 min-w-full overflow-hidden rounded-xl border border-white/20 bg-elevated/90 shadow-lg backdrop-blur-md"
+      class="absolute left-0 top-full z-10 mt-2 min-w-full overflow-hidden rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
     >
       <button
         type="button"
-        class="w-full px-4 sm:px-5 py-1.5 sm:py-2 text-left font-mono text-sm uppercase tracking-widest text-text-secondary transition-colors duration-150 hover:bg-white/8 hover:text-text-primary"
+        class="flex w-full items-center justify-center gap-2 px-3 py-3 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-4 md:py-4 md:text-sm"
         @click="
           emit('create-folder');
           isOpen = false;
         "
       >
-        新建資料夾
+        <FolderPlus class="h-4 w-4 shrink-0 md:ml-[22px]" aria-hidden="true" />
+        <span class="w-28 text-center md:w-auto md:text-left">CREATE NEW FOLDER</span>
       </button>
       <div class="mx-4 h-px bg-white/10" />
       <button
         type="button"
-        class="w-full px-4 sm:px-5 py-1.5 sm:py-2 text-left font-mono text-sm uppercase tracking-widest text-text-secondary transition-colors duration-150 hover:bg-white/8 hover:text-text-primary"
+        class="flex w-full items-center justify-center gap-2 px-3 py-3 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-4 md:py-4 md:text-sm"
         @click="
           emit('save-to-folder');
           isOpen = false;
         "
       >
-        儲存到既有資料夾
+        <BookmarkPlus class="h-4 w-4 shrink-0 md:ml-[22px]" aria-hidden="true" />
+        <span class="w-28 text-center md:w-auto md:text-left">SAVE TO FOLDER</span>
       </button>
     </div>
     <p v-if="props.error" class="mt-2 text-center font-mono text-xs text-red-400">

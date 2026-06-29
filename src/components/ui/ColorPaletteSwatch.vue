@@ -9,8 +9,8 @@ const hoveredIndex = ref<number | null>(null);
 </script>
 
 <template>
-  <div class="p-4 bg-elevated rounded">
-    <p class="text-h3 text-text-primary mb-2">color palette</p>
+  <div class="flex flex-col gap-4 p-4 bg-elevated rounded">
+    <p class="text-h3 text-text-primary">Color Palette</p>
     <div v-if="colors.length" class="flex h-16 rounded overflow-hidden">
       <div
         v-for="(color, i) in colors"
