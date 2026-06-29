@@ -4,7 +4,8 @@ import {
   getCurrentSession,
   login as loginService,
   logout as logoutService,
-  register as registerService
+  register as registerService,
+  signInWithGoogle as signInWithGoogleService
 } from '@/services/auth.service';
 import type { AuthSession, LoginPayload, RegisterPayload, UserProfile } from '@/types/auth';
 
@@ -49,5 +50,23 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { user, session, isAuthenticated, isAdmin, register, login, hydrate, logout };
+  // 組 redirectTo（回流到 /auth/callback，帶消毒過的 next）後觸發 OAuth，瀏覽器整頁導走。
+  // next 為空或就是首頁時不掛 query，讓 redirectTo 維持乾淨、好對 Supabase 白名單。
+  async function signInWithGoogle(next?: string): Promise<void> {
+    const base = `${window.location.origin}/auth/callback`;
+    const redirectTo = next && next !== '/' ? `${base}?next=${encodeURIComponent(next)}` : base;
+    await signInWithGoogleService(redirectTo);
+  }
+
+  return {
+    user,
+    session,
+    isAuthenticated,
+    isAdmin,
+    register,
+    login,
+    hydrate,
+    logout,
+    signInWithGoogle
+  };
 });

@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import FormInput from '@/components/ui/FormInput.vue';
+import OAuthSignInSection from '@/components/auth/OAuthSignInSection.vue';
 
 interface LoginPayload {
   email: string;
@@ -72,6 +73,8 @@ function handleSubmit() {
         </span>
       </div>
     </form>
+
+    <OAuthSignInSection />
   </section>
 </template>
 

@@ -1,4 +1,10 @@
-import { currentSessionApi, loginApi, logoutApi, registerApi } from '@/api/auth.api';
+import {
+  currentSessionApi,
+  loginApi,
+  logoutApi,
+  registerApi,
+  signInWithGoogleApi
+} from '@/api/auth.api';
 import type { AuthSession, LoginPayload, RegisterPayload } from '@/types/auth';
 
 // Service layer 負責解開 API response，
@@ -21,4 +27,8 @@ export async function logout(): Promise<void> {
 
 export async function getCurrentSession(): Promise<AuthSession | null> {
   return currentSessionApi();
+}
+
+export async function signInWithGoogle(redirectTo: string): Promise<void> {
+  await signInWithGoogleApi(redirectTo);
 }
