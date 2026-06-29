@@ -96,7 +96,10 @@ function pickOneImagePerGroup(
     else groups.set(key, [image]);
   }
 
-  return [...groups.values()].map((list) => list[Math.floor(rng() * list.length)]);
+  // clamp：注入的 rng 若回傳 1（floor(1*len)=len）不得越界。
+  return [...groups.values()].map(
+    (list) => list[Math.min(Math.floor(rng() * list.length), list.length - 1)]
+  );
 }
 
 function getRandomImagePerMedium(

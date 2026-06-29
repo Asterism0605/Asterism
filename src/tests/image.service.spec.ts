@@ -93,6 +93,16 @@ describe('image.service', () => {
         'y2k-graphic-packaging-001'
       );
     });
+
+    it('clamps to the last candidate when rng returns 1', () => {
+      // 防呆：注入的 rng 回傳 1（floor(1*len)=len）不得越界成 undefined。
+      const images = getMediumGroupImages('y2k-main-001', { rng: () => 1 });
+
+      expect(images).toHaveLength(4);
+      expect(images.find((image) => image.medium === 'Graphic Design')?.id).toBe(
+        'y2k-graphic-packaging-001'
+      );
+    });
   });
 
   describe('getSubMediumGroupImages', () => {
