@@ -35,32 +35,30 @@ describe('style-dna service', () => {
 
   it('fetches only the Style DNA profile fields and returns a valid result snapshot', async () => {
     single.mockResolvedValue({
-      data: { style_dna_result: serverResult, onboarding_status: 'completed' },
+      data: { style_dna_result: serverResult },
       error: null
     });
 
     const profile = await fetchStyleDnaProfile('user-1');
 
     expect(from).toHaveBeenCalledWith('profiles');
-    expect(select).toHaveBeenCalledWith('style_dna_result,onboarding_status');
+    expect(select).toHaveBeenCalledWith('style_dna_result');
     expect(selectEq).toHaveBeenCalledWith('id', 'user-1');
     expect(profile).toEqual({
-      result: serverResult,
-      onboardingStatus: 'completed'
+      result: serverResult
     });
   });
 
   it('treats malformed server result JSON as empty instead of returning an unsafe shape', async () => {
     single.mockResolvedValue({
-      data: { style_dna_result: { primaryStyle: 'missing fields' }, onboarding_status: 'completed' },
+      data: { style_dna_result: { primaryStyle: 'missing fields' } },
       error: null
     });
 
     const profile = await fetchStyleDnaProfile('user-1');
 
     expect(profile).toEqual({
-      result: null,
-      onboardingStatus: 'completed'
+      result: null
     });
   });
 

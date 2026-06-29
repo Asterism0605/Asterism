@@ -5,7 +5,6 @@ export type ProfileOnboardingStatus = 'not_started' | 'dna_pending' | 'completed
 
 export interface StyleDnaProfileRow {
   style_dna_result: unknown;
-  onboarding_status: ProfileOnboardingStatus | null;
 }
 
 export async function fetchStyleDnaProfileRow(
@@ -13,7 +12,7 @@ export async function fetchStyleDnaProfileRow(
 ): Promise<StyleDnaProfileRow | null> {
   const { data, error } = await getSupabase()
     .from('profiles')
-    .select('style_dna_result,onboarding_status')
+    .select('style_dna_result')
     .eq('id', userId)
     .single();
 

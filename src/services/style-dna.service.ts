@@ -1,7 +1,6 @@
 import {
   fetchStyleDnaProfileRow,
-  updateStyleDnaProfileRow,
-  type ProfileOnboardingStatus
+  updateStyleDnaProfileRow
 } from '@/api/style-dna.api';
 import type {
   ComputedStyleDnaResult,
@@ -11,7 +10,6 @@ import type {
 
 export interface StyleDnaProfile {
   result: ComputedStyleDnaResult | null;
-  onboardingStatus: ProfileOnboardingStatus | null;
 }
 
 const isStyleDnaScore = (value: unknown): value is StyleDnaScore => {
@@ -59,8 +57,7 @@ export async function fetchStyleDnaProfile(userId: string): Promise<StyleDnaProf
   const row = await fetchStyleDnaProfileRow(userId);
 
   return {
-    result: isComputedStyleDnaResult(row?.style_dna_result) ? row.style_dna_result : null,
-    onboardingStatus: row?.onboarding_status ?? null
+    result: isComputedStyleDnaResult(row?.style_dna_result) ? row.style_dna_result : null
   };
 }
 
