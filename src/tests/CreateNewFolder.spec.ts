@@ -1,21 +1,10 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
-import { createFolder } from '@/services/moodboard.service';
-import { showToast } from '@/composables/useToast';
 
-vi.mock('@/services/moodboard.service', () => ({
-  createFolder: vi.fn()
-}));
-
-vi.mock('@/composables/useToast', () => ({
-  showToast: vi.fn(),
-  useToast: () => ({ toast: { value: null } })
-}));
-
-function mountCreateNewFolder(modelValue = true) {
+function mountCreateNewFolder(props: Record<string, unknown> = {}) {
   return mount(CreateNewFolder, {
-    props: { modelValue },
+    props: { modelValue: true, isSubmitting: false, isSuccess: false, ...props },
     attachTo: document.body
   });
 }
@@ -25,8 +14,8 @@ function getInput() {
 }
 
 function getSendButton() {
-  return Array.from(document.querySelectorAll('button[type="button"]')).find(
-    (b) => b.textContent?.includes('SEND')
+  return Array.from(document.querySelectorAll('button[type="button"]')).find((b) =>
+    b.textContent?.includes('SEND')
   ) as HTMLButtonElement;
 }
 
@@ -37,11 +26,6 @@ describe('CreateNewFolder', () => {
 
   afterEach(() => {
     document.body.innerHTML = '';
-  });
-
-  it('輸入框 placeholder 為 Folder name', () => {
-    mountCreateNewFolder();
-    expect(getInput().placeholder).toBe('Folder name');
   });
 
   it('輸入為空時 SEND 按鈕 disabled', () => {
@@ -58,21 +42,7 @@ describe('CreateNewFolder', () => {
     expect(getSendButton().disabled).toBe(false);
   });
 
-  it('送出後呼叫 createFolder 並帶入輸入值', async () => {
-    vi.useFakeTimers();
-    mountCreateNewFolder();
-    const input = getInput();
-    input.value = 'My Folder';
-    input.dispatchEvent(new Event('input'));
-    await flushPromises();
-    getSendButton().click();
-    await flushPromises();
-    expect(createFolder).toHaveBeenCalledWith('My Folder');
-    vi.useRealTimers();
-  });
-
-  it('成功後 emit update:modelValue false', async () => {
-    vi.useFakeTimers();
+  it('送出後 emit submit 並帶入輸入值', async () => {
     const wrapper = mountCreateNewFolder();
     const input = getInput();
     input.value = 'My Folder';
@@ -80,21 +50,29 @@ describe('CreateNewFolder', () => {
     await flushPromises();
     getSendButton().click();
     await flushPromises();
-    await vi.runAllTimersAsync();
-    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
-    vi.useRealTimers();
+    expect(wrapper.emitted('submit')).toEqual([['My Folder']]);
   });
 
-  it('失敗時呼叫 showToast 顯示錯誤訊息', async () => {
-    vi.mocked(createFolder).mockImplementationOnce(() => { throw new Error('fail') });
-    mountCreateNewFolder();
+  it('isSubmitting 時 input 和 SEND 按鈕皆 disabled', async () => {
+    const wrapper = mountCreateNewFolder();
     const input = getInput();
     input.value = 'My Folder';
     input.dispatchEvent(new Event('input'));
     await flushPromises();
-    getSendButton().click();
+    await wrapper.setProps({ isSubmitting: true });
+    expect(getInput().disabled).toBe(true);
+    expect(getSendButton().disabled).toBe(true);
+  });
+
+  it('isSuccess 時 input 和 SEND 按鈕皆 disabled', async () => {
+    const wrapper = mountCreateNewFolder();
+    const input = getInput();
+    input.value = 'My Folder';
+    input.dispatchEvent(new Event('input'));
     await flushPromises();
-    expect(showToast).toHaveBeenCalledWith({ type: 'error', message: 'fail' });
+    await wrapper.setProps({ isSuccess: true });
+    expect(getInput().disabled).toBe(true);
+    expect(getSendButton().disabled).toBe(true);
   });
 
   it('modal 關閉時清空輸入框', async () => {

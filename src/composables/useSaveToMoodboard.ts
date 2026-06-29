@@ -14,9 +14,13 @@ export function useSaveToMoodboard() {
     saveError.value = null;
     try {
       await addItem(folderId, imageId);
-    } catch {
-      saveError.value = 'Failed to save. Please try again.';
-      showToast({ type: 'error', message: 'Failed to save. Please try again.' });
+    } catch (e) {
+      const message =
+        e instanceof Error && e.message === 'Image not found.'
+          ? 'Something went wrong. Please contact support.'
+          : 'Failed to save. Please try again.';
+      saveError.value = message;
+      showToast({ type: 'error', message });
     } finally {
       isSaving.value = false;
     }

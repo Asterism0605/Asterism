@@ -5,7 +5,7 @@ import { getImageById } from '@/services/image.service';
 export function addItem(folderId: string, imageId: string): void {
   const store = useMoodboardStore();
   const image = getImageById(imageId);
-  if (!image) return;
+  if (!image) throw new Error('Image not found.');
   const savedImage: SavedImage = { id: imageId, src: image.src };
   store.addImage(folderId, savedImage);
 }
