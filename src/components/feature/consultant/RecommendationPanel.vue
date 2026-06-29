@@ -63,16 +63,16 @@ const timeSlotOptions: Array<{ label: string; value: Exclude<TimeSlot, ''> }> = 
   { label: 'PM', value: 'pm' }
 ];
 
-const fieldOptions = ['Styling design', 'Graphic Design', 'Interior Design', 'Architecture'].map(
+const fieldOptions = ['Styling Design', 'Graphic Design', 'Interior Design', 'Architecture'].map(
   (field) => ({ label: field, value: field })
 );
 
 const focusOptions = [
-  'Spatial mood',
-  'Material palette',
-  'Color direction',
-  'Furniture selection',
-  'Visual concept'
+  'Spatial Mood',
+  'Material Palette',
+  'Color Direction',
+  'Furniture Selection',
+  'Visual Concept'
 ].map((focus) => ({ label: focus, value: focus }));
 
 const fieldErrors = computed(() => {
@@ -97,6 +97,7 @@ const fieldErrors = computed(() => {
 watch(
   () => [props.accountName, props.accountEmail],
   ([accountName, accountEmail]) => {
+    // 當登入會員資料更新時，同步回表單欄位。
     form.name = accountName;
     form.email = accountEmail;
   },
@@ -206,7 +207,7 @@ function handleSubmit() {
         v-model="form.designFocus"
         :open="isDesignFocusOpen"
         label="Design Focus"
-        placeholder="Select a focus area"
+        placeholder="Select a focus"
         list-label="Choose design focus"
         :options="focusOptions"
         :error="fieldErrors.designFocus"
@@ -245,8 +246,8 @@ function handleSubmit() {
     </label>
 
     <section class="recommendation-panel__fee" aria-labelledby="consultation-fee-title">
-      <div>
-        <p id="consultation-fee-title" class="recommendation-panel__label">Consultation Fee</p>
+      <p id="consultation-fee-title" class="recommendation-panel__label">Consultation Fee</p>
+      <div class="recommendation-panel__fee-detail">
         <p class="recommendation-panel__fee-amount">NT$500 deposit</p>
         <p class="recommendation-panel__fee-copy">
           A consultation deposit is required to submit your request.
@@ -264,8 +265,8 @@ function handleSubmit() {
     </section>
 
     <div class="recommendation-panel__actions">
-      <Button type="submit">CONFIRM &amp; PAY</Button>
-      <Button type="button" variant="secondary" @click="resetForm">RESET</Button>
+      <Button type="submit">Confirm &amp; Pay</Button>
+      <Button type="button" variant="secondary" @click="resetForm">Reset</Button>
     </div>
   </form>
 </template>
@@ -372,11 +373,19 @@ function handleSubmit() {
 
 .recommendation-panel__fee {
   display: grid;
-  gap: 12px;
+  gap: 0;
+}
+
+.recommendation-panel__fee-detail {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 14px 16px;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 8px;
 }
 
 .recommendation-panel__fee-amount {
-  margin-top: 8px;
   color: var(--color-text-primary);
   font-family: var(--font-family-mono);
   font-size: 1rem;
@@ -394,6 +403,7 @@ function handleSubmit() {
   display: inline-flex;
   align-items: flex-start;
   gap: 10px;
+  margin-top: 32px;
   color: rgb(240 237 230 / 0.82);
   font-size: 14px;
   font-weight: 700;
@@ -409,12 +419,14 @@ function handleSubmit() {
 }
 
 .recommendation-panel__fee small {
+  margin-top: 8px;
   color: var(--color-stellar-red);
   font-family: var(--font-family-mono);
   font-size: 0.7rem;
 }
 
 .recommendation-panel__demo-note {
+  margin-top: 14px;
   color: rgb(240 237 230 / 0.68);
   font-size: 12px;
   line-height: 1.55;
@@ -424,7 +436,6 @@ function handleSubmit() {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  padding-top: 6px;
 }
 
 @media (max-width: 720px) {

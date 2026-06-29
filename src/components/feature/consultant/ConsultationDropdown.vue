@@ -177,12 +177,6 @@ function selectOption(value: string) {
   color: var(--color-text-primary);
 }
 
-.recommendation-panel__dropdown-option--selected::before {
-  margin-right: 8px;
-  content: '✓';
-  color: var(--color-gold-dim);
-}
-
 .recommendation-panel__field small {
   color: var(--color-stellar-red);
   font-family: var(--font-family-mono);

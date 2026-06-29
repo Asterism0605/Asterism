@@ -22,7 +22,9 @@ interface BookingPayload {
   designFocus: string;
   name: string;
   email: string;
+  contactPhone: string;
   notes: string;
+  paymentConfirmed: boolean;
 }
 
 const authStore = useAuthStore();
@@ -47,7 +49,7 @@ const sourceImageId = computed(() => {
 
   return typeof rawSourceImageId === 'string' ? rawSourceImageId : '';
 });
-//
+// 從登入會員資料帶入預約表單的姓名與 Email
 const accountName = computed(() => authStore.user?.displayName ?? '');
 const accountEmail = computed(() => authStore.user?.email ?? '');
 
