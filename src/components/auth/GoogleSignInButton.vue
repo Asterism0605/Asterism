@@ -7,15 +7,19 @@ import { getSafeRedirectPath } from '@/utils/redirect';
 const route = useRoute();
 const authStore = useAuthStore();
 const error = ref(false);
+const loading = ref(false);
 
 // 成功時瀏覽器會整頁導去 Google；只有「導向前就失敗」（provider 沒開、redirectTo 不在白名單）才會 reject。
 async function signIn() {
+  if (loading.value) return;
   error.value = false;
+  loading.value = true;
   const next = getSafeRedirectPath(route.query.next, '/');
   try {
     await authStore.signInWithGoogle(next);
   } catch {
     error.value = true;
+    loading.value = false;
   }
 }
 </script>
@@ -24,7 +28,8 @@ async function signIn() {
   <button
     type="button"
     data-testid="google-signin"
-    class="flex w-full items-center justify-center gap-3 rounded-lg border border-white/20 bg-white/95 px-4 py-3 text-sm font-semibold text-[#1f1f1f] transition hover:bg-white"
+    :disabled="loading"
+    class="flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-white/20 bg-white/95 px-4 py-3 text-sm font-semibold text-[#1f1f1f] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
     @click="signIn"
   >
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
@@ -47,7 +52,7 @@ async function signIn() {
     </svg>
     Continue with Google
   </button>
-  <p v-if="error" class="mt-2 text-center font-mono text-xs text-red-400">
+  <p v-if="error" class="mt-2 text-center font-mono text-xs text-red-400" role="alert">
     Google sign-in failed. Please try again.
   </p>
 </template>
