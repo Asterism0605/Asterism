@@ -10,6 +10,7 @@ import type { ImageSpreadNode } from '@/types/image';
 const props = defineProps<{
   image: ImageSpreadNode;
   saved?: boolean;
+  disabled?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -90,6 +91,7 @@ const mainImageLabel = computed(() => {
       <ActionButton
         class="min-w-48"
         :saved="props.saved"
+        :disabled="props.disabled"
         @create-folder="emit('create-folder')"
         @save-to-folder="emit('save-to-folder')"
       />

@@ -52,6 +52,25 @@ describe('PictureDetail', () => {
     vi.useRealTimers();
   });
 
+  it('disables ADD TO MOODBOARD while a save is in flight and re-enables after', async () => {
+    let resolve!: () => void;
+    vi.mocked(addItem).mockImplementationOnce(() => new Promise<void>((r) => { resolve = r; }));
+    const { wrapper } = await mountPictureDetail();
+
+    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
+    await addBtn!.trigger('click');
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    await saveBtn!.trigger('click');
+
+    expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
+
+    resolve();
+    await flushPromises();
+
+    expect((addBtn!.element as HTMLButtonElement).disabled).toBe(false);
+    expect(addItem).toHaveBeenCalledOnce();
+  });
+
   it('calls addItem with the current image id when SAVE TO FOLDER is clicked', async () => {
     const { wrapper } = await mountPictureDetail();
 

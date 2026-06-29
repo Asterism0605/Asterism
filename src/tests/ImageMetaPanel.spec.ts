@@ -48,6 +48,13 @@ describe('ImageMetaPanel', () => {
   });
 
 
+  it('disables ADD TO MOODBOARD button when disabled prop is true', () => {
+    const wrapper = mount(ImageMetaPanel, { props: { ...defaultProps, disabled: true } });
+
+    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
+    expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
+  });
+
   it('forwards selected similar image ids', async () => {
     const wrapper = mount(ImageMetaPanel, {
       props: { ...defaultProps, similarImages }

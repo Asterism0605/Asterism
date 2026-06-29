@@ -31,7 +31,7 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
+const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
 const showCreateFolder = ref(false);
 
@@ -104,6 +104,7 @@ async function handleSaveToFolder() {
         photographer-role="Photographer"
         photographer-date="Aug 19, 2025"
         :saved="isSaved"
+        :disabled="isSaving"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
