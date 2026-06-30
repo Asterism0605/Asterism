@@ -7,10 +7,12 @@ import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
 import { getErrorMessage } from '@/utils/api-error';
 import type { RegisterPayload } from '@/types/auth';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 
 const isSubmitting = ref(false);
 const errorMessage = ref('');
@@ -24,7 +26,12 @@ async function handleSubmit(payload: RegisterPayload) {
   errorMessage.value = '';
 
   try {
-    await authStore.register(payload);
+    const session = await authStore.register(payload);
+    try {
+      await styleDnaStore.reconcileWithServer(session.user.id);
+    } catch (error) {
+      console.warn('[style-dna] sync after registration failed:', error);
+    }
     router.push(getSafeRedirectPath(route.query.next, '/discover-dna'));
   } catch (error) {
     errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
