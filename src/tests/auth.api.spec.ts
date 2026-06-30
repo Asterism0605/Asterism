@@ -5,7 +5,8 @@ const auth = {
   signInWithPassword: vi.fn(),
   signOut: vi.fn(),
   getSession: vi.fn(),
-  signInWithOAuth: vi.fn()
+  signInWithOAuth: vi.fn(),
+  resend: vi.fn()
 };
 const single = vi.fn();
 const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
@@ -14,7 +15,7 @@ vi.mock('@/api/supabaseClient', () => ({
   getSupabase: () => ({ auth, from })
 }));
 
-import { loginApi, logoutApi, registerApi, signInWithGoogleApi } from '@/api/auth.api';
+import { loginApi, logoutApi, registerApi, resendSignupApi, signInWithGoogleApi } from '@/api/auth.api';
 
 const fakeSession = {
   access_token: 'tok',
@@ -71,6 +72,20 @@ describe('auth.api (supabase)', () => {
     auth.signOut.mockResolvedValue({ error: { message: 'network down' } });
 
     await expect(logoutApi()).rejects.toMatchObject({ code: 'AUTH_ERROR' });
+  });
+
+  it('resendSignup 以 type=signup + email 呼叫 resend', async () => {
+    auth.resend.mockResolvedValue({ error: null });
+
+    await resendSignupApi('a@b.com');
+
+    expect(auth.resend).toHaveBeenCalledWith({ type: 'signup', email: 'a@b.com' });
+  });
+
+  it('resendSignup 失敗 → 丟出對應錯誤', async () => {
+    auth.resend.mockResolvedValue({ error: { message: 'network down' } });
+
+    await expect(resendSignupApi('a@b.com')).rejects.toMatchObject({ code: 'AUTH_ERROR' });
   });
 
   it('session 缺 expires_at → expiresAt 退回未來時間（非 1970）', async () => {

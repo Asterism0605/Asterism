@@ -6,6 +6,7 @@ import {
   login as loginService,
   logout as logoutService,
   register as registerService,
+  resendSignup as resendSignupService,
   signInWithGoogle as signInWithGoogleService,
   verifyOtp as verifyOtpService
 } from '@/services/auth.service';
@@ -65,6 +66,11 @@ export const useAuthStore = defineStore('auth', () => {
     return applySession(await verifyOtpService(tokenHash, type));
   }
 
+  // 重寄信箱驗證信（純動作、不改登入狀態）。
+  async function resendSignup(email: string): Promise<void> {
+    await resendSignupService(email);
+  }
+
   return {
     user,
     session,
@@ -75,6 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
     hydrate,
     logout,
     signInWithGoogle,
-    verifyOtp
+    verifyOtp,
+    resendSignup
   };
 });

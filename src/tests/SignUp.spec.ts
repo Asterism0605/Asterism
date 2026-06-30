@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter, type Router } from 'vue-router';
 import SignUp from '@/pages/SignUp.vue';
 
-const supaAuth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn() };
+const supaAuth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn(), resend: vi.fn() };
 const single = vi.fn();
 const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth: supaAuth, from }) }));
@@ -135,6 +135,37 @@ describe('SignUp', () => {
     expect(panel.text()).toContain('new-user@example.com');
     expect(wrapper.find('[data-testid="auth-error"]').exists()).toBe(false);
     expect(push).not.toHaveBeenCalled();
+  });
+
+  it('starts cooldown immediately, then resends after it expires', async () => {
+    vi.useFakeTimers();
+    try {
+      const router = createTestRouter();
+      router.push('/sign-up');
+      await router.isReady();
+
+      const wrapper = mountSignUp(router);
+      supaAuth.signUp.mockResolvedValue({ data: { session: null }, error: null });
+      supaAuth.resend.mockResolvedValue({ error: null });
+      await wrapper.find('input[type="email"]').setValue('new-user@example.com');
+      await wrapper.find('input[type="password"]').setValue('password123');
+      await wrapper.find('form').trigger('submit');
+      await vi.advanceTimersByTimeAsync(0);
+
+      // 註冊那封信已佔用 rate-limit 窗 → 重寄按鈕一開始就停用（避免立刻撞限流報錯）。
+      expect(wrapper.find('[data-testid="resend-button"]').attributes('disabled')).toBeDefined();
+      expect(supaAuth.resend).not.toHaveBeenCalled();
+
+      // 推過 60s cooldown 後才可重寄。
+      await vi.advanceTimersByTimeAsync(60_000);
+      await wrapper.find('[data-testid="resend-button"]').trigger('click');
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(supaAuth.resend).toHaveBeenCalledWith({ type: 'signup', email: 'new-user@example.com' });
+      expect(wrapper.find('[data-testid="resend-message"]').text()).toContain('resent');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('disables the submit button while submitting', async () => {
