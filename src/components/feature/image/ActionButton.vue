@@ -7,6 +7,7 @@ interface Props {
   variant?: 'bookmark' | 'consult';
   saved?: boolean;
   disabled?: boolean;
+  spread?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -58,6 +59,7 @@ onBeforeUnmount(() => {
       <Button
         variant="secondary"
         class="w-full !px-3 !py-3 md:!px-4 md:!py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+        :class="props.spread ? 'bg-black hover:!bg-dropdown' : ''"
         :disabled="props.disabled"
         @click="toggleDropdown()"
       >

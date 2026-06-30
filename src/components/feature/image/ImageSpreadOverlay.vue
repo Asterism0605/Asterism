@@ -90,6 +90,7 @@ const mainImageLabel = computed(() => {
       </Button>
       <ActionButton
         class="min-w-48"
+        spread
         :saved="props.saved"
         :disabled="props.disabled"
         @create-folder="emit('create-folder')"
