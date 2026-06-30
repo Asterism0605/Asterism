@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => {
   const hydrateResult = vi.fn();
-  const useStyleDnaStore = vi.fn((_pinia?: unknown) => ({ hydrateResult }));
+  const reconcileWithServer = vi.fn().mockResolvedValue(undefined);
+  const useStyleDnaStore = vi.fn((_pinia?: unknown) => ({ hydrateResult, reconcileWithServer }));
   const app = {
     use: vi.fn(),
     mount: vi.fn()
@@ -13,6 +14,7 @@ const mocks = vi.hoisted(() => {
     app,
     createApp: vi.fn(() => app),
     hydrateResult,
+    reconcileWithServer,
     router: { install: vi.fn() },
     useStyleDnaStore
   };
@@ -30,7 +32,12 @@ vi.mock('vue', async (importOriginal) => {
 vi.mock('@/App.vue', () => ({ default: { template: '<div />' } }));
 vi.mock('@/router', () => ({ default: mocks.router }));
 vi.mock('@/stores/style-dna.store', () => ({ useStyleDnaStore: mocks.useStyleDnaStore }));
-vi.mock('@/stores/auth.store', () => ({ useAuthStore: () => ({ hydrate: vi.fn().mockResolvedValue(undefined) }) }));
+vi.mock('@/stores/auth.store', () => ({
+  useAuthStore: () => ({
+    hydrate: vi.fn().mockResolvedValue(undefined),
+    user: { id: 'user-1' }
+  })
+}));
 vi.mock('@/services/image.service', () => ({ loadImages: vi.fn().mockResolvedValue(undefined) }));
 
 describe('main', () => {
@@ -42,6 +49,7 @@ describe('main', () => {
 
     expect(mocks.useStyleDnaStore).toHaveBeenCalledTimes(1);
     expect(mocks.hydrateResult).toHaveBeenCalledTimes(1);
+    expect(mocks.reconcileWithServer).toHaveBeenCalledWith('user-1');
     expect(mocks.app.use).toHaveBeenNthCalledWith(1, pinia);
     expect(mocks.app.use).toHaveBeenNthCalledWith(2, mocks.router);
     expect(mocks.app.mount).toHaveBeenCalledWith('#app');

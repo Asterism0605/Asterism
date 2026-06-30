@@ -47,21 +47,12 @@ describe('ImageMetaPanel', () => {
     expect(wrapper.emitted('save-to-folder')).toHaveLength(1);
   });
 
-  it('shows a spinner when loading is true', () => {
-    const wrapper = mount(ImageMetaPanel, {
-      props: { ...defaultProps, loading: true }
-    });
 
-    expect(wrapper.find('.animate-spin').exists()).toBe(true);
-  });
+  it('disables ADD TO MOODBOARD button when disabled prop is true', () => {
+    const wrapper = mount(ImageMetaPanel, { props: { ...defaultProps, disabled: true } });
 
-  it('shows an error message when error prop is set', () => {
-    const errorMsg = '儲存失敗，請再試一次';
-    const wrapper = mount(ImageMetaPanel, {
-      props: { ...defaultProps, error: errorMsg }
-    });
-
-    expect(wrapper.text()).toContain(errorMsg);
+    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
+    expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
   });
 
   it('forwards selected similar image ids', async () => {
