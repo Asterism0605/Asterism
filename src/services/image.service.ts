@@ -11,6 +11,7 @@ import type {
 interface RelatedImageOptions {
   limit?: number;
   visitedImageIds?: string[];
+  rng?: () => number;
 }
 
 const DEFAULT_RELATED_LIMIT = 4;
@@ -76,35 +77,56 @@ function sortByPreferredStyles(
     .map(({ image }) => image);
 }
 
-function getFirstImagePerMedium(styleGroup: string): StyleImage[] {
-  const mediums = new Map<string, StyleImage>();
+// 依 keyOf 把候選分組（已先排除 excludedIds），每組用 rng 隨機選一張代表。
+// 先排除再分組：排除某張圖只是換該組代表，不會讓整組消失（#94）。
+function pickOneImagePerGroup(
+  images: StyleImage[],
+  keyOf: (image: StyleImage) => string | undefined,
+  excludedIds: Set<string>,
+  rng: () => number
+): StyleImage[] {
+  const groups = new Map<string, StyleImage[]>();
 
-  for (const image of styleImages) {
-    if (image.styleGroup !== styleGroup) continue;
-    if (!image.medium) continue;
-    if (mediums.has(image.medium)) continue;
-    mediums.set(image.medium, image);
+  for (const image of images) {
+    const key = keyOf(image);
+    if (!key) continue;
+    if (excludedIds.has(image.id)) continue;
+    const list = groups.get(key);
+    if (list) list.push(image);
+    else groups.set(key, [image]);
   }
 
-  return [...mediums.values()];
+  // clamp：注入的 rng 若回傳 1（floor(1*len)=len）不得越界。
+  return [...groups.values()].map(
+    (list) => list[Math.min(Math.floor(rng() * list.length), list.length - 1)]
+  );
 }
 
-function getFirstImagePerSubMedium(
+function getRandomImagePerMedium(
   styleGroup: string,
-  medium: string
+  excludedIds: Set<string>,
+  rng: () => number
 ): StyleImage[] {
-  const subMediums = new Map<string, StyleImage>();
+  return pickOneImagePerGroup(
+    styleImages.filter((image) => image.styleGroup === styleGroup),
+    (image) => image.medium,
+    excludedIds,
+    rng
+  );
+}
 
-  for (const image of styleImages) {
-    if (image.styleGroup !== styleGroup) continue;
-    if (image.medium !== medium) continue;
-    if (!image.subMedium) continue;
-    const key = image.subMedium;
-    if (subMediums.has(key)) continue;
-    subMediums.set(key, image);
-  }
-
-  return [...subMediums.values()];
+function getRandomImagePerSubMedium(
+  styleGroup: string,
+  medium: string,
+  excludedIds: Set<string>,
+  rng: () => number
+): StyleImage[] {
+  return pickOneImagePerGroup(
+    styleImages.filter((image) => image.styleGroup === styleGroup && image.medium === medium),
+    (image) => image.subMedium,
+    excludedIds,
+    rng
+  );
 }
 
 export function getImageById(imageId: string): ImageSpreadNode | undefined {
@@ -148,10 +170,9 @@ export function getMediumGroupImages(
   if (!baseImage) return [];
 
   const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
+  const rng = options.rng ?? Math.random;
   const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
-  const mediumImages = getFirstImagePerMedium(baseImage.styleGroup).filter(
-    (image) => !excludedIds.has(image.id)
-  );
+  const mediumImages = getRandomImagePerMedium(baseImage.styleGroup, excludedIds, rng);
 
   return mediumImages.slice(0, limit).map(toSpreadNode);
 }
@@ -165,11 +186,14 @@ export function getSubMediumGroupImages(
   if (!baseImage || !baseImage.medium) return [];
 
   const limit = options.limit ?? DEFAULT_RELATED_LIMIT;
+  const rng = options.rng ?? Math.random;
   const excludedIds = new Set([imageId, ...(options.visitedImageIds ?? [])]);
-  const subMediumImages = getFirstImagePerSubMedium(
+  const subMediumImages = getRandomImagePerSubMedium(
     baseImage.styleGroup,
-    baseImage.medium
-  ).filter((image) => !excludedIds.has(image.id));
+    baseImage.medium,
+    excludedIds,
+    rng
+  );
 
   return subMediumImages.slice(0, limit).map(toSpreadNode);
 }
