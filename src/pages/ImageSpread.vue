@@ -172,7 +172,7 @@ watch(
   <ImageSpreadEntrance
     as="main"
     kind="page"
-    class="relative min-h-screen overflow-hidden bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:92px]"
+    class="relative min-h-screen overflow-x-hidden overflow-y-auto bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:92px]"
   >
     <ImageSpreadEntrance
       kind="wash"

@@ -57,7 +57,7 @@ onBeforeUnmount(() => {
     <template v-else>
       <Button
         variant="secondary"
-        class="w-full !px-3 !py-3 md:!px-4 md:!py-4 bg-black hover:!bg-dropdown disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full !px-3 !py-3 md:!px-4 md:!py-4 disabled:opacity-50 disabled:cursor-not-allowed"
         :disabled="props.disabled"
         @click="toggleDropdown()"
       >
@@ -70,7 +70,7 @@ onBeforeUnmount(() => {
 
     <div
       v-if="isOpen && props.variant === 'bookmark'"
-      class="absolute left-0 top-full z-10 mt-2 min-w-full overflow-hidden rounded-xl border border-white/20 bg-dropdown shadow-lg backdrop-blur-md"
+      class="absolute left-0 top-full z-10 mt-2 min-w-full overflow-hidden rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
     >
       <button
         type="button"
