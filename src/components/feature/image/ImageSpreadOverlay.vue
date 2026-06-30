@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ArrowLeft } from '@lucide/vue';
 import { computed } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
@@ -11,12 +11,13 @@ const props = defineProps<{
   image: ImageSpreadNode;
   saved?: boolean;
   disabled?: boolean;
+  folders?: { id: string; name: string }[];
 }>();
 
 const emit = defineEmits<{
   return: [];
   'create-folder': [];
-  'save-to-folder': [];
+  'save-to-folder': [folderId: string];
 }>();
 
 const mainImageLabel = computed(() => {
@@ -93,8 +94,9 @@ const mainImageLabel = computed(() => {
         spread
         :saved="props.saved"
         :disabled="props.disabled"
+        :folders="props.folders"
         @create-folder="emit('create-folder')"
-        @save-to-folder="emit('save-to-folder')"
+        @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
       />
     </ImageSpreadEntrance>
   </ImageSpreadEntrance>

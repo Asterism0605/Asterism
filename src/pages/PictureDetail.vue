@@ -11,6 +11,7 @@ import {
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import { isImageSaved } from '@/services/moodboard.service';
+import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
@@ -33,6 +34,8 @@ const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
 const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
+const moodboardStore = useMoodboardStore();
+const folders = computed(() => moodboardStore.folders.map((f) => ({ id: f.id, name: f.name })));
 const showCreateFolder = ref(false);
 
 function handleBack() {
@@ -76,9 +79,9 @@ function handleSelectImage(imageId: string) {
   router.push({ name: 'picture-detail', params: { imageId } });
 }
 
-async function handleSaveToFolder() {
+async function handleSaveToFolder(folderId: string) {
   if (!currentImage.value) return;
-  await saveToMoodboard('default', currentImage.value.id);
+  await saveToMoodboard(folderId, currentImage.value.id);
 }
 
 </script>
@@ -108,6 +111,7 @@ async function handleSaveToFolder() {
         :disabled="isSaving"
         @back="handleBack"
         @consult="handleConsult"
+        :folders="folders"
         @create-folder="handleCreateFolder"
         @save-to-folder="handleSaveToFolder"
         @select-image="handleSelectImage"
