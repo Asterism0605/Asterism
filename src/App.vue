@@ -6,7 +6,7 @@ import AppHeader from './layouts/AppHeader.vue';
 import AppFooter from './layouts/AppFooter.vue';
 
 const route = useRoute();
-const headerlessRouteNames = new Set(['discover-dna']);
+const headerlessRouteNames = new Set(['discover-dna', 'auth-callback']);
 // 沉浸式 / 全畫布頁面不放流式 footer，避免破壞固定版面
 const footerlessRouteNames = new Set([
   'discover-dna',
@@ -14,7 +14,8 @@ const footerlessRouteNames = new Set([
   'image-spread',
   'picture-detail',
   'style-dna',
-  'style-dna-result'
+  'style-dna-result',
+  'auth-callback'
 ]);
 const showHeader = computed(() => !headerlessRouteNames.has(String(route.name)));
 const showFooter = computed(() => !footerlessRouteNames.has(String(route.name)));
