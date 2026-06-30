@@ -5,7 +5,7 @@ import ConstellationBackground from '@/components/effects/ConstellationBackgroun
 import SignUpOverlay from '@/components/overlay/SignUpOverlay.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
-import { getErrorMessage } from '@/utils/api-error';
+import { getErrorCode, getErrorMessage } from '@/utils/api-error';
 import type { RegisterPayload } from '@/types/auth';
 
 const route = useRoute();
@@ -14,6 +14,8 @@ const authStore = useAuthStore();
 
 const isSubmitting = ref(false);
 const errorMessage = ref('');
+// 開啟 Confirm email 時，註冊不回 session 而是寄驗證信；存收件信箱以顯示「驗證信已寄出」引導畫面。
+const sentToEmail = ref('');
 
 async function handleSubmit(payload: RegisterPayload) {
   if (isSubmitting.value) {
@@ -27,7 +29,12 @@ async function handleSubmit(payload: RegisterPayload) {
     await authStore.register(payload);
     router.push(getSafeRedirectPath(route.query.next, '/discover-dna'));
   } catch (error) {
-    errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
+    // 已開信箱驗證：非錯誤，轉成正向「請至信箱收信」引導畫面。
+    if (getErrorCode(error) === 'EMAIL_CONFIRMATION_REQUIRED') {
+      sentToEmail.value = payload.email;
+    } else {
+      errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
+    }
   } finally {
     isSubmitting.value = false;
   }
@@ -87,7 +94,25 @@ async function handleSubmit(payload: RegisterPayload) {
     <div
       class="relative z-30 flex min-h-screen items-center justify-center px-4 pt-(--app-header-height)"
     >
+      <section
+        v-if="sentToEmail"
+        class="overlay-panel glass-panel"
+        style="max-width: 640px; padding: 72px 64px 68px"
+        data-testid="verification-sent"
+        role="main"
+        aria-label="Verification email sent"
+      >
+        <h2 class="overlay-title">Check your email</h2>
+        <p class="overlay-description">
+          We sent a verification link to <strong>{{ sentToEmail }}</strong
+          >. Open it to activate your account and finish signing up.
+        </p>
+        <div class="overlay-actions overlay-actions--stackable">
+          <RouterLink :to="{ name: 'login' }" class="overlay-link">Back to login</RouterLink>
+        </div>
+      </section>
       <SignUpOverlay
+        v-else
         :is-submitting="isSubmitting"
         :error-message="errorMessage"
         @submit="handleSubmit"

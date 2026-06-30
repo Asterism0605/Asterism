@@ -117,6 +117,26 @@ describe('SignUp', () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it('shows the verification-sent screen when email confirmation is required', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountSignUp(router);
+    // Confirm email 開啟：signUp 成功但不回 session、無 error。
+    supaAuth.signUp.mockResolvedValue({ data: { session: null }, error: null });
+    await fillForm(wrapper, 'new-user@example.com', 'password123');
+    await wrapper.find('form').trigger('submit');
+    await flushAuth();
+
+    const panel = wrapper.find('[data-testid="verification-sent"]');
+    expect(panel.exists()).toBe(true);
+    expect(panel.text()).toContain('new-user@example.com');
+    expect(wrapper.find('[data-testid="auth-error"]').exists()).toBe(false);
+    expect(push).not.toHaveBeenCalled();
+  });
+
   it('disables the submit button while submitting', async () => {
     const router = createTestRouter();
     router.push('/sign-up');
