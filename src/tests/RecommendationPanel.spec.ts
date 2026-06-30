@@ -138,6 +138,34 @@ describe('RecommendationPanel', () => {
     expect(wrapper.emitted('submit')).toHaveLength(1)
   })
 
+  it('requires a practical phone format', async () => {
+    const wrapper = mountPanel()
+    const inputs = wrapper.findAll('input.overlay-input')
+
+    await pickFirstAvailableDate(wrapper)
+    await pickDropdownOption(wrapper, 0, 'AM')
+    await inputs[0].setValue('Ruwen Hsieh')
+    await inputs[1].setValue('ruwen@example.com')
+    await inputs[2].setValue('abc!!!')
+    await wrapper.get('input[type="checkbox"]').setValue(true)
+
+    await wrapper.get('form').trigger('submit')
+
+    expect(wrapper.emitted('submit')).toBeUndefined()
+    expect(wrapper.text()).toContain('A valid phone number is required.')
+
+    await inputs[2].setValue('0912\\345678')
+    await wrapper.get('form').trigger('submit')
+
+    expect(wrapper.emitted('submit')).toBeUndefined()
+    expect(wrapper.text()).toContain('A valid phone number is required.')
+
+    await inputs[2].setValue('0912-345-678')
+    await wrapper.get('form').trigger('submit')
+
+    expect(wrapper.emitted('submit')).toHaveLength(1)
+  })
+
   it('does not overwrite user-edited contact fields when account props refresh', async () => {
     const wrapper = mountPanel()
     const inputs = wrapper.findAll('input.overlay-input')

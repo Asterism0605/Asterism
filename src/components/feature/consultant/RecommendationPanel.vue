@@ -45,6 +45,7 @@ const emit = defineEmits<{
 }>();
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phonePattern = /^[\d\s\-+()]{7,20}$/;
 
 const defaultForm = (): BookingForm => ({
   method: 'online',
@@ -91,6 +92,8 @@ const fieldErrors = computed(() => {
     return {};
   }
 
+  const contactPhone = form.contactPhone.trim();
+
   return {
     date: form.date ? '' : 'Date is required.',
     timeSlot: form.timeSlot ? '' : 'Time slot is required.',
@@ -98,7 +101,11 @@ const fieldErrors = computed(() => {
     designFocus: '',
     name: form.name.trim() ? '' : 'Name is required.',
     email: emailPattern.test(form.email.trim()) ? '' : 'A valid email is required.',
-    contactPhone: form.contactPhone.trim() ? '' : 'Contact phone is required.',
+    contactPhone: !contactPhone
+      ? 'Contact phone is required.'
+      : phonePattern.test(contactPhone)
+        ? ''
+        : 'A valid phone number is required.',
     paymentConfirmed: form.paymentConfirmed
       ? ''
       : 'Please confirm the consultation deposit before continuing.'
