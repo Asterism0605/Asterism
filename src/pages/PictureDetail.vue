@@ -3,7 +3,13 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
-import { getImageById, getRelatedImages } from '@/services/image.service';
+import {
+  getImageById,
+  getMediumEntryImage,
+  getRelatedImages,
+  getStyleGroupRootImage
+} from '@/services/image.service';
+import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
@@ -20,31 +26,49 @@ watch(
   },
   { immediate: true }
 );
-const smallImages = computed(() => relatedImages.value.slice(0, 2).map((img) => img.src));
-const similarImages = computed(() => relatedImages.value.slice(2, 6).map((img) => img.src));
+const smallImages = computed(() => relatedImages.value.slice(0, 2));
+const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const isSaving = ref(false);
-const saveError = ref<string | null>(null);
+const { isSaving, saveError, saveToMoodboard } = useSaveToMoodboard();
 
 function handleBack() {
-  router.back();
+  if (!currentImage.value) {
+    router.back();
+    return;
+  }
+
+  const rootImage = getStyleGroupRootImage(currentImage.value.id);
+  const spreadImage = getMediumEntryImage(currentImage.value.id) ?? currentImage.value;
+  const query =
+    rootImage && rootImage.id !== spreadImage.id ? { rootId: rootImage.id } : undefined;
+
+  router.push({
+    name: 'image-spread',
+    params: { imageId: spreadImage.id },
+    query
+  });
 }
 
 function handleCreateFolder() {
   // TODO: 開啟新建資料夾 modal
 }
 
+function handleConsult() {
+  if (!currentImage.value) return;
+
+  router.push({
+    name: 'consultant',
+    query: { sourceImageId: currentImage.value.id }
+  });
+}
+
+function handleSelectImage(imageId: string) {
+  router.push({ name: 'picture-detail', params: { imageId } });
+}
+
 async function handleSaveToFolder() {
-  isSaving.value = true;
-  saveError.value = null;
-  try {
-    // TODO: 接入實際 API
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  } catch {
-    saveError.value = '儲存失敗，請再試一次';
-  } finally {
-    isSaving.value = false;
-  }
+  if (!currentImage.value) return;
+  await saveToMoodboard(currentImage.value);
 }
 </script>
 
@@ -55,14 +79,14 @@ async function handleSaveToFolder() {
       class="hidden md:flex"
       :main-image-url="currentImage.src"
       :small-images="smallImages"
+      @select="handleSelectImage"
     />
 
     <div class="w-full overflow-y-auto md:w-2/5 md:overflow-hidden">
       <ImageMetaPanel
         v-if="currentImage"
-        :title="currentImage.title"
         source-url="https://unsplash.com/"
-        source-label="圖片來源網址.com"
+        source-label="Source URL.com"
         :color-palette="currentImage.colorPalette"
         :style-tags="currentImage.style"
         :similar-images="similarImages"
@@ -72,8 +96,10 @@ async function handleSaveToFolder() {
         :loading="isSaving"
         :error="saveError"
         @back="handleBack"
+        @consult="handleConsult"
         @create-folder="handleCreateFolder"
         @save-to-folder="handleSaveToFolder"
+        @select-image="handleSelectImage"
       />
     </div>
   </div>

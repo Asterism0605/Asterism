@@ -30,13 +30,15 @@ describe('StyleAnnotationDisplay', () => {
     expect(hero.attributes('src')).toBe('/images/minimalism.png')
     expect(hero.attributes('alt')).toContain('Minimalism')
 
+    const normalizedText = wrapper.text().replace(/\s+/g, ' ')
+
     styles.forEach((style) => {
-      expect(wrapper.text()).toContain(style.label)
+      expect(normalizedText).toContain(style.label)
       expect(wrapper.text()).toContain(`${style.percentage}%`)
     })
 
     annotations.forEach((annotation) => {
-      expect(wrapper.text()).toContain(annotation.label)
+      expect(normalizedText).toContain(annotation.label)
       expect(wrapper.text()).toContain(annotation.value)
     })
 
@@ -78,5 +80,18 @@ describe('StyleAnnotationDisplay', () => {
     })
 
     expect(wrapper.find('[data-testid="style-panel-bottom-line"]').exists()).toBe(false)
+  })
+
+  it('breaks two-word style labels onto separate display lines', () => {
+    const wrapper = mount(StyleAnnotationDisplay, {
+      props: {
+        primaryStyle: 'Minimalism',
+        heroImage: '/images/minimalism.png',
+        styles,
+        annotations,
+      },
+    })
+
+    expect(wrapper.text()).toContain('Soft\nTech')
   })
 })

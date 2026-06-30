@@ -7,6 +7,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import type { CSSProperties } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
 import {
   NAV_H,
@@ -29,6 +30,7 @@ import type { MoodboardMobilePhoto, MoodboardPositionedPhoto } from '@/types/moo
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useMobileOrbit } from '@/components/feature/moodboard/useMobileOrbit';
+import { useMoodboardStore } from '@/stores/moodboard.store';
 
 const props = defineProps({
   height: { type: String, default: '100vh' },
@@ -40,6 +42,7 @@ const emit = defineEmits(['open', 'home']);
 
 const router = useRouter();
 const route = useRoute();
+const moodboardStore = useMoodboardStore();
 
 const folderCount = ref(10);
 
@@ -153,6 +156,9 @@ const folderView = computed(() => {
 });
 
 const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
+const isMoodboardEmpty = computed(() =>
+  moodboardStore.folders.every((folder) => folder.images.length === 0)
+);
 
 function onImgError(e: Event) {
   const img = e.target as HTMLImageElement;
@@ -348,6 +354,8 @@ onBeforeUnmount(() => {
     class="relative w-full overflow-hidden"
     :style="{ background: '#0b0b0d', height: `calc(100vh - ${NAV_H}px)`, marginTop: `${NAV_H}px` }"
   >
+    <MoodboardEmptyState v-if="isMoodboardEmpty" />
+    <template v-else>
     <!-- ===================== MOBILE STAGE (440×fluid) ===================== -->
     <div
       v-if="isMobile"
@@ -832,6 +840,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
+    </template>
   </div>
 </template>
 

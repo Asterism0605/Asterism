@@ -12,8 +12,8 @@ withDefaults(
 
 <template>
   <template v-if="compact">
-    <section class="flex flex-col gap-3">
-      <h2 class="text-h3 text-text-primary mb-2">Theme Tags</h2>
+    <section class="flex flex-col gap-4">
+      <h2 class="text-h3 text-text-primary">Theme Tags</h2>
       <div class="flex flex-wrap gap-2 md:gap-3">
         <button
           v-for="tag in tags"
@@ -28,7 +28,7 @@ withDefaults(
   </template>
   <template v-else>
     <section class="flex flex-col gap-4 sm:gap-5">
-      <h2 class="text-h3 text-text-primary mb-2">Theme Tags</h2>
+      <h2 class="text-h3 text-text-primary">Theme Tags</h2>
 
       <div class="w-full glass-panel rounded-3xl px-4 py-5 sm:rounded-[32px] sm:px-10 sm:py-8">
         <div class="flex flex-wrap items-center gap-x-5 gap-y-3 sm:gap-x-3 sm:gap-y-5">

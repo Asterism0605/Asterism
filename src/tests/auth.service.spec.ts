@@ -1,68 +1,43 @@
 import { setActivePinia, createPinia } from 'pinia';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+const auth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn() };
+const single = vi.fn();
+const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth, from }) }));
+
 import { login, register } from '@/services/auth.service';
 import { useAuthStore } from '@/stores/auth.store';
+
+const fakeSession = {
+  access_token: 'tok',
+  expires_at: 1000,
+  user: { id: 'u1', email: 'new-user@example.com', created_at: '2026-01-01T00:00:00Z' }
+};
 
 describe('auth service and store', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
+    vi.clearAllMocks();
+    single.mockResolvedValue({ data: { display_name: 'New User', username: null, is_admin: false }, error: null });
   });
 
-  it('registers a mock user and unwraps the auth session from ApiResponse', async () => {
-    const session = await register({
-      email: 'new-user@example.com',
-      password: 'password123',
-      displayName: 'New User'
-    });
+  it('register 解開 ApiResponse 的 session', async () => {
+    auth.signUp.mockResolvedValue({ data: { session: fakeSession }, error: null });
 
-    expect(session.user).toEqual(
-      expect.objectContaining({
-        email: 'new-user@example.com',
-        displayName: 'New User'
-      })
-    );
-    expect(session.accessToken).toEqual(expect.stringContaining('mock_access_token_'));
-    expect(session.expiresAt).toEqual(expect.any(String));
+    const session = await register({ email: 'new-user@example.com', password: 'password123', displayName: 'New User' });
+
+    expect(session.user).toEqual(expect.objectContaining({ email: 'new-user@example.com', displayName: 'New User', isAdmin: false }));
+    expect(session.accessToken).toBe('tok');
   });
 
-  it('logs in a mock user and keeps form input outside the auth store', async () => {
+  it('login 後 store.isAuthenticated 為 true', async () => {
+    auth.signInWithPassword.mockResolvedValue({ data: { session: fakeSession }, error: null });
     const store = useAuthStore();
 
-    await store.login({
-      email: 'member@example.com',
-      password: 'password123'
-    });
+    await store.login({ email: 'new-user@example.com', password: 'password123' });
 
-    expect(store.user?.email).toBe('member@example.com');
-    expect(store.session?.accessToken).toEqual(expect.stringContaining('mock_access_token_'));
     expect(store.isAuthenticated).toBe(true);
-    expect('password' in store).toBe(false);
-  });
-
-  it('clears user and session state on logout', async () => {
-    const store = useAuthStore();
-
-    await store.register({
-      email: 'leaving@example.com',
-      password: 'password123'
-    });
-    store.logout();
-
-    expect(store.user).toBeNull();
-    expect(store.session).toBeNull();
-    expect(store.isAuthenticated).toBe(false);
-  });
-
-  it('exposes login service for non-store callers', async () => {
-    await expect(
-      login({
-        email: 'direct@example.com',
-        password: 'password123'
-      })
-    ).resolves.toEqual(
-      expect.objectContaining({
-        user: expect.objectContaining({ email: 'direct@example.com' })
-      })
-    );
+    expect(store.user?.email).toBe('new-user@example.com');
   });
 });

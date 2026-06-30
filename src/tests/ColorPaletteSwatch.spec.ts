@@ -3,9 +3,9 @@ import { describe, it, expect } from 'vitest';
 import ColorPaletteSwatch from '@/components/ui/ColorPaletteSwatch.vue';
 
 describe('ColorPaletteSwatch', () => {
-  it('renders the "color palette" label', () => {
+  it('renders the "Color Palette" label', () => {
     const wrapper = mount(ColorPaletteSwatch, { props: { colors: [] } });
-    expect(wrapper.text()).toContain('color palette');
+    expect(wrapper.text()).toContain('Color Palette');
   });
 
   it('renders no color blocks when colors is empty', () => {

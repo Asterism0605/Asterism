@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => {
   const hydrateResult = vi.fn();
-  const useStyleDnaStore = vi.fn(() => ({ hydrateResult }));
+  const useStyleDnaStore = vi.fn((_pinia?: unknown) => ({ hydrateResult }));
   const app = {
     use: vi.fn(),
     mount: vi.fn()
@@ -30,10 +30,13 @@ vi.mock('vue', async (importOriginal) => {
 vi.mock('@/App.vue', () => ({ default: { template: '<div />' } }));
 vi.mock('@/router', () => ({ default: mocks.router }));
 vi.mock('@/stores/style-dna.store', () => ({ useStyleDnaStore: mocks.useStyleDnaStore }));
+vi.mock('@/stores/auth.store', () => ({ useAuthStore: () => ({ hydrate: vi.fn().mockResolvedValue(undefined) }) }));
+vi.mock('@/services/image.service', () => ({ loadImages: vi.fn().mockResolvedValue(undefined) }));
 
 describe('main', () => {
   it('hydrates the Style DNA result before mounting the app', async () => {
     await import('@/main');
+    await new Promise(r => setTimeout(r, 0));
 
     const pinia = mocks.useStyleDnaStore.mock.calls[0]?.[0];
 

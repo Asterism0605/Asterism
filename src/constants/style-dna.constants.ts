@@ -8,6 +8,8 @@ export const STYLE_DNA_IMAGES: StyleDnaImage[] = styleData.map((item) => ({
   id: item.id,
   url: item.url,
   title: item.title,
+  styleGroup: item.styleGroup,
+  medium: item.medium,
+  subMedium: item.subMedium,
   style: [...item.style],
 }))
-

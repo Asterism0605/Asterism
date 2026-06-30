@@ -4,6 +4,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter, type Router } from 'vue-router';
 import Login from '@/pages/Login.vue';
 
+const supaAuth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn() };
+const single = vi.fn();
+const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth: supaAuth, from }) }));
+
+const fakeSession = {
+  access_token: 'tok',
+  expires_at: 1000,
+  user: { id: 'u1', email: 'new-user@example.com', created_at: '2026-01-01T00:00:00Z' }
+};
+
 function createTestRouter(): Router {
   return createRouter({
     history: createMemoryHistory(),
@@ -40,6 +51,9 @@ async function fillForm(
 describe('Login', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    single.mockResolvedValue({ data: { display_name: 'New User', username: null, is_admin: false }, error: null });
+    supaAuth.signUp.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    supaAuth.signInWithPassword.mockResolvedValue({ data: { session: fakeSession }, error: null });
   });
 
   it('logs in and redirects to home on success', async () => {
@@ -50,7 +64,7 @@ describe('Login', () => {
 
     const wrapper = mountLogin(router);
     await fillForm(wrapper, 'member@example.com', 'password123');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
     await flushAuth();
 
     expect(push).toHaveBeenCalledWith('/');
@@ -63,8 +77,9 @@ describe('Login', () => {
     const push = vi.spyOn(router, 'push');
 
     const wrapper = mountLogin(router);
+    supaAuth.signInWithPassword.mockResolvedValue({ data: { session: null }, error: { message: 'Invalid login credentials' } });
     await fillForm(wrapper, 'member@example.com', 'short');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
     await flushAuth();
 
     expect(wrapper.find('[data-testid="auth-error"]').exists()).toBe(true);
@@ -78,7 +93,7 @@ describe('Login', () => {
 
     const wrapper = mountLogin(router);
     await fillForm(wrapper, 'member@example.com', 'password123');
-    await wrapper.find('[data-testid="auth-submit"]').trigger('click');
+    await wrapper.find('form').trigger('submit');
 
     expect(wrapper.find('[data-testid="auth-submit"]').attributes('disabled')).toBeDefined();
 

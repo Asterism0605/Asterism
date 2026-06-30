@@ -28,8 +28,13 @@ function goToMoodboard() {
   router.push({ name: 'moodboard' });
 }
 
-function handleLogout() {
-  authStore.logout();
+async function handleLogout() {
+  try {
+    await authStore.logout();
+  } catch (e) {
+    console.warn('[auth] 登出失敗：', e);
+  }
+  router.push({ name: 'home' });
 }
 </script>
 

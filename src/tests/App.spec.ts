@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
-import { createPinia } from 'pinia';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { createPinia, setActivePinia } from 'pinia';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import router from '@/router';
 
 vi.mock('@/layouts/AppHeader.vue', () => ({ default: { template: '<header />' } }));
@@ -20,6 +20,10 @@ vi.mock('@/components/ui/AppToast.vue', () => ({
 }));
 
 describe('App', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  });
+
   afterEach(async () => {
     await router.push('/');
   });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Bookmark } from '@lucide/vue';
+import { ArrowLeft, Bookmark, LoaderCircle } from '@lucide/vue';
 import { computed } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
@@ -8,10 +8,12 @@ import type { ImageSpreadNode } from '@/types/image';
 
 const props = defineProps<{
   image: ImageSpreadNode;
+  saving?: boolean;
 }>();
 
 const emit = defineEmits<{
   return: [];
+  save: [];
 }>();
 
 const mainImageLabel = computed(() => {
@@ -83,9 +85,16 @@ const mainImageLabel = computed(() => {
           Return
         </span>
       </Button>
-      <Button variant="secondary" type="button" class="!bg-black hover:!bg-[#111111]">
+      <Button
+        variant="secondary"
+        type="button"
+        class="!bg-black hover:!bg-[#111111]"
+        :disabled="saving"
+        @click="emit('save')"
+      >
         <span class="inline-flex items-center gap-2">
-          <Bookmark class="size-4" aria-hidden="true" />
+          <LoaderCircle v-if="saving" class="size-4 animate-spin" aria-hidden="true" />
+          <Bookmark v-else class="size-4" aria-hidden="true" />
           Add to moodboard
         </span>
       </Button>

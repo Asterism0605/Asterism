@@ -28,9 +28,7 @@ describe('moodboard.service', () => {
     expect(defaultFolder?.images).toHaveLength(1);
     expect(defaultFolder?.images[0]).toEqual({
       id: 'y2k-001',
-      src: '/style-image/y2k-001.webp',
-      alt: 'Image y2k-001',
-      styleGroup: 'Y2K & Internet Aesthetics'
+      src: '/style-image/y2k-001.webp'
     });
   });
 
