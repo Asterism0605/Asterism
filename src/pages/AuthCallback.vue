@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { EmailOtpType } from '@supabase/supabase-js';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
@@ -16,8 +17,16 @@ function hasOAuthError(): boolean {
 
 onMounted(async () => {
   if (!hasOAuthError()) {
+    const tokenHash = route.query.token_hash;
     try {
-      await authStore.hydrate();
+      if (typeof tokenHash === 'string') {
+        // LINE 登入 / 信箱驗證：網址帶一次性 token_hash → verifyOtp 換 session（type 預設 magiclink）。
+        const type = typeof route.query.type === 'string' ? route.query.type : 'magiclink';
+        await authStore.verifyOtp(tokenHash, type as EmailOtpType);
+      } else {
+        // Google：detectSessionInUrl 已自動完成 PKCE，hydrate 讀回現存 session。
+        await authStore.hydrate();
+      }
     } catch {
       // 下面以 isAuthenticated 判斷
     }

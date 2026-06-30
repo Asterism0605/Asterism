@@ -1,4 +1,4 @@
-import type { Session } from '@supabase/supabase-js';
+import type { EmailOtpType, Session } from '@supabase/supabase-js';
 import { getSupabase } from '@/api/supabaseClient';
 import type { ApiError, ApiResponse } from '@/types/api';
 import type { AuthSession, LoginPayload, RegisterPayload, UserProfile } from '@/types/auth';
@@ -101,6 +101,18 @@ export async function currentSessionApi(): Promise<AuthSession | null> {
     return null;
   }
   return toAuthSession(data.session, '');
+}
+
+// LINE 登入 / 信箱驗證回流：Edge Function（或驗證信）給的一次性 token_hash 換成 Supabase session。
+export async function verifyOtpApi(
+  tokenHash: string,
+  type: EmailOtpType
+): Promise<ApiResponse<AuthSession>> {
+  const { data, error } = await getSupabase().auth.verifyOtp({ token_hash: tokenHash, type });
+  if (error || !data.session) {
+    throw mapSupabaseAuthError(error ?? { message: 'No session' });
+  }
+  return envelope(await toAuthSession(data.session, ''));
 }
 
 export async function signInWithGoogleApi(redirectTo: string): Promise<void> {

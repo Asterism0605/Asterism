@@ -1,9 +1,11 @@
+import type { EmailOtpType } from '@supabase/supabase-js';
 import {
   currentSessionApi,
   loginApi,
   logoutApi,
   registerApi,
-  signInWithGoogleApi
+  signInWithGoogleApi,
+  verifyOtpApi
 } from '@/api/auth.api';
 import type { AuthSession, LoginPayload, RegisterPayload } from '@/types/auth';
 
@@ -31,4 +33,10 @@ export async function getCurrentSession(): Promise<AuthSession | null> {
 
 export async function signInWithGoogle(redirectTo: string): Promise<void> {
   await signInWithGoogleApi(redirectTo);
+}
+
+export async function verifyOtp(tokenHash: string, type: EmailOtpType): Promise<AuthSession> {
+  const response = await verifyOtpApi(tokenHash, type);
+
+  return response.data;
 }
