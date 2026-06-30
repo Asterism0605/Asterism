@@ -78,6 +78,11 @@ onBeforeUnmount(() => {
       <span class="quiz-slash" aria-hidden="true"></span>
       <span class="quiz-total">{{ questions.length }}</span>
     </div>
+
+    <!-- 手機版（≤980px）：桌機那組裝飾式進度在小螢幕隱藏，改用簡潔的「N / Total」。 -->
+    <div class="quiz-progress-mobile" aria-label="Quiz progress">
+      {{ Math.min(currentQuestionIndex + 1, questions.length) }} / {{ questions.length }}
+    </div>
   </main>
 </template>
 
@@ -154,9 +159,28 @@ onBeforeUnmount(() => {
   transform-origin: left center;
 }
 
+.quiz-progress-mobile {
+  display: none;
+}
+
 @media (max-width: 980px) {
   .quiz-progress {
     display: none;
+  }
+
+  /* 頂部 0–~76px 在手機是空的（choice 最高從 clamp(96px) 起、instruction/axis 隱藏），放這不打架。 */
+  .quiz-progress-mobile {
+    position: absolute;
+    top: clamp(28px, 4svh, 44px);
+    left: 50%;
+    z-index: 5;
+    display: block;
+    transform: translateX(-50%);
+    color: rgb(240 237 230 / 70%);
+    font-size: 16px;
+    font-weight: 200;
+    letter-spacing: 0.12em;
+    pointer-events: none;
   }
 }
 </style>

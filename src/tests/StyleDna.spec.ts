@@ -33,14 +33,15 @@ const mockAnswer: StyleDnaAnswer = {
 
 const mockIsCompleted = ref(false);
 const mockAnswers = reactive<StyleDnaAnswer[]>([]);
+const mockCurrentIndex = ref(0);
 const mockSelectAnswer = vi.fn();
 const mockResetQuiz = vi.fn();
 
 vi.mock('@/composables/useStyleDnaQuiz', () => ({
   useStyleDnaQuiz: () => ({
-    questions: ref([mockQuestion]),
+    questions: ref(Array.from({ length: 12 }, () => mockQuestion)),
     currentQuestion: computed(() => (mockIsCompleted.value ? null : mockQuestion)),
-    currentQuestionIndex: ref(0),
+    currentQuestionIndex: mockCurrentIndex,
     answers: mockAnswers,
     isCompleted: mockIsCompleted,
     result: ref(null),
@@ -79,6 +80,7 @@ describe('StyleDna', () => {
     vi.useFakeTimers();
     mockIsCompleted.value = false;
     mockAnswers.splice(0, mockAnswers.length);
+    mockCurrentIndex.value = 0;
     mockSelectAnswer.mockReset();
     mockResetQuiz.mockReset();
   });
@@ -110,6 +112,24 @@ describe('StyleDna', () => {
 
     expect(completeQuiz).toHaveBeenCalledWith([mockAnswer]);
     expect(push).toHaveBeenCalledWith('/style-dna/result');
+  });
+
+  it('renders mobile quiz progress that tracks the current question (#92)', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const router = createTestRouter();
+    await router.push('/style-dna');
+    await router.isReady();
+
+    const wrapper = mountStyleDna(router, pinia);
+    const text = () => wrapper.find('.quiz-progress-mobile').text().replace(/\s+/g, ' ').trim();
+
+    expect(wrapper.find('.quiz-progress-mobile').exists()).toBe(true);
+    expect(text()).toBe('1 / 12');
+
+    mockCurrentIndex.value = 11; // 最後一題顯示 total / total
+    await wrapper.vm.$nextTick();
+    expect(text()).toBe('12 / 12');
   });
 
   it('does not call completeQuiz or navigate when a mid-quiz selection is made', async () => {
