@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 import { describe, expect, it } from 'vitest'
 import RecommendationPanel from '@/components/feature/consultant/RecommendationPanel.vue'
 
@@ -22,6 +23,12 @@ async function pickFirstAvailableDate(wrapper: ReturnType<typeof mountPanel>) {
   await availableDate!.trigger('click')
 
   return wrapper.get('button.recommendation-panel__date-trigger').text()
+}
+
+function displayDateToIso(value: string) {
+  const [month, day, year] = value.split(' / ')
+
+  return `${year}-${month}-${day}`
 }
 
 async function pickDropdownOption(
@@ -82,6 +89,8 @@ describe('RecommendationPanel', () => {
 
     const inputs = wrapper.findAll('input.overlay-input')
     const selectedDate = await pickFirstAvailableDate(wrapper)
+    const selectedIsoDate = displayDateToIso(selectedDate)
+    await wrapper.get('input[value="in-person"]').setValue()
     await pickDropdownOption(wrapper, 0, 'AM')
     await pickDropdownOption(wrapper, 1, 'Interior Design')
     await pickDropdownOption(wrapper, 2, 'Spatial Mood')
@@ -94,8 +103,8 @@ describe('RecommendationPanel', () => {
 
     expect(wrapper.emitted('submit')).toHaveLength(1)
     expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({
-      method: 'online',
-      date: selectedDate,
+      method: 'in_person',
+      date: selectedIsoDate,
       timeSlot: 'am',
       designField: 'Interior Design',
       designFocus: 'Spatial Mood',
@@ -104,6 +113,44 @@ describe('RecommendationPanel', () => {
       contactPhone: '+886 912 345 678',
       paymentConfirmed: true,
     })
+    expect(selectedDate).toMatch(/^\d{2} \/ \d{2} \/ \d{4}$/)
+  })
+
+  it('requires a practical email format', async () => {
+    const wrapper = mountPanel()
+    const inputs = wrapper.findAll('input.overlay-input')
+
+    await pickFirstAvailableDate(wrapper)
+    await pickDropdownOption(wrapper, 0, 'AM')
+    await inputs[0].setValue('Ruwen Hsieh')
+    await inputs[1].setValue('a@')
+    await inputs[2].setValue('+886 912 345 678')
+    await wrapper.get('input[type="checkbox"]').setValue(true)
+
+    await wrapper.get('form').trigger('submit')
+
+    expect(wrapper.emitted('submit')).toBeUndefined()
+    expect(wrapper.text()).toContain('A valid email is required.')
+
+    await inputs[1].setValue('ruwen@example.com')
+    await wrapper.get('form').trigger('submit')
+
+    expect(wrapper.emitted('submit')).toHaveLength(1)
+  })
+
+  it('does not overwrite user-edited contact fields when account props refresh', async () => {
+    const wrapper = mountPanel()
+    const inputs = wrapper.findAll('input.overlay-input')
+
+    await inputs[0].setValue('Custom Name')
+    await inputs[1].setValue('custom@example.com')
+    await wrapper.setProps({
+      accountName: 'Updated Account',
+      accountEmail: 'updated@example.com',
+    })
+
+    expect((inputs[0].element as HTMLInputElement).value).toBe('Custom Name')
+    expect((inputs[1].element as HTMLInputElement).value).toBe('custom@example.com')
   })
 
   it('allows design field and focus to be omitted', async () => {
@@ -136,6 +183,44 @@ describe('RecommendationPanel', () => {
     expect(wrapper.text()).toMatch(/[A-Za-z]+ \d{4}/)
     expect(wrapper.findAll('.recommendation-panel__calendar-weekdays span')).toHaveLength(7)
     expect(wrapper.findAll('button.recommendation-panel__calendar-day')).toHaveLength(42)
+  })
+
+  it('closes the date picker with Escape and outside clicks', async () => {
+    const wrapper = mountPanel()
+    const trigger = wrapper.get('button.recommendation-panel__date-trigger')
+
+    await trigger.trigger('click')
+    expect(wrapper.find('.recommendation-panel__calendar').exists()).toBe(true)
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await nextTick()
+    expect(wrapper.find('.recommendation-panel__calendar').exists()).toBe(false)
+
+    await trigger.trigger('click')
+    expect(wrapper.find('.recommendation-panel__calendar').exists()).toBe(true)
+
+    document.dispatchEvent(new Event('pointerdown', { bubbles: true }))
+    await nextTick()
+    expect(wrapper.find('.recommendation-panel__calendar').exists()).toBe(false)
+  })
+
+  it('closes dropdowns with Escape and outside clicks', async () => {
+    const wrapper = mountPanel()
+    const trigger = wrapper.findAll('button.recommendation-panel__dropdown-trigger')[0]
+
+    await trigger.trigger('click')
+    expect(wrapper.find('.recommendation-panel__dropdown-menu').exists()).toBe(true)
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await nextTick()
+    expect(wrapper.find('.recommendation-panel__dropdown-menu').exists()).toBe(false)
+
+    await trigger.trigger('click')
+    expect(wrapper.find('.recommendation-panel__dropdown-menu').exists()).toBe(true)
+
+    document.dispatchEvent(new Event('pointerdown', { bubbles: true }))
+    await nextTick()
+    expect(wrapper.find('.recommendation-panel__dropdown-menu').exists()).toBe(false)
   })
 
   it('resets form state', async () => {

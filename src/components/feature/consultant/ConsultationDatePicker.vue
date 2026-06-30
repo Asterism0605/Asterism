@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Calendar, ChevronLeft, ChevronRight } from '@lucide/vue';
-import { computed, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   modelValue: string;
   error?: string;
 }>();
@@ -12,6 +12,7 @@ const emit = defineEmits<{
 }>();
 
 const isOpen = defineModel<boolean>('open', { default: false });
+const datePickerRef = ref<HTMLElement | null>(null);
 const visibleMonth = ref(getMonthStart(new Date()));
 const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -24,9 +25,19 @@ function getDayStart(date: Date) {
 }
 
 function formatDateOption(date: Date) {
+  const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
-  const year = date.getFullYear();
+
+  return `${year}-${month}-${day}`;
+}
+
+function formatDisplayDate(value: string) {
+  const [year, month, day] = value.split('-');
+
+  if (!year || !month || !day) {
+    return value;
+  }
 
   return `${month} / ${day} / ${year}`;
 }
@@ -45,6 +56,8 @@ const calendarTitle = computed(() =>
     year: 'numeric'
   })
 );
+
+const displayValue = computed(() => (props.modelValue ? formatDisplayDate(props.modelValue) : ''));
 
 const calendarDays = computed(() => {
   const monthStart = visibleMonth.value;
@@ -90,10 +103,36 @@ function selectDate(value: string) {
   isOpen.value = false;
 }
 
+function closeDatePicker() {
+  isOpen.value = false;
+}
+
 function resetMonth() {
   visibleMonth.value = getMonthStart(new Date());
   isOpen.value = false;
 }
+
+function handleDocumentPointerDown(event: PointerEvent) {
+  if (!datePickerRef.value?.contains(event.target as Node)) {
+    closeDatePicker();
+  }
+}
+
+function handleDocumentKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    closeDatePicker();
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('pointerdown', handleDocumentPointerDown);
+  document.addEventListener('keydown', handleDocumentKeydown);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', handleDocumentPointerDown);
+  document.removeEventListener('keydown', handleDocumentKeydown);
+});
 
 defineExpose({ resetMonth });
 </script>
@@ -101,7 +140,7 @@ defineExpose({ resetMonth });
 <template>
   <div class="recommendation-panel__field">
     <span>Date</span>
-    <div class="recommendation-panel__date-picker">
+    <div ref="datePickerRef" class="recommendation-panel__date-picker">
       <button
         type="button"
         class="recommendation-panel__date-trigger"
@@ -110,7 +149,7 @@ defineExpose({ resetMonth });
         aria-haspopup="dialog"
         @click="toggleDatePicker"
       >
-        <span>{{ modelValue || 'Select a date' }}</span>
+        <span>{{ displayValue || 'Select a date' }}</span>
         <Calendar :size="18" aria-hidden="true" />
       </button>
 

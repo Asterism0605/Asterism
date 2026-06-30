@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+
 interface DropdownOption {
   label: string;
   value: string;
@@ -26,6 +28,7 @@ const emit = defineEmits<{
 }>();
 
 const isOpen = defineModel<boolean>('open', { default: false });
+const dropdownRef = ref<HTMLElement | null>(null);
 
 function toggleDropdown() {
   isOpen.value = !isOpen.value;
@@ -35,12 +38,38 @@ function selectOption(value: string) {
   emit('update:modelValue', value);
   isOpen.value = false;
 }
+
+function closeDropdown() {
+  isOpen.value = false;
+}
+
+function handleDocumentPointerDown(event: PointerEvent) {
+  if (!dropdownRef.value?.contains(event.target as Node)) {
+    closeDropdown();
+  }
+}
+
+function handleDocumentKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    closeDropdown();
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('pointerdown', handleDocumentPointerDown);
+  document.addEventListener('keydown', handleDocumentKeydown);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', handleDocumentPointerDown);
+  document.removeEventListener('keydown', handleDocumentKeydown);
+});
 </script>
 
 <template>
   <div class="recommendation-panel__field">
     <span>{{ label }}</span>
-    <div class="recommendation-panel__dropdown">
+    <div ref="dropdownRef" class="recommendation-panel__dropdown">
       <button
         type="button"
         class="recommendation-panel__dropdown-trigger"

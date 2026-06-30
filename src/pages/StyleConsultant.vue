@@ -15,9 +15,9 @@ interface ConsultantProfile {
 }
 
 interface BookingPayload {
-  method: 'online' | 'in-person';
+  method: 'online' | 'in_person';
   date: string;
-  timeSlot: '' | 'am' | 'pm';
+  timeSlot: 'am' | 'pm';
   designField: string;
   designFocus: string;
   name: string;

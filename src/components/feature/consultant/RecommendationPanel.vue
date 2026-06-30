@@ -6,7 +6,9 @@ import Button from '@/components/ui/Button.vue';
 import FormInput from '@/components/ui/FormInput.vue';
 
 type ConsultationMethod = 'online' | 'in-person';
+type BackendConsultationMethod = 'online' | 'in_person';
 type TimeSlot = '' | 'am' | 'pm';
+type SubmittedTimeSlot = Exclude<TimeSlot, ''>;
 
 interface BookingForm {
   method: ConsultationMethod;
@@ -21,6 +23,11 @@ interface BookingForm {
   paymentConfirmed: boolean;
 }
 
+interface BookingPayload extends Omit<BookingForm, 'method' | 'timeSlot'> {
+  method: BackendConsultationMethod;
+  timeSlot: SubmittedTimeSlot;
+}
+
 const props = withDefaults(
   defineProps<{
     accountName?: string;
@@ -33,9 +40,11 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  submit: [payload: BookingForm];
+  submit: [payload: BookingPayload];
   reset: [];
 }>();
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const defaultForm = (): BookingForm => ({
   method: 'online',
@@ -52,6 +61,8 @@ const defaultForm = (): BookingForm => ({
 
 const form = reactive<BookingForm>(defaultForm());
 const hasSubmitted = ref(false);
+const hasEditedName = ref(false);
+const hasEditedEmail = ref(false);
 const isDatePickerOpen = ref(false);
 const isTimeSlotOpen = ref(false);
 const isDesignFieldOpen = ref(false);
@@ -86,7 +97,7 @@ const fieldErrors = computed(() => {
     designField: '',
     designFocus: '',
     name: form.name.trim() ? '' : 'Name is required.',
-    email: form.email.trim().includes('@') ? '' : 'A valid email is required.',
+    email: emailPattern.test(form.email.trim()) ? '' : 'A valid email is required.',
     contactPhone: form.contactPhone.trim() ? '' : 'Contact phone is required.',
     paymentConfirmed: form.paymentConfirmed
       ? ''
@@ -97,12 +108,30 @@ const fieldErrors = computed(() => {
 watch(
   () => [props.accountName, props.accountEmail],
   ([accountName, accountEmail]) => {
-    // 當登入會員資料更新時，同步回表單欄位。
-    form.name = accountName;
-    form.email = accountEmail;
+    if (!hasEditedName.value && !form.name.trim()) {
+      form.name = accountName;
+    }
+
+    if (!hasEditedEmail.value && !form.email.trim()) {
+      form.email = accountEmail;
+    }
   },
   { immediate: true }
 );
+
+function updateName(value: string) {
+  hasEditedName.value = true;
+  form.name = value;
+}
+
+function updateEmail(value: string) {
+  hasEditedEmail.value = true;
+  form.email = value;
+}
+
+function mapConsultationMethod(method: ConsultationMethod): BackendConsultationMethod {
+  return method === 'in-person' ? 'in_person' : method;
+}
 
 function closeDropdowns() {
   isTimeSlotOpen.value = false;
@@ -138,6 +167,8 @@ function handleDropdownOpen(field: 'timeSlot' | 'designField' | 'designFocus', v
 function resetForm() {
   Object.assign(form, defaultForm());
   hasSubmitted.value = false;
+  hasEditedName.value = false;
+  hasEditedEmail.value = false;
   isDatePickerOpen.value = false;
   closeDropdowns();
   datePickerRef.value?.resetMonth();
@@ -151,7 +182,11 @@ function handleSubmit() {
     return;
   }
 
-  emit('submit', { ...form });
+  emit('submit', {
+    ...form,
+    method: mapConsultationMethod(form.method),
+    timeSlot: form.timeSlot as SubmittedTimeSlot
+  });
 }
 </script>
 
@@ -218,13 +253,18 @@ function handleSubmit() {
     <div class="recommendation-panel__grid">
       <label class="recommendation-panel__field">
         <span>Name</span>
-        <FormInput v-model="form.name" placeholder="Your name" />
+        <FormInput :model-value="form.name" placeholder="Your name" @update:model-value="updateName" />
         <small v-if="fieldErrors.name">{{ fieldErrors.name }}</small>
       </label>
 
       <label class="recommendation-panel__field">
         <span>Email</span>
-        <FormInput v-model="form.email" type="email" placeholder="your@email.com" />
+        <FormInput
+          :model-value="form.email"
+          type="email"
+          placeholder="your@email.com"
+          @update:model-value="updateEmail"
+        />
         <small v-if="fieldErrors.email">{{ fieldErrors.email }}</small>
       </label>
 
