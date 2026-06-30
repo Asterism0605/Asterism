@@ -140,6 +140,7 @@ function handleRelatedSelect(image: ImageSpreadNode) {
 }
 
 function handleCreateFolder() {
+  isCreateFolderSuccess.value = false;
   showCreateFolder.value = true;
 }
 

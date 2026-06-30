@@ -156,4 +156,54 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.params.imageId).toBe('rpl-interior-001');
     expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
   });
+
+  it('重開 CREATE NEW FOLDER modal 後 input 不再 disabled', async () => {
+    vi.useFakeTimers();
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
+        { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
+        { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
+      ]
+    });
+    await router.push('/images/y2k-main-001');
+    await router.isReady();
+
+    const wrapper = mount(PictureDetail, {
+      attachTo: document.body,
+      global: { plugins: [router] }
+    });
+
+    try {
+      const findBtn = (text: string) =>
+        wrapper.findAll('button').find((b) => b.text().includes(text))!;
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      const input = document.querySelector('input') as HTMLInputElement;
+      input.value = 'My Folder';
+      input.dispatchEvent(new Event('input'));
+      await flushPromises();
+
+      const sendBtn = Array.from(document.querySelectorAll('button')).find((b) =>
+        b.textContent?.includes('SEND')
+      ) as HTMLButtonElement;
+      sendBtn.click();
+      await flushPromises();
+      vi.advanceTimersByTime(800);
+      await flushPromises();
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      expect((document.querySelector('input') as HTMLInputElement).disabled).toBe(false);
+    } finally {
+      wrapper.unmount();
+      document.body.innerHTML = '';
+    }
+  });
 });

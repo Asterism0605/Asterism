@@ -253,4 +253,54 @@ describe('ImageSpread', () => {
     expect(addItem).toHaveBeenCalledOnce();
     expect(addItem).toHaveBeenCalledWith('default', 'y2k-main-001');
   });
+
+  it('重開 CREATE NEW FOLDER modal 後 input 不再 disabled', async () => {
+    vi.useFakeTimers();
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: { template: '<div />' } },
+        { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread },
+        { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } }
+      ]
+    });
+    router.push('/images/y2k-main-001/spread');
+    await router.isReady();
+
+    const wrapper = mount(ImageSpread, {
+      attachTo: document.body,
+      global: { plugins: [router], stubs: { ConstellationBackground: true } }
+    });
+
+    try {
+      const findBtn = (text: string) =>
+        wrapper.findAll('button').find((b) => b.text().includes(text))!;
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      const input = document.querySelector('input') as HTMLInputElement;
+      input.value = 'My Folder';
+      input.dispatchEvent(new Event('input'));
+      await flushPromises();
+
+      const sendBtn = Array.from(document.querySelectorAll('button')).find((b) =>
+        b.textContent?.includes('SEND')
+      ) as HTMLButtonElement;
+      sendBtn.click();
+      await flushPromises();
+      vi.advanceTimersByTime(800);
+      await flushPromises();
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      expect((document.querySelector('input') as HTMLInputElement).disabled).toBe(false);
+    } finally {
+      wrapper.unmount();
+      document.body.innerHTML = '';
+    }
+  });
 });

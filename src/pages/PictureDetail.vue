@@ -54,6 +54,7 @@ function handleBack() {
 }
 
 function handleCreateFolder() {
+  isCreateFolderSuccess.value = false;
   showCreateFolder.value = true;
 }
 
