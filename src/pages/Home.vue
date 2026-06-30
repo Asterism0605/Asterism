@@ -16,6 +16,7 @@ const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
+const showGuestHint = ref(false);
 const inspirationImages = ref<HomeInspirationImage[]>([]);
 
 const HOME_DENSITY_PER_100VH = 5;
@@ -35,15 +36,15 @@ function getGuestScrollLimitTop(): number {
   return Math.max(0, limitHeight - window.innerHeight);
 }
 
-function returnGuestToTop(): void {
+function clampGuestToLimit(): void {
   if (typeof window === 'undefined' || authStore.isAuthenticated) {
     return;
   }
 
-  window.scrollTo({
-    top: 0,
-    behavior: 'auto'
-  });
+  const limitTop = getGuestScrollLimitTop();
+  if (window.scrollY > limitTop) {
+    window.scrollTo({ top: limitTop, behavior: 'auto' });
+  }
 }
 
 function openLimitModal() {
@@ -56,8 +57,9 @@ function openLimitModal() {
 }
 
 function handleLimitModalClose() {
-  hasTriggeredLimit.value = false;
-  returnGuestToTop();
+  // Soft Gate：關閉後不回頂、不重複彈窗，改用 header 區淡提示引導，並把訪客留在限制範圍內。
+  showGuestHint.value = true;
+  clampGuestToLimit();
 }
 
 function handleScrollLimit() {
@@ -68,8 +70,19 @@ function handleScrollLimit() {
   const limit = getGuestScrollLimitTop() + window.innerHeight;
   const viewportBottom = window.scrollY + window.innerHeight;
 
-  if (viewportBottom >= limit) {
+  if (viewportBottom < limit) {
+    return;
+  }
+
+  if (!hasTriggeredLimit.value) {
     openLimitModal();
+    return;
+  }
+
+  // 已提示過：不再彈窗。modal 開著時捲動已被鎖、不處理；關閉後顯示 header 區淡提示並把訪客夾在限制處。
+  if (!isLimitModalOpen.value) {
+    showGuestHint.value = true;
+    clampGuestToLimit();
   }
 }
 
@@ -153,6 +166,17 @@ watch(homePreferredStyles, () => {
         </div>
       </div>
     </section>
+
+    <Transition name="guest-hint">
+      <p
+        v-if="showGuestHint && !authStore.isAuthenticated"
+        class="home-page__guest-hint"
+        role="status"
+      >
+        Sign up or log in to keep exploring
+      </p>
+    </Transition>
+
     <ModalOverlay
       v-model="isLimitModalOpen"
       max-width="590px"
@@ -202,6 +226,44 @@ watch(homePreferredStyles, () => {
     linear-gradient(90deg, rgb(240 237 230 / 0.6) 1px, transparent 1px);
   background-size: 118px 118px;
   mask-image: linear-gradient(180deg, transparent, black 12%, black 78%, transparent);
+}
+
+/* 限制觸發後的淡提示：貼在 header 下緣，引導到右上 Sign Up / Log in，不蓋版、不打斷瀏覽。 */
+.home-page__guest-hint {
+  position: fixed;
+  top: calc(var(--app-header-height) + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  padding: 8px 18px;
+  border: 1px solid rgb(240 237 230 / 0.12);
+  border-radius: 9999px;
+  background: rgb(20 20 24 / 0.55);
+  backdrop-filter: blur(8px);
+  color: rgb(240 237 230 / 0.78);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.guest-hint-enter-active,
+.guest-hint-leave-active {
+  transition:
+    opacity 320ms ease,
+    transform 320ms ease;
+}
+
+.guest-hint-enter-from,
+.guest-hint-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -6px);
+}
+
+.guest-hint-enter-to,
+.guest-hint-leave-from {
+  opacity: 1;
+  transform: translateX(-50%);
 }
 
 .meteor-arrow {

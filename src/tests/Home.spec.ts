@@ -231,7 +231,7 @@ describe('Home', () => {
     wrapper.unmount();
   });
 
-  it('reopens the limit modal after guests close it and scroll back to the limit again', async () => {
+  it('does not reopen the modal after closing — shows the header hint and clamps within the limit', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
@@ -255,19 +255,24 @@ describe('Home', () => {
     await wrapper.find('.overlay-backdrop').trigger('click');
     await wrapper.vm.$nextTick();
 
+    // 關閉後：不再彈窗、改顯示 header 區淡提示，並夾在限制處（非回頂）。
     expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
-    expect(viewport.getScrollY()).toBe(0);
+    expect(wrapper.text()).toContain('Sign up or log in to keep exploring');
+    expect(viewport.getScrollY()).toBe(500);
 
+    // 再次捲過限制：維持不彈窗、提示仍在、繼續夾在限制處。
     viewport.setScrollY(900);
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.text()).toContain('Your daily inspiration limit has been reached.');
+    expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
+    expect(wrapper.text()).toContain('Sign up or log in to keep exploring');
+    expect(viewport.getScrollY()).toBe(500);
 
     wrapper.unmount();
   });
 
-  it('returns guests to the top after the limit modal closes', async () => {
+  it('keeps guests at the scroll limit (not the top) after the limit modal closes', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
@@ -290,10 +295,10 @@ describe('Home', () => {
     await wrapper.vm.$nextTick();
 
     expect(viewport.scrollTo).toHaveBeenCalledWith({
-      top: 0,
+      top: 500,
       behavior: 'auto'
     });
-    expect(viewport.getScrollY()).toBe(0);
+    expect(viewport.getScrollY()).toBe(500);
 
     wrapper.unmount();
   });
@@ -320,7 +325,7 @@ describe('Home', () => {
     await firstWrapper.find('.overlay-backdrop').trigger('click');
     await firstWrapper.vm.$nextTick();
     expect(firstWrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
-    expect(firstViewport.getScrollY()).toBe(0);
+    expect(firstViewport.getScrollY()).toBe(500);
     firstWrapper.unmount();
     firstViewport.scrollTo.mockRestore();
 
