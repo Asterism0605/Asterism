@@ -1,10 +1,12 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createPinia } from 'pinia';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import PictureDetail from '@/pages/PictureDetail.vue';
 import { getRelatedImages } from '@/services/image.service';
 import { addItem } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
+import { useAuthStore } from '@/stores/auth.store';
 
 vi.mock('@/services/moodboard.service', () => ({
   addItem: vi.fn(),
@@ -25,20 +27,41 @@ vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
   }
 }));
 
-async function mountPictureDetail(imageId = 'y2k-main-001') {
+const fakeUser = {
+  id: 'user-1',
+  email: 'member@example.com',
+  displayName: 'Member',
+  isAdmin: false,
+  createdAt: '2026-01-01T00:00:00Z'
+};
+
+async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = true) {
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
       { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
       { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
-      { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
+      { path: '/consultant', name: 'consultant', component: { template: '<div />' } },
+      { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
+      { path: '/login', name: 'login', component: { template: '<div />' } }
     ]
   });
+  const pinia = createPinia();
+  const authStore = useAuthStore(pinia);
+
+  if (isAuthenticated) {
+    authStore.user = fakeUser;
+    authStore.session = {
+      user: fakeUser,
+      accessToken: 'test-token',
+      expiresAt: '2026-01-01T01:00:00Z'
+    };
+  }
 
   await router.push(`/images/${imageId}`);
   await router.isReady();
 
-  const wrapper = mount(PictureDetail, { global: { plugins: [router] } });
+  const wrapper = mount(PictureDetail, { global: { plugins: [router, pinia] } });
 
   return { router, wrapper };
 }
@@ -112,6 +135,19 @@ describe('PictureDetail', () => {
 
     expect(router.currentRoute.value.name).toBe('consultant');
     expect(router.currentRoute.value.query.sourceImageId).toBe('rpl-interior-lighting-001');
+  });
+
+  it('routes unauthenticated consult clicks to sign-up with the consultant target', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001', false);
+
+    const consultBtn = wrapper.findAll('button').find((button) => button.text().includes('CONSULT STYLIST'));
+    await consultBtn!.trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('sign-up');
+    expect(router.currentRoute.value.query.next).toBe(
+      '/consultant?sourceImageId=rpl-interior-lighting-001'
+    );
   });
 
   it('routes to the selected stage image detail page', async () => {

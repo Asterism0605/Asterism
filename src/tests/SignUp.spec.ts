@@ -123,6 +123,24 @@ describe('SignUp', () => {
     expect(push).toHaveBeenCalledWith('/discover-dna');
   });
 
+  it('routes existing users to login with the safe next path', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up?next=/consultant?sourceImageId=rpl-interior-lighting-001');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountSignUp(router);
+    await wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('ALREADY HAVE AN ACCOUNT.'))!
+      .trigger('click');
+
+    expect(push).toHaveBeenCalledWith({
+      name: 'login',
+      query: { next: '/consultant?sourceImageId=rpl-interior-lighting-001' }
+    });
+  });
+
   it('shows an error and does not redirect when registration fails', async () => {
     const router = createTestRouter();
     router.push('/sign-up');
