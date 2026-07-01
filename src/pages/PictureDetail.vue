@@ -10,6 +10,7 @@ import {
   getStyleGroupRootImage
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
+import { useAuthStore } from '@/stores/auth.store';
 import { isImageSaved } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
@@ -17,6 +18,7 @@ import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
 
 const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
@@ -75,9 +77,19 @@ async function handleSubmitFolder(name: string) {
 function handleConsult() {
   if (!currentImage.value) return;
 
-  router.push({
+  const consultantRoute = {
     name: 'consultant',
     query: { sourceImageId: currentImage.value.id }
+  };
+
+  if (authStore.isAuthenticated) {
+    router.push(consultantRoute);
+    return;
+  }
+
+  router.push({
+    name: 'sign-up',
+    query: { next: router.resolve(consultantRoute).fullPath }
   });
 }
 
@@ -115,9 +127,9 @@ async function handleSaveToFolder(folderId: string) {
         photographer-date="Aug 19, 2025"
         :saved="isSaved"
         :disabled="isSaving"
+        :folders="folders"
         @back="handleBack"
         @consult="handleConsult"
-        :folders="folders"
         @create-folder="handleCreateFolder"
         @save-to-folder="handleSaveToFolder"
         @select-image="handleSelectImage"

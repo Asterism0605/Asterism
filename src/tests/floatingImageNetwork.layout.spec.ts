@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   computeEvenYPositions,
-  buildFloatingImageLayout
+  buildFloatingImageLayout,
+  HOME_MIN_GAP
 } from '@/components/sections/FloatingImageNetwork/layout';
 import { LAYOUT_PRESETS } from '@/components/sections/FloatingImageNetwork/config';
 
@@ -72,6 +73,20 @@ describe('buildFloatingImageLayout (home)', () => {
     expect(countOverlappingPairs(nodes)).toBe(0);
   });
 
+  it('keeps a minimum gap between home cards (不只不重疊，視覺上一定分開)', () => {
+    const width = 1440;
+    const height = 9000;
+    const viewportHeight = 900;
+    const preset = { ...LAYOUT_PRESETS.home, widths: [180, 260, 200, 240, 260, 210] };
+    const aspects = Array.from({ length: 45 }, (_, i) =>
+      ['1122/1402', '1536/1024', '3/4', '1402/1122', '4/3'][i % 5]
+    );
+    const nodes = buildFloatingImageLayout(45, width, height, preset, viewportHeight, aspects);
+
+    // 容 1px 浮點/夾邊界誤差
+    expect(minPairGap(nodes)).toBeGreaterThanOrEqual(HOME_MIN_GAP - 1);
+  });
+
   it('keeps home cards clear of the title area in the first viewport', () => {
     const width = 1440;
     const height = 9000;
@@ -113,6 +128,21 @@ function rectsOverlap(
   b: { left: number; right: number; top: number; bottom: number }
 ) {
   return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+}
+
+// 任兩張卡片之間的最小空隙（px）；重疊則為 0。
+function minPairGap(nodes: { x: number; y: number; width: number; aspect: string }[]) {
+  let min = Infinity;
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodeRect(nodes[i]);
+      const b = nodeRect(nodes[j]);
+      const gapX = Math.max(0, Math.max(a.left, b.left) - Math.min(a.right, b.right));
+      const gapY = Math.max(0, Math.max(a.top, b.top) - Math.min(a.bottom, b.bottom));
+      min = Math.min(min, Math.hypot(gapX, gapY));
+    }
+  }
+  return min;
 }
 
 // 容許 8px 以下的接觸（視覺看不出、且 floatY 動畫本來就會 ±6px 飄動），

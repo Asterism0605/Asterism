@@ -6,6 +6,7 @@ import PictureDetail from '@/pages/PictureDetail.vue';
 import { getRelatedImages } from '@/services/image.service';
 import { addItem } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
+import { useAuthStore } from '@/stores/auth.store';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 
 vi.mock('@/services/moodboard.service', () => ({
@@ -23,37 +24,58 @@ vi.mock('@/composables/useToast', () => ({
 vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
   default: {
     emits: ['select'],
-    template: '<div data-test="image-stage-panel" @click="$emit(\'select\', \'stage-related-001\')" />'
+    template:
+      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'stage-related-001\')" />'
   }
 }));
 
-async function mountPictureDetail(imageId = 'y2k-main-001') {
+const fakeUser = {
+  id: 'user-1',
+  email: 'member@example.com',
+  displayName: 'Member',
+  isAdmin: false,
+  createdAt: '2026-01-01T00:00:00Z'
+};
+
+async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = true) {
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
       { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
       { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
-      { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
+      { path: '/consultant', name: 'consultant', component: { template: '<div />' } },
+      { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
+      { path: '/login', name: 'login', component: { template: '<div />' } }
     ]
   });
+  const pinia = createPinia();
+  const authStore = useAuthStore(pinia);
+
+  if (isAuthenticated) {
+    authStore.user = fakeUser;
+    authStore.session = {
+      user: fakeUser,
+      accessToken: 'test-token',
+      expiresAt: '2026-01-01T01:00:00Z'
+    };
+  }
+
+  const moodboardStore = useMoodboardStore(pinia);
+  moodboardStore.createFolder('test');
+  const folderId = moodboardStore.folders[0].id;
 
   await router.push(`/images/${imageId}`);
   await router.isReady();
 
-  const wrapper = mount(PictureDetail, { global: { plugins: [router] } });
+  const wrapper = mount(PictureDetail, { global: { plugins: [router, pinia] } });
 
-  return { router, wrapper };
+  return { router, wrapper, folderId };
 }
-
-let folderId: string;
 
 describe('PictureDetail', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setActivePinia(createPinia());
-    const store = useMoodboardStore();
-    store.createFolder('test');
-    folderId = store.folders[0].id;
   });
 
   afterEach(() => {
@@ -63,7 +85,12 @@ describe('PictureDetail', () => {
   it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
     vi.useFakeTimers();
     let resolve!: () => void;
-    vi.mocked(addItem).mockImplementationOnce(() => new Promise<void>((r) => { resolve = r; }));
+    vi.mocked(addItem).mockImplementationOnce(
+      () =>
+        new Promise<void>((r) => {
+          resolve = r;
+        })
+    );
     const { wrapper } = await mountPictureDetail();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
@@ -88,14 +115,12 @@ describe('PictureDetail', () => {
   });
 
   it('點擊 SAVE TO FOLDER 時以目前圖片 id 呼叫 addItem', async () => {
-    const { wrapper } = await mountPictureDetail();
+    const { wrapper, folderId } = await mountPictureDetail();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
 
-    const saveBtn = wrapper
-      .findAll('button')
-      .find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
     await folderBtn!.trigger('click');
@@ -105,15 +130,15 @@ describe('PictureDetail', () => {
   });
 
   it('當 addItem 拋出錯誤時顯示錯誤提示', async () => {
-    vi.mocked(addItem).mockImplementationOnce(() => { throw new Error('save failed') });
+    vi.mocked(addItem).mockImplementationOnce(() => {
+      throw new Error('save failed');
+    });
     const { wrapper } = await mountPictureDetail();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
 
-    const saveBtn = wrapper
-      .findAll('button')
-      .find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
     await folderBtn!.trigger('click');
@@ -122,16 +147,32 @@ describe('PictureDetail', () => {
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
   });
 
-
   it('點擊 consult 時帶著來源圖片 id 導向 consultant', async () => {
     const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001');
 
-    const consultBtn = wrapper.findAll('button').find((button) => button.text().includes('CONSULT STYLIST'));
+    const consultBtn = wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('CONSULT STYLIST'));
     await consultBtn!.trigger('click');
     await flushPromises();
 
     expect(router.currentRoute.value.name).toBe('consultant');
     expect(router.currentRoute.value.query.sourceImageId).toBe('rpl-interior-lighting-001');
+  });
+
+  it('routes unauthenticated consult clicks to sign-up with the consultant target', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001', false);
+
+    const consultBtn = wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('CONSULT STYLIST'));
+    await consultBtn!.trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('sign-up');
+    expect(router.currentRoute.value.query.next).toBe(
+      '/consultant?sourceImageId=rpl-interior-lighting-001'
+    );
   });
 
   it('導向選取的 stage 圖片詳情頁', async () => {
@@ -183,7 +224,11 @@ describe('PictureDetail', () => {
       history: createMemoryHistory(),
       routes: [
         { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
-        { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
+        {
+          path: '/images/:imageId/spread',
+          name: 'image-spread',
+          component: { template: '<div />' }
+        },
         { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
       ]
     });

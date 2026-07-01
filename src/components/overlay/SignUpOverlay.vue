@@ -11,6 +11,7 @@ interface SignUpPayload {
 
 const emit = defineEmits<{
   submit: [payload: SignUpPayload];
+  login: [];
 }>();
 
 withDefaults(
@@ -51,6 +52,12 @@ function handleSubmit() {
           placeholder="PASSWORD"
           autocomplete="new-password"
         />
+
+        <div class="overlay-helper">
+          <button type="button" class="overlay-link" @click="emit('login')">
+            ALREADY HAVE AN ACCOUNT.
+          </button>
+        </div>
       </div>
 
       <p v-if="errorMessage" class="overlay-error" data-testid="auth-error" role="alert">

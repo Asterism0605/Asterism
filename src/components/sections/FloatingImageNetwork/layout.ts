@@ -14,6 +14,10 @@ import {
 import { applyAvoidAreas, getActiveAvoidRects, type PixelRect } from './avoidance';
 import { LAYOUT_PRESETS, type LayoutPreset, type NodePosition } from './config';
 
+// home 卡片之間保證的最小視覺間距（px）。不只「不重疊」，而是一定留出空隙。
+// 取 16 是因為卡片有 floatY ±6px 飄動（兩張相向最多靠近 ~12px），靜態留 16 動畫時仍分得開。
+export const HOME_MIN_GAP = 16;
+
 export function resolveConfiguredHeight(rawHeight: string | undefined) {
   const resolvedHeight = rawHeight ?? '600px';
 
@@ -302,8 +306,10 @@ function resolveOverlaps(
       for (let j = i + 1; j < nodes.length; j++) {
         const a = nodes[i];
         const b = nodes[j];
-        const overlapX = (a.width + b.width) / 2 - Math.abs(b.x - a.x);
-        const overlapY = (getNodeHeight(a) + getNodeHeight(b)) / 2 - Math.abs(b.y - a.y);
+        // 半寬/半高各灌上 HOME_MIN_GAP：兩張在兩軸都落在 gap 範圍內才算「太近」，
+        // 沿最小軸推開後該軸間距即 ≥ HOME_MIN_GAP（不只是剛好不重疊）。
+        const overlapX = (a.width + b.width) / 2 + HOME_MIN_GAP - Math.abs(b.x - a.x);
+        const overlapY = (getNodeHeight(a) + getNodeHeight(b)) / 2 + HOME_MIN_GAP - Math.abs(b.y - a.y);
 
         if (overlapX <= 0 || overlapY <= 0) {
           continue;
