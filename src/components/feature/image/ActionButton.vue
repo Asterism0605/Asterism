@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { Bookmark, BookmarkPlus, ChevronDown, FolderPlus, User } from '@lucide/vue';
+import { Bookmark, BookmarkPlus, ChevronDown, FolderPlus, LoaderCircle, User } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 
 interface FolderItem {
@@ -85,7 +85,8 @@ onBeforeUnmount(() => {
         @click="toggleDropdown()"
       >
         <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
-          <Bookmark class="w-4 h-4 md:w-5.5 md:h-5.5" :fill="props.saved ? 'currentColor' : 'none'" aria-hidden="true" />
+          <LoaderCircle v-if="props.disabled" class="w-4 h-4 md:w-5.5 md:h-5.5 animate-spin" aria-hidden="true" />
+          <Bookmark v-else class="w-4 h-4 md:w-5.5 md:h-5.5" :fill="props.saved ? 'currentColor' : 'none'" aria-hidden="true" />
           ADD TO MOODBOARD
         </span>
       </Button>

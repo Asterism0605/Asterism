@@ -133,4 +133,18 @@ describe('ActionButton', () => {
 
     expect((wrapper.find('button').element as HTMLButtonElement).disabled).toBe(true);
   });
+
+  it('disabled 為 true 時顯示 LoaderCircle 轉圈動畫，不顯示書籤', () => {
+    const wrapper = mount(ActionButton, { props: { disabled: true } });
+
+    expect(wrapper.find('svg.animate-spin').exists()).toBe(true);
+    expect(wrapper.find('svg').attributes('fill')).not.toBe('currentColor');
+  });
+
+  it('儲存完成（disabled 恢復 false）後顯示實心書籤，不再顯示 loading', () => {
+    const wrapper = mount(ActionButton, { props: { disabled: false, saved: true } });
+
+    expect(wrapper.find('svg.animate-spin').exists()).toBe(false);
+    expect(wrapper.find('svg').attributes('fill')).toBe('currentColor');
+  });
 });

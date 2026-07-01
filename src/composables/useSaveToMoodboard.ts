@@ -14,6 +14,7 @@ export function useSaveToMoodboard() {
     saveError.value = null;
     try {
       await addItem(folderId, imageId);
+      await new Promise((resolve) => setTimeout(resolve, 500));
     } catch (e) {
       const message =
         e instanceof Error && e.message === 'Image not found.'

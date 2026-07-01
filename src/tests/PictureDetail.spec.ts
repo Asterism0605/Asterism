@@ -61,6 +61,7 @@ describe('PictureDetail', () => {
   });
 
   it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
+    vi.useFakeTimers();
     let resolve!: () => void;
     vi.mocked(addItem).mockImplementationOnce(() => new Promise<void>((r) => { resolve = r; }));
     const { wrapper } = await mountPictureDetail();
@@ -75,6 +76,11 @@ describe('PictureDetail', () => {
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
 
     resolve();
+    await flushPromises();
+
+    expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
+
+    vi.advanceTimersByTime(500);
     await flushPromises();
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(false);
