@@ -128,7 +128,13 @@ describe('StyleDna', () => {
     expect(wrapper.find('.qpm-current').text()).toBe('1');
     expect(wrapper.find('.qpm-total').text()).toBe('12');
 
-    mockCurrentIndex.value = 11; // 最後一題：current 夾在 total
+    mockCurrentIndex.value = 11;
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.qpm-current').text()).toBe('12');
+    expect(wrapper.find('.qpm-total').text()).toBe('12');
+
+    // 完成瞬間 index 越界（12），Math.min 應夾住，不顯示 13/12
+    mockCurrentIndex.value = 12;
     await wrapper.vm.$nextTick();
     expect(wrapper.find('.qpm-current').text()).toBe('12');
     expect(wrapper.find('.qpm-total').text()).toBe('12');
