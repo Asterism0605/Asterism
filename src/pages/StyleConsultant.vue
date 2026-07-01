@@ -5,6 +5,8 @@ import ConstellationBackground from '@/components/effects/ConstellationBackgroun
 import ConsultantSummary from '@/components/feature/consultant/ConsultantSummary.vue';
 import RecommendationPanel from '@/components/feature/consultant/RecommendationPanel.vue';
 import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
+import type { ComputedStyleDnaResult } from '@/utils/computeStyleDnaResult';
 
 interface ConsultantProfile {
   styleDna: Array<{
@@ -28,22 +30,43 @@ interface BookingPayload {
 }
 
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 const route = useRoute();
 const bookingStatus = ref<'idle' | 'submitted'>('idle');
 const lastBooking = ref<BookingPayload | null>(null);
 
-const mockProfile: ConsultantProfile = {
-  styleDna: [
-    { label: 'Luminous Minimalism', percentage: 54 },
-    { label: 'Organic Modern', percentage: 28 },
-    { label: 'Soft Industrial', percentage: 18 }
-  ],
-  consultantLabel: 'Spatial Consultant · Mira Chen'
-};
+const consultantByStyle = new Map<string, string>([
+  ['minimalism', 'Spatial Consultant · Mira Chen'],
+  ['organic modern', 'Spatial Consultant · Elena Park'],
+  ['soft industrial', 'Spatial Consultant · Theo Lin'],
+  ['art deco', 'Spatial Consultant · Nora Reyes'],
+  ['baroque', 'Spatial Consultant · Camille Wu'],
+  ['y2k', 'Spatial Consultant · Ilya Chen']
+]);
 
-// 是否帶入 DNA 測驗 mock data 
-const profile = computed(() => mockProfile);
-const hasSourceData = computed(() => Boolean(profile.value));
+function resolveConsultantLabel(result: ComputedStyleDnaResult): string {
+  return consultantByStyle.get(result.primaryStyle.trim().toLowerCase()) ?? 'Spatial Consultant · Asterism Studio';
+}
+
+const profile = computed<ConsultantProfile | null>(() => {
+  const result = styleDnaStore.currentResult;
+
+  if (!authStore.isAuthenticated || !result) {
+    return null;
+  }
+
+  return {
+    styleDna: result.styles,
+    consultantLabel: resolveConsultantLabel(result)
+  };
+});
+const summaryStatus = computed(() => {
+  if (!authStore.isAuthenticated) {
+    return 'auth-required';
+  }
+
+  return profile.value ? 'ready' : 'missing-result';
+});
 const sourceImageId = computed(() => {
   const rawSourceImageId = route.query.sourceImageId;
 
@@ -90,7 +113,7 @@ function handleReset() {
     </div>
 
     <section class="style-consultant__content">
-      <ConsultantSummary :profile="profile" :has-source-data="hasSourceData" />
+      <ConsultantSummary :profile="profile" :status="summaryStatus" />
 
       <div class="style-consultant__booking">
         <RecommendationPanel
