@@ -56,6 +56,21 @@ describe('moodboard.service', () => {
     expect(() => createFolder('One too many')).toThrow('You have reached the maximum of 10 folders.');
   });
 
+  it('當名稱與既有資料夾重複時 createFolder 會拋出錯誤', () => {
+    createFolder('我的最愛');
+
+    expect(() => createFolder('我的最愛')).toThrow('A folder with this name already exists.');
+
+    const store = useMoodboardStore();
+    expect(store.folders).toHaveLength(1);
+  });
+
+  it('建立資料夾名稱前後有空白時仍視為與既有資料夾重複', () => {
+    createFolder('我的最愛');
+
+    expect(() => createFolder('  我的最愛  ')).toThrow('A folder with this name already exists.');
+  });
+
   it('當圖片已儲存時 isImageSaved 回傳 true', () => {
     createFolder('test');
     const store = useMoodboardStore();
