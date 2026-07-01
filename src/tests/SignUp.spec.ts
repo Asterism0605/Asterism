@@ -7,7 +7,11 @@ import SignUp from '@/pages/SignUp.vue';
 const supaAuth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn() };
 const single = vi.fn();
 const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+const reconcileWithServer = vi.fn().mockResolvedValue(undefined);
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth: supaAuth, from }) }));
+vi.mock('@/stores/style-dna.store', () => ({
+  useStyleDnaStore: () => ({ reconcileWithServer })
+}));
 
 const fakeSession = {
   access_token: 'tok',
@@ -54,6 +58,8 @@ async function fillForm(
 describe('SignUp', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    reconcileWithServer.mockReset();
+    reconcileWithServer.mockResolvedValue(undefined);
     single.mockResolvedValue({ data: { display_name: 'New User', username: null, is_admin: false }, error: null });
     supaAuth.signUp.mockResolvedValue({ data: { session: fakeSession }, error: null });
     supaAuth.signInWithPassword.mockResolvedValue({ data: { session: fakeSession }, error: null });
@@ -71,6 +77,22 @@ describe('SignUp', () => {
     await flushAuth();
 
     expect(push).toHaveBeenCalledWith('/login');
+    expect(reconcileWithServer).toHaveBeenCalledWith('u1');
+  });
+
+  it('still redirects when Style DNA reconcile fails after registration', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+    reconcileWithServer.mockRejectedValueOnce(new Error('network down'));
+
+    const wrapper = mountSignUp(router);
+    await fillForm(wrapper, 'new-user@example.com', 'password123');
+    await wrapper.find('form').trigger('submit');
+    await flushAuth();
+
+    expect(push).toHaveBeenCalledWith('/discover-dna');
   });
 
   it('redirects to /discover-dna when next is missing', async () => {
@@ -99,6 +121,24 @@ describe('SignUp', () => {
     await flushAuth();
 
     expect(push).toHaveBeenCalledWith('/discover-dna');
+  });
+
+  it('routes existing users to login with the safe next path', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up?next=/consultant?sourceImageId=rpl-interior-lighting-001');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountSignUp(router);
+    await wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('ALREADY HAVE AN ACCOUNT.'))!
+      .trigger('click');
+
+    expect(push).toHaveBeenCalledWith({
+      name: 'login',
+      query: { next: '/consultant?sourceImageId=rpl-interior-lighting-001' }
+    });
   });
 
   it('shows an error and does not redirect when registration fails', async () => {

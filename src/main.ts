@@ -9,13 +9,18 @@ import { loadImages } from './services/image.service'
 import { useMoodboardStore } from './stores/moodboard.store'
 
 const pinia = createPinia()
-useStyleDnaStore(pinia).hydrateResult()
+const styleDnaStore = useStyleDnaStore(pinia)
+styleDnaStore.hydrateResult()
 useMoodboardStore(pinia).hydrate()
 
 void (async () => {
   // hydrate 失敗（Supabase 連不到 / env 未設）也要照常 mount，否則整站白屏。
   try {
-    await useAuthStore(pinia).hydrate()
+    const authStore = useAuthStore(pinia)
+    await authStore.hydrate()
+    if (authStore.user?.id) {
+      await styleDnaStore.reconcileWithServer(authStore.user.id)
+    }
   } catch (e) {
     console.warn('[auth] 啟動還原失敗：', e)
   }

@@ -6,7 +6,7 @@ const single = vi.fn();
 const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth, from }) }));
 
-import { login, register } from '@/services/auth.service';
+import { register } from '@/services/auth.service';
 import { useAuthStore } from '@/stores/auth.store';
 
 const fakeSession = {

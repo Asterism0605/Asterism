@@ -10,10 +10,14 @@ import {
   getStyleGroupRootImage
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
+import { useAuthStore } from '@/stores/auth.store';
+import { isImageSaved } from '@/services/moodboard.service';
+import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
 
 const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
@@ -29,7 +33,9 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { isSaving, saveError, saveToMoodboard } = useSaveToMoodboard();
+const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
+const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
+const showCreateFolder = ref(false);
 
 function handleBack() {
   if (!currentImage.value) {
@@ -50,15 +56,31 @@ function handleBack() {
 }
 
 function handleCreateFolder() {
-  // TODO: 開啟新建資料夾 modal
+  isCreateFolderSuccess.value = false;
+  showCreateFolder.value = true;
+}
+
+async function handleSubmitFolder(name: string) {
+  const success = await createNewFolder(name);
+  if (success) showCreateFolder.value = false;
 }
 
 function handleConsult() {
   if (!currentImage.value) return;
 
-  router.push({
+  const consultantRoute = {
     name: 'consultant',
     query: { sourceImageId: currentImage.value.id }
+  };
+
+  if (authStore.isAuthenticated) {
+    router.push(consultantRoute);
+    return;
+  }
+
+  router.push({
+    name: 'sign-up',
+    query: { next: router.resolve(consultantRoute).fullPath }
   });
 }
 
@@ -68,8 +90,9 @@ function handleSelectImage(imageId: string) {
 
 async function handleSaveToFolder() {
   if (!currentImage.value) return;
-  await saveToMoodboard(currentImage.value);
+  await saveToMoodboard('default', currentImage.value.id);
 }
+
 </script>
 
 <template>
@@ -93,8 +116,8 @@ async function handleSaveToFolder() {
         photographer-name="Zhenya Rukhlov"
         photographer-role="Photographer"
         photographer-date="Aug 19, 2025"
-        :loading="isSaving"
-        :error="saveError"
+        :saved="isSaved"
+        :disabled="isSaving"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
@@ -103,4 +126,10 @@ async function handleSaveToFolder() {
       />
     </div>
   </div>
+  <CreateNewFolder
+    v-model="showCreateFolder"
+    :is-submitting="isCreatingFolder"
+    :is-success="isCreateFolderSuccess"
+    @submit="handleSubmitFolder"
+  />
 </template>

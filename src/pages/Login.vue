@@ -7,10 +7,12 @@ import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
 import { getErrorMessage } from '@/utils/api-error';
 import type { LoginPayload } from '@/types/auth';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 
 const isSubmitting = ref(false);
 const errorMessage = ref('');
@@ -24,7 +26,12 @@ async function handleSubmit(payload: LoginPayload) {
   errorMessage.value = '';
 
   try {
-    await authStore.login(payload);
+    const session = await authStore.login(payload);
+    try {
+      await styleDnaStore.reconcileWithServer(session.user.id);
+    } catch (error) {
+      console.warn('[style-dna] sync after login failed:', error);
+    }
     router.push(getSafeRedirectPath(route.query.next, '/'));
   } catch (error) {
     errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');

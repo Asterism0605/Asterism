@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { Bookmark, BookmarkPlus, FolderPlus, LoaderCircle, User } from '@lucide/vue';
+import { Bookmark, BookmarkPlus, FolderPlus, User } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 
 interface Props {
   variant?: 'bookmark' | 'consult';
-  loading?: boolean;
-  error?: string | null;
+  saved?: boolean;
+  disabled?: boolean;
+  spread?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'bookmark',
-  loading: false,
-  error: null
+  variant: 'bookmark'
 });
 
 const emit = defineEmits<{
@@ -46,15 +45,7 @@ onBeforeUnmount(() => {
 <template>
   <div ref="containerRef" class="relative inline-block">
     <Button
-      v-if="props.loading"
-      variant="primary"
-      disabled
-      class="w-full !px-3 !py-3 md:!px-4 md:!py-4 opacity-60 cursor-not-allowed"
-    >
-      <LoaderCircle class="w-4 h-4 md:w-5.5 md:h-5.5 animate-spin" aria-hidden="true" />
-    </Button>
-    <Button
-      v-else-if="props.variant === 'consult'"
+      v-if="props.variant === 'consult'"
       variant="primary"
       class="w-full !px-3 !py-3 md:!px-4 md:!py-4"
       @click="emit('consult')"
@@ -67,11 +58,13 @@ onBeforeUnmount(() => {
     <template v-else>
       <Button
         variant="secondary"
-        class="w-full !px-3 !py-3 md:!px-4 md:!py-4"
-        @click="toggleDropdown"
+        class="w-full !px-3 !py-3 md:!px-4 md:!py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+        :class="props.spread ? 'bg-black hover:!bg-dropdown' : ''"
+        :disabled="props.disabled"
+        @click="toggleDropdown()"
       >
         <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
-          <Bookmark class="w-4 h-4 md:w-5.5 md:h-5.5" aria-hidden="true" />
+          <Bookmark class="w-4 h-4 md:w-5.5 md:h-5.5" :fill="props.saved ? 'currentColor' : 'none'" aria-hidden="true" />
           ADD TO MOODBOARD
         </span>
       </Button>
@@ -105,8 +98,5 @@ onBeforeUnmount(() => {
         <span class="w-28 text-center md:w-auto md:text-left">SAVE TO FOLDER</span>
       </button>
     </div>
-    <p v-if="props.error" class="mt-2 text-center font-mono text-xs text-red-400">
-      {{ props.error }}
-    </p>
   </div>
 </template>

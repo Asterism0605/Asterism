@@ -11,12 +11,16 @@ import {
   getSubMediumGroupImages
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
+import { isImageSaved } from '@/services/moodboard.service';
+import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
 const router = useRouter();
 
-const { isSaving, saveToMoodboard } = useSaveToMoodboard();
+const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
+const isSaved = computed(() => isImageSaved(centerImage.value?.id ?? ''));
+const showCreateFolder = ref(false);
 const centerImage = ref<ImageSpreadNode | undefined>();
 const rootImage = ref<ImageSpreadNode | undefined>();
 const relatedImages = ref<ImageSpreadNode[]>([]);
@@ -135,9 +139,19 @@ function handleRelatedSelect(image: ImageSpreadNode) {
   syncSpreadRoute(image.id);
 }
 
-async function handleSave() {
+function handleCreateFolder() {
+  isCreateFolderSuccess.value = false;
+  showCreateFolder.value = true;
+}
+
+async function handleSubmitFolder(name: string) {
+  const success = await createNewFolder(name);
+  if (success) showCreateFolder.value = false;
+}
+
+async function handleSaveToFolder() {
   if (!centerImage.value) return;
-  await saveToMoodboard(centerImage.value);
+  await saveToMoodboard('default', centerImage.value.id);
 }
 
 watch(
@@ -158,7 +172,7 @@ watch(
   <ImageSpreadEntrance
     as="main"
     kind="page"
-    class="relative min-h-screen overflow-hidden bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:92px]"
+    class="relative min-h-screen overflow-x-hidden overflow-y-auto bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:92px]"
   >
     <ImageSpreadEntrance
       kind="wash"
@@ -170,7 +184,7 @@ watch(
       v-if="centerImage"
       class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] w-full max-w-[1600px] flex-col items-center justify-center gap-8 px-6 pb-10 pt-6 lg:px-10 lg:pt-8"
     >
-      <div class="relative flex w-full flex-1 items-center justify-center">
+      <div class="relative z-10 flex w-full flex-1 items-center justify-center">
         <RelatedImageCluster
           class="hidden lg:block"
           :images="relatedImages"
@@ -178,7 +192,7 @@ watch(
           @select="handleRelatedSelect"
         />
 
-        <ImageSpreadOverlay :image="centerImage" :saving="isSaving" @return="returnToPreviousLayer" @save="handleSave" />
+        <ImageSpreadOverlay :image="centerImage" :saved="isSaved" :disabled="isSaving" @return="returnToPreviousLayer" @create-folder="handleCreateFolder" @save-to-folder="handleSaveToFolder" />
       </div>
 
       <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
@@ -225,6 +239,12 @@ watch(
       </Button>
     </section>
   </ImageSpreadEntrance>
+  <CreateNewFolder
+    v-model="showCreateFolder"
+    :is-submitting="isCreatingFolder"
+    :is-success="isCreateFolderSuccess"
+    @submit="handleSubmitFolder"
+  />
 </template>
 
 <style scoped>

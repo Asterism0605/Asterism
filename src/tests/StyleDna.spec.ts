@@ -5,6 +5,7 @@ import { createMemoryHistory, createRouter, type Router } from 'vue-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import StyleDna from '@/pages/StyleDna.vue';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
+import { useAuthStore } from '@/stores/auth.store';
 import type { StyleDnaAnswer, StyleDnaQuestion } from '@/types/style-dna';
 
 const mockQuestion: StyleDnaQuestion = {
@@ -110,7 +111,7 @@ describe('StyleDna', () => {
     await wrapper.find('[data-testid="select-btn"]').trigger('click');
     await vi.advanceTimersByTimeAsync(500);
 
-    expect(completeQuiz).toHaveBeenCalledWith([mockAnswer]);
+    expect(completeQuiz).toHaveBeenCalledWith([mockAnswer], null);
     expect(push).toHaveBeenCalledWith('/style-dna/result');
   });
 
@@ -131,6 +132,45 @@ describe('StyleDna', () => {
     await wrapper.vm.$nextTick();
     expect(wrapper.find('.qpm-current').text()).toBe('12');
     expect(wrapper.find('.qpm-total').text()).toBe('12');
+  });
+
+  it('syncs the current Style DNA result when an authenticated user completes the quiz', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const store = useStyleDnaStore();
+    const saveCurrentResultToServer = vi
+      .spyOn(store, 'saveCurrentResultToServer')
+      .mockResolvedValue(undefined);
+    const authStore = useAuthStore();
+    authStore.user = {
+      id: 'user-1',
+      email: 'member@example.com',
+      displayName: 'Member',
+      isAdmin: false,
+      createdAt: '2026-01-01T00:00:00.000Z'
+    };
+    authStore.session = {
+      user: authStore.user,
+      accessToken: 'token',
+      expiresAt: '2099-01-01T00:00:00.000Z'
+    };
+
+    const router = createTestRouter();
+    await router.push('/style-dna');
+    await router.isReady();
+
+    mockAnswers.push(mockAnswer);
+    mockSelectAnswer.mockImplementation(() => {
+      mockIsCompleted.value = true;
+    });
+
+    const wrapper = mountStyleDna(router, pinia);
+
+    await wrapper.find('[data-testid="select-btn"]').trigger('click');
+    await vi.advanceTimersByTimeAsync(500);
+
+    expect(store.localUserId).toBe('user-1');
+    expect(saveCurrentResultToServer).toHaveBeenCalledWith('user-1');
   });
 
   it('does not call completeQuiz or navigate when a mid-quiz selection is made', async () => {
