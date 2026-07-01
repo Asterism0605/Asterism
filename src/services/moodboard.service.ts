@@ -20,10 +20,10 @@ export function createFolder(name: string): void {
   if (store.folders.length >= 10) {
     throw new Error('You have reached the maximum of 10 folders.');
   }
-  if (store.folders.some((f) => f.name === name.trim())) {
+  if (store.folders.some((f) => f.name.trim() === name.trim())) {
     throw new Error('A folder with this name already exists.');
   }
-  store.createFolder(name);
+  store.createFolder(name.trim());
 }
 
 export function isImageSaved(imageId: string): boolean {

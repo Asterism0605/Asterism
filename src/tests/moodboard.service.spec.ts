@@ -71,6 +71,22 @@ describe('moodboard.service', () => {
     expect(() => createFolder('  我的最愛  ')).toThrow('A folder with this name already exists.');
   });
 
+  it('建立資料夾時會把名稱前後空白去掉再儲存', () => {
+    createFolder('  我的最愛  ');
+
+    const store = useMoodboardStore();
+    expect(store.folders[0].name).toBe('我的最愛');
+  });
+
+  it('既有資料夾名稱帶空白時，之後建立去掉空白的同名資料夾仍會被擋下', () => {
+    createFolder('  我的最愛  ');
+
+    expect(() => createFolder('我的最愛')).toThrow('A folder with this name already exists.');
+
+    const store = useMoodboardStore();
+    expect(store.folders).toHaveLength(1);
+  });
+
   it('當圖片已儲存時 isImageSaved 回傳 true', () => {
     createFolder('test');
     const store = useMoodboardStore();
