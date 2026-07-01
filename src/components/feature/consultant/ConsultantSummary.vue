@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
+type ConsultantSummaryStatus = 'missing-result' | 'ready';
+
 interface ConsultantProfile {
   styleDna: Array<{
     label: string;
@@ -7,16 +11,28 @@ interface ConsultantProfile {
   consultantLabel: string;
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
+    status?: ConsultantSummaryStatus;
     profile?: ConsultantProfile | null;
     hasSourceData?: boolean;
   }>(),
   {
+    status: undefined,
     profile: null,
     hasSourceData: false
   }
 );
+
+const effectiveStatus = computed<ConsultantSummaryStatus>(() => {
+  if (props.status) {
+    return props.status;
+  }
+
+  return props.hasSourceData && props.profile ? 'ready' : 'missing-result';
+});
+
+const canShowProfile = computed(() => effectiveStatus.value === 'ready' && props.profile !== null);
 </script>
 
 <template>
@@ -34,7 +50,7 @@ withDefaults(
       </p>
     </div>
 
-    <dl v-if="profile && hasSourceData" class="consultant-summary__profile">
+    <dl v-if="canShowProfile && profile" class="consultant-summary__profile">
       <div>
         <dt>Style DNA</dt>
         <dd>
@@ -52,13 +68,12 @@ withDefaults(
       </div>
     </dl>
 
-    <div v-else class="consultant-summary__fallback">
+    <div v-else class="consultant-summary__fallback" data-testid="consultant-style-dna-fallback">
       <p>We need a Style DNA result before matching a consultant.</p>
       <div class="consultant-summary__actions">
         <a class="consultant-summary__button consultant-summary__button--primary" href="/style-dna">
-          Retake quiz
+          Take Style DNA quiz
         </a>
-        <button class="consultant-summary__button" type="button">Skip</button>
       </div>
     </div>
   </section>
