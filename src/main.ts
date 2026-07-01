@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import './styles/main.css'
 import App from './App.vue'
 import router from './router'
+import { i18n } from './i18n'
 import { useStyleDnaStore } from './stores/style-dna.store'
 import { useAuthStore } from './stores/auth.store'
 import { loadImages } from './services/image.service'
@@ -30,5 +31,5 @@ void (async () => {
   } catch (e) {
     console.warn('[image] 啟動載入失敗：', e)
   }
-  createApp(App).use(pinia).use(router).mount('#app')
+  createApp(App).use(pinia).use(router).use(i18n).mount('#app')
 })()
