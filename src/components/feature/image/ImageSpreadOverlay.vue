@@ -26,11 +26,7 @@ const mainImageLabel = computed(() => {
     return undefined;
   }
 
-  if (props.image.medium && !props.image.subMedium) {
-    return props.image.medium;
-  }
-
-  return props.image.style[0] ?? props.image.styleGroup;
+  return props.image.medium;
 });
 </script>
 
