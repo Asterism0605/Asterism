@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import Button from '@/components/ui/Button.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import SignUpOverlay from '@/components/overlay/SignUpOverlay.vue';
+import VerificationSentOverlay from '@/components/overlay/VerificationSentOverlay.vue';
+import { useCountdown } from '@/composables/useCountdown';
 import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
 import { getErrorCode, getErrorMessage } from '@/utils/api-error';
@@ -19,25 +20,10 @@ const errorMessage = ref('');
 const sentToEmail = ref('');
 
 // 重寄驗證信：cooldown 對齊 Supabase SMTP 的 Minimum interval（60s），避免狂點吃 rate-limit。
-const RESEND_COOLDOWN_S = 60;
-const resendCountdown = ref(0);
 const resendMessage = ref('');
-let resendTimer: ReturnType<typeof setInterval> | undefined;
-
-function startCooldown() {
-  resendCountdown.value = RESEND_COOLDOWN_S;
-  resendTimer = setInterval(() => {
-    resendCountdown.value -= 1;
-    if (resendCountdown.value <= 0) {
-      clearInterval(resendTimer);
-    }
-  }, 1000);
-}
+const { countdown: resendCountdown, start: startCooldown } = useCountdown(60);
 
 async function handleResend() {
-  if (resendCountdown.value > 0 || !sentToEmail.value) {
-    return;
-  }
   resendMessage.value = '';
   try {
     await authStore.resendSignup(sentToEmail.value);
@@ -47,8 +33,6 @@ async function handleResend() {
     resendMessage.value = getErrorMessage(error, "Couldn't resend right now. Please try again.");
   }
 }
-
-onUnmounted(() => clearInterval(resendTimer));
 
 async function handleSubmit(payload: RegisterPayload) {
   if (isSubmitting.value) {
@@ -130,51 +114,13 @@ async function handleSubmit(payload: RegisterPayload) {
     <div
       class="relative z-30 flex min-h-screen items-center justify-center px-4 pt-(--app-header-height)"
     >
-      <section
+      <VerificationSentOverlay
         v-if="sentToEmail"
-        class="overlay-panel glass-panel"
-        style="max-width: 640px; padding: 72px 64px 68px"
-        data-testid="verification-sent"
-        role="main"
-        aria-label="Verification email sent"
-      >
-        <h2 class="overlay-title">Check your email</h2>
-        <p class="overlay-description">
-          We sent a verification link to <strong>{{ sentToEmail }}</strong>.
-          <span style="display: block; margin-top: 0.5rem">
-            Open it to activate your account and finish signing up.
-          </span>
-        </p>
-
-        <p class="overlay-description" style="margin-top: 1.25rem; font-size: 14px">
-          Didn't get it? Check your spam folder, or resend below.
-        </p>
-
-        <div class="overlay-actions overlay-actions--stackable">
-          <span class="overlay-submit">
-            <Button
-              variant="secondary"
-              type="button"
-              data-testid="resend-button"
-              :disabled="resendCountdown > 0"
-              @click="handleResend"
-            >
-              {{ resendCountdown > 0 ? `RESEND IN ${resendCountdown}S` : 'RESEND EMAIL' }}
-            </Button>
-          </span>
-          <RouterLink :to="{ name: 'login' }" class="overlay-link">Back to login</RouterLink>
-        </div>
-
-        <p
-          v-if="resendMessage"
-          class="overlay-description"
-          style="margin-top: 1rem; font-size: 13px"
-          role="status"
-          data-testid="resend-message"
-        >
-          {{ resendMessage }}
-        </p>
-      </section>
+        :email="sentToEmail"
+        :resend-message="resendMessage"
+        :countdown="resendCountdown"
+        @resend="handleResend"
+      />
       <SignUpOverlay
         v-else
         :is-submitting="isSubmitting"
