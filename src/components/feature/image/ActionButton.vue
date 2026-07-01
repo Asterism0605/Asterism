@@ -52,7 +52,7 @@ onBeforeUnmount(() => {
     >
       <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
         <User class="w-4 h-4 md:w-5.5 md:h-5.5" aria-hidden="true" />
-        CONSULT STYLIST
+        {{ $t('image.consultStylist') }}
       </span>
     </Button>
     <template v-else>
@@ -65,7 +65,7 @@ onBeforeUnmount(() => {
       >
         <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
           <Bookmark class="w-4 h-4 md:w-5.5 md:h-5.5" :fill="props.saved ? 'currentColor' : 'none'" aria-hidden="true" />
-          ADD TO MOODBOARD
+          {{ $t('image.addToMoodboard') }}
         </span>
       </Button>
     </template>
@@ -83,7 +83,7 @@ onBeforeUnmount(() => {
         "
       >
         <FolderPlus class="h-4 w-4 shrink-0 md:ml-[22px]" aria-hidden="true" />
-        <span class="w-28 text-center md:w-auto md:text-left">CREATE NEW FOLDER</span>
+        <span class="w-28 text-center md:w-auto md:text-left">{{ $t('moodboard.createFolderTitle') }}</span>
       </button>
       <div class="mx-4 h-px bg-white/10" />
       <button
@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
         "
       >
         <BookmarkPlus class="h-4 w-4 shrink-0 md:ml-[22px]" aria-hidden="true" />
-        <span class="w-28 text-center md:w-auto md:text-left">SAVE TO FOLDER</span>
+        <span class="w-28 text-center md:w-auto md:text-left">{{ $t('image.saveToFolder') }}</span>
       </button>
     </div>
   </div>

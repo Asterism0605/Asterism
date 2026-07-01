@@ -80,7 +80,7 @@ onBeforeUnmount(() => {
     />
 
     <div class="quiz-progress">
-      <span class="quiz-label" aria-label="Quiz progress">Quiz</span>
+      <span class="quiz-label" :aria-label="$t('dna.quizProgress')">{{ $t('dna.quiz') }}</span>
       <span class="quiz-current">{{ Math.min(currentQuestionIndex + 1, questions.length) }}</span>
       <span class="quiz-slash" aria-hidden="true"></span>
       <span class="quiz-total">{{ questions.length }}</span>

@@ -105,8 +105,7 @@ function handleReset() {
           class="style-consultant__confirmation"
           role="status"
         >
-          Request received. We’ll contact {{ lastBooking.name }} at
-          {{ lastBooking.email }} with the next available consultation details.
+          {{ $t('consult.requestReceived', { name: lastBooking.name, email: lastBooking.email }) }}
         </p>
       </div>
     </section>

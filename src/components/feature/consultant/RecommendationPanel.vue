@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ConsultationDatePicker from '@/components/feature/consultant/ConsultationDatePicker.vue';
 import ConsultationDropdown from '@/components/feature/consultant/ConsultationDropdown.vue';
 import Button from '@/components/ui/Button.vue';
@@ -44,6 +45,8 @@ const emit = defineEmits<{
   reset: [];
 }>();
 
+const { t } = useI18n();
+
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^[\d\s\-+()]{7,20}$/;
 
@@ -75,17 +78,26 @@ const timeSlotOptions: Array<{ label: string; value: Exclude<TimeSlot, ''> }> = 
   { label: 'PM', value: 'pm' }
 ];
 
-const fieldOptions = ['Styling Design', 'Graphic Design', 'Interior Design', 'Architecture'].map(
-  (field) => ({ label: field, value: field })
+// ponytail: label===value（皆隨語言變）。預約是 mock、沒接後端，語言化的值不影響任何送出。
+// 若日後接真後端要固定英文值，改成 value 存英文、label 顯譯文，並讓下拉 trigger 顯示 label。
+const fieldOptions = computed(() =>
+  [
+    t('consult.fieldStyling'),
+    t('consult.fieldGraphic'),
+    t('consult.fieldInterior'),
+    t('consult.fieldArchitecture')
+  ].map((field) => ({ label: field, value: field }))
 );
 
-const focusOptions = [
-  'Spatial Mood',
-  'Material Palette',
-  'Color Direction',
-  'Furniture Selection',
-  'Visual Concept'
-].map((focus) => ({ label: focus, value: focus }));
+const focusOptions = computed(() =>
+  [
+    t('consult.focusSpatial'),
+    t('consult.focusMaterial'),
+    t('consult.focusColor'),
+    t('consult.focusFurniture'),
+    t('consult.focusVisual')
+  ].map((focus) => ({ label: focus, value: focus }))
+);
 
 const fieldErrors = computed(() => {
   if (!hasSubmitted.value) {
@@ -95,20 +107,18 @@ const fieldErrors = computed(() => {
   const contactPhone = form.contactPhone.trim();
 
   return {
-    date: form.date ? '' : 'Date is required.',
-    timeSlot: form.timeSlot ? '' : 'Time slot is required.',
+    date: form.date ? '' : t('consult.errDate'),
+    timeSlot: form.timeSlot ? '' : t('consult.errTimeSlot'),
     designField: '',
     designFocus: '',
-    name: form.name.trim() ? '' : 'Name is required.',
-    email: emailPattern.test(form.email.trim()) ? '' : 'A valid email is required.',
+    name: form.name.trim() ? '' : t('consult.errName'),
+    email: emailPattern.test(form.email.trim()) ? '' : t('consult.errEmail'),
     contactPhone: !contactPhone
-      ? 'Contact phone is required.'
+      ? t('consult.errPhoneRequired')
       : phonePattern.test(contactPhone)
         ? ''
-        : 'A valid phone number is required.',
-    paymentConfirmed: form.paymentConfirmed
-      ? ''
-      : 'Please confirm the consultation deposit before continuing.'
+        : t('consult.errPhoneInvalid'),
+    paymentConfirmed: form.paymentConfirmed ? '' : t('consult.errPayment')
   };
 });
 
@@ -200,15 +210,15 @@ function handleSubmit() {
 <template>
   <form class="recommendation-panel" novalidate @submit.prevent="handleSubmit">
     <div class="recommendation-panel__section">
-      <p class="recommendation-panel__label">Consultation Method</p>
+      <p class="recommendation-panel__label">{{ $t('consult.method') }}</p>
       <div class="recommendation-panel__radio-grid">
         <label class="recommendation-panel__choice">
           <input v-model="form.method" type="radio" value="online" />
-          <span>Online</span>
+          <span>{{ $t('consult.online') }}</span>
         </label>
         <label class="recommendation-panel__choice">
           <input v-model="form.method" type="radio" value="in-person" />
-          <span>In-Person</span>
+          <span>{{ $t('consult.inPerson') }}</span>
         </label>
       </div>
     </div>
@@ -225,9 +235,9 @@ function handleSubmit() {
       <ConsultationDropdown
         v-model="form.timeSlot"
         :open="isTimeSlotOpen"
-        label="Time Slot"
-        placeholder="AM / PM"
-        list-label="Choose time slot"
+        :label="$t('consult.timeSlot')"
+        :placeholder="$t('consult.timeSlotPlaceholder')"
+        :list-label="$t('consult.chooseTimeSlot')"
         :options="timeSlotOptions"
         :error="fieldErrors.timeSlot"
         uppercase-value
@@ -237,9 +247,9 @@ function handleSubmit() {
       <ConsultationDropdown
         v-model="form.designField"
         :open="isDesignFieldOpen"
-        label="Design Field"
-        placeholder="Select a field"
-        list-label="Choose design field"
+        :label="$t('consult.designField')"
+        :placeholder="$t('consult.selectField')"
+        :list-label="$t('consult.chooseField')"
         :options="fieldOptions"
         :error="fieldErrors.designField"
         @update:open="(value) => handleDropdownOpen('designField', value)"
@@ -248,9 +258,9 @@ function handleSubmit() {
       <ConsultationDropdown
         v-model="form.designFocus"
         :open="isDesignFocusOpen"
-        label="Design Focus"
-        placeholder="Select a focus"
-        list-label="Choose design focus"
+        :label="$t('consult.designFocus')"
+        :placeholder="$t('consult.selectFocus')"
+        :list-label="$t('consult.chooseFocus')"
         :options="focusOptions"
         :error="fieldErrors.designFocus"
         @update:open="(value) => handleDropdownOpen('designFocus', value)"
@@ -259,13 +269,13 @@ function handleSubmit() {
 
     <div class="recommendation-panel__grid">
       <label class="recommendation-panel__field">
-        <span>Name</span>
-        <FormInput :model-value="form.name" placeholder="Your name" @update:model-value="updateName" />
+        <span>{{ $t('consult.name') }}</span>
+        <FormInput :model-value="form.name" :placeholder="$t('consult.namePlaceholder')" @update:model-value="updateName" />
         <small v-if="fieldErrors.name">{{ fieldErrors.name }}</small>
       </label>
 
       <label class="recommendation-panel__field">
-        <span>Email</span>
+        <span>{{ $t('consult.email') }}</span>
         <FormInput
           :model-value="form.email"
           type="email"
@@ -276,44 +286,44 @@ function handleSubmit() {
       </label>
 
       <label class="recommendation-panel__field recommendation-panel__field--wide">
-        <span>Contact Phone</span>
+        <span>{{ $t('consult.contactPhone') }}</span>
         <FormInput v-model="form.contactPhone" placeholder="+886 912 345 678" autocomplete="tel" />
         <small v-if="fieldErrors.contactPhone">{{ fieldErrors.contactPhone }}</small>
       </label>
     </div>
 
     <label class="recommendation-panel__field">
-      <span>Additional Notes</span>
+      <span>{{ $t('consult.notes') }}</span>
       <textarea
         v-model="form.notes"
         class="recommendation-panel__textarea"
-        placeholder="Tell us about your project or questions."
+        :placeholder="$t('consult.notesPlaceholder')"
         rows="5"
       />
     </label>
 
     <section class="recommendation-panel__fee" aria-labelledby="consultation-fee-title">
-      <p id="consultation-fee-title" class="recommendation-panel__label">Consultation Fee</p>
+      <p id="consultation-fee-title" class="recommendation-panel__label">{{ $t('consult.fee') }}</p>
       <div class="recommendation-panel__fee-detail">
-        <p class="recommendation-panel__fee-amount">NT$500 deposit</p>
+        <p class="recommendation-panel__fee-amount">{{ $t('consult.feeAmount') }}</p>
         <p class="recommendation-panel__fee-copy">
-          A consultation deposit is required to submit your request.
+          {{ $t('consult.feeCopy') }}
         </p>
       </div>
 
       <label class="recommendation-panel__payment-confirmation">
         <input v-model="form.paymentConfirmed" type="checkbox" />
-        <span>I understand and agree to continue to payment.</span>
+        <span>{{ $t('consult.paymentConfirm') }}</span>
       </label>
       <small v-if="fieldErrors.paymentConfirmed">{{ fieldErrors.paymentConfirmed }}</small>
       <p class="recommendation-panel__demo-note">
-        For demo purposes only. No real payment will be charged.
+        {{ $t('consult.demoNote') }}
       </p>
     </section>
 
     <div class="recommendation-panel__actions">
-      <Button type="submit">Confirm &amp; Pay</Button>
-      <Button type="button" variant="secondary" @click="resetForm">Reset</Button>
+      <Button type="submit">{{ $t('consult.confirmPay') }}</Button>
+      <Button type="button" variant="secondary" @click="resetForm">{{ $t('consult.reset') }}</Button>
     </div>
   </form>
 </template>

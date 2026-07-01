@@ -1,8 +1,10 @@
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { addItem, createFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 
 export function useSaveToMoodboard() {
+  const { t } = useI18n();
   const isSaving = ref(false);
   const saveError = ref<string | null>(null);
   const isCreatingFolder = ref(false);
@@ -17,8 +19,8 @@ export function useSaveToMoodboard() {
     } catch (e) {
       const message =
         e instanceof Error && e.message === 'Image not found.'
-          ? 'Something went wrong. Please contact support.'
-          : 'Failed to save. Please try again.';
+          ? t('toast.saveContactSupport')
+          : t('toast.saveFailed');
       saveError.value = message;
       showToast({ type: 'error', message });
     } finally {
@@ -35,7 +37,12 @@ export function useSaveToMoodboard() {
       await new Promise((resolve) => setTimeout(resolve, 800));
       return true;
     } catch (e) {
-      showToast({ type: 'error', message: (e as Error).message });
+      const raw = (e as Error).message;
+      const message =
+        raw === 'You have reached the maximum of 10 folders.'
+          ? t('toast.folderLimit')
+          : t('toast.saveFailed');
+      showToast({ type: 'error', message });
       return false;
     } finally {
       isCreatingFolder.value = false;

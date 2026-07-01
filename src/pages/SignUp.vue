@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import SignUpOverlay from '@/components/overlay/SignUpOverlay.vue';
 import { useAuthStore } from '@/stores/auth.store';
@@ -13,6 +14,7 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
+const { t } = useI18n();
 
 const isSubmitting = ref(false);
 const errorMessage = ref('');
@@ -34,7 +36,7 @@ async function handleSubmit(payload: RegisterPayload) {
     }
     router.push(getSafeRedirectPath(route.query.next, '/discover-dna'));
   } catch (error) {
-    errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
+    errorMessage.value = getErrorMessage(error, t('auth.genericError'));
   } finally {
     isSubmitting.value = false;
   }

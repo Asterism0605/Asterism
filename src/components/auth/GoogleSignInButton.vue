@@ -28,7 +28,7 @@ async function signIn() {
   <button
     type="button"
     data-testid="google-signin"
-    aria-label="Continue with Google"
+    :aria-label="$t('auth.continueWithGoogle')"
     :disabled="loading"
     class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
     @click="signIn"
@@ -54,6 +54,6 @@ async function signIn() {
     Google
   </button>
   <p v-if="error" class="mt-2 text-center font-mono text-xs text-red-400" role="alert">
-    Google sign-in failed. Please try again.
+    {{ $t('auth.googleFailed') }}
   </p>
 </template>
