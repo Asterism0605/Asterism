@@ -33,6 +33,27 @@ describe('ActionButton', () => {
     expect(folderNames).toContain('Another Folder');
   });
 
+  it('資料夾清單中已儲存該圖片的資料夾顯示實心書籤，其餘為空心', async () => {
+    const wrapper = mount(ActionButton, {
+      props: {
+        folders: [
+          { id: 'folder-1', name: 'My Folder', saved: true },
+          { id: 'folder-2', name: 'Another Folder', saved: false }
+        ]
+      }
+    });
+
+    await wrapper.find('button').trigger('click');
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    await saveBtn!.trigger('click');
+
+    const savedFolderBtn = wrapper.findAll('button').find((b) => b.text() === 'My Folder');
+    const unsavedFolderBtn = wrapper.findAll('button').find((b) => b.text() === 'Another Folder');
+
+    expect(savedFolderBtn!.find('svg').attributes('fill')).toBe('currentColor');
+    expect(unsavedFolderBtn!.find('svg').attributes('fill')).toBe('none');
+  });
+
   it('點擊第二層資料夾名稱時 emit save-to-folder 帶正確的 folderId', async () => {
     const wrapper = mount(ActionButton, { props: { folders } });
 

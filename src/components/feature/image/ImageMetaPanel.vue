@@ -18,7 +18,7 @@ interface Props {
   similarImages?: ImageSpreadNode[];
   saved?: boolean;
   disabled?: boolean;
-  folders?: { id: string; name: string }[];
+  folders?: { id: string; name: string; saved?: boolean }[];
 }
 
 defineProps<Props>();

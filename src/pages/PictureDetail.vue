@@ -35,7 +35,13 @@ const similarImages = computed(() => relatedImages.value.slice(2, 6));
 const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
 const moodboardStore = useMoodboardStore();
-const folders = computed(() => moodboardStore.folders.map((f) => ({ id: f.id, name: f.name })));
+const folders = computed(() =>
+  moodboardStore.folders.map((f) => ({
+    id: f.id,
+    name: f.name,
+    saved: f.images.some((image) => image.id === currentImage.value?.id)
+  }))
+);
 const showCreateFolder = ref(false);
 
 function handleBack() {

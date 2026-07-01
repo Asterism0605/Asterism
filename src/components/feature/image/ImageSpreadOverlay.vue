@@ -11,7 +11,7 @@ const props = defineProps<{
   image: ImageSpreadNode;
   saved?: boolean;
   disabled?: boolean;
-  folders?: { id: string; name: string }[];
+  folders?: { id: string; name: string; saved?: boolean }[];
 }>();
 
 const emit = defineEmits<{
@@ -39,7 +39,7 @@ const mainImageLabel = computed(() => {
   <ImageSpreadEntrance
     as="section"
     kind="center"
-    class="relative mx-auto flex w-full max-w-[460px] flex-col items-center gap-5"
+    class="relative z-20 mx-auto flex w-full max-w-[460px] flex-col items-center gap-5"
   >
     <div class="relative flex w-full justify-center">
       <ConstellationBackground

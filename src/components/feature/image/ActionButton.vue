@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { Bookmark, BookmarkPlus, ChevronDown, FolderPlus, LoaderCircle, User } from '@lucide/vue';
+import { Bookmark, BookmarkPlus, ChevronDown, ChevronRight, FolderPlus, LoaderCircle, User } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 
 interface FolderItem {
   id: string;
   name: string;
+  saved?: boolean;
 }
 
 interface Props {
@@ -94,18 +95,25 @@ onBeforeUnmount(() => {
 
     <div
       v-if="isOpen && props.variant === 'bookmark'"
-      class="absolute left-0 top-full z-10 mt-2 min-w-full overflow-visible rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
+      class="absolute z-10 w-40 overflow-visible rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
+      :class="
+        props.spread
+          ? props.folders.length === 0
+            ? 'left-0 top-full mt-2 md:left-full md:top-0 md:mt-0 md:ml-2'
+            : 'left-0 top-full mt-2 md:left-full md:top-[-50px] md:mt-0 md:ml-2'
+          : 'left-0 top-full mt-2'
+      "
     >
       <button
         type="button"
-        class="flex w-full items-center justify-center gap-2 px-3 py-3 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-4 md:py-4 md:text-sm"
+        class="flex w-full items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
         @click="
           emit('create-folder');
           isOpen = false;
         "
       >
-        <FolderPlus class="h-4 w-4 shrink-0 md:ml-[22px]" aria-hidden="true" />
-        <span class="w-28 text-center md:w-auto md:text-left">CREATE NEW FOLDER</span>
+        <FolderPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
+        <span class="flex-1 min-w-0 text-center md:text-left">CREATE NEW FOLDER</span>
       </button>
 
       <template v-if="props.folders.length > 0">
@@ -113,27 +121,32 @@ onBeforeUnmount(() => {
         <div class="relative">
           <button
             type="button"
-            class="flex w-full items-center justify-center gap-2 px-3 py-3 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-4 md:py-4 md:text-sm"
+            class="flex w-full items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
             @click.stop="showFolderList = !showFolderList"
           >
-            <BookmarkPlus class="h-4 w-4 shrink-0 md:ml-[22px]" aria-hidden="true" />
-            <span class="w-28 text-center md:w-auto md:text-left">SAVE TO FOLDER</span>
-            <ChevronDown class="ml-auto h-3 w-3 shrink-0" aria-hidden="true" />
+            <BookmarkPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span class="flex-1 min-w-0 text-center md:text-left">SAVE TO FOLDER</span>
+            <template v-if="props.spread">
+              <ChevronDown class="ml-auto h-4 w-4 shrink-0 md:hidden" aria-hidden="true" />
+              <ChevronRight class="ml-auto hidden h-4 w-4 shrink-0 md:block" aria-hidden="true" />
+            </template>
+            <ChevronDown v-else class="ml-auto h-4 w-4 shrink-0" aria-hidden="true" />
           </button>
 
           <div
             v-if="showFolderList"
-            class="absolute left-0 top-full z-20 mt-2 w-[calc(100%-8px)] overflow-hidden rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
+            class="absolute z-20 w-40 overflow-hidden rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
+            :class="props.spread ? 'left-0 top-full mt-2 md:left-full md:top-0 md:mt-0 md:ml-2' : 'left-0 top-full mt-2'"
           >
             <button
               v-for="folder in props.folders"
               :key="folder.id"
               type="button"
-              class="flex w-full items-center justify-center gap-2 px-3 py-3 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-4 md:py-4 md:text-sm"
+              class="flex w-full items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
               @click.stop="handleSaveToFolderClick(folder)"
             >
-              <BookmarkPlus class="h-4 w-4 shrink-0 md:ml-[22px]" aria-hidden="true" />
-              <span class="flex-1 min-w-0 break-words text-center md:text-left">
+              <Bookmark class="h-4 w-4 shrink-0" :fill="folder.saved ? 'currentColor' : 'none'" aria-hidden="true" />
+              <span class="flex-1 min-w-0 truncate text-center md:text-left">
                 {{ savedFolderId === folder.id ? '✓ Saved' : folder.name }}
               </span>
             </button>

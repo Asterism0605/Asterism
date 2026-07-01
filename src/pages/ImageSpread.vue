@@ -22,7 +22,13 @@ const router = useRouter();
 const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(centerImage.value?.id ?? ''));
 const moodboardStore = useMoodboardStore();
-const folders = computed(() => moodboardStore.folders.map((f) => ({ id: f.id, name: f.name })));
+const folders = computed(() =>
+  moodboardStore.folders.map((f) => ({
+    id: f.id,
+    name: f.name,
+    saved: f.images.some((image) => image.id === centerImage.value?.id)
+  }))
+);
 const showCreateFolder = ref(false);
 const centerImage = ref<ImageSpreadNode | undefined>();
 const rootImage = ref<ImageSpreadNode | undefined>();
