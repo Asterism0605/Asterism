@@ -122,14 +122,15 @@ describe('StyleDna', () => {
     await router.isReady();
 
     const wrapper = mountStyleDna(router, pinia);
-    const text = () => wrapper.find('.quiz-progress-mobile').text().replace(/\s+/g, ' ').trim();
 
     expect(wrapper.find('.quiz-progress-mobile').exists()).toBe(true);
-    expect(text()).toBe('1 / 12');
+    expect(wrapper.find('.qpm-current').text()).toBe('1');
+    expect(wrapper.find('.qpm-total').text()).toBe('12');
 
-    mockCurrentIndex.value = 11; // 最後一題顯示 total / total
+    mockCurrentIndex.value = 11; // 最後一題：current 夾在 total
     await wrapper.vm.$nextTick();
-    expect(text()).toBe('12 / 12');
+    expect(wrapper.find('.qpm-current').text()).toBe('12');
+    expect(wrapper.find('.qpm-total').text()).toBe('12');
   });
 
   it('does not call completeQuiz or navigate when a mid-quiz selection is made', async () => {
