@@ -11,3 +11,15 @@ export function getErrorMessage(error: unknown, fallback: string): string {
 
   return fallback;
 }
+
+// 取出 ApiError 的 code（純物件，非 Error 實例），用來分流特定狀態（如信箱驗證）。
+export function getErrorCode(error: unknown): string | null {
+  if (typeof error === 'object' && error !== null && 'code' in error) {
+    const code = (error as { code: unknown }).code;
+    if (typeof code === 'string') {
+      return code;
+    }
+  }
+
+  return null;
+}
