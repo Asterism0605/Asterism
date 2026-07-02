@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { onScopeDispose, ref } from 'vue';
 import { addItem, createFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { MOODBOARD_FEEDBACK_DISPLAY_MS } from '@/constants/moodboard.constants';
@@ -10,6 +10,17 @@ export function useSaveToMoodboard() {
   const isCreateFolderSuccess = ref(false);
   const justSavedFolderId = ref<string | null>(null);
 
+  let justSavedTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function clearJustSavedTimer() {
+    if (justSavedTimer !== null) {
+      clearTimeout(justSavedTimer);
+      justSavedTimer = null;
+    }
+  }
+
+  onScopeDispose(clearJustSavedTimer);
+
   async function saveToMoodboard(folderId: string, imageId: string): Promise<boolean> {
     if (isSaving.value) return false;
     isSaving.value = true;
@@ -17,8 +28,10 @@ export function useSaveToMoodboard() {
     try {
       await addItem(folderId, imageId);
       justSavedFolderId.value = folderId;
-      setTimeout(() => {
+      clearJustSavedTimer();
+      justSavedTimer = setTimeout(() => {
         justSavedFolderId.value = null;
+        justSavedTimer = null;
       }, MOODBOARD_FEEDBACK_DISPLAY_MS);
       return true;
     } catch (e) {
