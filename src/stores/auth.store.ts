@@ -6,8 +6,10 @@ import {
   login as loginService,
   logout as logoutService,
   register as registerService,
+  requestPasswordReset as requestPasswordResetService,
   resendSignup as resendSignupService,
   signInWithGoogle as signInWithGoogleService,
+  updatePassword as updatePasswordService,
   verifyOtp as verifyOtpService
 } from '@/services/auth.service';
 import type { AuthSession, LoginPayload, RegisterPayload, UserProfile } from '@/types/auth';
@@ -71,6 +73,17 @@ export const useAuthStore = defineStore('auth', () => {
     await resendSignupService(email);
   }
 
+  // 忘記密碼：寄重設連結，回流到 /auth/callback（帶 type=recovery，比照 Google 組 redirectTo）。
+  async function requestPasswordReset(email: string): Promise<void> {
+    const redirectTo = `${window.location.origin}/auth/callback?type=recovery`;
+    await requestPasswordResetService(email, redirectTo);
+  }
+
+  // 重設密碼：recovery session 已建立後更新密碼（純動作，session 維持登入）。
+  async function updatePassword(newPassword: string): Promise<void> {
+    await updatePasswordService(newPassword);
+  }
+
   return {
     user,
     session,
@@ -82,6 +95,8 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     signInWithGoogle,
     verifyOtp,
-    resendSignup
+    resendSignup,
+    requestPasswordReset,
+    updatePassword
   };
 });

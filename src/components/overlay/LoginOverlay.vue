@@ -52,7 +52,9 @@ function handleSubmit() {
         />
 
         <div class="overlay-helper">
-          <button type="button" class="overlay-link">FORGOT PASSWORD?</button>
+          <RouterLink :to="{ name: 'forgot-password' }" class="overlay-link">
+            FORGOT PASSWORD?
+          </RouterLink>
         </div>
       </div>
 
