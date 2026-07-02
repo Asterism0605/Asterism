@@ -12,14 +12,24 @@ import {
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import { isImageSaved } from '@/services/moodboard.service';
+import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
 const router = useRouter();
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
+const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
+  useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(centerImage.value?.id ?? ''));
+const moodboardStore = useMoodboardStore();
+const folders = computed(() =>
+  moodboardStore.folders.map((f) => ({
+    id: f.id,
+    name: f.name,
+    saved: f.images.some((image) => image.id === centerImage.value?.id)
+  }))
+);
 const showCreateFolder = ref(false);
 const centerImage = ref<ImageSpreadNode | undefined>();
 const rootImage = ref<ImageSpreadNode | undefined>();
@@ -149,9 +159,9 @@ async function handleSubmitFolder(name: string) {
   if (success) showCreateFolder.value = false;
 }
 
-async function handleSaveToFolder() {
+async function handleSaveToFolder(folderId: string) {
   if (!centerImage.value) return;
-  await saveToMoodboard('default', centerImage.value.id);
+  await saveToMoodboard(folderId, centerImage.value.id);
 }
 
 watch(
@@ -192,7 +202,16 @@ watch(
           @select="handleRelatedSelect"
         />
 
-        <ImageSpreadOverlay :image="centerImage" :saved="isSaved" :disabled="isSaving" @return="returnToPreviousLayer" @create-folder="handleCreateFolder" @save-to-folder="handleSaveToFolder" />
+        <ImageSpreadOverlay
+          :image="centerImage"
+          :saved="isSaved"
+          :disabled="isSaving"
+          :folders="folders"
+          :just-saved-folder-id="justSavedFolderId"
+          @return="returnToPreviousLayer"
+          @create-folder="handleCreateFolder"
+          @save-to-folder="handleSaveToFolder"
+        />
       </div>
 
       <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">

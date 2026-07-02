@@ -31,7 +31,7 @@ function isPersistedMoodboard(value: unknown): value is { folders: MoodboardFold
 }
 
 export const useMoodboardStore = defineStore('moodboard', () => {
-  const folders = ref<MoodboardFolder[]>([{ id: 'default', name: '我的收藏', images: [] }]);
+  const folders = ref<MoodboardFolder[]>([]);
 
   function persist(): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ folders: folders.value }));
