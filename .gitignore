@@ -42,3 +42,4 @@ tmp_review/
 
 # 暫存後端資料
 tmp_b2e/
+.worktrees/
