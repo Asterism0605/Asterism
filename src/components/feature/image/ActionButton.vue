@@ -121,7 +121,7 @@ onBeforeUnmount(() => {
         "
       >
         <FolderPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span class="flex-1 min-w-0 text-center md:text-left">CREATE NEW FOLDER</span>
+        <span class="flex-1 min-w-0 text-center md:text-left">SAVE TO NEW FOLDER</span>
       </button>
 
       <template v-if="props.folders.length > 0">

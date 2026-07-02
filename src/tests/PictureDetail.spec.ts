@@ -212,7 +212,7 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
   });
 
-  it('送出 CREATE NEW FOLDER 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
+  it('送出 SAVE TO NEW FOLDER 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
     vi.mocked(createFolder).mockReturnValueOnce('new-folder-id');
     const router = createRouter({
       history: createMemoryHistory(),
@@ -235,7 +235,7 @@ describe('PictureDetail', () => {
         wrapper.findAll('button').find((b) => b.text().includes(text))!;
 
       await findBtn('ADD TO MOODBOARD').trigger('click');
-      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
       await flushPromises();
 
       const input = document.querySelector('input') as HTMLInputElement;
@@ -283,7 +283,7 @@ describe('PictureDetail', () => {
         wrapper.findAll('button').find((b) => b.text().includes(text))!;
 
       await findBtn('ADD TO MOODBOARD').trigger('click');
-      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
       await flushPromises();
 
       const input = document.querySelector('input') as HTMLInputElement;
@@ -305,7 +305,7 @@ describe('PictureDetail', () => {
     }
   });
 
-  it('重開 CREATE NEW FOLDER modal 後 input 不再 disabled', async () => {
+  it('重開 SAVE TO NEW FOLDER modal 後 input 不再 disabled', async () => {
     vi.useFakeTimers();
     const router = createRouter({
       history: createMemoryHistory(),
@@ -332,7 +332,7 @@ describe('PictureDetail', () => {
         wrapper.findAll('button').find((b) => b.text().includes(text))!;
 
       await findBtn('ADD TO MOODBOARD').trigger('click');
-      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
       await flushPromises();
 
       const input = document.querySelector('input') as HTMLInputElement;
@@ -349,7 +349,7 @@ describe('PictureDetail', () => {
       await flushPromises();
 
       await findBtn('ADD TO MOODBOARD').trigger('click');
-      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
       await flushPromises();
 
       expect((document.querySelector('input') as HTMLInputElement).disabled).toBe(false);
