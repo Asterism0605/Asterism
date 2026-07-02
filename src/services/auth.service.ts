@@ -4,6 +4,7 @@ import {
   loginApi,
   logoutApi,
   registerApi,
+  resendSignupApi,
   signInWithGoogleApi,
   verifyOtpApi
 } from '@/api/auth.api';
@@ -29,6 +30,10 @@ export async function logout(): Promise<void> {
 
 export async function getCurrentSession(): Promise<AuthSession | null> {
   return currentSessionApi();
+}
+
+export async function resendSignup(email: string): Promise<void> {
+  await resendSignupApi(email);
 }
 
 export async function signInWithGoogle(redirectTo: string): Promise<void> {
