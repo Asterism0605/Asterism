@@ -1,12 +1,13 @@
 import { flushPromises, mount } from '@vue/test-utils';
+import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createPinia } from 'pinia';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import PictureDetail from '@/pages/PictureDetail.vue';
 import { getRelatedImages } from '@/services/image.service';
 import { addItem } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { useAuthStore } from '@/stores/auth.store';
+import { useMoodboardStore } from '@/stores/moodboard.store';
 
 vi.mock('@/services/moodboard.service', () => ({
   addItem: vi.fn(),
@@ -23,7 +24,8 @@ vi.mock('@/composables/useToast', () => ({
 vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
   default: {
     emits: ['select'],
-    template: '<div data-test="image-stage-panel" @click="$emit(\'select\', \'stage-related-001\')" />'
+    template:
+      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'stage-related-001\')" />'
   }
 }));
 
@@ -58,32 +60,44 @@ async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = tr
     };
   }
 
+  const moodboardStore = useMoodboardStore(pinia);
+  moodboardStore.createFolder('test');
+  const folderId = moodboardStore.folders[0].id;
+
   await router.push(`/images/${imageId}`);
   await router.isReady();
 
   const wrapper = mount(PictureDetail, { global: { plugins: [router, pinia] } });
 
-  return { router, wrapper };
+  return { router, wrapper, folderId };
 }
 
 describe('PictureDetail', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    setActivePinia(createPinia());
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it('disables ADD TO MOODBOARD while a save is in flight and re-enables after', async () => {
+  it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
     let resolve!: () => void;
-    vi.mocked(addItem).mockImplementationOnce(() => new Promise<void>((r) => { resolve = r; }));
+    vi.mocked(addItem).mockImplementationOnce(
+      () =>
+        new Promise<void>((r) => {
+          resolve = r;
+        })
+    );
     const { wrapper } = await mountPictureDetail();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
+    const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
+    await folderBtn!.trigger('click');
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
 
@@ -94,42 +108,45 @@ describe('PictureDetail', () => {
     expect(addItem).toHaveBeenCalledOnce();
   });
 
-  it('calls addItem with the current image id when SAVE TO FOLDER is clicked', async () => {
-    const { wrapper } = await mountPictureDetail();
+  it('點擊 SAVE TO FOLDER 時以目前圖片 id 呼叫 addItem', async () => {
+    const { wrapper, folderId } = await mountPictureDetail();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
 
-    const saveBtn = wrapper
-      .findAll('button')
-      .find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
+    const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
+    await folderBtn!.trigger('click');
 
     expect(addItem).toHaveBeenCalledOnce();
-    expect(addItem).toHaveBeenCalledWith('default', 'y2k-main-001');
+    expect(addItem).toHaveBeenCalledWith(folderId, 'y2k-main-001');
   });
 
-  it('shows an error toast when addItem throws', async () => {
-    vi.mocked(addItem).mockImplementationOnce(() => { throw new Error('save failed') });
+  it('當 addItem 拋出錯誤時顯示錯誤提示', async () => {
+    vi.mocked(addItem).mockImplementationOnce(() => {
+      throw new Error('save failed');
+    });
     const { wrapper } = await mountPictureDetail();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
 
-    const saveBtn = wrapper
-      .findAll('button')
-      .find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
+    const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
+    await folderBtn!.trigger('click');
     await flushPromises();
 
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
   });
 
-
-  it('routes to consultant with the source image id when consult is clicked', async () => {
+  it('點擊 consult 時帶著來源圖片 id 導向 consultant', async () => {
     const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001');
 
-    const consultBtn = wrapper.findAll('button').find((button) => button.text().includes('CONSULT STYLIST'));
+    const consultBtn = wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('CONSULT STYLIST'));
     await consultBtn!.trigger('click');
     await flushPromises();
 
@@ -140,7 +157,9 @@ describe('PictureDetail', () => {
   it('routes unauthenticated consult clicks to sign-up with the consultant target', async () => {
     const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001', false);
 
-    const consultBtn = wrapper.findAll('button').find((button) => button.text().includes('CONSULT STYLIST'));
+    const consultBtn = wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('CONSULT STYLIST'));
     await consultBtn!.trigger('click');
     await flushPromises();
 
@@ -150,7 +169,7 @@ describe('PictureDetail', () => {
     );
   });
 
-  it('routes to the selected stage image detail page', async () => {
+  it('導向選取的 stage 圖片詳情頁', async () => {
     const { router, wrapper } = await mountPictureDetail();
 
     await wrapper.find('[data-test="image-stage-panel"]').trigger('click');
@@ -160,7 +179,7 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.params.imageId).toBe('stage-related-001');
   });
 
-  it('routes to the selected similar image detail page', async () => {
+  it('導向選取的相似圖片詳情頁', async () => {
     const { router, wrapper } = await mountPictureDetail();
     const expectedImageId = getRelatedImages('y2k-main-001', { limit: 6 })[2].id;
 
@@ -171,7 +190,7 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.params.imageId).toBe(expectedImageId);
   });
 
-  it('returns to the image spread page with the style group root id', async () => {
+  it('帶著 style group 的 root id 回到 image spread 頁', async () => {
     const { router, wrapper } = await mountPictureDetail('rpl-interior-001');
 
     await wrapper.find('button').trigger('click');
@@ -182,7 +201,7 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
   });
 
-  it('returns sub-medium detail images to their medium spread entry', async () => {
+  it('將 sub-medium 詳情圖片返回其 medium spread 入口', async () => {
     const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001');
 
     await wrapper.find('button').trigger('click');
@@ -199,7 +218,11 @@ describe('PictureDetail', () => {
       history: createMemoryHistory(),
       routes: [
         { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
-        { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
+        {
+          path: '/images/:imageId/spread',
+          name: 'image-spread',
+          component: { template: '<div />' }
+        },
         { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
       ]
     });

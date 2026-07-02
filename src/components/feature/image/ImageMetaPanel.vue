@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import ColorPaletteSwatch from '@/components/ui/ColorPaletteSwatch.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
 import ThemeTag from '@/components/ui/ThemeTag.vue';
@@ -18,6 +18,8 @@ interface Props {
   similarImages?: ImageSpreadNode[];
   saved?: boolean;
   disabled?: boolean;
+  folders?: { id: string; name: string; saved?: boolean }[];
+  justSavedFolderId?: string | null;
 }
 
 defineProps<Props>();
@@ -26,7 +28,7 @@ const emit = defineEmits<{
   back: [];
   consult: [];
   'create-folder': [];
-  'save-to-folder': [];
+  'save-to-folder': [folderId: string];
   'select-image': [imageId: string];
 }>();
 
@@ -86,8 +88,10 @@ const siteLogoSrc = '/sitelogo.png';
         class="flex-1"
         :saved="saved"
         :disabled="disabled"
+        :folders="folders"
+        :just-saved-folder-id="justSavedFolderId"
         @create-folder="emit('create-folder')"
-        @save-to-folder="emit('save-to-folder')"
+        @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
       />
     </div>
 

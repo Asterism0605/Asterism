@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ArrowLeft } from '@lucide/vue';
 import { computed } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
@@ -14,12 +14,14 @@ const props = defineProps<{
   image: ImageSpreadNode;
   saved?: boolean;
   disabled?: boolean;
+  folders?: { id: string; name: string; saved?: boolean }[];
+  justSavedFolderId?: string | null;
 }>();
 
 const emit = defineEmits<{
   return: [];
   'create-folder': [];
-  'save-to-folder': [];
+  'save-to-folder': [folderId: string];
 }>();
 
 const mainImageLabel = computed(() => {
@@ -41,7 +43,7 @@ const mainImageLabel = computed(() => {
   <ImageSpreadEntrance
     as="section"
     kind="center"
-    class="relative mx-auto flex w-full max-w-[460px] flex-col items-center gap-5"
+    class="relative z-20 mx-auto flex w-full max-w-[460px] flex-col items-center gap-5"
   >
     <div class="relative flex w-full justify-center">
       <ConstellationBackground
@@ -96,8 +98,10 @@ const mainImageLabel = computed(() => {
         spread
         :saved="props.saved"
         :disabled="props.disabled"
+        :folders="props.folders"
+        :just-saved-folder-id="props.justSavedFolderId"
         @create-folder="emit('create-folder')"
-        @save-to-folder="emit('save-to-folder')"
+        @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
       />
     </ImageSpreadEntrance>
   </ImageSpreadEntrance>
