@@ -15,6 +15,8 @@ function mapSupabaseAuthError(error: { message?: string; status?: number } | nul
     return apiError('This email is already registered.', 'EMAIL_EXISTS', 409);
   if (/password should be at least/i.test(raw))
     return apiError('Password must be at least 6 characters.', 'INVALID_PASSWORD', 400);
+  if (/rate limit|you can only request|after \d+ seconds/i.test(raw))
+    return apiError('Please wait a moment before requesting another email.', 'RATE_LIMITED', 429);
   console.warn('[auth] unclassified error:', raw);
   return apiError('Authentication failed. Please try again later.', 'AUTH_ERROR', error?.status ?? 400);
 }
@@ -113,6 +115,14 @@ export async function verifyOtpApi(
     throw mapSupabaseAuthError(error ?? { message: 'No session' });
   }
   return envelope(await toAuthSession(data.session, ''));
+}
+
+// 重寄信箱驗證信：用同一個 Confirm signup 模板再寄一次（連結仍回 /auth/callback?type=signup）。
+export async function resendSignupApi(email: string): Promise<void> {
+  const { error } = await getSupabase().auth.resend({ type: 'signup', email });
+  if (error) {
+    throw mapSupabaseAuthError(error);
+  }
 }
 
 export async function signInWithGoogleApi(redirectTo: string): Promise<void> {

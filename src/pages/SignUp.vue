@@ -4,9 +4,11 @@ import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import SignUpOverlay from '@/components/overlay/SignUpOverlay.vue';
+import VerificationSentOverlay from '@/components/overlay/VerificationSentOverlay.vue';
+import { useCountdown } from '@/composables/useCountdown';
 import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
-import { getErrorMessage } from '@/utils/api-error';
+import { getErrorCode, getErrorMessage } from '@/utils/api-error';
 import type { RegisterPayload } from '@/types/auth';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 
@@ -18,6 +20,23 @@ const { t } = useI18n();
 
 const isSubmitting = ref(false);
 const errorMessage = ref('');
+// 開啟 Confirm email 時，註冊不回 session 而是寄驗證信；存收件信箱以顯示「驗證信已寄出」引導畫面。
+const sentToEmail = ref('');
+
+// 重寄驗證信：cooldown 對齊 Supabase SMTP 的 Minimum interval（60s），避免狂點吃 rate-limit。
+const resendMessage = ref('');
+const { countdown: resendCountdown, start: startCooldown } = useCountdown(60);
+
+async function handleResend() {
+  resendMessage.value = '';
+  try {
+    await authStore.resendSignup(sentToEmail.value);
+    resendMessage.value = 'Verification email resent.';
+    startCooldown();
+  } catch (error) {
+    resendMessage.value = getErrorMessage(error, "Couldn't resend right now. Please try again.");
+  }
+}
 
 async function handleSubmit(payload: RegisterPayload) {
   if (isSubmitting.value) {
@@ -36,7 +55,15 @@ async function handleSubmit(payload: RegisterPayload) {
     }
     router.push(getSafeRedirectPath(route.query.next, '/discover-dna'));
   } catch (error) {
-    errorMessage.value = getErrorMessage(error, t('auth.genericError'));
+    // 已開信箱驗證：非錯誤，轉成正向「請至信箱收信」引導畫面。
+    if (getErrorCode(error) === 'EMAIL_CONFIRMATION_REQUIRED') {
+      sentToEmail.value = payload.email;
+      // 註冊已寄出第一封信＝已佔用 60s rate-limit 窗，先起跑 cooldown，
+      // 否則使用者馬上按重寄會直接撞 Supabase 限流報錯。
+      startCooldown();
+    } else {
+      errorMessage.value = getErrorMessage(error, t('auth.genericError'));
+    }
   } finally {
     isSubmitting.value = false;
   }
@@ -104,7 +131,15 @@ function handleLoginClick() {
     <div
       class="relative z-30 flex min-h-screen items-center justify-center px-4 pt-(--app-header-height)"
     >
+      <VerificationSentOverlay
+        v-if="sentToEmail"
+        :email="sentToEmail"
+        :resend-message="resendMessage"
+        :countdown="resendCountdown"
+        @resend="handleResend"
+      />
       <SignUpOverlay
+        v-else
         :is-submitting="isSubmitting"
         :error-message="errorMessage"
         @submit="handleSubmit"
