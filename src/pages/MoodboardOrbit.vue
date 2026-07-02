@@ -156,8 +156,8 @@ const folderView = computed(() => {
 });
 
 const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
-const isMoodboardEmpty = computed(() =>
-  moodboardStore.folders.every((folder) => folder.images.length === 0)
+const isMoodboardEmpty = computed(
+  () => moodboardStore.folders.length === 0 && moodboardStore.folders.every((folder) => folder.images.length === 0)
 );
 
 function onImgError(e: Event) {
