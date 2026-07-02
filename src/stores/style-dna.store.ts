@@ -31,10 +31,13 @@ export const useStyleDnaStore = defineStore('style-dna', () => {
   const serverResult = ref<ComputedStyleDnaResult | null>(null);
 
   const hasLocalResult = computed(() => completedAt.value !== null && answers.value.length > 0);
-  const result = computed(() =>
-    hasLocalResult.value ? computeStyleDnaResult(answers.value) : serverResult.value ?? computeStyleDnaResult()
+  const currentResult = computed<ComputedStyleDnaResult | null>(() =>
+    hasLocalResult.value ? computeStyleDnaResult(answers.value) : serverResult.value
   );
-  const hasCompletedQuiz = computed(() => completedAt.value !== null || serverResult.value !== null);
+  const result = computed(() =>
+    currentResult.value ?? computeStyleDnaResult()
+  );
+  const hasCompletedQuiz = computed(() => currentResult.value !== null);
   const preferredStyles = computed(() => result.value.styles.map((style) => style.label));
 
   function persist(): void {
@@ -124,6 +127,7 @@ export const useStyleDnaStore = defineStore('style-dna', () => {
     completedAt,
     localUserId,
     serverResult,
+    currentResult,
     result,
     hasCompletedQuiz,
     preferredStyles,

@@ -61,10 +61,6 @@ const profile = computed<ConsultantProfile | null>(() => {
   };
 });
 const summaryStatus = computed(() => {
-  if (!authStore.isAuthenticated) {
-    return 'auth-required';
-  }
-
   return profile.value ? 'ready' : 'missing-result';
 });
 const sourceImageId = computed(() => {
