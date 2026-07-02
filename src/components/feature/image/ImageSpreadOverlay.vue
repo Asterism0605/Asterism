@@ -12,6 +12,7 @@ const props = defineProps<{
   saved?: boolean;
   disabled?: boolean;
   folders?: { id: string; name: string; saved?: boolean }[];
+  justSavedFolderId?: string | null;
 }>();
 
 const emit = defineEmits<{
@@ -95,6 +96,7 @@ const mainImageLabel = computed(() => {
         :saved="props.saved"
         :disabled="props.disabled"
         :folders="props.folders"
+        :just-saved-folder-id="props.justSavedFolderId"
         @create-folder="emit('create-folder')"
         @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
       />

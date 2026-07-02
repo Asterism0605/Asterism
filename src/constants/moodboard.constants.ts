@@ -1,0 +1,1 @@
+export const MOODBOARD_FEEDBACK_DISPLAY_MS = 800;

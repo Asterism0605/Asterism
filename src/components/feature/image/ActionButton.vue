@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Bookmark, BookmarkPlus, ChevronDown, ChevronRight, FolderPlus, LoaderCircle, User } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 
@@ -15,11 +15,13 @@ interface Props {
   disabled?: boolean;
   spread?: boolean;
   folders?: FolderItem[];
+  justSavedFolderId?: string | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'bookmark',
-  folders: () => []
+  folders: () => [],
+  justSavedFolderId: null
 });
 
 const emit = defineEmits<{
@@ -30,8 +32,9 @@ const emit = defineEmits<{
 
 const isOpen = ref(false);
 const showFolderList = ref(false);
-const savedFolderId = ref<string | null>(null);
 const containerRef = ref<HTMLElement | null>(null);
+
+const isBusy = computed(() => props.disabled || props.justSavedFolderId !== null);
 
 function toggleDropdown() {
   isOpen.value = !isOpen.value;
@@ -46,14 +49,19 @@ function handleOutsideClick(event: MouseEvent) {
 }
 
 function handleSaveToFolderClick(folder: FolderItem) {
-  savedFolderId.value = folder.id;
+  if (isBusy.value) return;
   emit('save-to-folder', folder.id);
-  setTimeout(() => {
-    savedFolderId.value = null;
-    isOpen.value = false;
-    showFolderList.value = false;
-  }, 800);
 }
+
+watch(
+  () => props.justSavedFolderId,
+  (current, previous) => {
+    if (previous && !current) {
+      isOpen.value = false;
+      showFolderList.value = false;
+    }
+  }
+);
 
 onMounted(() => {
   document.addEventListener('click', handleOutsideClick);
@@ -142,12 +150,13 @@ onBeforeUnmount(() => {
               v-for="folder in props.folders"
               :key="folder.id"
               type="button"
-              class="flex w-full items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
+              class="flex w-full items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50 md:justify-start md:px-3 md:py-2.5"
+              :disabled="isBusy"
               @click.stop="handleSaveToFolderClick(folder)"
             >
               <Bookmark class="h-4 w-4 shrink-0" :fill="folder.saved ? 'currentColor' : 'none'" aria-hidden="true" />
               <span class="flex-1 min-w-0 truncate text-center md:text-left">
-                {{ savedFolderId === folder.id ? '✓ Saved' : folder.name }}
+                {{ props.justSavedFolderId === folder.id ? '✓ Saved' : folder.name }}
               </span>
             </button>
           </div>

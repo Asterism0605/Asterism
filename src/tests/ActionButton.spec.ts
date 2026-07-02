@@ -1,5 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
 
 const folders = [
@@ -8,10 +8,6 @@ const folders = [
 ];
 
 describe('ActionButton', () => {
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it('folders 為空陣列時不渲染 SAVE TO FOLDER 區塊', async () => {
     const wrapper = mount(ActionButton, { props: { folders: [] } });
 
@@ -66,7 +62,7 @@ describe('ActionButton', () => {
     expect(wrapper.emitted('save-to-folder')).toEqual([['folder-2']]);
   });
 
-  it('點擊資料夾後暫時顯示「✓ Saved」', async () => {
+  it('點擊資料夾當下尚未收到 parent 儲存成功前，不顯示「✓ Saved」', async () => {
     const wrapper = mount(ActionButton, { props: { folders } });
 
     await wrapper.find('button').trigger('click');
@@ -74,13 +70,23 @@ describe('ActionButton', () => {
     await saveBtn!.trigger('click');
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'My Folder');
     await folderBtn!.trigger('click');
+
+    expect(wrapper.emitted('save-to-folder')).toEqual([['folder-1']]);
+    expect(wrapper.text()).not.toContain('✓ Saved');
+  });
+
+  it('parent 透過 justSavedFolderId prop 回報成功後顯示「✓ Saved」', async () => {
+    const wrapper = mount(ActionButton, { props: { folders, justSavedFolderId: 'folder-1' } });
+
+    await wrapper.find('button').trigger('click');
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    await saveBtn!.trigger('click');
 
     expect(wrapper.text()).toContain('✓ Saved');
   });
 
-  it('儲存到資料夾後 800ms 自動關閉兩層選單', async () => {
-    vi.useFakeTimers();
-    const wrapper = mount(ActionButton, { props: { folders } });
+  it('parent 回報儲存失敗（justSavedFolderId 維持 null）時不顯示「✓ Saved」', async () => {
+    const wrapper = mount(ActionButton, { props: { folders, justSavedFolderId: null } });
 
     await wrapper.find('button').trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
@@ -88,8 +94,35 @@ describe('ActionButton', () => {
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'My Folder');
     await folderBtn!.trigger('click');
 
-    vi.advanceTimersByTime(800);
-    await flushPromises();
+    expect(wrapper.text()).not.toContain('✓ Saved');
+  });
+
+  it('justSavedFolderId 有值（顯示 ✓ Saved 期間）時資料夾按鈕停用，避免點擊觸發第二次儲存', async () => {
+    const wrapper = mount(ActionButton, { props: { folders, justSavedFolderId: 'folder-1' } });
+
+    await wrapper.find('button').trigger('click');
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    await saveBtn!.trigger('click');
+    const anotherFolderBtn = wrapper.findAll('button').find((b) => b.text() === 'Another Folder');
+
+    expect((anotherFolderBtn!.element as HTMLButtonElement).disabled).toBe(true);
+
+    await anotherFolderBtn!.trigger('click');
+
+    expect(wrapper.emitted('save-to-folder')).toBeUndefined();
+  });
+
+  it('justSavedFolderId 從有值變回 null 時自動關閉兩層選單', async () => {
+    const wrapper = mount(ActionButton, {
+      props: { folders, justSavedFolderId: 'folder-1' as string | null }
+    });
+
+    await wrapper.find('button').trigger('click');
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    await saveBtn!.trigger('click');
+    expect(wrapper.text()).toContain('✓ Saved');
+
+    await wrapper.setProps({ justSavedFolderId: null });
 
     expect(wrapper.findAll('button').some((b) => b.text().includes('CREATE NEW FOLDER'))).toBe(false);
   });

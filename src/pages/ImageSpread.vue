@@ -19,7 +19,8 @@ import type { ImageSpreadNode } from '@/types/image';
 const route = useRoute();
 const router = useRouter();
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
+const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
+  useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(centerImage.value?.id ?? ''));
 const moodboardStore = useMoodboardStore();
 const folders = computed(() =>
@@ -201,7 +202,16 @@ watch(
           @select="handleRelatedSelect"
         />
 
-        <ImageSpreadOverlay :image="centerImage" :saved="isSaved" :disabled="isSaving" :folders="folders" @return="returnToPreviousLayer" @create-folder="handleCreateFolder" @save-to-folder="handleSaveToFolder" />
+        <ImageSpreadOverlay
+          :image="centerImage"
+          :saved="isSaved"
+          :disabled="isSaving"
+          :folders="folders"
+          :just-saved-folder-id="justSavedFolderId"
+          @return="returnToPreviousLayer"
+          @create-folder="handleCreateFolder"
+          @save-to-folder="handleSaveToFolder"
+        />
       </div>
 
       <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">

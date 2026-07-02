@@ -19,6 +19,7 @@ interface Props {
   saved?: boolean;
   disabled?: boolean;
   folders?: { id: string; name: string; saved?: boolean }[];
+  justSavedFolderId?: string | null;
 }
 
 defineProps<Props>();
@@ -88,6 +89,7 @@ const siteLogoSrc = '/sitelogo.png';
         :saved="saved"
         :disabled="disabled"
         :folders="folders"
+        :just-saved-folder-id="justSavedFolderId"
         @create-folder="emit('create-folder')"
         @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
       />

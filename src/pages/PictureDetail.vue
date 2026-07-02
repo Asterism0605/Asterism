@@ -34,7 +34,8 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
+const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
+  useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
 const moodboardStore = useMoodboardStore();
 const folders = computed(() =>
@@ -128,6 +129,7 @@ async function handleSaveToFolder(folderId: string) {
         :saved="isSaved"
         :disabled="isSaving"
         :folders="folders"
+        :just-saved-folder-id="justSavedFolderId"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
