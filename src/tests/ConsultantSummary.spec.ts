@@ -7,6 +7,14 @@ describe('ConsultantSummary', () => {
     const wrapper = mount(ConsultantSummary, {
       props: {
         status: 'missing-result'
+      },
+      global: {
+        stubs: {
+          RouterLink: {
+            props: ['to'],
+            template: '<a :href="to"><slot /></a>'
+          }
+        }
       }
     })
 

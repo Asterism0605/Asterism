@@ -71,9 +71,12 @@ const canShowProfile = computed(() => effectiveStatus.value === 'ready' && props
     <div v-else class="consultant-summary__fallback" data-testid="consultant-style-dna-fallback">
       <p>We need a Style DNA result before matching a consultant.</p>
       <div class="consultant-summary__actions">
-        <a class="consultant-summary__button consultant-summary__button--primary" href="/style-dna">
+        <RouterLink
+          class="consultant-summary__button consultant-summary__button--primary"
+          to="/style-dna"
+        >
           Take Style DNA quiz
-        </a>
+        </RouterLink>
       </div>
     </div>
   </section>
