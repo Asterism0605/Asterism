@@ -38,16 +38,13 @@ const canShowProfile = computed(() => effectiveStatus.value === 'ready' && props
 <template>
   <section class="consultant-summary">
     <div>
-      <p class="consultant-summary__eyebrow">Style DNA translation</p>
-      <h1 class="consultant-summary__title">Consultation Booking</h1>
+      <p class="consultant-summary__eyebrow">{{ $t('consult.eyebrow') }}</p>
+      <h1 class="consultant-summary__title">{{ $t('consult.title') }}</h1>
     </div>
 
     <div class="consultant-summary__copy">
-      <p>Your aesthetic coordinates have been mapped.</p>
-      <p>
-        We’ve matched you with a consultant to help translate your Style DNA into a real
-        design direction.
-      </p>
+      <p>{{ $t('consult.intro1') }}</p>
+      <p>{{ $t('consult.intro2') }}</p>
     </div>
 
     <dl v-if="canShowProfile && profile" class="consultant-summary__profile">
@@ -63,20 +60,21 @@ const canShowProfile = computed(() => effectiveStatus.value === 'ready' && props
         </dd>
       </div>
       <div>
-        <dt>Matched consultant</dt>
+        <dt>{{ $t('consult.matchedConsultant') }}</dt>
         <dd>{{ profile.consultantLabel }}</dd>
       </div>
     </dl>
 
     <div v-else class="consultant-summary__fallback" data-testid="consultant-style-dna-fallback">
-      <p>We need a Style DNA result before matching a consultant.</p>
+      <p>{{ $t('consult.needDna') }}</p>
       <div class="consultant-summary__actions">
         <RouterLink
           class="consultant-summary__button consultant-summary__button--primary"
           to="/style-dna"
         >
-          Take Style DNA quiz
+          {{ $t('consult.retakeQuiz') }}
         </RouterLink>
+        <button class="consultant-summary__button" type="button">{{ $t('consult.skip') }}</button>
       </div>
     </div>
   </section>

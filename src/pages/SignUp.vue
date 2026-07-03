@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import SignUpOverlay from '@/components/overlay/SignUpOverlay.vue';
 import VerificationSentOverlay from '@/components/overlay/VerificationSentOverlay.vue';
@@ -15,6 +16,7 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
+const { t } = useI18n();
 
 const isSubmitting = ref(false);
 const errorMessage = ref('');
@@ -60,7 +62,7 @@ async function handleSubmit(payload: RegisterPayload) {
       // 否則使用者馬上按重寄會直接撞 Supabase 限流報錯。
       startCooldown();
     } else {
-      errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
+      errorMessage.value = getErrorMessage(error, t('auth.genericError'));
     }
   } finally {
     isSubmitting.value = false;

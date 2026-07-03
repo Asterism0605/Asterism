@@ -16,9 +16,9 @@
       <h1
         class="dna-loading-state__title text-center text-[52px] font-semibold leading-[0.95] sm:text-[78px] md:text-[104px]"
       >
-        <span class="dna-loading-state__title-line block">Forming</span>
+        <span class="dna-loading-state__title-line block">{{ $t('dna.loadingLine1') }}</span>
         <span class="dna-loading-state__title-line dna-loading-state__title-line--delay block">
-          Your Style DNA
+          {{ $t('dna.loadingLine2') }}
         </span>
       </h1>
     </section>
