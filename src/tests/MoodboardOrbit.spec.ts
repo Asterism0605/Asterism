@@ -59,7 +59,8 @@ describe('MoodboardOrbit', () => {
 
   it('keeps the orbit view when saved images exist', async () => {
     const store = useMoodboardStore();
-    store.addImage('default', { id: 'saved-1', src: '/style-image/saved-1.webp' });
+    store.createFolder('test');
+    store.addImage(store.folders[0].id, { id: 'saved-1', src: '/style-image/saved-1.webp' });
 
     const { wrapper } = await mountMoodboard();
 
