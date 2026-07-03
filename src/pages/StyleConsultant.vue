@@ -4,9 +4,9 @@ import { useRoute } from 'vue-router';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ConsultantSummary from '@/components/feature/consultant/ConsultantSummary.vue';
 import RecommendationPanel from '@/components/feature/consultant/RecommendationPanel.vue';
+import { matchConsultantByStyleTag } from '@/services/consultant-match.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
-import type { ComputedStyleDnaResult } from '@/utils/computeStyleDnaResult';
 
 interface ConsultantProfile {
   styleDna: Array<{
@@ -35,19 +35,6 @@ const route = useRoute();
 const bookingStatus = ref<'idle' | 'submitted'>('idle');
 const lastBooking = ref<BookingPayload | null>(null);
 
-const consultantByStyle = new Map<string, string>([
-  ['minimalism', 'Spatial Consultant · Mira Chen'],
-  ['organic modern', 'Spatial Consultant · Elena Park'],
-  ['soft industrial', 'Spatial Consultant · Theo Lin'],
-  ['art deco', 'Spatial Consultant · Nora Reyes'],
-  ['baroque', 'Spatial Consultant · Camille Wu'],
-  ['y2k', 'Spatial Consultant · Ilya Chen']
-]);
-
-function resolveConsultantLabel(result: ComputedStyleDnaResult): string {
-  return consultantByStyle.get(result.primaryStyle.trim().toLowerCase()) ?? 'Spatial Consultant · Asterism Studio';
-}
-
 const profile = computed<ConsultantProfile | null>(() => {
   const result = styleDnaStore.currentResult;
 
@@ -57,7 +44,7 @@ const profile = computed<ConsultantProfile | null>(() => {
 
   return {
     styleDna: result.styles,
-    consultantLabel: resolveConsultantLabel(result)
+    consultantLabel: matchConsultantByStyleTag(result)
   };
 });
 const summaryStatus = computed(() => {
