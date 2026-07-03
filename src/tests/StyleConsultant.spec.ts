@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import StyleConsultant from '@/pages/StyleConsultant.vue';
 import { useAuthStore } from '@/stores/auth.store';
@@ -32,6 +32,10 @@ const y2kAnswer: StyleDnaAnswer = {
 };
 
 describe('StyleConsultant', () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   function createTestRouter() {
     return createRouter({
       history: createMemoryHistory(),
