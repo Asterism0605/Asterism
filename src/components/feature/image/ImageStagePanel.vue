@@ -16,8 +16,11 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <!-- 點圖片以外的空白區（背景/星座線）＝返回，等同右側「返回」按鈕 -->
-  <div class="relative w-3/5 overflow-hidden bg-void" @click="emit('back')">
+  <!-- 點圖片以外的空白區（背景/星座線）＝返回，等同右側「返回」按鈕；hover 時輕微反白提示可點擊 -->
+  <div
+    class="relative w-3/5 cursor-pointer overflow-hidden bg-void transition-colors duration-200 hover:bg-white/5"
+    @click="emit('back')"
+  >
     <div class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
       <ConstellationBackground
         :size="820"
@@ -37,7 +40,7 @@ const emit = defineEmits<{
       <img
         :src="mainImageUrl"
         alt=""
-        class="float-img max-h-[52vh] max-w-[55%] rounded-[4px] object-contain drop-shadow-2xl"
+        class="float-img max-h-[52vh] max-w-[55%] cursor-default rounded-[4px] object-contain drop-shadow-2xl"
         style="--float-delay: 0s"
         @click.stop
       />
