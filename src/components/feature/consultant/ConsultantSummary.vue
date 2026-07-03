@@ -22,16 +22,13 @@ withDefaults(
 <template>
   <section class="consultant-summary">
     <div>
-      <p class="consultant-summary__eyebrow">Style DNA translation</p>
-      <h1 class="consultant-summary__title">Consultation Booking</h1>
+      <p class="consultant-summary__eyebrow">{{ $t('consult.eyebrow') }}</p>
+      <h1 class="consultant-summary__title">{{ $t('consult.title') }}</h1>
     </div>
 
     <div class="consultant-summary__copy">
-      <p>Your aesthetic coordinates have been mapped.</p>
-      <p>
-        We’ve matched you with a consultant to help translate your Style DNA into a real
-        design direction.
-      </p>
+      <p>{{ $t('consult.intro1') }}</p>
+      <p>{{ $t('consult.intro2') }}</p>
     </div>
 
     <dl v-if="profile && hasSourceData" class="consultant-summary__profile">
@@ -47,18 +44,18 @@ withDefaults(
         </dd>
       </div>
       <div>
-        <dt>Matched consultant</dt>
+        <dt>{{ $t('consult.matchedConsultant') }}</dt>
         <dd>{{ profile.consultantLabel }}</dd>
       </div>
     </dl>
 
     <div v-else class="consultant-summary__fallback">
-      <p>We need a Style DNA result before matching a consultant.</p>
+      <p>{{ $t('consult.needDna') }}</p>
       <div class="consultant-summary__actions">
         <a class="consultant-summary__button consultant-summary__button--primary" href="/style-dna">
-          Retake quiz
+          {{ $t('consult.retakeQuiz') }}
         </a>
-        <button class="consultant-summary__button" type="button">Skip</button>
+        <button class="consultant-summary__button" type="button">{{ $t('consult.skip') }}</button>
       </div>
     </div>
   </section>

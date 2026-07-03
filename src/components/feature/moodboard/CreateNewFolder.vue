@@ -27,7 +27,7 @@ function handleSubmit() {
 
 <template>
   <ModalOverlay :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)">
-    <template #title>CREATE NEW FOLDER</template>
+    <template #title>{{ $t('moodboard.createFolderTitle') }}</template>
     <div class="overlay-fields">
       <div class="relative">
         <input
@@ -35,7 +35,7 @@ function handleSubmit() {
           class="overlay-input"
           :class="{ 'pr-10': isSuccess }"
           type="text"
-          placeholder="Folder name"
+          :placeholder="$t('moodboard.folderNamePlaceholder')"
           maxlength="40"
           :disabled="isSubmitting || isSuccess"
           @keydown.enter="handleSubmit"
@@ -57,7 +57,7 @@ function handleSubmit() {
           :disabled="!folderName.trim() || isSubmitting || isSuccess"
           @click="handleSubmit"
         >
-          SEND
+          {{ $t('moodboard.send') }}
         </Button>
       </div>
     </div>

@@ -5,7 +5,10 @@ import ConstellationBackground from '@/components/effects/ConstellationBackgroun
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
 import Button from '@/components/ui/Button.vue';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
+import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel';
 import type { ImageSpreadNode } from '@/types/image';
+
+const { localizeTaxon } = useTaxonomyLabel();
 
 const props = defineProps<{
   image: ImageSpreadNode;
@@ -74,7 +77,7 @@ const mainImageLabel = computed(() => {
           data-testid="spread-main-image-label"
           class="absolute bottom-4 left-4 rounded-full bg-void/80 px-4 py-2 text-sm font-semibold text-text-primary backdrop-blur-md"
         >
-          {{ mainImageLabel }}
+          {{ localizeTaxon(mainImageLabel) }}
         </figcaption>
       </ImageSpreadEntrance>
     </div>
@@ -87,7 +90,7 @@ const mainImageLabel = computed(() => {
       <Button variant="primary" type="button" data-testid="return-home" @click="emit('return')">
         <span class="inline-flex items-center gap-2">
           <ArrowLeft class="size-4" aria-hidden="true" />
-          Return
+          {{ $t('image.return') }}
         </span>
       </Button>
       <ActionButton

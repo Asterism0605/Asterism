@@ -3,6 +3,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import router from '@/router';
 import AppHeader from '@/layouts/AppHeader.vue';
+import UserMenu from '@/layouts/UserMenu.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import type { AuthSession } from '@/types/auth';
 
@@ -83,7 +84,7 @@ describe('AppHeader', () => {
     expect(wrapper.text()).toContain('Ada Lovelace');
     expect(wrapper.text()).not.toContain('Sign Up');
 
-    await wrapper.find('[aria-haspopup="true"]').trigger('click');
+    await wrapper.findComponent(UserMenu).find('[aria-haspopup="true"]').trigger('click');
 
     expect(wrapper.text()).toContain('Signed in as');
     expect(wrapper.text()).toContain('Moodboard');

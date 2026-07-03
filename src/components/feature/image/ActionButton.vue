@@ -82,7 +82,7 @@ onBeforeUnmount(() => {
     >
       <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
         <User class="w-4 h-4 md:w-5.5 md:h-5.5" aria-hidden="true" />
-        CONSULT STYLIST
+        {{ $t('image.consultStylist') }}
       </span>
     </Button>
     <template v-else>
@@ -96,7 +96,7 @@ onBeforeUnmount(() => {
         <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
           <LoaderCircle v-if="props.disabled" class="w-4 h-4 md:w-5.5 md:h-5.5 animate-spin" aria-hidden="true" />
           <Bookmark v-else class="w-4 h-4 md:w-5.5 md:h-5.5" :fill="props.saved ? 'currentColor' : 'none'" aria-hidden="true" />
-          ADD TO MOODBOARD
+          {{ $t('image.addToMoodboard') }}
         </span>
       </Button>
     </template>
@@ -121,7 +121,7 @@ onBeforeUnmount(() => {
         "
       >
         <FolderPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span class="flex-1 min-w-0 text-center md:text-left">CREATE NEW FOLDER</span>
+        <span class="flex-1 min-w-0 text-center md:text-left">{{ $t('moodboard.createFolderTitle') }}</span>
       </button>
 
       <template v-if="props.folders.length > 0">

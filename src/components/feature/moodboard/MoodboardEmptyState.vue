@@ -52,16 +52,15 @@ const cards = bands.flatMap((band, bandIndex) =>
 
     <div class="relative z-10 flex h-full items-center justify-center px-6 text-center">
       <div class="max-w-xl">
-        <p class="mb-5 text-xs tracking-[0.5em] text-[#c49a45]">MOODBOARD</p>
+        <p class="mb-5 text-xs tracking-[0.5em] text-[#c49a45]">{{ $t('moodboard.emptyEyebrow') }}</p>
 
         <h1 class="text-4xl font-semibold leading-tight text-white md:text-6xl">
-          Your moodboard is<br />
-          still empty.
+          {{ $t('moodboard.emptyTitle1') }}<br />
+          {{ $t('moodboard.emptyTitle2') }}
         </h1>
 
         <p class="mt-6 text-base leading-7 text-white/55">
-          You haven't saved any images yet. Explore the homepage to discover and collect inspiration
-          that fits your style constellation.
+          {{ $t('moodboard.emptyDesc') }}
         </p>
 
         <RouterLink
@@ -69,7 +68,7 @@ const cards = bands.flatMap((band, bandIndex) =>
           to="/"
           class="mt-8 inline-flex rounded-full bg-[#d96643] px-7 py-3 font-semibold text-white transition hover:bg-[#e67550] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
-          Start Exploring
+          {{ $t('moodboard.startExploring') }}
         </RouterLink>
       </div>
     </div>

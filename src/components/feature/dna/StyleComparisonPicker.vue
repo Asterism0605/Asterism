@@ -50,7 +50,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
     <div class="instruction" aria-hidden="true">
       <span class="instruction-line"></span>
       <span class="instruction-dot"></span>
-      <span>Click one image to continue</span>
+      <span>{{ $t('dna.pickerHint') }}</span>
     </div>
 
     <span class="ambient-dot ambient-dot--one" aria-hidden="true"></span>
