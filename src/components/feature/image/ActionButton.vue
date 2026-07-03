@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
     >
       <button
         type="button"
-        class="flex w-full items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
+        class="flex w-full cursor-pointer items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
         @click="
           emit('create-folder');
           isOpen = false;
@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
         <div class="relative">
           <button
             type="button"
-            class="flex w-full items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
+            class="flex w-full cursor-pointer items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
             @click.stop="showFolderList = !showFolderList"
           >
             <BookmarkPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -150,7 +150,7 @@ onBeforeUnmount(() => {
               v-for="folder in props.folders"
               :key="folder.id"
               type="button"
-              class="flex w-full items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50 md:justify-start md:px-3 md:py-2.5"
+              class="flex w-full cursor-pointer items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50 md:justify-start md:px-3 md:py-2.5"
               :disabled="isBusy"
               @click.stop="handleSaveToFolderClick(folder)"
             >

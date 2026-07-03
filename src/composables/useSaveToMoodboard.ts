@@ -51,6 +51,7 @@ export function useSaveToMoodboard() {
   }
 
   async function createNewFolder(name: string, imageId: string): Promise<boolean> {
+    if (isCreatingFolder.value) return false;
     isCreatingFolder.value = true;
     isCreateFolderSuccess.value = false;
     try {
