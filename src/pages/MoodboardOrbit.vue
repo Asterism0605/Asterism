@@ -3,7 +3,7 @@
 //   config.ts         — 常數與靜態資料
 //   layout.ts         — 純幾何算法（packPhotos, ellipsePath...）
 //   sphere.ts         — Three.js 球體邏輯
-//   useMobileOrbit.ts — 手機拖曳 composable
+//   useOrbitDrag.ts   — 拖拉旋轉軌道 composable（手機/桌機共用）
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import type { CSSProperties } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -29,7 +29,7 @@ import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/mood
 import type { MoodboardMobilePhoto, MoodboardPositionedPhoto } from '@/types/moodboard';
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
-import { useMobileOrbit } from '@/components/feature/moodboard/useMobileOrbit';
+import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 
 const props = defineProps({
@@ -60,16 +60,42 @@ const deskVisibleH = ref(1024);
 const deskBackTop = computed(() => Math.round(deskVisibleH.value - 130));
 const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96));
 const mStage = ref<HTMLElement | null>(null);
+const deskStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
 const mDetailPhotos = ref<MoodboardMobilePhoto[]>([]);
 const mHomePhotosRandom = ref<MoodboardMobilePhoto[]>([]);
 
-const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useMobileOrbit(
-  mStage,
+// 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
+const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
+  () => (isMobile.value ? mStage.value : deskStage.value),
   scale,
   orbitPhase,
-  hasFolders
+  hasFolders,
+  () => (isMobile.value ? M_HOME_ORBIT : HO),
+  // 手機/桌機都只有點在資料夾附近才起拖。
+  (p) => (isMobile.value ? nearMobileFolder(p) : nearDeskFolder(p))
 );
+
+// pointerdown 是否落在任一手機資料夾範圍內（含 18px 邊距）。
+function nearMobileFolder(p: { x: number; y: number }): boolean {
+  const m = 18;
+  return mFolders.value.some(
+    (f) => Math.abs(p.x - f.cx) <= f.w / 2 + m && Math.abs(p.y - f.cy) <= f.h / 2 + m
+  );
+}
+
+// 桌機同理：只算目前顯示（onLine）的資料夾，用其 left/top + 尺寸還原中心點判定（含 18px 邊距）。
+function nearDeskFolder(p: { x: number; y: number }): boolean {
+  const m = 18;
+  return folderView.value.some((fv) => {
+    if (!fv.onLine) return false;
+    const w = fv.w + 20;
+    const h = fv.h + 30;
+    const cx = fv.left + w / 2;
+    const cy = fv.top + h / 2;
+    return Math.abs(p.x - cx) <= w / 2 + m && Math.abs(p.y - cy) <= h / 2 + m;
+  });
+}
 
 /* ---- derived ---- */
 const stageStyle = computed<CSSProperties>(() => ({
@@ -367,6 +393,7 @@ onBeforeUnmount(() => {
       @pointerup="onDragEnd"
       @pointercancel="onDragEnd"
       @pointerleave="onDragEnd"
+      @dragstart.prevent
     >
       <!-- orbit line stays the SAME on detail — only the folders disappear -->
       <svg
@@ -384,7 +411,7 @@ onBeforeUnmount(() => {
       <div
         v-show="hasFolders"
         class="absolute inset-0"
-        :style="{ cursor: dragging ? 'grabbing' : 'grab', touchAction: 'none' }"
+        :style="{ cursor: dragging ? 'grabbing' : 'default', touchAction: 'none' }"
       >
         <div
           v-for="f in mFolders"
@@ -398,7 +425,7 @@ onBeforeUnmount(() => {
             transform: mHover === f.i ? 'scale(1.06)' : 'scale(1)',
             transition: 'transform .22s ease',
             zIndex: mHover === f.i ? 20 : 5,
-            cursor: 'pointer'
+            cursor: dragging ? 'grabbing' : 'grab'
           }"
           @pointerenter="mHover = f.i"
           @pointerleave="mHover = -1"
@@ -611,7 +638,18 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- ===================== DESKTOP STAGE (1440×1024) ===================== -->
-    <div v-else class="relative" :style="stageStyle">
+    <div
+      v-else
+      ref="deskStage"
+      class="relative"
+      :style="stageStyle"
+      @pointerdown="onDragStart"
+      @pointermove="onDragMove"
+      @pointerup="onDragEnd"
+      @pointercancel="onDragEnd"
+      @pointerleave="onDragEnd"
+      @dragstart.prevent
+    >
       <!-- ===== ORBIT LINES (same arc on both pages) ===== -->
       <svg
         class="absolute inset-0 pointer-events-none"
@@ -625,7 +663,11 @@ onBeforeUnmount(() => {
       </svg>
 
       <!-- ===== STATE A : HAS FOLDERS (orbit + photo sphere) ===== -->
-      <div v-show="hasFolders" class="absolute inset-0">
+      <div
+        v-show="hasFolders"
+        class="absolute inset-0"
+        :style="{ cursor: dragging ? 'grabbing' : 'default', touchAction: 'none' }"
+      >
         <canvas ref="sphereCanvas" class="absolute" :style="sphereStyle"></canvas>
 
         <!-- folder images orbit the ellipse; hovering swaps to the active image + pauses the orbit -->
@@ -644,11 +686,11 @@ onBeforeUnmount(() => {
             opacity: fv.onLine ? 1 : 0,
             pointerEvents: fv.onLine ? 'auto' : 'none',
             zIndex: fv.active ? 30 : 2,
-            cursor: 'pointer'
+            cursor: dragging ? 'grabbing' : 'grab'
           }"
           @mouseenter="hoverIdx = fv.i"
           @mouseleave="hoverIdx = -1"
-          @click="openFolder(fv.i)"
+          @click="onFolderClick(fv.i)"
         >
           <img
             :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"

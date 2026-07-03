@@ -11,11 +11,13 @@ defineProps<Props>();
 
 const emit = defineEmits<{
   select: [imageId: string];
+  back: [];
 }>();
 </script>
 
 <template>
-  <div class="relative w-3/5 overflow-hidden bg-void">
+  <!-- 點圖片以外的空白區（背景/星座線）＝返回，等同右側「返回」按鈕 -->
+  <div class="relative w-3/5 overflow-hidden bg-void" @click="emit('back')">
     <div class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
       <ConstellationBackground
         :size="820"
@@ -37,6 +39,7 @@ const emit = defineEmits<{
         alt=""
         class="float-img max-h-[52vh] max-w-[55%] rounded-[4px] object-contain drop-shadow-2xl"
         style="--float-delay: 0s"
+        @click.stop
       />
 
       <button
@@ -44,7 +47,7 @@ const emit = defineEmits<{
         type="button"
         class="float-img absolute left-[6%] top-[10%] w-[14%] cursor-pointer overflow-hidden rounded-[4px] opacity-40 transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim"
         style="--float-delay: 0.5s"
-        @click="emit('select', smallImages[0].id)"
+        @click.stop="emit('select', smallImages[0].id)"
       >
         <img :src="smallImages[0].src" :alt="smallImages[0].alt" class="w-full object-contain" />
       </button>
@@ -54,7 +57,7 @@ const emit = defineEmits<{
         type="button"
         class="float-img absolute bottom-[6%] right-[6%] w-[14%] cursor-pointer overflow-hidden rounded-[4px] opacity-40 transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim"
         style="--float-delay: 0.5s"
-        @click="emit('select', smallImages[1].id)"
+        @click.stop="emit('select', smallImages[1].id)"
       >
         <img :src="smallImages[1].src" :alt="smallImages[1].alt" class="w-full object-contain" />
       </button>
