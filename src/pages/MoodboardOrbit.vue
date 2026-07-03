@@ -31,6 +31,7 @@ import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
 import { useMoodboardStore } from '@/stores/moodboard.store';
+import { useAuthStore } from '@/stores/auth.store';
 
 const props = defineProps({
   height: { type: String, default: '100vh' },
@@ -43,6 +44,7 @@ const emit = defineEmits(['open', 'home']);
 const router = useRouter();
 const route = useRoute();
 const moodboardStore = useMoodboardStore();
+const authStore = useAuthStore();
 
 const folderCount = ref(10);
 
@@ -554,7 +556,11 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- header: asterisk logo + plain profile (NAME kept compact) -->
-      <div class="absolute flex items-center gap-3" style="left: 20px; top: 28px">
+      <div
+        v-if="authStore.isAuthenticated"
+        class="absolute flex items-center gap-3"
+        style="left: 20px; top: 28px"
+      >
         <div
           style="
             width: 34px;
@@ -568,9 +574,11 @@ onBeforeUnmount(() => {
             class="text-white/90"
             style="font-size: 12px; font-weight: 500; letter-spacing: 0.5px"
           >
-            NAME
+            {{ authStore.user?.displayName ?? '' }}
           </div>
-          <div class="text-white/45" style="font-size: 11px">alawhoagua@gmail.com</div>
+          <div class="text-white/45" style="font-size: 11px">
+            {{ authStore.user?.email ?? '' }}
+          </div>
         </div>
       </div>
 
@@ -808,12 +816,12 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- ===== PROFILE (teammate's ProfileCard component, scaled down a touch) ===== -->
-      <div
-        class="absolute"
-        style="left: 100px; top: 150px; transform: scale(0.5); transform-origin: top left"
-      >
-        <ProfileCard name="NAME" subtitle="alawhoagua@gmail.com" />
+      <!-- ===== PROFILE (teammate's ProfileCard component, full size) ===== -->
+      <div v-if="authStore.isAuthenticated" class="absolute" style="left: 100px; top: 150px">
+        <ProfileCard
+          :name="authStore.user?.displayName ?? ''"
+          :subtitle="authStore.user?.email ?? ''"
+        />
       </div>
 
       <!-- hover title block: dark halo + glowing title + underline with a dot at its left -->
