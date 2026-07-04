@@ -49,7 +49,7 @@ export default {
       "We've matched you with a consultant to help translate your Style DNA into a real design direction.",
     matchedConsultant: 'Matched consultant',
     needDna: 'We need a Style DNA result before matching a consultant.',
-    retakeQuiz: 'Retake quiz',
+    retakeQuiz: 'Take Style DNA quiz',
     skip: 'Skip',
     method: 'Consultation Method',
     online: 'Online',
