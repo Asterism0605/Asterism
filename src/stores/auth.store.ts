@@ -19,6 +19,9 @@ export const useAuthStore = defineStore('auth', () => {
   const session = ref<AuthSession | null>(null);
   const isAuthenticated = computed(() => session.value !== null && user.value !== null);
   const isAdmin = computed(() => user.value?.isAdmin === true);
+  // 只在 token_hash + type=recovery 驗證成功後才為 true，是「能改密碼」的唯一憑據。
+  // 純記憶體、用完即焚：改完密碼 / 登出即清，重整也會消失（fail-safe 導回請求新連結）。
+  const isPasswordRecovery = ref(false);
 
   function applySession(nextSession: AuthSession): AuthSession {
     session.value = nextSession;
@@ -29,6 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
   function clear(): void {
     user.value = null;
     session.value = null;
+    isPasswordRecovery.value = false;
   }
 
   async function register(payload: RegisterPayload): Promise<AuthSession> {
@@ -63,9 +67,14 @@ export const useAuthStore = defineStore('auth', () => {
     await signInWithGoogleService(redirectTo);
   }
 
-  // LINE 登入 / 信箱驗證回流：用網址帶回的一次性 token_hash 換 session 並套用登入狀態。
+  // LINE 登入 / 信箱驗證 / 密碼重設回流：用網址帶回的一次性 token_hash 換 session 並套用登入狀態。
   async function verifyOtp(tokenHash: string, type: EmailOtpType): Promise<AuthSession> {
-    return applySession(await verifyOtpService(tokenHash, type));
+    const applied = applySession(await verifyOtpService(tokenHash, type));
+    // 驗證成功才標記 recovery：這是 reset-password 表單的唯一開門條件。
+    if (type === 'recovery') {
+      isPasswordRecovery.value = true;
+    }
+    return applied;
   }
 
   // 重寄信箱驗證信（純動作、不改登入狀態）。
@@ -79,9 +88,10 @@ export const useAuthStore = defineStore('auth', () => {
     await requestPasswordResetService(email, redirectTo);
   }
 
-  // 重設密碼：recovery session 已建立後更新密碼（純動作，session 維持登入）。
+  // 重設密碼：recovery session 已建立後更新密碼，成功即消掉 recovery 憑據（用完即焚）。
   async function updatePassword(newPassword: string): Promise<void> {
     await updatePasswordService(newPassword);
+    isPasswordRecovery.value = false;
   }
 
   return {
@@ -89,6 +99,7 @@ export const useAuthStore = defineStore('auth', () => {
     session,
     isAuthenticated,
     isAdmin,
+    isPasswordRecovery,
     register,
     login,
     hydrate,

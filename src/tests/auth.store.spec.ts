@@ -1,7 +1,12 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const auth = { signOut: vi.fn().mockResolvedValue({ error: null }), getSession: vi.fn() };
+const auth = {
+  signOut: vi.fn().mockResolvedValue({ error: null }),
+  getSession: vi.fn(),
+  verifyOtp: vi.fn(),
+  updateUser: vi.fn().mockResolvedValue({ error: null })
+};
 const single = vi.fn();
 const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth, from }) }));
@@ -62,5 +67,43 @@ describe('auth.store', () => {
     await expect(store.logout()).rejects.toThrow('network error');
     // 但本機 session 一律被清除：登出觀感應一律成功
     expect(store.isAuthenticated).toBe(false);
+  });
+
+  it('verifyOtp type=recovery 成功才標記 isPasswordRecovery', async () => {
+    auth.verifyOtp.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    const store = useAuthStore();
+
+    await store.verifyOtp('token', 'recovery');
+
+    expect(store.isPasswordRecovery).toBe(true);
+  });
+
+  it('verifyOtp 非 recovery 型別不會開 recovery 憑據', async () => {
+    auth.verifyOtp.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    const store = useAuthStore();
+
+    await store.verifyOtp('token', 'magiclink');
+
+    expect(store.isPasswordRecovery).toBe(false);
+  });
+
+  it('updatePassword 成功後清掉 recovery 憑據（用完即焚）', async () => {
+    auth.verifyOtp.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    const store = useAuthStore();
+    await store.verifyOtp('token', 'recovery');
+
+    await store.updatePassword('new-password-123');
+
+    expect(store.isPasswordRecovery).toBe(false);
+  });
+
+  it('logout 也會清掉 recovery 憑據', async () => {
+    auth.verifyOtp.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    const store = useAuthStore();
+    await store.verifyOtp('token', 'recovery');
+
+    await store.logout();
+
+    expect(store.isPasswordRecovery).toBe(false);
   });
 });

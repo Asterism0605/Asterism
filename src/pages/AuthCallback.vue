@@ -32,8 +32,9 @@ onMounted(async () => {
       // 下面以 isAuthenticated 判斷
     }
     if (authStore.isAuthenticated) {
-      // 密碼重設：驗證後已建立 session，導去設定新密碼頁而非首頁。
-      if (type === 'recovery') {
+      // 密碼重設：只有 token_hash+recovery 驗證成功（isPasswordRecovery）才導去設定新密碼頁，
+      // 光靠 query type=recovery（例如沒帶 token_hash）不算，避免任何登入者被導進 reset 表單。
+      if (authStore.isPasswordRecovery) {
         void router.replace({ name: 'reset-password' });
         return;
       }

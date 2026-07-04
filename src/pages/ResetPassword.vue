@@ -16,8 +16,8 @@ const { isSubmitting, errorMessage, submit } = useAsyncSubmit();
 function handleSubmit() {
   return submit(async () => {
     await authStore.updatePassword(password.value);
-    // recovery session 已登入，更新完成直接進首頁。
-    router.push('/');
+    // 更新完成、recovery 憑據已清；replace 避免上一頁又回到 reset 表單。
+    router.replace('/');
   }, 'Something went wrong. Please try again.');
 }
 </script>
@@ -74,9 +74,9 @@ function handleSubmit() {
     <div
       class="relative z-30 flex min-h-screen items-center justify-center px-4 pt-(--app-header-height)"
     >
-      <!-- 沒有 recovery session（連結過期/直接進頁）：導回忘記密碼重寄。 -->
+      <!-- 沒有 recovery 憑據（連結過期/直接進頁/重整掉狀態）：導回忘記密碼重寄。 -->
       <section
-        v-if="!authStore.isAuthenticated"
+        v-if="!authStore.isPasswordRecovery"
         class="overlay-panel overlay-form glass-panel"
         style="max-width: 640px; padding: 72px 64px 68px"
         role="main"
