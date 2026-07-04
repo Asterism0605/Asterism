@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { Bookmark, BookmarkPlus, ChevronDown, ChevronRight, FolderPlus, LoaderCircle, User } from '@lucide/vue';
+import {
+  Bookmark,
+  BookmarkPlus,
+  ChevronDown,
+  ChevronRight,
+  FolderPlus,
+  LoaderCircle,
+  User
+} from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 
 interface FolderItem {
@@ -80,9 +88,11 @@ onBeforeUnmount(() => {
       class="w-full !px-3 !py-3 md:!px-4 md:!py-4"
       @click="emit('consult')"
     >
-      <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
+      <span
+        class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest"
+      >
         <User class="w-4 h-4 md:w-5.5 md:h-5.5" aria-hidden="true" />
-        CONSULT STYLIST
+        {{ $t('image.consultStylist') }}
       </span>
     </Button>
     <template v-else>
@@ -93,10 +103,21 @@ onBeforeUnmount(() => {
         :disabled="props.disabled"
         @click="toggleDropdown()"
       >
-        <span class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest">
-          <LoaderCircle v-if="props.disabled" class="w-4 h-4 md:w-5.5 md:h-5.5 animate-spin" aria-hidden="true" />
-          <Bookmark v-else class="w-4 h-4 md:w-5.5 md:h-5.5" :fill="props.saved ? 'currentColor' : 'none'" aria-hidden="true" />
-          ADD TO MOODBOARD
+        <span
+          class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest"
+        >
+          <LoaderCircle
+            v-if="props.disabled"
+            class="w-4 h-4 md:w-5.5 md:h-5.5 animate-spin"
+            aria-hidden="true"
+          />
+          <Bookmark
+            v-else
+            class="w-4 h-4 md:w-5.5 md:h-5.5"
+            :fill="props.saved ? 'currentColor' : 'none'"
+            aria-hidden="true"
+          />
+          {{ $t('image.addToMoodboard') }}
         </span>
       </Button>
     </template>
@@ -121,7 +142,9 @@ onBeforeUnmount(() => {
         "
       >
         <FolderPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span class="flex-1 min-w-0 text-center md:text-left">SAVE TO NEW FOLDER</span>
+        <span class="flex-1 min-w-0 text-center md:text-left">{{
+          $t('moodboard.createFolderTitle')
+        }}</span>
       </button>
 
       <template v-if="props.folders.length > 0">
@@ -144,7 +167,11 @@ onBeforeUnmount(() => {
           <div
             v-if="showFolderList"
             class="absolute z-20 w-40 overflow-hidden rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
-            :class="props.spread ? 'left-0 top-full mt-2 md:left-full md:top-0 md:mt-0 md:ml-2' : 'left-0 top-full mt-2'"
+            :class="
+              props.spread
+                ? 'left-0 top-full mt-2 md:left-full md:top-0 md:mt-0 md:ml-2'
+                : 'left-0 top-full mt-2'
+            "
           >
             <button
               v-for="folder in props.folders"
@@ -154,7 +181,11 @@ onBeforeUnmount(() => {
               :disabled="isBusy"
               @click.stop="handleSaveToFolderClick(folder)"
             >
-              <Bookmark class="h-4 w-4 shrink-0" :fill="folder.saved ? 'currentColor' : 'none'" aria-hidden="true" />
+              <Bookmark
+                class="h-4 w-4 shrink-0"
+                :fill="folder.saved ? 'currentColor' : 'none'"
+                aria-hidden="true"
+              />
               <span class="flex-1 min-w-0 truncate text-center md:text-left">
                 {{ props.justSavedFolderId === folder.id ? '✓ Saved' : folder.name }}
               </span>

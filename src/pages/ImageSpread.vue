@@ -11,6 +11,7 @@ import {
   getSubMediumGroupImages
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
+import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel';
 import { isImageSaved } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
@@ -18,6 +19,7 @@ import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
 const router = useRouter();
+const { localizeTaxon } = useTaxonomyLabel();
 
 const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
   useSaveToMoodboard();
@@ -53,7 +55,7 @@ function refreshRelatedImages(imageId: string) {
 }
 
 function getRelatedImageLabel(image: ImageSpreadNode) {
-  return spreadDepth.value === 0 ? image.medium : image.subMedium;
+  return localizeTaxon(spreadDepth.value === 0 ? image.medium : image.subMedium);
 }
 
 function loadImageSpread(imageId: string | undefined) {
@@ -247,15 +249,15 @@ watch(
       v-else
       class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] max-w-xl flex-col items-center justify-center gap-5 px-6 text-center"
     >
-      <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">Image not found</p>
+      <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">{{ $t('image.notFoundEyebrow') }}</p>
       <h1 class="text-3xl font-bold tracking-normal sm:text-5xl">
-        This inspiration point is outside the current map.
+        {{ $t('image.notFoundTitle') }}
       </h1>
       <p class="text-sm leading-7 text-text-secondary sm:text-base">
-        Return home and choose another visual path from the exploration field.
+        {{ $t('image.notFoundDesc') }}
       </p>
       <Button data-testid="return-home" type="button" variant="primary" @click="returnToPreviousLayer">
-        Return home
+        {{ $t('image.returnHome') }}
       </Button>
     </section>
   </ImageSpreadEntrance>

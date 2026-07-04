@@ -1,9 +1,11 @@
 import { onScopeDispose, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { addItem, createFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { MOODBOARD_FEEDBACK_DISPLAY_MS } from '@/constants/moodboard.constants';
 
 export function useSaveToMoodboard() {
+  const { t } = useI18n();
   const isSaving = ref(false);
   const saveError = ref<string | null>(null);
   const isCreatingFolder = ref(false);
@@ -21,10 +23,10 @@ export function useSaveToMoodboard() {
 
   onScopeDispose(clearJustSavedTimer);
 
-  function mapSaveImageError(e: unknown): string {
+  function mapSaveImageError(e: unknown, t: ReturnType<typeof useI18n>['t']): string {
     return e instanceof Error && e.message === 'Image not found.'
-      ? 'Something went wrong. Please contact support.'
-      : 'Failed to save. Please try again.';
+      ? t('toast.saveContactSupport')
+      : t('toast.saveFailed');
   }
 
   async function saveToMoodboard(folderId: string, imageId: string): Promise<boolean> {
@@ -41,7 +43,7 @@ export function useSaveToMoodboard() {
       }, MOODBOARD_FEEDBACK_DISPLAY_MS);
       return true;
     } catch (e) {
-      const message = mapSaveImageError(e);
+      const message = mapSaveImageError(e, t);
       saveError.value = message;
       showToast({ type: 'error', message });
       return false;
@@ -59,7 +61,7 @@ export function useSaveToMoodboard() {
       try {
         await addItem(folderId, imageId);
       } catch (e) {
-        const message = mapSaveImageError(e);
+        const message = mapSaveImageError(e, t);
         showToast({
           type: 'error',
           message: `Folder created, but ${message.charAt(0).toLowerCase()}${message.slice(1)}`
@@ -71,7 +73,12 @@ export function useSaveToMoodboard() {
       await new Promise((resolve) => setTimeout(resolve, MOODBOARD_FEEDBACK_DISPLAY_MS));
       return true;
     } catch (e) {
-      showToast({ type: 'error', message: (e as Error).message });
+      const raw = (e as Error).message;
+      const message =
+        raw === 'You have reached the maximum of 10 folders.'
+          ? t('toast.folderLimit')
+          : t('toast.saveFailed');
+      showToast({ type: 'error', message });
       return false;
     } finally {
       isCreatingFolder.value = false;

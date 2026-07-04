@@ -561,7 +561,7 @@ onBeforeUnmount(() => {
           "
           @click="goHome"
         >
-          <span style="font-size: 19px; line-height: 1">&larr;</span> Back
+          <span style="font-size: 19px; line-height: 1">&larr;</span> {{ $t('moodboard.back') }}
         </button>
         <div
           class="absolute"
@@ -708,7 +708,7 @@ onBeforeUnmount(() => {
             "
             @click="goHome"
           >
-            <span style="font-size: 20px; line-height: 1">&larr;</span> Back
+            <span style="font-size: 20px; line-height: 1">&larr;</span> {{ $t('moodboard.back') }}
           </button>
         </div>
         <!-- docked folder-name tab -->
