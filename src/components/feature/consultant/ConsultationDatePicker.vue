@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Calendar, ChevronLeft, ChevronRight } from '@lucide/vue';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { locale } = useI18n();
 
 const props = defineProps<{
   modelValue: string;
@@ -14,7 +17,11 @@ const emit = defineEmits<{
 const isOpen = defineModel<boolean>('open', { default: false });
 const datePickerRef = ref<HTMLElement | null>(null);
 const visibleMonth = ref(getMonthStart(new Date()));
-const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const weekdayLabels = computed(() =>
+  locale.value === 'zh'
+    ? ['日', '一', '二', '三', '四', '五', '六']
+    : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+);
 
 function getMonthStart(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), 1);
@@ -51,7 +58,7 @@ function isSameDate(firstDate: Date, secondDate: Date) {
 }
 
 const calendarTitle = computed(() =>
-  visibleMonth.value.toLocaleDateString('en-US', {
+  visibleMonth.value.toLocaleDateString(locale.value === 'zh' ? 'zh-TW' : 'en-US', {
     month: 'long',
     year: 'numeric'
   })
@@ -139,7 +146,7 @@ defineExpose({ resetMonth });
 
 <template>
   <div class="recommendation-panel__field">
-    <span>Date</span>
+    <span>{{ $t('consult.dateLabel') }}</span>
     <div ref="datePickerRef" class="recommendation-panel__date-picker">
       <button
         type="button"
@@ -149,7 +156,7 @@ defineExpose({ resetMonth });
         aria-haspopup="dialog"
         @click="toggleDatePicker"
       >
-        <span>{{ displayValue || 'Select a date' }}</span>
+        <span>{{ displayValue || $t('consult.selectDate') }}</span>
         <Calendar :size="18" aria-hidden="true" />
       </button>
 
@@ -157,13 +164,13 @@ defineExpose({ resetMonth });
         v-if="isOpen"
         class="recommendation-panel__calendar"
         role="dialog"
-        aria-label="Choose consultation date"
+        :aria-label="$t('consult.chooseDateAria')"
       >
         <div class="recommendation-panel__calendar-header">
           <button
             type="button"
             class="recommendation-panel__calendar-nav"
-            aria-label="Previous month"
+            :aria-label="$t('consult.prevMonth')"
             :disabled="isPreviousMonthDisabled"
             @click="moveVisibleMonth(-1)"
           >
@@ -173,7 +180,7 @@ defineExpose({ resetMonth });
           <button
             type="button"
             class="recommendation-panel__calendar-nav"
-            aria-label="Next month"
+            :aria-label="$t('consult.nextMonth')"
             @click="moveVisibleMonth(1)"
           >
             <ChevronRight :size="17" aria-hidden="true" />

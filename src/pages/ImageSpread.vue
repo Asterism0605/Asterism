@@ -11,15 +11,27 @@ import {
   getSubMediumGroupImages
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
+import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel';
 import { isImageSaved } from '@/services/moodboard.service';
+import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
 const router = useRouter();
+const { localizeTaxon } = useTaxonomyLabel();
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
+const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
+  useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(centerImage.value?.id ?? ''));
+const moodboardStore = useMoodboardStore();
+const folders = computed(() =>
+  moodboardStore.folders.map((f) => ({
+    id: f.id,
+    name: f.name,
+    saved: f.images.some((image) => image.id === centerImage.value?.id)
+  }))
+);
 const showCreateFolder = ref(false);
 const centerImage = ref<ImageSpreadNode | undefined>();
 const rootImage = ref<ImageSpreadNode | undefined>();
@@ -43,7 +55,7 @@ function refreshRelatedImages(imageId: string) {
 }
 
 function getRelatedImageLabel(image: ImageSpreadNode) {
-  return spreadDepth.value === 0 ? image.medium : image.subMedium;
+  return localizeTaxon(spreadDepth.value === 0 ? image.medium : image.subMedium);
 }
 
 function loadImageSpread(imageId: string | undefined) {
@@ -149,9 +161,9 @@ async function handleSubmitFolder(name: string) {
   if (success) showCreateFolder.value = false;
 }
 
-async function handleSaveToFolder() {
+async function handleSaveToFolder(folderId: string) {
   if (!centerImage.value) return;
-  await saveToMoodboard('default', centerImage.value.id);
+  await saveToMoodboard(folderId, centerImage.value.id);
 }
 
 watch(
@@ -192,7 +204,16 @@ watch(
           @select="handleRelatedSelect"
         />
 
-        <ImageSpreadOverlay :image="centerImage" :saved="isSaved" :disabled="isSaving" @return="returnToPreviousLayer" @create-folder="handleCreateFolder" @save-to-folder="handleSaveToFolder" />
+        <ImageSpreadOverlay
+          :image="centerImage"
+          :saved="isSaved"
+          :disabled="isSaving"
+          :folders="folders"
+          :just-saved-folder-id="justSavedFolderId"
+          @return="returnToPreviousLayer"
+          @create-folder="handleCreateFolder"
+          @save-to-folder="handleSaveToFolder"
+        />
       </div>
 
       <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
@@ -227,15 +248,15 @@ watch(
       v-else
       class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] max-w-xl flex-col items-center justify-center gap-5 px-6 text-center"
     >
-      <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">Image not found</p>
+      <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">{{ $t('image.notFoundEyebrow') }}</p>
       <h1 class="text-3xl font-bold tracking-normal sm:text-5xl">
-        This inspiration point is outside the current map.
+        {{ $t('image.notFoundTitle') }}
       </h1>
       <p class="text-sm leading-7 text-text-secondary sm:text-base">
-        Return home and choose another visual path from the exploration field.
+        {{ $t('image.notFoundDesc') }}
       </p>
       <Button data-testid="return-home" type="button" variant="primary" @click="returnToPreviousLayer">
-        Return home
+        {{ $t('image.returnHome') }}
       </Button>
     </section>
   </ImageSpreadEntrance>

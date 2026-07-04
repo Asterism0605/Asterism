@@ -28,7 +28,7 @@ function signIn() {
   <button
     type="button"
     data-testid="line-signin"
-    aria-label="Continue with LINE"
+    :aria-label="$t('auth.continueWithLine')"
     class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
     @click="signIn"
   >
@@ -56,6 +56,6 @@ function signIn() {
     LINE
   </button>
   <p v-if="error" class="mt-2 text-center font-mono text-xs text-red-400" role="alert">
-    LINE sign-in failed. Please try again.
+    {{ $t('auth.lineFailed') }}
   </p>
 </template>

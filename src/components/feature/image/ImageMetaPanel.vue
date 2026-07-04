@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import ColorPaletteSwatch from '@/components/ui/ColorPaletteSwatch.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
 import ThemeTag from '@/components/ui/ThemeTag.vue';
@@ -18,6 +18,8 @@ interface Props {
   similarImages?: ImageSpreadNode[];
   saved?: boolean;
   disabled?: boolean;
+  folders?: { id: string; name: string; saved?: boolean }[];
+  justSavedFolderId?: string | null;
 }
 
 defineProps<Props>();
@@ -26,7 +28,7 @@ const emit = defineEmits<{
   back: [];
   consult: [];
   'create-folder': [];
-  'save-to-folder': [];
+  'save-to-folder': [folderId: string];
   'select-image': [imageId: string];
 }>();
 
@@ -44,11 +46,11 @@ const siteLogoSrc = '/sitelogo.png';
       @click="emit('back')"
     >
       <ArrowLeft class="size-4" aria-hidden="true" />
-      Back
+      {{ $t('image.back') }}
     </button>
 
     <div class="flex items-center justify-between gap-4">
-      <h1 class="text-h1 font-[300] text-text-primary leading-tight">Info</h1>
+      <h1 class="text-h1 font-[300] text-text-primary leading-tight">{{ $t('image.info') }}</h1>
       <a
         v-if="sourceUrl"
         :href="sourceUrl"
@@ -63,8 +65,8 @@ const siteLogoSrc = '/sitelogo.png';
 
     <div class="flex flex-col gap-[12px]">
       <p v-if="photographerDate || photographerName" class="text-mono text-text-secondary">
-        Photo shared<span v-if="photographerDate"> on {{ photographerDate }}</span
-        ><span v-if="photographerName"> by</span>
+        {{ $t('image.photoShared') }}<span v-if="photographerDate"> {{ $t('image.photoOn', { date: photographerDate }) }}</span
+        ><span v-if="photographerName"> {{ $t('image.photoBy') }}</span>
       </p>
 
       <ProfileCard
@@ -86,8 +88,10 @@ const siteLogoSrc = '/sitelogo.png';
         class="flex-1"
         :saved="saved"
         :disabled="disabled"
+        :folders="folders"
+        :just-saved-folder-id="justSavedFolderId"
         @create-folder="emit('create-folder')"
-        @save-to-folder="emit('save-to-folder')"
+        @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
       />
     </div>
 

@@ -38,24 +38,24 @@ function handleSubmit() {
     class="overlay-panel overlay-form glass-panel"
     style="max-width: 640px; padding: 72px 64px 68px"
     role="main"
-    aria-label="Sign up"
+    :aria-label="$t('auth.signupTitle')"
   >
-    <h2 class="overlay-title">Sign up</h2>
-    <p class="overlay-subtitle">Sign up to start building your Style DNA.</p>
+    <h2 class="overlay-title">{{ $t('auth.signupTitle') }}</h2>
+    <p class="overlay-subtitle">{{ $t('auth.signupSubtitle') }}</p>
 
     <form class="overlay-form-body" @submit.prevent="handleSubmit">
       <div class="overlay-fields">
-        <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
+        <FormInput v-model="email" type="email" :placeholder="$t('auth.email')" autocomplete="email" />
         <FormInput
           v-model="password"
           type="password"
-          placeholder="PASSWORD"
+          :placeholder="$t('auth.password')"
           autocomplete="new-password"
         />
 
         <div class="overlay-helper">
           <button type="button" class="overlay-link" @click="emit('login')">
-            ALREADY HAVE AN ACCOUNT.
+            {{ $t('auth.alreadyHaveAccount') }}
           </button>
         </div>
       </div>
@@ -72,7 +72,7 @@ function handleSubmit() {
             data-testid="auth-submit"
             :disabled="isSubmitting"
           >
-            {{ isSubmitting ? 'SENDING…' : 'SEND' }}
+            {{ isSubmitting ? $t('auth.sending') : $t('auth.send') }}
           </Button>
         </span>
       </div>

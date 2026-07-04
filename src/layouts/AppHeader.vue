@@ -1,10 +1,35 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { Languages, ChevronDown } from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth.store';
 import Button from '@/components/ui/Button.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { getImageById } from '@/services/image.service';
+import { setLocale, SUPPORTED_LOCALES, type AppLocale } from '@/i18n';
+
+const { locale } = useI18n();
+
+const langMenuOpen = ref(false);
+const langMenuRef = ref<HTMLElement | null>(null);
+const currentLocaleLabel = computed(
+  () => SUPPORTED_LOCALES.find((l) => l.value === locale.value)?.label ?? locale.value
+);
+
+function selectLocale(next: AppLocale) {
+  setLocale(next);
+  langMenuOpen.value = false;
+}
+
+function handleLangClickOutside(event: MouseEvent) {
+  if (langMenuRef.value && !langMenuRef.value.contains(event.target as Node)) {
+    langMenuOpen.value = false;
+  }
+}
+
+onMounted(() => document.addEventListener('click', handleLangClickOutside, true));
+onUnmounted(() => document.removeEventListener('click', handleLangClickOutside, true));
 
 const siteLogoSrc = '/sitelogo.png';
 const route = useRoute();
@@ -54,9 +79,58 @@ async function handleLogout() {
     </button>
 
     <div class="flex items-center gap-3">
+      <div ref="langMenuRef" class="relative" @keydown.esc="langMenuOpen = false">
+        <button
+          type="button"
+          class="group flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium tracking-wide text-text-secondary backdrop-blur-sm cursor-pointer touch-manipulation transition-[transform,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-white/20 hover:text-text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-dim/40 motion-reduce:transition-none"
+          :class="langMenuOpen ? 'border-gold-dim/30 text-text-primary shadow-[0_0_0_1px_rgba(168,137,58,0.14)]' : ''"
+          aria-haspopup="menu"
+          :aria-expanded="langMenuOpen"
+          :aria-label="$t('common.language')"
+          @click.stop="langMenuOpen = !langMenuOpen"
+        >
+          <Languages class="size-3.5 opacity-60 transition-opacity duration-200 group-hover:opacity-90" />
+          <span class="min-w-[42px] text-center">{{ currentLocaleLabel }}</span>
+          <ChevronDown class="size-3 shrink-0 opacity-60 transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]" :class="langMenuOpen ? 'rotate-180' : ''" />
+        </button>
+
+        <Transition
+          enter-active-class="transition duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+          enter-from-class="opacity-0 -translate-y-1 scale-95"
+          enter-to-class="opacity-100 translate-y-0 scale-100"
+          leave-active-class="transition duration-150 ease-[cubic-bezier(0.4,0,1,1)] motion-reduce:transition-none"
+          leave-from-class="opacity-100 translate-y-0 scale-100"
+          leave-to-class="opacity-0 -translate-y-1 scale-95"
+        >
+          <ul
+            v-if="langMenuOpen"
+            role="menu"
+            class="absolute right-0 top-[calc(100%+10px)] w-36 origin-top-right rounded-2xl border border-white/8 bg-elevated/90 py-1.5 backdrop-blur-xl shadow-[0_16px_48px_-12px_rgba(0,0,0,0.7)] ring-1 ring-inset ring-white/[0.02] overflow-hidden"
+          >
+            <li v-for="opt in SUPPORTED_LOCALES" :key="opt.value" role="none">
+              <button
+                type="button"
+                role="menuitemradio"
+                :aria-checked="locale === opt.value"
+                class="relative w-full flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-left transition-colors duration-150 hover:bg-white/5 focus-visible:outline-none focus-visible:bg-white/[0.07] active:scale-[0.985]"
+                :class="locale === opt.value ? 'text-stellar-red font-medium' : 'text-text-secondary hover:text-text-primary'"
+                @click="selectLocale(opt.value)"
+              >
+                <span
+                  v-if="locale === opt.value"
+                  class="absolute left-1.5 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-stellar-red"
+                  aria-hidden="true"
+                />
+                {{ opt.label }}
+              </button>
+            </li>
+          </ul>
+        </Transition>
+      </div>
+
       <template v-if="!authStore.isAuthenticated">
-        <Button variant="ghost" @click="router.push({ name: 'login' })">Log in</Button>
-        <Button variant="primary" @click="router.push({ name: 'sign-up' })">Sign Up</Button>
+        <Button variant="ghost" class="min-w-[80px] text-center" @click="router.push({ name: 'login' })">{{ $t('nav.login') }}</Button>
+        <Button variant="primary" class="min-w-[88px] text-center" @click="router.push({ name: 'sign-up' })">{{ $t('nav.signup') }}</Button>
       </template>
 
       <UserMenu

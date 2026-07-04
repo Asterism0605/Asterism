@@ -78,7 +78,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside, true
         class="absolute right-0 top-[calc(100%+10px)] w-44 origin-top-right rounded-2xl border border-white/8 bg-elevated/90 backdrop-blur-xl shadow-2xl overflow-hidden"
       >
         <div class="px-4 py-3 border-b border-white/8">
-          <p class="text-xs text-text-secondary truncate">Signed in as</p>
+          <p class="text-xs text-text-secondary truncate">{{ $t('userMenu.signedInAs') }}</p>
           <p class="text-sm font-medium text-text-primary truncate mt-0.5">
             {{ displayName }}
           </p>
@@ -92,7 +92,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside, true
               @click="handleMoodboard"
             >
               <LayoutDashboard class="size-4 shrink-0 opacity-60" />
-              Moodboard
+              {{ $t('userMenu.moodboard') }}
             </button>
           </li>
 
@@ -103,7 +103,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside, true
               @click="handleLogout"
             >
               <LogOut class="size-4 shrink-0 opacity-60" />
-              Log out
+              {{ $t('userMenu.logout') }}
             </button>
           </li>
         </ul>

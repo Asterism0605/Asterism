@@ -3,10 +3,31 @@ import { describe, expect, it } from 'vitest'
 import ConsultantSummary from '@/components/feature/consultant/ConsultantSummary.vue'
 
 describe('ConsultantSummary', () => {
-  it('renders the booking copy and consultant profile', () => {
+  it('shows a Style DNA CTA without rendering a profile when the quiz is incomplete', () => {
     const wrapper = mount(ConsultantSummary, {
       props: {
-        hasSourceData: true,
+        status: 'missing-result'
+      },
+      global: {
+        stubs: {
+          RouterLink: {
+            props: ['to'],
+            template: '<a :href="to"><slot /></a>'
+          }
+        }
+      }
+    })
+
+    expect(wrapper.text()).toContain('We need a Style DNA result')
+    expect(wrapper.get('a[href="/style-dna"]').text()).toContain('Take Style DNA quiz')
+    expect(wrapper.find('.consultant-summary__profile').exists()).toBe(false)
+    expect(wrapper.text()).not.toContain('Matched consultant')
+  })
+
+  it('renders Style DNA rows and the matched consultant when ready', () => {
+    const wrapper = mount(ConsultantSummary, {
+      props: {
+        status: 'ready',
         profile: {
           styleDna: [
             { label: 'Luminous Minimalism', percentage: 54 },
@@ -25,13 +46,6 @@ describe('ConsultantSummary', () => {
     expect(wrapper.text()).toContain('54%')
     expect(wrapper.text()).not.toContain('Design direction')
     expect(wrapper.text()).toContain('Spatial Consultant · Mira Chen')
-  })
-
-  it('shows fallback CTAs without source data', () => {
-    const wrapper = mount(ConsultantSummary)
-
-    expect(wrapper.text()).toContain('We need a Style DNA result')
-    expect(wrapper.get('a[href="/style-dna"]').text()).toContain('Retake quiz')
-    expect(wrapper.find('button').text()).toContain('Skip')
+    expect(wrapper.find('[data-testid="consultant-style-dna-fallback"]').exists()).toBe(false)
   })
 })

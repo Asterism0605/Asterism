@@ -11,22 +11,20 @@ defineEmits<{
   <section class="dna-intro-hero" aria-labelledby="dna-intro-title">
     <div class="dna-intro-hero__copy">
       <h1 id="dna-intro-title" class="dna-intro-hero__title">
-        <span>Discover</span>
-        <span>Your Style DNA</span>
+        <span>{{ $t('dna.discoverTitle1') }}</span>
+        <span>{{ $t('dna.discoverTitle2') }}</span>
       </h1>
 
       <div class="dna-intro-hero__panel glass-panel">
         <p class="dna-intro-hero__description">
-          Asterism personalizes your visual feed by cataloging your stylistic preferences.
-          Embark on a 4-stage blind selection process to extract your architectural and sensory
-          style values.
+          {{ $t('dna.introDesc') }}
         </p>
 
         <div class="dna-intro-hero__actions">
           <Button type="button" data-testid="start-dna-cta" @click="$emit('start')">
-            PARTICIPATE
+            {{ $t('dna.participate') }}
           </Button>
-          <Button type="button" variant="secondary" @click="$emit('skip')">SKIP</Button>
+          <Button type="button" variant="secondary" @click="$emit('skip')">{{ $t('dna.skip') }}</Button>
         </div>
       </div>
     </div>

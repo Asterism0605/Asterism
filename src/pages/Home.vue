@@ -173,7 +173,7 @@ watch(homePreferredStyles, () => {
         class="home-page__guest-hint"
         role="status"
       >
-        Sign up or log in to keep exploring
+        {{ $t('home.guestHint') }}
       </p>
     </Transition>
 
@@ -191,18 +191,17 @@ watch(homePreferredStyles, () => {
         </div>
       </template>
 
-      <template #title>Your daily inspiration limit has been reached.</template>
+      <template #title>{{ $t('home.limitTitle') }}</template>
 
       <template #description>
-        Create a free account to unlock endless scrolling, save your favorite pieces to boards, and
-        define your aesthetic DNA.
+        {{ $t('home.limitDesc') }}
       </template>
 
       <template #actions>
         <Button variant="primary" data-testid="cta-create-account" @click="startStyleDnaSignUp">
-          Create Free Account
+          {{ $t('home.createAccount') }}
         </Button>
-        <Button variant="secondary" data-testid="cta-login" @click="goToLogin">Log In</Button>
+        <Button variant="secondary" data-testid="cta-login" @click="goToLogin">{{ $t('home.login') }}</Button>
       </template>
     </ModalOverlay>
   </main>
