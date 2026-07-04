@@ -163,6 +163,10 @@ describe('ImageSpread', () => {
 
     expect(router.currentRoute.value.name).toBe('picture-detail');
     expect(router.currentRoute.value.params.imageId).toBeDefined();
+    expect(router.currentRoute.value.query).toEqual({
+      spreadImageId: 'y2k-graphic-001',
+      spreadRootId: 'y2k-main-001'
+    });
   });
 
   it('點擊第一張相關圖片後可返回上一層 spread', async () => {

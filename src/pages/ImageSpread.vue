@@ -140,7 +140,14 @@ function returnToPreviousLayer() {
 
 function handleRelatedSelect(image: ImageSpreadNode) {
   if (spreadDepth.value >= 1) {
-    void router.push({ name: 'picture-detail', params: { imageId: image.id } });
+    void router.push({
+      name: 'picture-detail',
+      params: { imageId: image.id },
+      query: {
+        spreadImageId: centerImage.value?.id,
+        spreadRootId: rootImage.value?.id
+      }
+    });
     return;
   }
 

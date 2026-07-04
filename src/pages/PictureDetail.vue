@@ -47,9 +47,43 @@ const folders = computed(() =>
 );
 const showCreateFolder = ref(false);
 
+function firstQueryValue(value: unknown): string | undefined {
+  if (Array.isArray(value)) return typeof value[0] === 'string' ? value[0] : undefined;
+
+  return typeof value === 'string' ? value : undefined;
+}
+
+function getSpreadPathContext() {
+  const spreadImageId = firstQueryValue(route.query.spreadImageId);
+  const spreadRootId = firstQueryValue(route.query.spreadRootId);
+  const spreadImage = spreadImageId ? getImageById(spreadImageId) : undefined;
+  const spreadRoot = spreadRootId ? getImageById(spreadRootId) : undefined;
+
+  if (!spreadImage) return undefined;
+
+  return {
+    imageId: spreadImage.id,
+    rootId:
+      spreadRoot && spreadRoot.id !== spreadImage.id && spreadRoot.styleGroup === spreadImage.styleGroup
+        ? spreadRoot.id
+        : undefined
+  };
+}
+
 function handleBack() {
   if (!currentImage.value) {
     router.back();
+    return;
+  }
+
+  const spreadPathContext = getSpreadPathContext();
+
+  if (spreadPathContext) {
+    router.push({
+      name: 'image-spread',
+      params: { imageId: spreadPathContext.imageId },
+      query: spreadPathContext.rootId ? { rootId: spreadPathContext.rootId } : undefined
+    });
     return;
   }
 
@@ -95,7 +129,7 @@ function handleConsult() {
 }
 
 function handleSelectImage(imageId: string) {
-  router.push({ name: 'picture-detail', params: { imageId } });
+  router.push({ name: 'picture-detail', params: { imageId }, query: route.query });
 }
 
 async function handleSaveToFolder(folderId: string) {

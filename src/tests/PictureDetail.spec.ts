@@ -212,6 +212,35 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
   });
 
+  it('有 spread path context 時返回原本路徑上的 spread target', async () => {
+    const { router, wrapper } = await mountPictureDetail(
+      'ftdp-graphic-poster-001?spreadImageId=ftdp-graphic-brand-001&spreadRootId=ftdp-main-001'
+    );
+
+    await wrapper.find('button').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-brand-001');
+    expect(router.currentRoute.value.query.rootId).toBe('ftdp-main-001');
+  });
+
+  it('在詳情頁切換圖片時保留 spread path context', async () => {
+    const { router, wrapper } = await mountPictureDetail(
+      'ftdp-graphic-poster-001?spreadImageId=ftdp-graphic-brand-001&spreadRootId=ftdp-main-001'
+    );
+
+    await wrapper.find('[data-test="image-stage-panel"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('picture-detail');
+    expect(router.currentRoute.value.params.imageId).toBe('stage-related-001');
+    expect(router.currentRoute.value.query).toEqual({
+      spreadImageId: 'ftdp-graphic-brand-001',
+      spreadRootId: 'ftdp-main-001'
+    });
+  });
+
   it('重開 CREATE NEW FOLDER modal 後 input 不再 disabled', async () => {
     vi.useFakeTimers();
     const router = createRouter({
