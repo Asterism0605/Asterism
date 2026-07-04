@@ -1,0 +1,115 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+const { post, get } = vi.hoisted(() => ({
+  post: vi.fn(),
+  get: vi.fn()
+}));
+
+vi.mock('@/api/httpClient', () => ({
+  httpClient: { post, get }
+}));
+
+import {
+  createConsultationCheckoutSession,
+  getConsultationBookingDetail
+} from '@/api/consultation.api';
+import type { ConsultationCheckoutRequest } from '@/types/consultation';
+
+describe('consultation.api', () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it('creates checkout with auth, idempotency, and only allowed body fields', async () => {
+    const payload: ConsultationCheckoutRequest & {
+      amount: number;
+      currency: string;
+      paymentStatus: string;
+      consultantId: string;
+      paymentConfirmed: boolean;
+    } = {
+      method: 'online',
+      consultationDate: '2026-07-10',
+      timeSlot: 'pm',
+      designField: 'Styling design',
+      designFocus: 'Material palette',
+      sourceImageId: 'image-id',
+      notes: 'Keep the room calm.',
+      paymentConsentAccepted: true,
+      amount: 50_000,
+      currency: 'TWD',
+      paymentStatus: 'paid',
+      consultantId: 'consultant-id',
+      paymentConfirmed: true
+    };
+    const response = {
+      success: true as const,
+      data: {
+        bookingId: 'booking-id',
+        paymentId: 'payment-id',
+        checkoutUrl: 'https://checkout.stripe.com/test',
+        matchedConsultant: {
+          id: 'consultant-id',
+          displayName: 'Asterism Consultant',
+          title: 'Design Consultant'
+        }
+      },
+      error: null
+    };
+    post.mockResolvedValue({ data: response });
+
+    await expect(
+      createConsultationCheckoutSession(payload, 'access-token', 'idempotency-key')
+    ).resolves.toEqual(response);
+    expect(post).toHaveBeenCalledWith(
+      '/api/v1/consultations/checkout',
+      {
+        method: 'online',
+        consultationDate: '2026-07-10',
+        timeSlot: 'pm',
+        designField: 'Styling design',
+        designFocus: 'Material palette',
+        sourceImageId: 'image-id',
+        notes: 'Keep the room calm.',
+        paymentConsentAccepted: true
+      },
+      {
+        headers: {
+          Authorization: 'Bearer access-token',
+          'Idempotency-Key': 'idempotency-key'
+        }
+      }
+    );
+  });
+
+  it('gets booking detail with auth and accepts a null consultant', async () => {
+    const response = {
+      success: true as const,
+      data: {
+        booking: {
+          id: 'booking-id',
+          status: 'confirmed' as const,
+          method: 'online' as const,
+          consultationDate: '2026-07-10',
+          timeSlot: 'pm' as const,
+          contactEmail: 'user@example.com',
+          createdAt: '2026-07-04T00:00:00.000Z',
+          updatedAt: '2026-07-04T00:00:00.000Z'
+        },
+        payment: {
+          status: 'paid' as const,
+          amount: 50_000,
+          currency: 'TWD' as const
+        },
+        consultant: null
+      },
+      error: null
+    };
+    get.mockResolvedValue({ data: response });
+
+    await expect(
+      getConsultationBookingDetail('booking-id', 'access-token')
+    ).resolves.toEqual(response);
+    expect(get).toHaveBeenCalledWith('/api/v1/consultations/booking-id', {
+      headers: { Authorization: 'Bearer access-token' }
+    });
+  });
+});
