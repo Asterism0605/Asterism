@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { Languages, ChevronDown } from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 import Button from '@/components/ui/Button.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { getImageById } from '@/services/image.service';
@@ -35,6 +36,7 @@ const siteLogoSrc = '/sitelogo.png';
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 
 const isPictureDetail = computed(
   () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
@@ -51,6 +53,10 @@ const initials = computed(() =>
 
 function goToMoodboard() {
   router.push({ name: 'moodboard' });
+}
+
+function goToStyleDna() {
+  router.push(styleDnaStore.hasCompletedQuiz ? '/style-dna/result' : '/discover-dna');
 }
 
 async function handleLogout() {
@@ -138,6 +144,7 @@ async function handleLogout() {
         :display-name="authStore.user?.displayName ?? ''"
         :initials="initials"
         @moodboard="goToMoodboard"
+        @style-dna="goToStyleDna"
         @logout="handleLogout"
       />
     </div>
