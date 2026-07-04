@@ -4,6 +4,7 @@ import ConstellationBackground from '@/components/effects/ConstellationBackgroun
 import VerificationSentOverlay from '@/components/overlay/VerificationSentOverlay.vue';
 import Button from '@/components/ui/Button.vue';
 import FormInput from '@/components/ui/FormInput.vue';
+import { useAsyncSubmit } from '@/composables/useAsyncSubmit';
 import { useCountdown } from '@/composables/useCountdown';
 import { useAuthStore } from '@/stores/auth.store';
 import { getErrorMessage } from '@/utils/api-error';
@@ -11,8 +12,7 @@ import { getErrorMessage } from '@/utils/api-error';
 const authStore = useAuthStore();
 
 const email = ref('');
-const isSubmitting = ref(false);
-const errorMessage = ref('');
+const { isSubmitting, errorMessage, submit } = useAsyncSubmit();
 // 送出成功後存收件信箱，切換為「請至信箱收信」引導畫面。
 const sentToEmail = ref('');
 
@@ -20,24 +20,17 @@ const sentToEmail = ref('');
 const resendMessage = ref('');
 const { countdown: resendCountdown, start: startCooldown } = useCountdown(60);
 
-async function handleSubmit() {
-  if (isSubmitting.value) {
-    return;
-  }
-  isSubmitting.value = true;
-  errorMessage.value = '';
-  try {
+function handleSubmit() {
+  return submit(async () => {
     await authStore.requestPasswordReset(email.value);
     sentToEmail.value = email.value;
     // 第一封已寄出＝已佔用 60s rate-limit 窗，先起跑 cooldown。
     startCooldown();
-  } catch (error) {
-    errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
-  } finally {
-    isSubmitting.value = false;
-  }
+  }, 'Something went wrong. Please try again.');
 }
 
+// 重寄走獨立訊息欄（resendMessage，成功也要顯示）＋ cooldown 擋重點，
+// 不吃 isSubmitting，所以維持自己的 try/catch。
 async function handleResend() {
   resendMessage.value = '';
   try {

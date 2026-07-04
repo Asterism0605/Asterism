@@ -1,36 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import LoginOverlay from '@/components/overlay/LoginOverlay.vue';
+import { useAsyncSubmit } from '@/composables/useAsyncSubmit';
 import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
-import { getErrorMessage } from '@/utils/api-error';
 import type { LoginPayload } from '@/types/auth';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
-const isSubmitting = ref(false);
-const errorMessage = ref('');
+const { isSubmitting, errorMessage, submit } = useAsyncSubmit();
 
-async function handleSubmit(payload: LoginPayload) {
-  if (isSubmitting.value) {
-    return;
-  }
-
-  isSubmitting.value = true;
-  errorMessage.value = '';
-
-  try {
+function handleSubmit(payload: LoginPayload) {
+  return submit(async () => {
     await authStore.login(payload);
     router.push(getSafeRedirectPath(route.query.next, '/'));
-  } catch (error) {
-    errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
-  } finally {
-    isSubmitting.value = false;
-  }
+  }, 'Something went wrong. Please try again.');
 }
 </script>
 

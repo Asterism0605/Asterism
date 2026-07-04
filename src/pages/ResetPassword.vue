@@ -4,31 +4,21 @@ import { useRouter } from 'vue-router';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import Button from '@/components/ui/Button.vue';
 import FormInput from '@/components/ui/FormInput.vue';
+import { useAsyncSubmit } from '@/composables/useAsyncSubmit';
 import { useAuthStore } from '@/stores/auth.store';
-import { getErrorMessage } from '@/utils/api-error';
 
 const router = useRouter();
 const authStore = useAuthStore();
 
 const password = ref('');
-const isSubmitting = ref(false);
-const errorMessage = ref('');
+const { isSubmitting, errorMessage, submit } = useAsyncSubmit();
 
-async function handleSubmit() {
-  if (isSubmitting.value) {
-    return;
-  }
-  isSubmitting.value = true;
-  errorMessage.value = '';
-  try {
+function handleSubmit() {
+  return submit(async () => {
     await authStore.updatePassword(password.value);
     // recovery session 已登入，更新完成直接進首頁。
     router.push('/');
-  } catch (error) {
-    errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
-  } finally {
-    isSubmitting.value = false;
-  }
+  }, 'Something went wrong. Please try again.');
 }
 </script>
 
