@@ -1,26 +1,29 @@
-import type { ImageSpreadNode } from '@/types/image';
 import type { SavedImage } from '@/types/moodboard';
 import { useMoodboardStore } from '@/stores/moodboard.store';
+import { getImageById } from '@/services/image.service';
 
-const DEFAULT_FOLDER_ID = 'default';
-
-export function saveImage(image: ImageSpreadNode): void {
+export function addItem(folderId: string, imageId: string): void {
   const store = useMoodboardStore();
-  const savedImage: SavedImage = {
-    id: image.id,
-    src: image.src
-  };
-  store.addImage(DEFAULT_FOLDER_ID, savedImage);
+  const image = getImageById(imageId);
+  if (!image) throw new Error('Image not found.');
+  const savedImage: SavedImage = { id: imageId, src: image.src };
+  store.addImage(folderId, savedImage);
 }
 
-export function unsaveImage(imageId: string): void {
+export function removeItem(folderId: string, imageId: string): void {
   const store = useMoodboardStore();
-  store.removeImage(DEFAULT_FOLDER_ID, imageId);
+  store.removeImage(folderId, imageId);
 }
 
 export function createFolder(name: string): void {
   const store = useMoodboardStore();
-  store.createFolder(name);
+  if (store.folders.length >= 10) {
+    throw new Error('You have reached the maximum of 10 folders.');
+  }
+  if (store.folders.some((f) => f.name.trim() === name.trim())) {
+    throw new Error('A folder with this name already exists.');
+  }
+  store.createFolder(name.trim());
 }
 
 export function isImageSaved(imageId: string): boolean {

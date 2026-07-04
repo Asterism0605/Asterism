@@ -7,7 +7,11 @@ import Login from '@/pages/Login.vue';
 const supaAuth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn() };
 const single = vi.fn();
 const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+const reconcileWithServer = vi.fn().mockResolvedValue(undefined);
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth: supaAuth, from }) }));
+vi.mock('@/stores/style-dna.store', () => ({
+  useStyleDnaStore: () => ({ reconcileWithServer })
+}));
 
 const fakeSession = {
   access_token: 'tok',
@@ -52,6 +56,8 @@ async function fillForm(
 describe('Login', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    reconcileWithServer.mockReset();
+    reconcileWithServer.mockResolvedValue(undefined);
     single.mockResolvedValue({ data: { display_name: 'New User', username: null, is_admin: false }, error: null });
     supaAuth.signUp.mockResolvedValue({ data: { session: fakeSession }, error: null });
     supaAuth.signInWithPassword.mockResolvedValue({ data: { session: fakeSession }, error: null });
@@ -62,6 +68,22 @@ describe('Login', () => {
     router.push('/login');
     await router.isReady();
     const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountLogin(router);
+    await fillForm(wrapper, 'member@example.com', 'password123');
+    await wrapper.find('form').trigger('submit');
+    await flushAuth();
+
+    expect(push).toHaveBeenCalledWith('/');
+    expect(reconcileWithServer).toHaveBeenCalledWith('u1');
+  });
+
+  it('still redirects when Style DNA reconcile fails after login', async () => {
+    const router = createTestRouter();
+    router.push('/login');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+    reconcileWithServer.mockRejectedValueOnce(new Error('network down'));
 
     const wrapper = mountLogin(router);
     await fillForm(wrapper, 'member@example.com', 'password123');

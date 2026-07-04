@@ -15,14 +15,16 @@ interface ConsultantProfile {
 }
 
 interface BookingPayload {
-  method: 'online' | 'in-person';
+  method: 'online' | 'in_person';
   date: string;
-  timeSlot: '' | 'am' | 'pm';
+  timeSlot: 'am' | 'pm';
   designField: string;
   designFocus: string;
   name: string;
   email: string;
+  contactPhone: string;
   notes: string;
+  paymentConfirmed: boolean;
 }
 
 const authStore = useAuthStore();
@@ -47,7 +49,7 @@ const sourceImageId = computed(() => {
 
   return typeof rawSourceImageId === 'string' ? rawSourceImageId : '';
 });
-//
+// 從登入會員資料帶入預約表單的姓名與 Email
 const accountName = computed(() => authStore.user?.displayName ?? '');
 const accountEmail = computed(() => authStore.user?.email ?? '');
 
@@ -103,8 +105,7 @@ function handleReset() {
           class="style-consultant__confirmation"
           role="status"
         >
-          Request received. We’ll contact {{ lastBooking.name }} at
-          {{ lastBooking.email }} with the next available consultation details.
+          {{ $t('consult.requestReceived', { name: lastBooking.name, email: lastBooking.email }) }}
         </p>
       </div>
     </section>
@@ -117,8 +118,13 @@ function handleReset() {
   min-height: 100vh;
   overflow: hidden;
   background:
-    radial-gradient(circle at 72% 48%, rgb(240 237 230 / 0.08), transparent 24%),
-    linear-gradient(135deg, var(--color-void) 0%, var(--color-deep) 62%, #15151b 100%);
+    radial-gradient(circle at 72% 48%, #f0ede614, transparent 24%),
+    linear-gradient(
+      135deg,
+      var(--color-void) 0%,
+      var(--color-deep) 62%,
+      #15151b 100%
+    );
   color: var(--color-text-primary);
 }
 
@@ -181,10 +187,10 @@ function handleReset() {
 
 .style-consultant__confirmation {
   padding: 16px 18px;
-  border: 1px solid rgb(168 137 58 / 0.4);
+  border: 1px solid #a8893a66;
   border-radius: 8px;
-  background: rgb(168 137 58 / 0.1);
-  color: rgb(240 237 230 / 0.82);
+  background: #a8893a1a;
+  color: #f0ede6d1;
   font-size: 0.9rem;
   line-height: 1.6;
 }

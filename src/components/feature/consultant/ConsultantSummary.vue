@@ -22,16 +22,13 @@ withDefaults(
 <template>
   <section class="consultant-summary">
     <div>
-      <p class="consultant-summary__eyebrow">Style DNA translation</p>
-      <h1 class="consultant-summary__title">Consultation Booking</h1>
+      <p class="consultant-summary__eyebrow">{{ $t('consult.eyebrow') }}</p>
+      <h1 class="consultant-summary__title">{{ $t('consult.title') }}</h1>
     </div>
 
     <div class="consultant-summary__copy">
-      <p>Your aesthetic coordinates have been mapped.</p>
-      <p>
-        We’ve matched you with a consultant to help translate your Style DNA into a real
-        design direction.
-      </p>
+      <p>{{ $t('consult.intro1') }}</p>
+      <p>{{ $t('consult.intro2') }}</p>
     </div>
 
     <dl v-if="profile && hasSourceData" class="consultant-summary__profile">
@@ -47,18 +44,18 @@ withDefaults(
         </dd>
       </div>
       <div>
-        <dt>Matched consultant</dt>
+        <dt>{{ $t('consult.matchedConsultant') }}</dt>
         <dd>{{ profile.consultantLabel }}</dd>
       </div>
     </dl>
 
     <div v-else class="consultant-summary__fallback">
-      <p>We need a Style DNA result before matching a consultant.</p>
+      <p>{{ $t('consult.needDna') }}</p>
       <div class="consultant-summary__actions">
         <a class="consultant-summary__button consultant-summary__button--primary" href="/style-dna">
-          Retake quiz
+          {{ $t('consult.retakeQuiz') }}
         </a>
-        <button class="consultant-summary__button" type="button">Skip</button>
+        <button class="consultant-summary__button" type="button">{{ $t('consult.skip') }}</button>
       </div>
     </div>
   </section>
@@ -93,7 +90,7 @@ withDefaults(
   max-width: 590px;
   display: grid;
   gap: 12px;
-  color: rgb(240 237 230 / 0.76);
+  color: #f0ede6c2;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -104,9 +101,9 @@ withDefaults(
   margin-top: auto;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.1);
+  border: 1px solid #ffffff1a;
   border-radius: 8px;
-  background: rgb(255 255 255 / 0.045);
+  background: #ffffff0b;
 }
 
 .consultant-summary__profile div {
@@ -114,7 +111,7 @@ withDefaults(
   gap: 8px;
   min-width: 0;
   padding: 18px;
-  border-right: 1px solid rgb(255 255 255 / 0.08);
+  border-right: 1px solid #ffffff14;
 }
 
 .consultant-summary__profile div:last-child {
@@ -160,10 +157,10 @@ withDefaults(
   gap: 18px;
   margin-top: 20px;
   padding: 20px;
-  border: 1px solid rgb(255 255 255 / 0.1);
+  border: 1px solid #ffffff1a;
   border-radius: 8px;
-  background: rgb(255 255 255 / 0.045);
-  color: rgb(240 237 230 / 0.78);
+  background: #ffffff0b;
+  color: #f0ede6c7;
 }
 
 .consultant-summary__actions {
@@ -177,7 +174,7 @@ withDefaults(
   min-height: 38px;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(255 255 255 / 0.2);
+  border: 1px solid #ffffff33;
   border-radius: 9999px;
   padding: 8px 18px;
   color: var(--color-text-primary);
@@ -190,8 +187,8 @@ withDefaults(
 }
 
 .consultant-summary__button:hover {
-  border-color: rgb(255 255 255 / 0.34);
-  background: rgb(255 255 255 / 0.06);
+  border-color: #ffffff57;
+  background: #ffffff0f;
 }
 
 .consultant-summary__button--primary {
@@ -222,7 +219,7 @@ withDefaults(
 
   .consultant-summary__profile div {
     border-right: 0;
-    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    border-bottom: 1px solid #ffffff14;
   }
 
   .consultant-summary__profile div:last-child {

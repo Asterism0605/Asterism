@@ -21,7 +21,7 @@ const similarImages: ImageSpreadNode[] = [
 ];
 
 describe('ImageMetaPanel', () => {
-  it('emits consult when CONSULT STYLIST is clicked', async () => {
+  it('點擊 CONSULT STYLIST 時觸發 consult', async () => {
     const wrapper = mount(ImageMetaPanel, { props: defaultProps });
 
     const consultBtn = wrapper
@@ -32,8 +32,10 @@ describe('ImageMetaPanel', () => {
     expect(wrapper.emitted('consult')).toHaveLength(1);
   });
 
-  it('emits save-to-folder when SAVE TO FOLDER is clicked', async () => {
-    const wrapper = mount(ImageMetaPanel, { props: defaultProps });
+  it('點擊 SAVE TO FOLDER 時觸發 save-to-folder', async () => {
+    const wrapper = mount(ImageMetaPanel, {
+      props: { ...defaultProps, folders: [{ id: 'folder-001', name: 'test' }] }
+    });
 
     const buttons = wrapper.findAll('button');
     const addBtn = buttons.find((b) => b.text().includes('ADD TO MOODBOARD'));
@@ -44,27 +46,21 @@ describe('ImageMetaPanel', () => {
       .find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
 
-    expect(wrapper.emitted('save-to-folder')).toHaveLength(1);
+    const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
+    await folderBtn!.trigger('click');
+
+    expect(wrapper.emitted('save-to-folder')).toEqual([['folder-001']]);
   });
 
-  it('shows a spinner when loading is true', () => {
-    const wrapper = mount(ImageMetaPanel, {
-      props: { ...defaultProps, loading: true }
-    });
 
-    expect(wrapper.find('.animate-spin').exists()).toBe(true);
+  it('當 disabled prop 為 true 時停用 ADD TO MOODBOARD 按鈕', () => {
+    const wrapper = mount(ImageMetaPanel, { props: { ...defaultProps, disabled: true } });
+
+    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
+    expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('shows an error message when error prop is set', () => {
-    const errorMsg = '儲存失敗，請再試一次';
-    const wrapper = mount(ImageMetaPanel, {
-      props: { ...defaultProps, error: errorMsg }
-    });
-
-    expect(wrapper.text()).toContain(errorMsg);
-  });
-
-  it('forwards selected similar image ids', async () => {
+  it('轉發選取的相似圖片 id', async () => {
     const wrapper = mount(ImageMetaPanel, {
       props: { ...defaultProps, similarImages }
     });

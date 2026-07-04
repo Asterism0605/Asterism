@@ -1,64 +1,103 @@
 import { setActivePinia, createPinia } from 'pinia';
-import { beforeEach, describe, expect, it } from 'vitest';
-import { saveImage, unsaveImage, createFolder, isImageSaved } from '@/services/moodboard.service';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { addItem, removeItem, createFolder, isImageSaved } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
-import type { ImageSpreadNode } from '@/types/image';
 
-const createSpreadNode = (id: string): ImageSpreadNode => ({
-  id,
-  src: `/style-image/${id}.webp`,
-  alt: `Image ${id}`,
-  title: `Title ${id}`,
-  styleGroup: 'Y2K & Internet Aesthetics',
-  style: ['Y2K'],
-  colorPalette: ['#ffffff']
-});
+vi.mock('@/services/image.service', () => ({
+  getImageById: (id: string) => ({ id, src: `/style-image/${id}.webp` })
+}));
 
 describe('moodboard.service', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
   });
 
-  it('saveImage stores only the SavedImage fields into the default folder', () => {
-    saveImage(createSpreadNode('y2k-001'));
-
+  it('addItem 將圖片儲存到指定的資料夾', () => {
+    createFolder('test');
     const store = useMoodboardStore();
-    const defaultFolder = store.folders.find((f) => f.id === 'default');
+    const folderId = store.folders[0].id;
 
-    expect(defaultFolder?.images).toHaveLength(1);
-    expect(defaultFolder?.images[0]).toEqual({
-      id: 'y2k-001',
-      src: '/style-image/y2k-001.webp'
-    });
+    addItem(folderId, 'y2k-001');
+
+    const folder = store.folders.find((f) => f.id === folderId);
+
+    expect(folder?.images).toHaveLength(1);
+    expect(folder?.images[0]).toMatchObject({ id: 'y2k-001' });
   });
 
-  it('unsaveImage removes the image from the default folder', () => {
-    saveImage(createSpreadNode('y2k-001'));
-    unsaveImage('y2k-001');
-
+  it('removeItem 從指定的資料夾中移除圖片', () => {
+    createFolder('test');
     const store = useMoodboardStore();
-    const defaultFolder = store.folders.find((f) => f.id === 'default');
+    const folderId = store.folders[0].id;
 
-    expect(defaultFolder?.images).toHaveLength(0);
+    addItem(folderId, 'y2k-001');
+    removeItem(folderId, 'y2k-001');
+
+    const folder = store.folders.find((f) => f.id === folderId);
+
+    expect(folder?.images).toHaveLength(0);
   });
 
-  it('createFolder adds a new named folder to the store', () => {
+  it('createFolder 在 store 中新增一個具名的資料夾', () => {
     createFolder('我的最愛');
 
     const store = useMoodboardStore();
 
-    expect(store.folders).toHaveLength(2);
-    expect(store.folders[1].name).toBe('我的最愛');
-    expect(store.folders[1].images).toEqual([]);
+    expect(store.folders).toHaveLength(1);
+    expect(store.folders[0].name).toBe('我的最愛');
+    expect(store.folders[0].images).toEqual([]);
   });
 
-  it('isImageSaved returns true when the image is saved', () => {
-    saveImage(createSpreadNode('y2k-001'));
+  it('當資料夾數量達到 10 個時 createFolder 會拋出錯誤', () => {
+    for (let i = 0; i < 10; i++) {
+      createFolder(`Folder ${i}`);
+    }
+
+    expect(() => createFolder('One too many')).toThrow('You have reached the maximum of 10 folders.');
+  });
+
+  it('當名稱與既有資料夾重複時 createFolder 會拋出錯誤', () => {
+    createFolder('我的最愛');
+
+    expect(() => createFolder('我的最愛')).toThrow('A folder with this name already exists.');
+
+    const store = useMoodboardStore();
+    expect(store.folders).toHaveLength(1);
+  });
+
+  it('建立資料夾名稱前後有空白時仍視為與既有資料夾重複', () => {
+    createFolder('我的最愛');
+
+    expect(() => createFolder('  我的最愛  ')).toThrow('A folder with this name already exists.');
+  });
+
+  it('建立資料夾時會把名稱前後空白去掉再儲存', () => {
+    createFolder('  我的最愛  ');
+
+    const store = useMoodboardStore();
+    expect(store.folders[0].name).toBe('我的最愛');
+  });
+
+  it('既有資料夾名稱帶空白時，之後建立去掉空白的同名資料夾仍會被擋下', () => {
+    createFolder('  我的最愛  ');
+
+    expect(() => createFolder('我的最愛')).toThrow('A folder with this name already exists.');
+
+    const store = useMoodboardStore();
+    expect(store.folders).toHaveLength(1);
+  });
+
+  it('當圖片已儲存時 isImageSaved 回傳 true', () => {
+    createFolder('test');
+    const store = useMoodboardStore();
+    const folderId = store.folders[0].id;
+
+    addItem(folderId, 'y2k-001');
 
     expect(isImageSaved('y2k-001')).toBe(true);
   });
 
-  it('isImageSaved returns false when the image is not saved', () => {
+  it('當圖片未儲存時 isImageSaved 回傳 false', () => {
     expect(isImageSaved('not-saved-id')).toBe(false);
   });
 });

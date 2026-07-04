@@ -37,23 +37,23 @@ function handleSubmit() {
     class="overlay-panel overlay-form glass-panel"
     style="max-width: 640px; padding: 72px 64px 68px"
     role="main"
-    aria-label="Login"
+    :aria-label="$t('auth.loginTitle')"
   >
-    <h2 class="overlay-title">Login</h2>
+    <h2 class="overlay-title">{{ $t('auth.loginTitle') }}</h2>
 
     <form class="overlay-form-body" @submit.prevent="handleSubmit">
       <div class="overlay-fields">
-        <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
+        <FormInput v-model="email" type="email" :placeholder="$t('auth.email')" autocomplete="email" />
         <FormInput
           v-model="password"
           type="password"
-          placeholder="PASSWORD"
+          :placeholder="$t('auth.password')"
           autocomplete="current-password"
         />
 
         <div class="overlay-helper">
           <RouterLink :to="{ name: 'forgot-password' }" class="overlay-link">
-            FORGOT PASSWORD?
+            {{ $t('auth.forgotPassword') }}
           </RouterLink>
         </div>
       </div>
@@ -70,7 +70,7 @@ function handleSubmit() {
             data-testid="auth-submit"
             :disabled="isSubmitting"
           >
-            {{ isSubmitting ? 'SENDING…' : 'SEND' }}
+            {{ isSubmitting ? $t('auth.sending') : $t('auth.send') }}
           </Button>
         </span>
       </div>

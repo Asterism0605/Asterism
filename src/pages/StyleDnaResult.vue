@@ -70,13 +70,13 @@ onBeforeUnmount(() => {
             >
               <Check class="size-2.5" :stroke-width="2.4" />
             </span>
-            <span>Style DNA Complete</span>
+            <span>{{ $t('dna.complete') }}</span>
           </p>
 
           <h1
             class="translate-y-7 font-title text-[3.2rem] font-extralight leading-[1.12] text-text-primary 
             lg:translate-y-0 lg:text-display lg:leading-[1.02]">
-            Your<br/>
+            {{ $t('dna.resultYour') }}<br/>
             <span class="whitespace-nowrap">Style DNA</span>
           </h1>
 
@@ -84,7 +84,7 @@ onBeforeUnmount(() => {
             class="hidden 
             lg:mt-10 lg:block">
             <p class="mt-3 max-w-[15.5rem] text-xs font-medium leading-relaxed text-text-secondary lg:mt-4 lg:max-w-[34rem] lg:text-sm">
-              Your homepage is now personalized based on your Style DNA.
+              {{ $t('dna.homepagePersonalized') }}
             </p>
           </div>
 
@@ -99,7 +99,7 @@ onBeforeUnmount(() => {
                 lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
                 data-testid="start-exploring"
                 @click="startExploring">
-                Start Exploring
+                {{ $t('dna.startExploring') }}
               </Button>
             </span>
 
@@ -110,7 +110,7 @@ onBeforeUnmount(() => {
               lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
               data-testid="retake-quiz"
               @click="retakeQuiz">
-              Retake Quiz
+              {{ $t('dna.retakeQuiz') }}
             </Button>
           </div>
         </div>
@@ -124,7 +124,7 @@ onBeforeUnmount(() => {
           <template #mobile-panel>
             <div class="flex h-full flex-col justify-center pr-5">
               <p class="mb-4 inline-flex items-center gap-2.5 text-xs font-medium text-text-primary">
-                <span>Style DNA Complete</span>
+                <span>{{ $t('dna.complete') }}</span>
                 <span
                   class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
                   aria-hidden="true"
@@ -134,9 +134,7 @@ onBeforeUnmount(() => {
               </p>
 
               <p class="max-w-[15rem] text-xs font-medium leading-relaxed text-text-secondary">
-                Your homepage<br/>
-                is now personalized<br/>
-                based on your Style DNA.
+                {{ $t('dna.homepagePersonalized') }}
               </p>
 
               <div class="mt-5 flex flex-col items-start gap-3">
@@ -148,7 +146,7 @@ onBeforeUnmount(() => {
                     data-testid="start-exploring"
                     @click="startExploring"
                   >
-                    Start Exploring
+                    {{ $t('dna.startExploring') }}
                   </Button>
                 </span>
 
@@ -159,7 +157,7 @@ onBeforeUnmount(() => {
                   data-testid="retake-quiz"
                   @click="retakeQuiz"
                 >
-                  Retake Quiz
+                  {{ $t('dna.retakeQuiz') }}
                 </Button>
               </div>
             </div>

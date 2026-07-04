@@ -1,23 +1,32 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import LoginOverlay from '@/components/overlay/LoginOverlay.vue';
 import { useAsyncSubmit } from '@/composables/useAsyncSubmit';
 import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
 import type { LoginPayload } from '@/types/auth';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
+const { t } = useI18n();
 
 const { isSubmitting, errorMessage, submit } = useAsyncSubmit();
 
 function handleSubmit(payload: LoginPayload) {
   return submit(async () => {
-    await authStore.login(payload);
+    const session = await authStore.login(payload);
+    try {
+      await styleDnaStore.reconcileWithServer(session.user.id);
+    } catch (error) {
+      console.warn('[style-dna] sync after login failed:', error);
+    }
     router.push(getSafeRedirectPath(route.query.next, '/'));
-  }, 'Something went wrong. Please try again.');
+  }, t('auth.genericError'));
 }
 </script>
 

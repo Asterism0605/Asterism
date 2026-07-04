@@ -1,19 +1,27 @@
-<script setup lang="ts">
-import { ArrowLeft, Bookmark, LoaderCircle } from '@lucide/vue';
+﻿<script setup lang="ts">
+import { ArrowLeft } from '@lucide/vue';
 import { computed } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
 import Button from '@/components/ui/Button.vue';
+import ActionButton from '@/components/feature/image/ActionButton.vue';
+import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel';
 import type { ImageSpreadNode } from '@/types/image';
+
+const { localizeTaxon } = useTaxonomyLabel();
 
 const props = defineProps<{
   image: ImageSpreadNode;
-  saving?: boolean;
+  saved?: boolean;
+  disabled?: boolean;
+  folders?: { id: string; name: string; saved?: boolean }[];
+  justSavedFolderId?: string | null;
 }>();
 
 const emit = defineEmits<{
   return: [];
-  save: [];
+  'create-folder': [];
+  'save-to-folder': [folderId: string];
 }>();
 
 const mainImageLabel = computed(() => {
@@ -35,7 +43,7 @@ const mainImageLabel = computed(() => {
   <ImageSpreadEntrance
     as="section"
     kind="center"
-    class="relative mx-auto flex w-full max-w-[460px] flex-col items-center gap-5"
+    class="relative z-20 mx-auto flex w-full max-w-[460px] flex-col items-center gap-5"
   >
     <div class="relative flex w-full justify-center">
       <ConstellationBackground
@@ -69,7 +77,7 @@ const mainImageLabel = computed(() => {
           data-testid="spread-main-image-label"
           class="absolute bottom-4 left-4 rounded-full bg-void/80 px-4 py-2 text-sm font-semibold text-text-primary backdrop-blur-md"
         >
-          {{ mainImageLabel }}
+          {{ localizeTaxon(mainImageLabel) }}
         </figcaption>
       </ImageSpreadEntrance>
     </div>
@@ -82,22 +90,19 @@ const mainImageLabel = computed(() => {
       <Button variant="primary" type="button" data-testid="return-home" @click="emit('return')">
         <span class="inline-flex items-center gap-2">
           <ArrowLeft class="size-4" aria-hidden="true" />
-          Return
+          {{ $t('image.return') }}
         </span>
       </Button>
-      <Button
-        variant="secondary"
-        type="button"
-        class="!bg-black hover:!bg-[#111111]"
-        :disabled="saving"
-        @click="emit('save')"
-      >
-        <span class="inline-flex items-center gap-2">
-          <LoaderCircle v-if="saving" class="size-4 animate-spin" aria-hidden="true" />
-          <Bookmark v-else class="size-4" aria-hidden="true" />
-          Add to moodboard
-        </span>
-      </Button>
+      <ActionButton
+        class="min-w-48"
+        spread
+        :saved="props.saved"
+        :disabled="props.disabled"
+        :folders="props.folders"
+        :just-saved-folder-id="props.justSavedFolderId"
+        @create-folder="emit('create-folder')"
+        @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
+      />
     </ImageSpreadEntrance>
   </ImageSpreadEntrance>
 </template>

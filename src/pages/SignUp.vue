@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import SignUpOverlay from '@/components/overlay/SignUpOverlay.vue';
 import VerificationSentOverlay from '@/components/overlay/VerificationSentOverlay.vue';
@@ -9,10 +10,13 @@ import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
 import { getErrorCode, getErrorMessage } from '@/utils/api-error';
 import type { RegisterPayload } from '@/types/auth';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
+const { t } = useI18n();
 
 const isSubmitting = ref(false);
 const errorMessage = ref('');
@@ -43,7 +47,12 @@ async function handleSubmit(payload: RegisterPayload) {
   errorMessage.value = '';
 
   try {
-    await authStore.register(payload);
+    const session = await authStore.register(payload);
+    try {
+      await styleDnaStore.reconcileWithServer(session.user.id);
+    } catch (error) {
+      console.warn('[style-dna] sync after registration failed:', error);
+    }
     router.push(getSafeRedirectPath(route.query.next, '/discover-dna'));
   } catch (error) {
     // 已開信箱驗證：非錯誤，轉成正向「請至信箱收信」引導畫面。
@@ -53,11 +62,19 @@ async function handleSubmit(payload: RegisterPayload) {
       // 否則使用者馬上按重寄會直接撞 Supabase 限流報錯。
       startCooldown();
     } else {
-      errorMessage.value = getErrorMessage(error, 'Something went wrong. Please try again.');
+      errorMessage.value = getErrorMessage(error, t('auth.genericError'));
     }
   } finally {
     isSubmitting.value = false;
   }
+}
+
+function handleLoginClick() {
+  const nextPath = getSafeRedirectPath(route.query.next, '');
+  router.push({
+    name: 'login',
+    query: nextPath ? { next: nextPath } : undefined
+  });
 }
 </script>
 
@@ -126,6 +143,7 @@ async function handleSubmit(payload: RegisterPayload) {
         :is-submitting="isSubmitting"
         :error-message="errorMessage"
         @submit="handleSubmit"
+        @login="handleLoginClick"
       />
     </div>
   </main>
