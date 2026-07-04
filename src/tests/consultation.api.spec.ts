@@ -18,6 +18,49 @@ import type { ConsultationCheckoutRequest } from '@/types/consultation';
 describe('consultation.api', () => {
   beforeEach(() => vi.clearAllMocks());
 
+  it('creates checkout with in_person method', async () => {
+    const payload: ConsultationCheckoutRequest = {
+      method: 'in_person',
+      consultationDate: '2026-07-10',
+      timeSlot: 'pm',
+      paymentConsentAccepted: true
+    };
+    const response = {
+      success: true as const,
+      data: {
+        bookingId: 'booking-id',
+        paymentId: 'payment-id',
+        checkoutUrl: 'https://checkout.stripe.com/test',
+        matchedConsultant: {
+          id: 'consultant-id',
+          displayName: 'Asterism Consultant',
+          title: 'Design Consultant'
+        }
+      },
+      error: null
+    };
+    post.mockResolvedValue({ data: response });
+
+    await expect(
+      createConsultationCheckoutSession(payload, 'access-token', 'idempotency-key')
+    ).resolves.toEqual(response);
+    expect(post).toHaveBeenCalledWith(
+      '/api/v1/consultations/checkout',
+      {
+        method: 'in_person',
+        consultationDate: '2026-07-10',
+        timeSlot: 'pm',
+        paymentConsentAccepted: true
+      },
+      {
+        headers: {
+          Authorization: 'Bearer access-token',
+          'Idempotency-Key': 'idempotency-key'
+        }
+      }
+    );
+  });
+
   it('creates checkout with auth, idempotency, and only allowed body fields', async () => {
     const payload: ConsultationCheckoutRequest & {
       amount: number;

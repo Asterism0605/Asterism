@@ -17,7 +17,7 @@ export type ConsultationApiResponse<T> =
     };
 
 export type ConsultationTimeSlot = 'am' | 'pm';
-export type ConsultationCheckoutMethod = 'online' | 'in-person';
+export type ConsultationCheckoutMethod = 'online' | 'in_person';
 export type ConsultationBookingMethod = 'online' | 'in_person';
 
 export type ConsultationBookingStatus =
