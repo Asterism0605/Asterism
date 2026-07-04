@@ -52,7 +52,9 @@ function handleSubmit() {
         />
 
         <div class="overlay-helper">
-          <button type="button" class="overlay-link">{{ $t('auth.forgotPassword') }}</button>
+          <RouterLink :to="{ name: 'forgot-password' }" class="overlay-link">
+            {{ $t('auth.forgotPassword') }}
+          </RouterLink>
         </div>
       </div>
 

@@ -24,7 +24,8 @@ function createTestRouter(): Router {
     history: createMemoryHistory(),
     routes: [
       { path: '/', name: 'home', component: { template: '<div />' } },
-      { path: '/login', name: 'login', component: { template: '<div />' } }
+      { path: '/login', name: 'login', component: { template: '<div />' } },
+      { path: '/forgot-password', name: 'forgot-password', component: { template: '<div />' } }
     ]
   });
 }
