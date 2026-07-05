@@ -8,6 +8,7 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import type { CSSProperties } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
+import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
 import {
   NAV_H,
@@ -47,9 +48,7 @@ const authStore = useAuthStore();
 
 const folderCount = computed(() => moodboardStore.folders.length);
 const folderNames = computed(() => moodboardStore.folders.map((folder) => folder.name));
-const allSavedImages = computed(() =>
-  moodboardStore.folders.flatMap((folder) => folder.images)
-);
+const allSavedImages = computed(() => moodboardStore.folders.flatMap((folder) => folder.images));
 const orbitImages = computed(() => buildMoodboardOrbitImages(allSavedImages.value));
 
 /* ---- reactive state ---- */
@@ -162,9 +161,7 @@ const folderView = computed(() => {
 });
 
 const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
-const showEmpty = computed(
-  () => moodboardStore.status === 'idle' || moodboardStore.isEmpty
-);
+const showEmpty = computed(() => moodboardStore.status === 'idle' || moodboardStore.isEmpty);
 
 function getFolderName(index: number): string {
   return folderNames.value[index % folderNames.value.length] ?? '';
@@ -416,112 +413,457 @@ onBeforeUnmount(() => {
     class="relative w-full overflow-hidden"
     :style="{ background: '#0b0b0d', height: `calc(100vh - ${NAV_H}px)`, marginTop: `${NAV_H}px` }"
   >
-    <div
-      v-if="moodboardStore.status === 'loading'"
-      data-testid="moodboard-loading"
-      class="flex h-full items-center justify-center text-sm text-white/60"
-    >
-      {{ $t('moodboard.loading') }}
-    </div>
-    <div
-      v-else-if="moodboardStore.status === 'error'"
-      data-testid="moodboard-error"
-      class="flex h-full flex-col items-center justify-center gap-4 text-center text-white"
-    >
-      <p>{{ $t('moodboard.loadError') }}</p>
-      <button
-        type="button"
-        class="rounded-full border border-white/30 px-5 py-2 text-sm hover:border-white/60"
-        @click="retryMoodboard"
-      >
-        {{ $t('moodboard.retry') }}
-      </button>
-    </div>
+    <MoodboardStatusDisplay
+      v-if="moodboardStore.status === 'loading' || moodboardStore.status === 'error'"
+      :status="moodboardStore.status"
+      @retry="retryMoodboard"
+    />
     <MoodboardEmptyState v-else-if="showEmpty" />
     <template v-else>
-    <!-- ===================== MOBILE STAGE (440×fluid) ===================== -->
-    <div
-      v-if="isMobile"
-      ref="mStage"
-      class="relative"
-      :style="mStageStyle"
-      @pointerdown="onDragStart"
-      @pointermove="onDragMove"
-      @pointerup="onDragEnd"
-      @pointercancel="onDragEnd"
-      @pointerleave="onDragEnd"
-    >
-      <!-- orbit line stays the SAME on detail — only the folders disappear -->
-      <svg
-        class="absolute inset-0 pointer-events-none"
-        :width="MW"
-        :height="mDesignH"
-        :viewBox="`0 0 ${MW} ${mDesignH}`"
-        fill="none"
-      >
-        <path :d="mOrbitOuter" stroke="rgba(220,222,228,0.42)" stroke-width="1" fill="none" />
-        <path :d="mOrbitInner" stroke="rgba(220,222,228,0.28)" stroke-width="1" fill="none" />
-      </svg>
-
-      <!-- HOME: folders revolve along the orbit (up to 10). Drag to rotate, tap to open. -->
+      <!-- ===================== MOBILE STAGE (440×fluid) ===================== -->
       <div
-        v-show="hasFolders"
-        class="absolute inset-0"
-        :style="{ cursor: dragging ? 'grabbing' : 'grab', touchAction: 'none' }"
+        v-if="isMobile"
+        ref="mStage"
+        class="relative"
+        :style="mStageStyle"
+        @pointerdown="onDragStart"
+        @pointermove="onDragMove"
+        @pointerup="onDragEnd"
+        @pointercancel="onDragEnd"
+        @pointerleave="onDragEnd"
       >
-        <div
-          v-for="f in mFolders"
-          :key="'mf' + f.i"
-          class="absolute"
-          :style="{
-            left: f.cx - f.w / 2 + 'px',
-            top: f.cy - f.h / 2 + 'px',
-            width: f.w + 'px',
-            height: f.h + 'px',
-            transform: mHover === f.i ? 'scale(1.06)' : 'scale(1)',
-            transition: 'transform .22s ease',
-            zIndex: mHover === f.i ? 20 : 5,
-            cursor: 'pointer'
-          }"
-          @pointerenter="mHover = f.i"
-          @pointerleave="mHover = -1"
-          @click="onFolderClick(f.i)"
+        <!-- orbit line stays the SAME on detail — only the folders disappear -->
+        <svg
+          class="absolute inset-0 pointer-events-none"
+          :width="MW"
+          :height="mDesignH"
+          :viewBox="`0 0 ${MW} ${mDesignH}`"
+          fill="none"
         >
-          <img
-            :src="mHover === f.i ? '/images/folder-active.png' : '/images/folder-idle.png'"
-            draggable="false"
-            class="w-full h-full select-none"
-            style="
-              object-fit: contain;
-              display: block;
-              pointer-events: none;
-              filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5));
-            "
-          />
+          <path :d="mOrbitOuter" stroke="rgba(220,222,228,0.42)" stroke-width="1" fill="none" />
+          <path :d="mOrbitInner" stroke="rgba(220,222,228,0.28)" stroke-width="1" fill="none" />
+        </svg>
+
+        <!-- HOME: folders revolve along the orbit (up to 10). Drag to rotate, tap to open. -->
+        <div
+          v-show="hasFolders"
+          class="absolute inset-0"
+          :style="{ cursor: dragging ? 'grabbing' : 'grab', touchAction: 'none' }"
+        >
+          <div
+            v-for="f in mFolders"
+            :key="'mf' + f.i"
+            class="absolute"
+            :style="{
+              left: f.cx - f.w / 2 + 'px',
+              top: f.cy - f.h / 2 + 'px',
+              width: f.w + 'px',
+              height: f.h + 'px',
+              transform: mHover === f.i ? 'scale(1.06)' : 'scale(1)',
+              transition: 'transform .22s ease',
+              zIndex: mHover === f.i ? 20 : 5,
+              cursor: 'pointer'
+            }"
+            @pointerenter="mHover = f.i"
+            @pointerleave="mHover = -1"
+            @click="onFolderClick(f.i)"
+          >
+            <img
+              :src="mHover === f.i ? '/images/folder-active.png' : '/images/folder-idle.png'"
+              draggable="false"
+              class="w-full h-full select-none"
+              style="
+                object-fit: contain;
+                display: block;
+                pointer-events: none;
+                filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5));
+              "
+            />
+          </div>
+
+          <!-- folder name appears only while a folder is hovered/pressed -->
+          <div
+            class="absolute"
+            :style="{
+              left: '28px',
+              top: '100px',
+              pointerEvents: 'none',
+              opacity: mHover >= 0 ? 1 : 0,
+              transform: mHover >= 0 ? 'translateY(0)' : 'translateY(8px)',
+              transition: 'opacity .3s ease, transform .3s ease'
+            }"
+          >
+            <div
+              class="absolute"
+              style="
+                left: -26px;
+                top: -22px;
+                width: 240px;
+                height: 118px;
+                border-radius: 34px;
+                background: radial-gradient(
+                  58% 56% at 30% 46%,
+                  rgba(9, 9, 11, 0.72),
+                  rgba(9, 9, 11, 0)
+                );
+                filter: blur(5px);
+              "
+            ></div>
+            <div
+              class="relative text-white"
+              style="
+                font-size: 21px;
+                font-weight: 400;
+                letter-spacing: 0.4px;
+                text-shadow:
+                  0 2px 18px rgba(0, 0, 0, 0.7),
+                  0 0 14px rgba(255, 255, 255, 0.14);
+              "
+            >
+              {{ mHover >= 0 ? getFolderName(mHover) : '' }}
+            </div>
+            <div class="relative flex items-center" style="gap: 8px; margin-top: 14px">
+              <span
+                style="
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 50%;
+                  background: #eaecf0;
+                  box-shadow: 0 0 8px rgba(234, 236, 240, 0.7);
+                  flex: 0 0 auto;
+                "
+              ></span>
+              <span
+                style="
+                  height: 1.5px;
+                  width: 138px;
+                  background: linear-gradient(
+                    90deg,
+                    rgba(234, 236, 240, 0.95),
+                    rgba(234, 236, 240, 0.28)
+                  );
+                "
+              ></span>
+            </div>
+          </div>
         </div>
 
-        <!-- folder name appears only while a folder is hovered/pressed -->
+        <!-- photos (peek on home, randomised + fade-in on detail) -->
+        <!-- outer = entrance fade/slide (staggered); inner = idle float -->
+        <div
+          v-for="p in mPhotoView"
+          :key="p.id"
+          class="absolute photo-enter"
+          :style="{
+            left: p.cx - p.w / 2 + 'px',
+            top: p.cy - p.h / 2 + 'px',
+            width: p.w + 'px',
+            height: p.h + 'px',
+            animationDelay: p.delay + 's'
+          }"
+        >
+          <div
+            class="image-card w-full h-full"
+            :style="{
+              opacity: p.placeholder ? 0.2 : p.faded ? 0.5 : 1,
+              filter: p.placeholder ? 'grayscale(1)' : 'none',
+              animationDelay: p.delay + 's'
+            }"
+          >
+            <img
+              :src="p.src"
+              draggable="false"
+              class="w-full h-full block select-none"
+              style="object-fit: cover; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55)"
+              @error="onImgError"
+            />
+            <div
+              class="w-full h-full"
+              style="
+                display: none;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+                background:
+                  repeating-linear-gradient(
+                    45deg,
+                    rgba(255, 255, 255, 0.05) 0 9px,
+                    rgba(255, 255, 255, 0.09) 9px 18px
+                  ),
+                  #26272b;
+              "
+            ></div>
+          </div>
+        </div>
+
+        <!-- header: asterisk logo + plain profile (NAME kept compact) -->
+        <div class="absolute flex items-center gap-3" style="left: 20px; top: 28px">
+          <div
+            style="
+              width: 34px;
+              height: 34px;
+              border-radius: 9999px;
+              background: radial-gradient(120% 120% at 35% 30%, #e9eaec, #c0c1c4 60%, #9c9da0);
+            "
+          ></div>
+          <div style="line-height: 1.25">
+            <div
+              class="text-white/90"
+              style="font-size: 12px; font-weight: 500; letter-spacing: 0.5px"
+            >
+              NAME
+            </div>
+            <div class="text-white/45" style="font-size: 11px">alawhoagua@gmail.com</div>
+          </div>
+        </div>
+
+        <!-- detail: back (just above the name tab) + docked folder-name tab -->
+        <div v-show="!hasFolders" class="absolute inset-0 pointer-events-none">
+          <button
+            class="absolute flex items-center gap-2 text-white/80"
+            style="
+              left: 22px;
+              bottom: 132px;
+              font-size: 16px;
+              font-weight: 300;
+              background: none;
+              border: none;
+              cursor: pointer;
+              pointer-events: auto;
+            "
+            @click="goHome"
+          >
+            <span style="font-size: 19px; line-height: 1">&larr;</span> {{ $t('moodboard.back') }}
+          </button>
+          <div
+            class="absolute"
+            style="left: 0; right: 0; bottom: 14px; height: 92px; pointer-events: auto"
+          >
+            <div
+              class="absolute"
+              style="
+                left: 14px;
+                top: -14px;
+                width: 120px;
+                height: 30px;
+                border-radius: 16px 16px 0 0;
+                background: linear-gradient(180deg, rgba(42, 43, 48, 0.62), rgba(26, 27, 31, 0.55));
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.07);
+                border-bottom: none;
+              "
+            ></div>
+            <div
+              class="absolute"
+              style="
+                left: 8px;
+                right: 8px;
+                top: 0;
+                bottom: 0;
+                border-radius: 26px;
+                background: linear-gradient(180deg, rgba(54, 55, 61, 0.62), rgba(24, 25, 29, 0.58));
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                box-shadow: 0 -14px 50px rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <span
+                class="text-white/90"
+                style="font-size: 24px; font-weight: 400; letter-spacing: 0.5px"
+                >{{ selectedName }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== DESKTOP STAGE (1440×1024) ===================== -->
+      <div v-else class="relative" :style="stageStyle">
+        <!-- ===== ORBIT LINES (same arc on both pages) ===== -->
+        <svg
+          class="absolute inset-0 pointer-events-none"
+          width="1440"
+          height="1024"
+          viewBox="0 0 1440 1024"
+          fill="none"
+        >
+          <path :d="outerPath" stroke="rgba(220,222,228,0.45)" stroke-width="1" fill="none" />
+          <path :d="innerPath" stroke="rgba(220,222,228,0.32)" stroke-width="1" fill="none" />
+        </svg>
+
+        <!-- ===== STATE A : HAS FOLDERS (orbit + photo sphere) ===== -->
+        <div v-show="hasFolders" class="absolute inset-0">
+          <canvas ref="sphereCanvas" class="absolute" :style="sphereStyle"></canvas>
+
+          <!-- folder images orbit the ellipse; hovering swaps to the active image + pauses the orbit -->
+          <div
+            v-for="fv in folderView"
+            :key="'f' + fv.i"
+            class="absolute"
+            :style="{
+              left: fv.left + 'px',
+              top: fv.top + 'px',
+              width: fv.w + 20 + 'px',
+              height: fv.h + 30 + 'px',
+              transform: fv.active ? 'scale(1.07)' : 'scale(1)',
+              transformOrigin: 'center center',
+              transition: 'transform .28s ease, opacity .35s ease',
+              opacity: fv.onLine ? 1 : 0,
+              pointerEvents: fv.onLine ? 'auto' : 'none',
+              zIndex: fv.active ? 30 : 2,
+              cursor: 'pointer'
+            }"
+            @mouseenter="hoverIdx = fv.i"
+            @mouseleave="hoverIdx = -1"
+            @click="openFolder(fv.i)"
+          >
+            <img
+              :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
+              draggable="false"
+              class="w-full h-full select-none"
+              style="object-fit: contain; display: block; pointer-events: none"
+            />
+          </div>
+        </div>
+
+        <!-- ===== DETAIL PAGE : opened folder — photos randomly arranged (static, non-overlapping) inside the visible circle ===== -->
+        <div v-show="!hasFolders" class="absolute inset-0">
+          <div
+            v-for="n in scatter"
+            :key="n.id"
+            class="absolute image-card"
+            :style="{
+              left: n.x - n.w / 2 + 'px',
+              top: n.y - n.h / 2 + 'px',
+              width: n.w + 'px',
+              height: n.h + 'px',
+              animationDelay: n.delay + 's'
+            }"
+          >
+            <img
+              :src="n.src"
+              draggable="false"
+              class="w-full h-full block select-none"
+              style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
+              @error="onImgError"
+            />
+            <div
+              class="w-full h-full"
+              style="
+                display: none;
+                border: 2px solid rgba(244, 244, 240, 0.9);
+                box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+                background:
+                  repeating-linear-gradient(
+                    45deg,
+                    rgba(255, 255, 255, 0.05) 0 10px,
+                    rgba(255, 255, 255, 0.09) 10px 20px
+                  ),
+                  #2b2c30;
+              "
+            ></div>
+          </div>
+
+          <!-- back link (sits just above the docked tab, against the visible bottom) -->
+          <div class="absolute" :style="{ left: '30px', top: deskBackTop + 'px' }">
+            <button
+              class="flex items-center gap-2 text-white/75 hover:text-white"
+              style="
+                font-size: 17px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-weight: 300;
+              "
+              @click="goHome"
+            >
+              <span style="font-size: 20px; line-height: 1">&larr;</span> {{ $t('moodboard.back') }}
+            </button>
+          </div>
+          <!-- docked folder-name tab -->
+          <div
+            class="absolute"
+            :style="{ left: '30px', top: deskTabTop + 'px', width: '360px', height: '130px' }"
+          >
+            <div
+              class="absolute"
+              style="
+                left: 18px;
+                top: 0;
+                width: 300px;
+                height: 130px;
+                border-radius: 18px 18px 0 0;
+                border: 1px solid rgba(255, 255, 255, 0.07);
+                border-bottom: none;
+                background: linear-gradient(180deg, rgba(40, 41, 46, 0.5), rgba(18, 19, 22, 0.46));
+                backdrop-filter: blur(10px);
+              "
+            ></div>
+            <div
+              class="absolute"
+              style="
+                left: 0;
+                top: 16px;
+                width: 340px;
+                height: 130px;
+                border-radius: 20px 20px 0 0;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-bottom: none;
+                background: linear-gradient(180deg, rgba(48, 49, 55, 0.58), rgba(22, 23, 27, 0.52));
+                backdrop-filter: blur(13px);
+                box-shadow: 0 -12px 44px rgba(0, 0, 0, 0.4);
+              "
+            ></div>
+            <div
+              class="absolute text-white/90 font-light"
+              style="
+                left: 0;
+                right: 0;
+                top: 44px;
+                font-size: 24px;
+                letter-spacing: 0.4px;
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ selectedName }}
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PROFILE (teammate's ProfileCard component, scaled down a touch) ===== -->
+        <div
+          class="absolute"
+          style="left: 100px; top: 150px; transform: scale(0.5); transform-origin: top left"
+        >
+          <ProfileCard name="NAME" subtitle="alawhoagua@gmail.com" />
+        </div>
+
+        <!-- hover title block: dark halo + glowing title + underline with a dot at its left -->
         <div
           class="absolute"
           :style="{
-            left: '28px',
-            top: '100px',
+            left: '150px',
+            top: '300px',
             pointerEvents: 'none',
-            opacity: mHover >= 0 ? 1 : 0,
-            transform: mHover >= 0 ? 'translateY(0)' : 'translateY(8px)',
-            transition: 'opacity .3s ease, transform .3s ease'
+            opacity: showLeader ? 1 : 0,
+            transform: showLeader ? 'translateY(0)' : 'translateY(8px)',
+            transition: showLeader ? 'opacity .32s ease, transform .32s ease' : 'none'
           }"
         >
           <div
             class="absolute"
             style="
-              left: -26px;
-              top: -22px;
-              width: 240px;
-              height: 118px;
-              border-radius: 34px;
+              left: -34px;
+              top: -26px;
+              width: 330px;
+              height: 150px;
+              border-radius: 40px;
               background: radial-gradient(
-                58% 56% at 30% 46%,
+                58% 56% at 32% 46%,
                 rgba(9, 9, 11, 0.72),
                 rgba(9, 9, 11, 0)
               );
@@ -531,31 +873,31 @@ onBeforeUnmount(() => {
           <div
             class="relative text-white"
             style="
-              font-size: 21px;
+              font-size: 16px;
               font-weight: 400;
-              letter-spacing: 0.4px;
+              letter-spacing: 0.6px;
               text-shadow:
-                0 2px 18px rgba(0, 0, 0, 0.7),
-                0 0 14px rgba(255, 255, 255, 0.14);
+                0 2px 22px rgba(0, 0, 0, 0.7),
+                0 0 18px rgba(255, 255, 255, 0.14);
             "
           >
-            {{ mHover >= 0 ? getFolderName(mHover) : '' }}
+            {{ getFolderName(hoverIdx) }}
           </div>
-          <div class="relative flex items-center" style="gap: 8px; margin-top: 14px">
+          <div class="relative flex items-center" style="gap: 10px; margin-top: 20px">
             <span
               style="
-                width: 7px;
-                height: 7px;
+                width: 9px;
+                height: 9px;
                 border-radius: 50%;
                 background: #eaecf0;
-                box-shadow: 0 0 8px rgba(234, 236, 240, 0.7);
+                box-shadow: 0 0 10px rgba(234, 236, 240, 0.7);
                 flex: 0 0 auto;
               "
             ></span>
             <span
               style="
                 height: 1.5px;
-                width: 138px;
+                width: 188px;
                 background: linear-gradient(
                   90deg,
                   rgba(234, 236, 240, 0.95),
@@ -566,367 +908,6 @@ onBeforeUnmount(() => {
           </div>
         </div>
       </div>
-
-      <!-- photos (peek on home, randomised + fade-in on detail) -->
-      <!-- outer = entrance fade/slide (staggered); inner = idle float -->
-      <div
-        v-for="p in mPhotoView"
-        :key="p.id"
-        class="absolute photo-enter"
-        :style="{
-          left: p.cx - p.w / 2 + 'px',
-          top: p.cy - p.h / 2 + 'px',
-          width: p.w + 'px',
-          height: p.h + 'px',
-          animationDelay: p.delay + 's'
-        }"
-      >
-        <div
-          class="image-card w-full h-full"
-            :style="{
-              opacity: p.placeholder ? 0.2 : p.faded ? 0.5 : 1,
-              filter: p.placeholder ? 'grayscale(1)' : 'none',
-              animationDelay: p.delay + 's'
-            }"
-        >
-          <img
-            :src="p.src"
-            draggable="false"
-            class="w-full h-full block select-none"
-            style="object-fit: cover; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55)"
-            @error="onImgError"
-          />
-          <div
-            class="w-full h-full"
-            style="
-              display: none;
-              box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
-              background:
-                repeating-linear-gradient(
-                  45deg,
-                  rgba(255, 255, 255, 0.05) 0 9px,
-                  rgba(255, 255, 255, 0.09) 9px 18px
-                ),
-                #26272b;
-            "
-          ></div>
-        </div>
-      </div>
-
-      <!-- header: asterisk logo + plain profile (NAME kept compact) -->
-      <div class="absolute flex items-center gap-3" style="left: 20px; top: 28px">
-        <div
-          style="
-            width: 34px;
-            height: 34px;
-            border-radius: 9999px;
-            background: radial-gradient(120% 120% at 35% 30%, #e9eaec, #c0c1c4 60%, #9c9da0);
-          "
-        ></div>
-        <div style="line-height: 1.25">
-          <div
-            class="text-white/90"
-            style="font-size: 12px; font-weight: 500; letter-spacing: 0.5px"
-          >
-            NAME
-          </div>
-          <div class="text-white/45" style="font-size: 11px">alawhoagua@gmail.com</div>
-        </div>
-      </div>
-
-      <!-- detail: back (just above the name tab) + docked folder-name tab -->
-      <div v-show="!hasFolders" class="absolute inset-0 pointer-events-none">
-        <button
-          class="absolute flex items-center gap-2 text-white/80"
-          style="
-            left: 22px;
-            bottom: 132px;
-            font-size: 16px;
-            font-weight: 300;
-            background: none;
-            border: none;
-            cursor: pointer;
-            pointer-events: auto;
-          "
-          @click="goHome"
-        >
-          <span style="font-size: 19px; line-height: 1">&larr;</span> {{ $t('moodboard.back') }}
-        </button>
-        <div
-          class="absolute"
-          style="left: 0; right: 0; bottom: 14px; height: 92px; pointer-events: auto"
-        >
-          <div
-            class="absolute"
-            style="
-              left: 14px;
-              top: -14px;
-              width: 120px;
-              height: 30px;
-              border-radius: 16px 16px 0 0;
-              background: linear-gradient(180deg, rgba(42, 43, 48, 0.62), rgba(26, 27, 31, 0.55));
-              backdrop-filter: blur(10px);
-              border: 1px solid rgba(255, 255, 255, 0.07);
-              border-bottom: none;
-            "
-          ></div>
-          <div
-            class="absolute"
-            style="
-              left: 8px;
-              right: 8px;
-              top: 0;
-              bottom: 0;
-              border-radius: 26px;
-              background: linear-gradient(180deg, rgba(54, 55, 61, 0.62), rgba(24, 25, 29, 0.58));
-              backdrop-filter: blur(16px);
-              border: 1px solid rgba(255, 255, 255, 0.12);
-              box-shadow: 0 -14px 50px rgba(0, 0, 0, 0.5);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <span
-              class="text-white/90"
-              style="font-size: 24px; font-weight: 400; letter-spacing: 0.5px"
-              >{{ selectedName }}</span
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===================== DESKTOP STAGE (1440×1024) ===================== -->
-    <div v-else class="relative" :style="stageStyle">
-      <!-- ===== ORBIT LINES (same arc on both pages) ===== -->
-      <svg
-        class="absolute inset-0 pointer-events-none"
-        width="1440"
-        height="1024"
-        viewBox="0 0 1440 1024"
-        fill="none"
-      >
-        <path :d="outerPath" stroke="rgba(220,222,228,0.45)" stroke-width="1" fill="none" />
-        <path :d="innerPath" stroke="rgba(220,222,228,0.32)" stroke-width="1" fill="none" />
-      </svg>
-
-      <!-- ===== STATE A : HAS FOLDERS (orbit + photo sphere) ===== -->
-      <div v-show="hasFolders" class="absolute inset-0">
-        <canvas ref="sphereCanvas" class="absolute" :style="sphereStyle"></canvas>
-
-        <!-- folder images orbit the ellipse; hovering swaps to the active image + pauses the orbit -->
-        <div
-          v-for="fv in folderView"
-          :key="'f' + fv.i"
-          class="absolute"
-          :style="{
-            left: fv.left + 'px',
-            top: fv.top + 'px',
-            width: fv.w + 20 + 'px',
-            height: fv.h + 30 + 'px',
-            transform: fv.active ? 'scale(1.07)' : 'scale(1)',
-            transformOrigin: 'center center',
-            transition: 'transform .28s ease, opacity .35s ease',
-            opacity: fv.onLine ? 1 : 0,
-            pointerEvents: fv.onLine ? 'auto' : 'none',
-            zIndex: fv.active ? 30 : 2,
-            cursor: 'pointer'
-          }"
-          @mouseenter="hoverIdx = fv.i"
-          @mouseleave="hoverIdx = -1"
-          @click="openFolder(fv.i)"
-        >
-          <img
-            :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
-            draggable="false"
-            class="w-full h-full select-none"
-            style="object-fit: contain; display: block; pointer-events: none"
-          />
-        </div>
-      </div>
-
-      <!-- ===== DETAIL PAGE : opened folder — photos randomly arranged (static, non-overlapping) inside the visible circle ===== -->
-      <div v-show="!hasFolders" class="absolute inset-0">
-        <div
-          v-for="n in scatter"
-          :key="n.id"
-          class="absolute image-card"
-          :style="{
-            left: n.x - n.w / 2 + 'px',
-            top: n.y - n.h / 2 + 'px',
-            width: n.w + 'px',
-            height: n.h + 'px',
-            animationDelay: n.delay + 's'
-          }"
-        >
-          <img
-            :src="n.src"
-            draggable="false"
-            class="w-full h-full block select-none"
-            style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
-            @error="onImgError"
-          />
-          <div
-            class="w-full h-full"
-            style="
-              display: none;
-              border: 2px solid rgba(244, 244, 240, 0.9);
-              box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
-              background:
-                repeating-linear-gradient(
-                  45deg,
-                  rgba(255, 255, 255, 0.05) 0 10px,
-                  rgba(255, 255, 255, 0.09) 10px 20px
-                ),
-                #2b2c30;
-            "
-          ></div>
-        </div>
-
-        <!-- back link (sits just above the docked tab, against the visible bottom) -->
-        <div class="absolute" :style="{ left: '30px', top: deskBackTop + 'px' }">
-          <button
-            class="flex items-center gap-2 text-white/75 hover:text-white"
-            style="
-              font-size: 17px;
-              background: none;
-              border: none;
-              cursor: pointer;
-              font-weight: 300;
-            "
-            @click="goHome"
-          >
-            <span style="font-size: 20px; line-height: 1">&larr;</span> {{ $t('moodboard.back') }}
-          </button>
-        </div>
-        <!-- docked folder-name tab -->
-        <div
-          class="absolute"
-          :style="{ left: '30px', top: deskTabTop + 'px', width: '360px', height: '130px' }"
-        >
-          <div
-            class="absolute"
-            style="
-              left: 18px;
-              top: 0;
-              width: 300px;
-              height: 130px;
-              border-radius: 18px 18px 0 0;
-              border: 1px solid rgba(255, 255, 255, 0.07);
-              border-bottom: none;
-              background: linear-gradient(180deg, rgba(40, 41, 46, 0.5), rgba(18, 19, 22, 0.46));
-              backdrop-filter: blur(10px);
-            "
-          ></div>
-          <div
-            class="absolute"
-            style="
-              left: 0;
-              top: 16px;
-              width: 340px;
-              height: 130px;
-              border-radius: 20px 20px 0 0;
-              border: 1px solid rgba(255, 255, 255, 0.1);
-              border-bottom: none;
-              background: linear-gradient(180deg, rgba(48, 49, 55, 0.58), rgba(22, 23, 27, 0.52));
-              backdrop-filter: blur(13px);
-              box-shadow: 0 -12px 44px rgba(0, 0, 0, 0.4);
-            "
-          ></div>
-          <div
-            class="absolute text-white/90 font-light"
-            style="
-              left: 0;
-              right: 0;
-              top: 44px;
-              font-size: 24px;
-              letter-spacing: 0.4px;
-              text-align: center;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            "
-          >
-            {{ selectedName }}
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== PROFILE (teammate's ProfileCard component, scaled down a touch) ===== -->
-      <div
-        class="absolute"
-        style="left: 100px; top: 150px; transform: scale(0.5); transform-origin: top left"
-      >
-        <ProfileCard name="NAME" subtitle="alawhoagua@gmail.com" />
-      </div>
-
-      <!-- hover title block: dark halo + glowing title + underline with a dot at its left -->
-      <div
-        class="absolute"
-        :style="{
-          left: '150px',
-          top: '300px',
-          pointerEvents: 'none',
-          opacity: showLeader ? 1 : 0,
-          transform: showLeader ? 'translateY(0)' : 'translateY(8px)',
-          transition: showLeader ? 'opacity .32s ease, transform .32s ease' : 'none'
-        }"
-      >
-        <div
-          class="absolute"
-          style="
-            left: -34px;
-            top: -26px;
-            width: 330px;
-            height: 150px;
-            border-radius: 40px;
-            background: radial-gradient(
-              58% 56% at 32% 46%,
-              rgba(9, 9, 11, 0.72),
-              rgba(9, 9, 11, 0)
-            );
-            filter: blur(5px);
-          "
-        ></div>
-        <div
-          class="relative text-white"
-          style="
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 0.6px;
-            text-shadow:
-              0 2px 22px rgba(0, 0, 0, 0.7),
-              0 0 18px rgba(255, 255, 255, 0.14);
-          "
-        >
-          {{ getFolderName(hoverIdx) }}
-        </div>
-        <div class="relative flex items-center" style="gap: 10px; margin-top: 20px">
-          <span
-            style="
-              width: 9px;
-              height: 9px;
-              border-radius: 50%;
-              background: #eaecf0;
-              box-shadow: 0 0 10px rgba(234, 236, 240, 0.7);
-              flex: 0 0 auto;
-            "
-          ></span>
-          <span
-            style="
-              height: 1.5px;
-              width: 188px;
-              background: linear-gradient(
-                90deg,
-                rgba(234, 236, 240, 0.95),
-                rgba(234, 236, 240, 0.28)
-              );
-            "
-          ></span>
-        </div>
-      </div>
-    </div>
     </template>
   </div>
 </template>
