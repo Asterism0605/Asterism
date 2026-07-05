@@ -34,10 +34,20 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
-  useSaveToMoodboard();
-const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
+const {
+  isSaving,
+  canSave,
+  redirectGuestToSignUp,
+  saveToMoodboard,
+  createNewFolder,
+  isCreatingFolder,
+  isCreateFolderSuccess,
+  justSavedFolderId
+} = useSaveToMoodboard();
 const moodboardStore = useMoodboardStore();
+const isSaved = computed(() =>
+  isImageSaved(moodboardStore.folders, currentImage.value?.id ?? '')
+);
 const folders = computed(() =>
   moodboardStore.folders.map((f) => ({
     id: f.id,
@@ -129,8 +139,10 @@ async function handleSaveToFolder(folderId: string) {
         photographer-date="Aug 19, 2025"
         :saved="isSaved"
         :disabled="isSaving"
+        :can-save="canSave"
         :folders="folders"
         :just-saved-folder-id="justSavedFolderId"
+        @auth-required="redirectGuestToSignUp"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"

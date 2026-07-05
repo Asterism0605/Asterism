@@ -1,11 +1,19 @@
-import { onScopeDispose, ref } from 'vue';
+import { computed, onScopeDispose, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 import { addItem, createFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { MOODBOARD_FEEDBACK_DISPLAY_MS } from '@/constants/moodboard.constants';
+import { useAuthStore } from '@/stores/auth.store';
+import { useMoodboardStore } from '@/stores/moodboard.store';
 
 export function useSaveToMoodboard() {
   const { t } = useI18n();
+  const route = useRoute();
+  const router = useRouter();
+  const authStore = useAuthStore();
+  const moodboardStore = useMoodboardStore();
+  const canSave = computed(() => Boolean(authStore.user?.id));
   const isSaving = ref(false);
   const saveError = ref<string | null>(null);
   const isCreatingFolder = ref(false);
@@ -29,12 +37,22 @@ export function useSaveToMoodboard() {
       : t('toast.saveFailed');
   }
 
+  function redirectGuestToSignUp(): false {
+    void router.push({
+      name: 'sign-up',
+      query: { next: route.fullPath }
+    });
+    return false;
+  }
+
   async function saveToMoodboard(folderId: string, imageId: string): Promise<boolean> {
+    if (!authStore.user?.id) return redirectGuestToSignUp();
     if (isSaving.value) return false;
     isSaving.value = true;
     saveError.value = null;
     try {
-      await addItem(folderId, imageId);
+      const savedImage = await addItem(folderId, imageId);
+      moodboardStore.addImage(folderId, savedImage);
       justSavedFolderId.value = folderId;
       clearJustSavedTimer();
       justSavedTimer = setTimeout(() => {
@@ -53,13 +71,18 @@ export function useSaveToMoodboard() {
   }
 
   async function createNewFolder(name: string, imageId: string): Promise<boolean> {
+    if (!authStore.user?.id) return redirectGuestToSignUp();
     if (isCreatingFolder.value) return false;
     isCreatingFolder.value = true;
     isCreateFolderSuccess.value = false;
     try {
-      const folderId = createFolder(name);
+      const profileId = authStore.user.id;
+
+      const folder = await createFolder(profileId, name, [...moodboardStore.folders]);
+      moodboardStore.addFolder(folder);
       try {
-        await addItem(folderId, imageId);
+        const savedImage = await addItem(folder.id, imageId);
+        moodboardStore.addImage(folder.id, savedImage);
       } catch (e) {
         const message = mapSaveImageError(e, t);
         showToast({
@@ -87,6 +110,8 @@ export function useSaveToMoodboard() {
 
   return {
     isSaving,
+    canSave,
+    redirectGuestToSignUp,
     saveError,
     saveToMoodboard,
     isCreatingFolder,

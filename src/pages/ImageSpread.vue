@@ -21,10 +21,20 @@ const route = useRoute();
 const router = useRouter();
 const { localizeTaxon } = useTaxonomyLabel();
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
-  useSaveToMoodboard();
-const isSaved = computed(() => isImageSaved(centerImage.value?.id ?? ''));
+const {
+  isSaving,
+  canSave,
+  redirectGuestToSignUp,
+  saveToMoodboard,
+  createNewFolder,
+  isCreatingFolder,
+  isCreateFolderSuccess,
+  justSavedFolderId
+} = useSaveToMoodboard();
 const moodboardStore = useMoodboardStore();
+const isSaved = computed(() =>
+  isImageSaved(moodboardStore.folders, centerImage.value?.id ?? '')
+);
 const folders = computed(() =>
   moodboardStore.folders.map((f) => ({
     id: f.id,
@@ -209,8 +219,10 @@ watch(
           :image="centerImage"
           :saved="isSaved"
           :disabled="isSaving"
+          :can-save="canSave"
           :folders="folders"
           :just-saved-folder-id="justSavedFolderId"
+          @auth-required="redirectGuestToSignUp"
           @return="returnToPreviousLayer"
           @create-folder="handleCreateFolder"
           @save-to-folder="handleSaveToFolder"

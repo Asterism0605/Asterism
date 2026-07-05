@@ -24,16 +24,19 @@ interface Props {
   spread?: boolean;
   folders?: FolderItem[];
   justSavedFolderId?: string | null;
+  canSave?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'bookmark',
   folders: () => [],
-  justSavedFolderId: null
+  justSavedFolderId: null,
+  canSave: true
 });
 
 const emit = defineEmits<{
   consult: [];
+  'auth-required': [];
   'create-folder': [];
   'save-to-folder': [folderId: string];
 }>();
@@ -45,6 +48,11 @@ const containerRef = ref<HTMLElement | null>(null);
 const isBusy = computed(() => props.disabled || props.justSavedFolderId !== null);
 
 function toggleDropdown() {
+  if (!props.canSave) {
+    emit('auth-required');
+    return;
+  }
+
   isOpen.value = !isOpen.value;
   showFolderList.value = false;
 }
