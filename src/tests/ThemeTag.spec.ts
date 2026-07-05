@@ -29,9 +29,9 @@ describe('ThemeTag', () => {
       }
     });
 
-    expect(wrapper.text()).toContain('清透科技風');
-    expect(wrapper.text()).toContain('鉻金屬設計');
-    expect(wrapper.text()).toContain('千禧風');
+    expect(wrapper.text()).toContain('生態科技美學');
+    expect(wrapper.text()).toContain('金屬鍍鉻風格');
+    expect(wrapper.text()).toContain('千禧年風格');
     expect(wrapper.text()).not.toContain('Frutiger Aero');
     expect(wrapper.text()).not.toContain('Chrome Design');
   });
