@@ -139,7 +139,7 @@ export default {
     emptyTitle2: '還是空的。',
     emptyDesc: '你還沒有收藏任何圖片。到首頁探索，發掘並收集符合你風格星座的靈感。',
     startExploring: '開始探索',
-    createFolderTitle: '建立新資料夾',
+    createFolderTitle: '建立新資料夾並收藏圖片',
     folderNamePlaceholder: '資料夾名稱',
     send: '送出'
   },

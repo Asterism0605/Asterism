@@ -52,9 +52,11 @@ export const useMoodboardStore = defineStore('moodboard', () => {
     persist();
   }
 
-  function createFolder(name: string): void {
-    folders.value.push({ id: crypto.randomUUID(), name, images: [] });
+  function createFolder(name: string): string {
+    const id = crypto.randomUUID();
+    folders.value.push({ id, name, images: [] });
     persist();
+    return id;
   }
 
   function hydrate(): void {

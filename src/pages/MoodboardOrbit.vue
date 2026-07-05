@@ -156,9 +156,7 @@ const folderView = computed(() => {
 });
 
 const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
-const isMoodboardEmpty = computed(() =>
-  moodboardStore.folders.every((folder) => folder.images.length === 0)
-);
+const hasNoFolders = computed(() => moodboardStore.folders.length === 0);
 
 function onImgError(e: Event) {
   const img = e.target as HTMLImageElement;
@@ -354,7 +352,7 @@ onBeforeUnmount(() => {
     class="relative w-full overflow-hidden"
     :style="{ background: '#0b0b0d', height: `calc(100vh - ${NAV_H}px)`, marginTop: `${NAV_H}px` }"
   >
-    <MoodboardEmptyState v-if="isMoodboardEmpty" />
+    <MoodboardEmptyState v-if="hasNoFolders" />
     <template v-else>
     <!-- ===================== MOBILE STAGE (440×fluid) ===================== -->
     <div

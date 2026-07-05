@@ -7,7 +7,7 @@ import Button from '@/components/ui/Button.vue';
 const props = defineProps<{ modelValue: boolean; isSubmitting: boolean; isSuccess: boolean }>();
 const emit = defineEmits<{
   'update:modelValue': [value: boolean];
-  'submit': [name: string];
+  submit: [name: string];
 }>();
 
 const folderName = ref('');
@@ -20,7 +20,13 @@ watch(
 );
 
 function handleSubmit() {
-  if (!folderName.value.trim() || folderName.value.trim().length > 40 || props.isSubmitting || props.isSuccess) return;
+  if (
+    !folderName.value.trim() ||
+    folderName.value.trim().length > 40 ||
+    props.isSubmitting ||
+    props.isSuccess
+  )
+    return;
   emit('submit', folderName.value.trim());
 }
 </script>
@@ -70,8 +76,14 @@ function handleSubmit() {
 }
 
 @keyframes check-in {
-  from { opacity: 0; transform: translateY(-50%) scale(0.5); }
-  to   { opacity: 1; transform: translateY(-50%) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
 }
 
 .success-icon :deep(path) {
@@ -87,10 +99,14 @@ function handleSubmit() {
 }
 
 @keyframes draw-check {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 @keyframes draw-circle {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 </style>

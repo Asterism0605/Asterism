@@ -13,7 +13,7 @@ describe('ActionButton', () => {
 
     await wrapper.find('button').trigger('click');
 
-    expect(wrapper.text()).toContain('CREATE NEW FOLDER');
+    expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
     expect(wrapper.text()).not.toContain('SAVE TO FOLDER');
   });
 
@@ -124,7 +124,7 @@ describe('ActionButton', () => {
 
     await wrapper.setProps({ justSavedFolderId: null });
 
-    expect(wrapper.findAll('button').some((b) => b.text().includes('CREATE NEW FOLDER'))).toBe(false);
+    expect(wrapper.findAll('button').some((b) => b.text().includes('SAVE TO NEW FOLDER'))).toBe(false);
   });
 
   it('重新打開第一層 dropdown 時第二層資料夾清單重置為收合', async () => {
@@ -150,27 +150,27 @@ describe('ActionButton', () => {
 
     try {
       await wrapper.find('button').trigger('click');
-      expect(wrapper.text()).toContain('CREATE NEW FOLDER');
+      expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
 
       document.body.click();
       await flushPromises();
 
-      expect(wrapper.text()).not.toContain('CREATE NEW FOLDER');
+      expect(wrapper.text()).not.toContain('SAVE TO NEW FOLDER');
     } finally {
       wrapper.unmount();
       document.body.innerHTML = '';
     }
   });
 
-  it('點擊 CREATE NEW FOLDER 時 emit create-folder 並關閉 dropdown', async () => {
+  it('點擊 SAVE TO NEW FOLDER 時 emit create-folder 並關閉 dropdown', async () => {
     const wrapper = mount(ActionButton, { props: { folders } });
 
     await wrapper.find('button').trigger('click');
-    const createBtn = wrapper.findAll('button').find((b) => b.text().includes('CREATE NEW FOLDER'));
+    const createBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO NEW FOLDER'));
     await createBtn!.trigger('click');
 
     expect(wrapper.emitted('create-folder')).toHaveLength(1);
-    expect(wrapper.text()).not.toContain('CREATE NEW FOLDER');
+    expect(wrapper.text()).not.toContain('SAVE TO NEW FOLDER');
   });
 
   it('consult variant 渲染 CONSULT STYLIST 按鈕並 emit consult', async () => {

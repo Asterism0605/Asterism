@@ -67,11 +67,12 @@ describe('moodboard store', () => {
   it('建立新資料夾並持久化到 localStorage', () => {
     const store = useMoodboardStore();
 
-    store.createFolder('我的最愛');
+    const folderId = store.createFolder('我的最愛');
 
     expect(store.folders).toHaveLength(1);
     expect(store.folders[0].name).toBe('我的最愛');
     expect(store.folders[0].images).toEqual([]);
+    expect(folderId).toBe(store.folders[0].id);
 
     const persisted = JSON.parse(localStorage.getItem(STORAGE_KEY) as string);
     expect(persisted.folders).toHaveLength(1);

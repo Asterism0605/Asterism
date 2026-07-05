@@ -67,4 +67,14 @@ describe('MoodboardOrbit', () => {
     expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
     expect(wrapper.find('canvas').exists()).toBe(true);
   });
+
+  it('keeps the orbit view when a folder exists with no saved images', async () => {
+    const store = useMoodboardStore();
+    store.createFolder('test');
+
+    const { wrapper } = await mountMoodboard();
+
+    expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
+    expect(wrapper.find('canvas').exists()).toBe(true);
+  });
 });

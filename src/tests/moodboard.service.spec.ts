@@ -38,14 +38,15 @@ describe('moodboard.service', () => {
     expect(folder?.images).toHaveLength(0);
   });
 
-  it('createFolder 在 store 中新增一個具名的資料夾', () => {
-    createFolder('我的最愛');
+  it('createFolder 在 store 中新增一個具名的資料夾，並回傳新資料夾的 id', () => {
+    const folderId = createFolder('我的最愛');
 
     const store = useMoodboardStore();
 
     expect(store.folders).toHaveLength(1);
     expect(store.folders[0].name).toBe('我的最愛');
     expect(store.folders[0].images).toEqual([]);
+    expect(folderId).toBe(store.folders[0].id);
   });
 
   it('當資料夾數量達到 10 個時 createFolder 會拋出錯誤', () => {
