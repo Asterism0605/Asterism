@@ -1,104 +1,161 @@
-import { setActivePinia, createPinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { addItem, removeItem, createFolder, isImageSaved } from '@/services/moodboard.service';
-import { useMoodboardStore } from '@/stores/moodboard.store';
+import type { MoodboardFolder } from '@/types/moodboard';
+
+const { addMoodboardItem, createMoodboardFolder, fetchMoodboardFolders } = vi.hoisted(() => ({
+  addMoodboardItem: vi.fn(),
+  createMoodboardFolder: vi.fn(),
+  fetchMoodboardFolders: vi.fn()
+}));
+
+vi.mock('@/api/moodboard.api', () => ({
+  addMoodboardItem,
+  createMoodboardFolder,
+  fetchMoodboardFolders
+}));
 
 vi.mock('@/services/image.service', () => ({
-  getImageById: (id: string) => ({ id, src: `/style-image/${id}.webp` })
+  getImageById: (id: string) => ({
+    id,
+    src: `/style-image/${id}.webp`,
+    title: `Image ${id}`,
+    styleGroup: 'minimal',
+    style: ['Minimalism']
+  })
 }));
+
+import {
+  addItem,
+  createFolder,
+  getMoodboardViewModel,
+  isImageSaved
+} from '@/services/moodboard.service';
+
+const existingFolders: MoodboardFolder[] = [];
 
 describe('moodboard.service', () => {
   beforeEach(() => {
-    setActivePinia(createPinia());
+    vi.clearAllMocks();
   });
 
-  it('addItem 將圖片儲存到指定的資料夾', () => {
-    createFolder('test');
-    const store = useMoodboardStore();
-    const folderId = store.folders[0].id;
+  it('maps nested Data API rows into the existing UI view model', async () => {
+    fetchMoodboardFolders.mockResolvedValue([
+      {
+        id: 'folder-1',
+        profile_id: 'user-1',
+        name: 'Studio',
+        created_at: '2026-07-05T00:00:00.000Z',
+        updated_at: '2026-07-05T00:00:00.000Z',
+        moodboard_items: [
+          {
+            id: 'item-1',
+            folder_id: 'folder-1',
+            image_id: 'image-1',
+            created_at: '2026-07-05T00:00:00.000Z',
+            images: {
+              id: 'image-1',
+              url: '/image-1.webp',
+              title: 'Image 1',
+              style_group: 'minimal',
+              style: ['Minimalism']
+            }
+          }
+        ]
+      }
+    ]);
 
-    addItem(folderId, 'y2k-001');
+    const viewModel = await getMoodboardViewModel('user-1');
 
-    const folder = store.folders.find((f) => f.id === folderId);
-
-    expect(folder?.images).toHaveLength(1);
-    expect(folder?.images[0]).toMatchObject({ id: 'y2k-001' });
+    expect(viewModel.totalFolderCount).toBe(1);
+    expect(viewModel.totalSavedItemCount).toBe(1);
+    expect(viewModel.folders[0].images[0]).toMatchObject({
+      itemId: 'item-1',
+      id: 'image-1',
+      src: '/image-1.webp',
+      styleGroup: 'minimal'
+    });
   });
 
-  it('removeItem 從指定的資料夾中移除圖片', () => {
-    createFolder('test');
-    const store = useMoodboardStore();
-    const folderId = store.folders[0].id;
+  it('creates a trimmed folder through the Data API', async () => {
+    createMoodboardFolder.mockResolvedValue({
+      id: 'folder-1',
+      profile_id: 'user-1',
+      name: 'Studio',
+      created_at: '2026-07-05T00:00:00.000Z',
+      updated_at: '2026-07-05T00:00:00.000Z'
+    });
 
-    addItem(folderId, 'y2k-001');
-    removeItem(folderId, 'y2k-001');
+    const result = await createFolder('user-1', '  Studio  ', existingFolders);
 
-    const folder = store.folders.find((f) => f.id === folderId);
-
-    expect(folder?.images).toHaveLength(0);
+    expect(createMoodboardFolder).toHaveBeenCalledWith({
+      profileId: 'user-1',
+      name: 'Studio'
+    });
+    expect(result).toEqual({
+      id: 'folder-1',
+      name: 'Studio',
+      createdAt: '2026-07-05T00:00:00.000Z',
+      images: []
+    });
   });
 
-  it('createFolder 在 store 中新增一個具名的資料夾，並回傳新資料夾的 id', () => {
-    const folderId = createFolder('我的最愛');
+  it('rejects duplicate folder names before writing', async () => {
+    const folders = [
+      {
+        id: 'folder-1',
+        name: 'Studio',
+        createdAt: '2026-07-05T00:00:00.000Z',
+        images: []
+      }
+    ];
 
-    const store = useMoodboardStore();
-
-    expect(store.folders).toHaveLength(1);
-    expect(store.folders[0].name).toBe('我的最愛');
-    expect(store.folders[0].images).toEqual([]);
-    expect(folderId).toBe(store.folders[0].id);
+    await expect(createFolder('user-1', ' Studio ', folders)).rejects.toThrow(
+      'A folder with this name already exists.'
+    );
+    expect(createMoodboardFolder).not.toHaveBeenCalled();
   });
 
-  it('當資料夾數量達到 10 個時 createFolder 會拋出錯誤', () => {
-    for (let i = 0; i < 10; i++) {
-      createFolder(`Folder ${i}`);
-    }
+  it('adds an image through the Data API and returns an immediate UI item', async () => {
+    addMoodboardItem.mockResolvedValue({
+      id: 'item-1',
+      folder_id: 'folder-1',
+      image_id: 'image-1',
+      created_at: '2026-07-05T00:00:00.000Z'
+    });
 
-    expect(() => createFolder('One too many')).toThrow('You have reached the maximum of 10 folders.');
+    const item = await addItem('folder-1', 'image-1');
+
+    expect(addMoodboardItem).toHaveBeenCalledWith({
+      folderId: 'folder-1',
+      imageId: 'image-1'
+    });
+    expect(item).toMatchObject({
+      itemId: 'item-1',
+      id: 'image-1',
+      src: '/style-image/image-1.webp'
+    });
   });
 
-  it('當名稱與既有資料夾重複時 createFolder 會拋出錯誤', () => {
-    createFolder('我的最愛');
+  it('checks saved state from the passed store snapshot', () => {
+    const folders = [
+      {
+        id: 'folder-1',
+        name: 'Studio',
+        createdAt: '2026-07-05T00:00:00.000Z',
+        images: [
+          {
+            itemId: 'item-1',
+            id: 'image-1',
+            src: '/image-1.webp',
+            title: 'Image 1',
+            styleGroup: 'minimal',
+            style: [],
+            createdAt: '2026-07-05T00:00:00.000Z'
+          }
+        ]
+      }
+    ];
 
-    expect(() => createFolder('我的最愛')).toThrow('A folder with this name already exists.');
-
-    const store = useMoodboardStore();
-    expect(store.folders).toHaveLength(1);
-  });
-
-  it('建立資料夾名稱前後有空白時仍視為與既有資料夾重複', () => {
-    createFolder('我的最愛');
-
-    expect(() => createFolder('  我的最愛  ')).toThrow('A folder with this name already exists.');
-  });
-
-  it('建立資料夾時會把名稱前後空白去掉再儲存', () => {
-    createFolder('  我的最愛  ');
-
-    const store = useMoodboardStore();
-    expect(store.folders[0].name).toBe('我的最愛');
-  });
-
-  it('既有資料夾名稱帶空白時，之後建立去掉空白的同名資料夾仍會被擋下', () => {
-    createFolder('  我的最愛  ');
-
-    expect(() => createFolder('我的最愛')).toThrow('A folder with this name already exists.');
-
-    const store = useMoodboardStore();
-    expect(store.folders).toHaveLength(1);
-  });
-
-  it('當圖片已儲存時 isImageSaved 回傳 true', () => {
-    createFolder('test');
-    const store = useMoodboardStore();
-    const folderId = store.folders[0].id;
-
-    addItem(folderId, 'y2k-001');
-
-    expect(isImageSaved('y2k-001')).toBe(true);
-  });
-
-  it('當圖片未儲存時 isImageSaved 回傳 false', () => {
-    expect(isImageSaved('not-saved-id')).toBe(false);
+    expect(isImageSaved(folders, 'image-1')).toBe(true);
+    expect(isImageSaved(folders, 'image-2')).toBe(false);
   });
 });

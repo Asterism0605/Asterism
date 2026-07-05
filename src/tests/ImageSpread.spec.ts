@@ -7,6 +7,8 @@ import { getImageById } from '@/services/image.service';
 import { addItem, createFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { useMoodboardStore } from '@/stores/moodboard.store';
+import { useAuthStore } from '@/stores/auth.store';
+import type { MoodboardFolder, SavedImage } from '@/types/moodboard';
 
 vi.mock('@/services/moodboard.service', () => ({
   addItem: vi.fn(),
@@ -27,7 +29,8 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
     routes: [
       { path: '/', name: 'home', component: { template: '<div />' } },
       { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread },
-      { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } }
+      { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } },
+      { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } }
     ]
   });
   const push = vi.spyOn(router, 'push');
@@ -48,6 +51,21 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
 }
 
 let folderId: string;
+const testFolder: MoodboardFolder = {
+  id: 'folder-1',
+  name: 'test',
+  createdAt: '2026-07-05T00:00:00.000Z',
+  images: []
+};
+const testSavedImage: SavedImage = {
+  itemId: 'item-1',
+  id: 'y2k-main-001',
+  src: '/style-image/y2k-main-001.webp',
+  title: 'Saved image',
+  styleGroup: 'y2k',
+  style: [],
+  createdAt: '2026-07-05T00:00:00.000Z'
+};
 
 describe('ImageSpread', () => {
   beforeEach(() => {
@@ -56,9 +74,19 @@ describe('ImageSpread', () => {
     // 固定成 0＝每組取資料序第一張（medium 入口圖），讓標籤/導航斷言維持決定性。
     vi.spyOn(Math, 'random').mockReturnValue(0);
     setActivePinia(createPinia());
+    const authStore = useAuthStore();
+    authStore.user = {
+      id: 'user-1',
+      email: 'member@example.com',
+      displayName: 'Member',
+      isAdmin: false,
+      createdAt: '2026-07-05T00:00:00.000Z'
+    };
     const store = useMoodboardStore();
-    store.createFolder('test');
-    folderId = store.folders[0].id;
+    store.$patch({ status: 'success', folders: [{ ...testFolder, images: [] }] });
+    folderId = testFolder.id;
+    vi.mocked(addItem).mockResolvedValue(testSavedImage);
+    vi.mocked(createFolder).mockResolvedValue({ ...testFolder, id: 'new-folder-id', images: [] });
   });
 
   afterEach(() => {
@@ -74,6 +102,22 @@ describe('ImageSpread', () => {
     expect(wrapper.text()).toContain('Return');
     expect(wrapper.text()).toContain('ADD TO MOODBOARD');
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4);
+  });
+
+  it('未登入點擊收藏時直接導向註冊頁且保留目前路徑', async () => {
+    useAuthStore().user = null;
+    const { wrapper, router } = await mountImageSpread();
+
+    const addButton = wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('ADD TO MOODBOARD'));
+    await addButton!.trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('sign-up');
+    expect(router.currentRoute.value.query.next).toBe('/images/y2k-main-001/spread');
+    expect(addItem).not.toHaveBeenCalled();
+    expect(createFolder).not.toHaveBeenCalled();
   });
 
   it('第一層相關圖片以 medium 標示標籤', async () => {
@@ -236,8 +280,8 @@ describe('ImageSpread', () => {
   });
 
   it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
-    let resolve!: () => void;
-    vi.mocked(addItem).mockImplementationOnce(() => new Promise<void>((r) => { resolve = r; }));
+    let resolve!: (image: SavedImage) => void;
+    vi.mocked(addItem).mockImplementationOnce(() => new Promise<SavedImage>((r) => { resolve = r; }));
     const { wrapper } = await mountImageSpread();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
@@ -249,7 +293,7 @@ describe('ImageSpread', () => {
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
 
-    resolve();
+    resolve(testSavedImage);
     await flushPromises();
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(false);
@@ -272,7 +316,7 @@ describe('ImageSpread', () => {
   });
 
   it('送出 SAVE TO NEW FOLDER 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
-    vi.mocked(createFolder).mockReturnValueOnce('new-folder-id');
+    vi.mocked(createFolder).mockResolvedValueOnce({ ...testFolder, id: 'new-folder-id', images: [] });
     const router = createRouter({
       history: createMemoryHistory(),
       routes: [
@@ -308,7 +352,7 @@ describe('ImageSpread', () => {
       sendBtn.click();
       await flushPromises();
 
-      expect(createFolder).toHaveBeenCalledWith('My Folder');
+      expect(createFolder).toHaveBeenCalledWith('user-1', 'My Folder', [testFolder]);
       expect(addItem).toHaveBeenCalledWith('new-folder-id', 'y2k-main-001');
     } finally {
       wrapper.unmount();
@@ -317,7 +361,7 @@ describe('ImageSpread', () => {
   });
 
   it('createFolder 成功但 addItem 失敗時顯示錯誤提示，且 modal 不關閉', async () => {
-    vi.mocked(createFolder).mockReturnValueOnce('new-folder-id');
+    vi.mocked(createFolder).mockResolvedValueOnce({ ...testFolder, id: 'new-folder-id', images: [] });
     vi.mocked(addItem).mockImplementationOnce(() => {
       throw new Error('save failed');
     });

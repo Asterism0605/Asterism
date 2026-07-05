@@ -8,6 +8,20 @@ const folders = [
 ];
 
 describe('ActionButton', () => {
+  it('未登入點擊收藏時 emit auth-required 且不開啟選單', async () => {
+    const wrapper = mount(ActionButton, {
+      props: { canSave: false }
+    });
+
+    const addButton = wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('ADD TO MOODBOARD'));
+    await addButton!.trigger('click');
+
+    expect(wrapper.emitted('auth-required')).toHaveLength(1);
+    expect(wrapper.text()).not.toContain('SAVE TO NEW FOLDER');
+  });
+
   it('folders 為空陣列時不渲染 SAVE TO FOLDER 區塊', async () => {
     const wrapper = mount(ActionButton, { props: { folders: [] } });
 

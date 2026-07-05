@@ -40,6 +40,8 @@ describe('MoodboardOrbit', () => {
   });
 
   it('shows the empty state when no images are saved', async () => {
+    const store = useMoodboardStore();
+    store.$patch({ status: 'success', folders: [] });
     const { wrapper } = await mountMoodboard();
 
     expect(wrapper.text()).toContain('Your moodboard is still empty.');
@@ -49,6 +51,8 @@ describe('MoodboardOrbit', () => {
   });
 
   it('routes the empty state CTA back to the homepage', async () => {
+    const store = useMoodboardStore();
+    store.$patch({ status: 'success', folders: [] });
     const { wrapper, router } = await mountMoodboard();
 
     await wrapper.get('[data-testid="moodboard-empty-cta"]').trigger('click');
@@ -59,22 +63,71 @@ describe('MoodboardOrbit', () => {
 
   it('keeps the orbit view when saved images exist', async () => {
     const store = useMoodboardStore();
-    store.createFolder('test');
-    store.addImage(store.folders[0].id, { id: 'saved-1', src: '/style-image/saved-1.webp' });
+    store.$patch({
+      status: 'success',
+      folders: [
+        {
+          id: 'folder-1',
+          name: 'Studio',
+          createdAt: '2026-07-05T00:00:00.000Z',
+          images: [
+            {
+              itemId: 'item-1',
+              id: 'saved-1',
+              src: '/style-image/saved-1.webp',
+              title: 'Saved',
+              styleGroup: 'minimal',
+              style: [],
+              createdAt: '2026-07-05T00:00:00.000Z'
+            }
+          ]
+        }
+      ]
+    });
 
     const { wrapper } = await mountMoodboard();
 
     expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
     expect(wrapper.find('canvas').exists()).toBe(true);
+    expect(wrapper.text()).toContain('Studio');
   });
 
-  it('keeps the orbit view when a folder exists with no saved images', async () => {
+  it('keeps an empty folder in the empty state because it has no saved images', async () => {
     const store = useMoodboardStore();
-    store.createFolder('test');
+    store.$patch({
+      status: 'success',
+      folders: [
+        {
+          id: 'folder-1',
+          name: 'Studio',
+          createdAt: '2026-07-05T00:00:00.000Z',
+          images: []
+        }
+      ]
+    });
 
     const { wrapper } = await mountMoodboard();
 
+    expect(wrapper.text()).toContain('Your moodboard is still empty.');
+  });
+
+  it('shows a loading state without flashing the empty state', async () => {
+    const store = useMoodboardStore();
+    store.$patch({ status: 'loading', folders: [] });
+
+    const { wrapper } = await mountMoodboard();
+
+    expect(wrapper.text()).toContain('Loading your moodboard...');
     expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
-    expect(wrapper.find('canvas').exists()).toBe(true);
+  });
+
+  it('shows a Data API error separately from the empty state', async () => {
+    const store = useMoodboardStore();
+    store.$patch({ status: 'error', error: 'network down', folders: [] });
+
+    const { wrapper } = await mountMoodboard();
+
+    expect(wrapper.text()).toContain("We couldn't load your moodboard.");
+    expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
   });
 });

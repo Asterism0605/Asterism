@@ -8,6 +8,7 @@ import { addItem, createFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { useAuthStore } from '@/stores/auth.store';
 import { useMoodboardStore } from '@/stores/moodboard.store';
+import type { MoodboardFolder, SavedImage } from '@/types/moodboard';
 
 vi.mock('@/services/moodboard.service', () => ({
   addItem: vi.fn(),
@@ -36,6 +37,21 @@ const fakeUser = {
   isAdmin: false,
   createdAt: '2026-01-01T00:00:00Z'
 };
+const testFolder: MoodboardFolder = {
+  id: 'folder-1',
+  name: 'test',
+  createdAt: '2026-07-05T00:00:00.000Z',
+  images: []
+};
+const testSavedImage: SavedImage = {
+  itemId: 'item-1',
+  id: 'y2k-main-001',
+  src: '/style-image/y2k-main-001.webp',
+  title: 'Saved image',
+  styleGroup: 'y2k',
+  style: [],
+  createdAt: '2026-07-05T00:00:00.000Z'
+};
 
 async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = true) {
   const router = createRouter({
@@ -61,8 +77,8 @@ async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = tr
   }
 
   const moodboardStore = useMoodboardStore(pinia);
-  moodboardStore.createFolder('test');
-  const folderId = moodboardStore.folders[0].id;
+  moodboardStore.$patch({ status: 'success', folders: [{ ...testFolder, images: [] }] });
+  const folderId = testFolder.id;
 
   await router.push(`/images/${imageId}`);
   await router.isReady();
@@ -76,6 +92,9 @@ describe('PictureDetail', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setActivePinia(createPinia());
+    useAuthStore().user = fakeUser;
+    vi.mocked(addItem).mockResolvedValue(testSavedImage);
+    vi.mocked(createFolder).mockResolvedValue({ ...testFolder, id: 'new-folder-id', images: [] });
   });
 
   afterEach(() => {
@@ -83,10 +102,10 @@ describe('PictureDetail', () => {
   });
 
   it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
-    let resolve!: () => void;
+    let resolve!: (image: SavedImage) => void;
     vi.mocked(addItem).mockImplementationOnce(
       () =>
-        new Promise<void>((r) => {
+        new Promise<SavedImage>((r) => {
           resolve = r;
         })
     );
@@ -101,7 +120,7 @@ describe('PictureDetail', () => {
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
 
-    resolve();
+    resolve(testSavedImage);
     await flushPromises();
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(false);
@@ -169,6 +188,21 @@ describe('PictureDetail', () => {
     );
   });
 
+  it('routes unauthenticated moodboard clicks to sign-up with the current image target', async () => {
+    const { router, wrapper } = await mountPictureDetail('y2k-main-001', false);
+
+    const addButton = wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('ADD TO MOODBOARD'));
+    await addButton!.trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('sign-up');
+    expect(router.currentRoute.value.query.next).toBe('/images/y2k-main-001');
+    expect(addItem).not.toHaveBeenCalled();
+    expect(createFolder).not.toHaveBeenCalled();
+  });
+
   it('導向選取的 stage 圖片詳情頁', async () => {
     const { router, wrapper } = await mountPictureDetail();
 
@@ -213,7 +247,7 @@ describe('PictureDetail', () => {
   });
 
   it('送出 SAVE TO NEW FOLDER 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
-    vi.mocked(createFolder).mockReturnValueOnce('new-folder-id');
+    vi.mocked(createFolder).mockResolvedValueOnce({ ...testFolder, id: 'new-folder-id', images: [] });
     const router = createRouter({
       history: createMemoryHistory(),
       routes: [
@@ -249,7 +283,7 @@ describe('PictureDetail', () => {
       sendBtn.click();
       await flushPromises();
 
-      expect(createFolder).toHaveBeenCalledWith('My Folder');
+      expect(createFolder).toHaveBeenCalledWith('user-1', 'My Folder', []);
       expect(addItem).toHaveBeenCalledWith('new-folder-id', 'y2k-main-001');
     } finally {
       wrapper.unmount();
@@ -258,7 +292,7 @@ describe('PictureDetail', () => {
   });
 
   it('createFolder 成功但 addItem 失敗時顯示錯誤提示，且 modal 不關閉', async () => {
-    vi.mocked(createFolder).mockReturnValueOnce('new-folder-id');
+    vi.mocked(createFolder).mockResolvedValueOnce({ ...testFolder, id: 'new-folder-id', images: [] });
     vi.mocked(addItem).mockImplementationOnce(() => {
       throw new Error('save failed');
     });
