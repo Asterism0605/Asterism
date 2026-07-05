@@ -6,8 +6,7 @@ import ConsultationDropdown from '@/components/feature/consultant/ConsultationDr
 import Button from '@/components/ui/Button.vue';
 import FormInput from '@/components/ui/FormInput.vue';
 
-type ConsultationMethod = 'online' | 'in-person';
-type BackendConsultationMethod = 'online' | 'in_person';
+type ConsultationMethod = 'online' | 'in_person';
 type TimeSlot = '' | 'am' | 'pm';
 type SubmittedTimeSlot = Exclude<TimeSlot, ''>;
 
@@ -24,8 +23,7 @@ interface BookingForm {
   paymentConfirmed: boolean;
 }
 
-interface BookingPayload extends Omit<BookingForm, 'method' | 'timeSlot'> {
-  method: BackendConsultationMethod;
+interface BookingPayload extends Omit<BookingForm, 'timeSlot'> {
   timeSlot: SubmittedTimeSlot;
 }
 
@@ -146,10 +144,6 @@ function updateEmail(value: string) {
   form.email = value;
 }
 
-function mapConsultationMethod(method: ConsultationMethod): BackendConsultationMethod {
-  return method === 'in-person' ? 'in_person' : method;
-}
-
 function closeDropdowns() {
   isTimeSlotOpen.value = false;
   isDesignFieldOpen.value = false;
@@ -201,7 +195,6 @@ function handleSubmit() {
 
   emit('submit', {
     ...form,
-    method: mapConsultationMethod(form.method),
     timeSlot: form.timeSlot as SubmittedTimeSlot
   });
 }
@@ -217,7 +210,7 @@ function handleSubmit() {
           <span>{{ $t('consult.online') }}</span>
         </label>
         <label class="recommendation-panel__choice">
-          <input v-model="form.method" type="radio" value="in-person" />
+          <input v-model="form.method" type="radio" value="in_person" />
           <span>{{ $t('consult.inPerson') }}</span>
         </label>
       </div>
