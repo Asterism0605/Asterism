@@ -3,7 +3,7 @@ import * as THREE from 'three'
 
 type TextureWithAspect = THREE.Texture & { _aspect: number }
 import { fibSphere } from './layout'
-import { IMG_URLS, SPRITE_RADIUS } from './config'
+import { SPRITE_RADIUS, type MoodboardOrbitImage } from './config'
 
 export interface SphereHandle {
   resize: () => void
@@ -13,7 +13,8 @@ export interface SphereHandle {
 export function initSphere(
   canvas: HTMLCanvasElement,
   getScale: () => number,
-  getHasFolders: () => boolean
+  getHasFolders: () => boolean,
+  images: MoodboardOrbitImage[]
 ): SphereHandle {
   // sphereDPR as private closure (uses getScale() instead of scale.value)
   function sphereDPR() {
@@ -53,8 +54,8 @@ export function initSphere(
     return t
   }
 
-  const positions = fibSphere(IMG_URLS.length, SPRITE_RADIUS)
-  const textures: THREE.Texture[] = new Array(IMG_URLS.length)
+  const positions = fibSphere(images.length, SPRITE_RADIUS)
+  const textures: THREE.Texture[] = new Array(images.length)
   const sprites: THREE.Sprite[] = []
   const loader = new THREE.TextureLoader()
   loader.crossOrigin = 'anonymous'
@@ -67,6 +68,7 @@ export function initSphere(
       const sp = new THREE.Sprite(
         new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false })
       )
+      sp.userData.isPlaceholder = images[i].isPlaceholder
       const a = (tex as unknown as TextureWithAspect)._aspect || 0.75
       sp.scale.set(0.9 * a, 0.9, 1)
       sp.position.copy(pos)
@@ -77,11 +79,17 @@ export function initSphere(
   }
 
   let done = 0
-  const finishOne = () => { if (++done >= IMG_URLS.length) build() }
+  const finishOne = () => { if (++done >= images.length) build() }
 
-  IMG_URLS.forEach((url, i) =>
+  images.forEach((image, i) => {
+    if (image.isPlaceholder) {
+      textures[i] = makeFallbackTexture(i)
+      finishOne()
+      return
+    }
+
     loader.load(
-      url,
+      image.src,
       (tex) => {
         tex.colorSpace = THREE.SRGBColorSpace
         tex.anisotropy = renderer.capabilities.getMaxAnisotropy()
@@ -94,7 +102,7 @@ export function initSphere(
       undefined,
       () => { textures[i] = makeFallbackTexture(i); finishOne() }
     )
-  )
+  })
 
   const tmp = new THREE.Vector3()
   let t = 0
@@ -107,7 +115,7 @@ export function initSphere(
     for (const sp of sprites) {
       sp.getWorldPosition(tmp)
       const k = Math.max(0, Math.min(1, (tmp.z + SPRITE_RADIUS) / (2 * SPRITE_RADIUS)))
-      sp.material.opacity = 0.55 + 0.45 * k
+      sp.material.opacity = sp.userData.isPlaceholder ? 0.18 : 0.55 + 0.45 * k
     }
     renderer.render(scene, camera)
   }
@@ -124,6 +132,7 @@ export function initSphere(
 
   function dispose() {
     cancelAnimationFrame(rafId)
+    textures.forEach((texture) => texture.dispose())
     renderer.dispose()
   }
 

@@ -20,10 +20,9 @@ import {
   MH,
   M_HOME_ORBIT,
   M_DETAIL_ORBIT,
-  folderNames,
   photos,
   mDetailBase,
-  mHomePhotos
+  buildMoodboardOrbitImages
 } from '@/components/feature/moodboard/config';
 import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
 import type { MoodboardMobilePhoto, MoodboardPositionedPhoto } from '@/types/moodboard';
@@ -31,6 +30,7 @@ import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useMobileOrbit } from '@/components/feature/moodboard/useMobileOrbit';
 import { useMoodboardStore } from '@/stores/moodboard.store';
+import { useAuthStore } from '@/stores/auth.store';
 
 const props = defineProps({
   height: { type: String, default: '100vh' },
@@ -43,8 +43,14 @@ const emit = defineEmits(['open', 'home']);
 const router = useRouter();
 const route = useRoute();
 const moodboardStore = useMoodboardStore();
+const authStore = useAuthStore();
 
-const folderCount = ref(10);
+const folderCount = computed(() => moodboardStore.folders.length);
+const folderNames = computed(() => moodboardStore.folders.map((folder) => folder.name));
+const allSavedImages = computed(() =>
+  moodboardStore.folders.flatMap((folder) => folder.images)
+);
+const orbitImages = computed(() => buildMoodboardOrbitImages(allSavedImages.value));
 
 /* ---- reactive state ---- */
 const scale = ref(1);
@@ -52,7 +58,7 @@ const hasFolders = ref(true);
 const orbitPhase = ref(0);
 const hoverIdx = ref(-1);
 const selectedFolder = ref(0);
-const selectedName = computed(() => folderNames[selectedFolder.value % folderNames.length]);
+const selectedName = computed(() => getFolderName(selectedFolder.value));
 const scatter = ref<MoodboardPositionedPhoto[]>([]);
 const sphereCanvas = ref<HTMLCanvasElement | null>(null);
 const isMobile = ref(false);
@@ -156,7 +162,23 @@ const folderView = computed(() => {
 });
 
 const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
-const hasNoFolders = computed(() => moodboardStore.folders.length === 0);
+const showEmpty = computed(
+  () => moodboardStore.status === 'idle' || moodboardStore.isEmpty
+);
+
+function getFolderName(index: number): string {
+  return folderNames.value[index % folderNames.value.length] ?? '';
+}
+
+function toPhotos(images: typeof allSavedImages.value, mobile = false) {
+  const sizes = mobile ? mDetailBase : photos;
+
+  return images.map((image, index) => ({
+    src: image.src,
+    w: sizes[index % sizes.length].w,
+    h: sizes[index % sizes.length].h
+  }));
+}
 
 function onImgError(e: Event) {
   const img = e.target as HTMLImageElement;
@@ -168,7 +190,9 @@ function onImgError(e: Event) {
 function buildDetail() {
   const o = HO;
   const floor = deskVisibleH.value;
-  const list = photos.slice(0, DETAIL_CAP);
+  const list = toPhotos(
+    moodboardStore.folders[selectedFolder.value]?.images.slice(0, DETAIL_CAP) ?? []
+  );
   const nodes = packPhotos(list, {
     idPrefix: 's',
     cx: o.cx,
@@ -199,7 +223,11 @@ function buildDetail() {
 function buildMobileDetail() {
   const o = M_DETAIL_ORBIT;
   const photoFloorBottom = mDesignH.value - 138;
-  const nodes = packPhotos(mDetailBase, {
+  const list = toPhotos(
+    moodboardStore.folders[selectedFolder.value]?.images.slice(0, DETAIL_CAP) ?? [],
+    true
+  );
+  const nodes = packPhotos(list, {
     idPrefix: 'md',
     cx: o.cx,
     cy: o.cy,
@@ -225,7 +253,16 @@ function buildMobileDetail() {
 
 function buildMobileHome() {
   const o = M_HOME_ORBIT;
-  const list = mHomePhotos.map((p) => ({ src: p.src, w: p.w, h: p.h, faded: p.faded }));
+  const list = orbitImages.value.map((image, index) => {
+    const size = mDetailBase[index % mDetailBase.length];
+    return {
+      src: image.src,
+      w: size.w,
+      h: size.h,
+      faded: image.isPlaceholder,
+      placeholder: image.isPlaceholder
+    };
+  });
   const nodes = packPhotos(list, {
     idPrefix: 'mh',
     cx: o.cx,
@@ -259,14 +296,14 @@ function openFolder(i: number) {
 }
 
 function slugFor(i: number) {
-  const name = folderNames[i % folderNames.length] || 'folder-' + i;
+  const name = getFolderName(i) || 'folder-' + i;
   return encodeURIComponent(name.trim().replace(/\s+/g, '-').toLowerCase());
 }
 
 function navigate(slug: string, i: number) {
   const path = props.basePath + (slug ? '/' + slug : '');
   router.push(path);
-  if (slug) emit('open', { index: i, name: folderNames[i % folderNames.length], slug, path });
+  if (slug) emit('open', { index: i, name: getFolderName(i), slug, path });
   else emit('home', { path });
 }
 
@@ -324,19 +361,46 @@ function onResize() {
   }
 }
 
-onMounted(() => {
+async function retryMoodboard() {
+  const profileId = authStore.user?.id;
+
+  if (!profileId) {
+    return;
+  }
+
+  await moodboardStore.fetchMoodboard(profileId);
+  if (moodboardStore.status === 'success') {
+    if (isMobile.value) buildMobileHome();
+    initializeSphere();
+  }
+}
+
+function initializeSphere() {
+  if (!sphereCanvas.value || orbitImages.value.length === 0) {
+    return;
+  }
+
+  sphereHandle?.dispose();
+  sphereHandle = initSphere(
+    sphereCanvas.value,
+    () => scale.value,
+    () => hasFolders.value,
+    orbitImages.value
+  );
+}
+
+onMounted(async () => {
   onResize();
   window.addEventListener('resize', onResize);
+  const profileId = authStore.user?.id;
+  if (
+    profileId &&
+    (moodboardStore.status === 'idle' || moodboardStore.loadedProfileId !== profileId)
+  ) {
+    await moodboardStore.fetchMoodboard(profileId);
+  }
   if (isMobile.value) buildMobileHome();
-  nextTick(() => {
-    if (sphereCanvas.value) {
-      sphereHandle = initSphere(
-        sphereCanvas.value,
-        () => scale.value,
-        () => hasFolders.value
-      );
-    }
-  });
+  nextTick(initializeSphere);
   orbitRaf = requestAnimationFrame(orbitLoop);
 });
 
@@ -352,7 +416,28 @@ onBeforeUnmount(() => {
     class="relative w-full overflow-hidden"
     :style="{ background: '#0b0b0d', height: `calc(100vh - ${NAV_H}px)`, marginTop: `${NAV_H}px` }"
   >
-    <MoodboardEmptyState v-if="hasNoFolders" />
+    <div
+      v-if="moodboardStore.status === 'loading'"
+      data-testid="moodboard-loading"
+      class="flex h-full items-center justify-center text-sm text-white/60"
+    >
+      {{ $t('moodboard.loading') }}
+    </div>
+    <div
+      v-else-if="moodboardStore.status === 'error'"
+      data-testid="moodboard-error"
+      class="flex h-full flex-col items-center justify-center gap-4 text-center text-white"
+    >
+      <p>{{ $t('moodboard.loadError') }}</p>
+      <button
+        type="button"
+        class="rounded-full border border-white/30 px-5 py-2 text-sm hover:border-white/60"
+        @click="retryMoodboard"
+      >
+        {{ $t('moodboard.retry') }}
+      </button>
+    </div>
+    <MoodboardEmptyState v-else-if="showEmpty" />
     <template v-else>
     <!-- ===================== MOBILE STAGE (440×fluid) ===================== -->
     <div
@@ -454,7 +539,7 @@ onBeforeUnmount(() => {
                 0 0 14px rgba(255, 255, 255, 0.14);
             "
           >
-            {{ mHover >= 0 ? folderNames[mHover % folderNames.length] : '' }}
+            {{ mHover >= 0 ? getFolderName(mHover) : '' }}
           </div>
           <div class="relative flex items-center" style="gap: 8px; margin-top: 14px">
             <span
@@ -498,7 +583,11 @@ onBeforeUnmount(() => {
       >
         <div
           class="image-card w-full h-full"
-          :style="{ opacity: p.faded ? 0.5 : 1, animationDelay: p.delay + 's' }"
+            :style="{
+              opacity: p.placeholder ? 0.2 : p.faded ? 0.5 : 1,
+              filter: p.placeholder ? 'grayscale(1)' : 'none',
+              animationDelay: p.delay + 's'
+            }"
         >
           <img
             :src="p.src"
@@ -811,7 +900,7 @@ onBeforeUnmount(() => {
               0 0 18px rgba(255, 255, 255, 0.14);
           "
         >
-          {{ folderNames[hoverIdx % folderNames.length] }}
+          {{ getFolderName(hoverIdx) }}
         </div>
         <div class="relative flex items-center" style="gap: 10px; margin-top: 20px">
           <span

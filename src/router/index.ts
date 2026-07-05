@@ -70,7 +70,8 @@ const router = createRouter({
     {
       path: '/moodboard/:slug?',
       name: 'moodboard',
-      component: MoodboardOrbit
+      component: MoodboardOrbit,
+      meta: { requiresAuth: true }
     },
     {
       path: '/playground',
