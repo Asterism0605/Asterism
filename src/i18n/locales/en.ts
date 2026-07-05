@@ -142,7 +142,7 @@ export default {
     emptyDesc:
       "You haven't saved any images yet. Explore the homepage to discover and collect inspiration that fits your style constellation.",
     startExploring: 'Start Exploring',
-    createFolderTitle: 'CREATE NEW FOLDER',
+    createFolderTitle: 'SAVE TO NEW FOLDER',
     folderNamePlaceholder: 'Folder name',
     send: 'SEND'
   },

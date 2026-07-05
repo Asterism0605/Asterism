@@ -105,7 +105,8 @@ function handleCreateFolder() {
 }
 
 async function handleSubmitFolder(name: string) {
-  const success = await createNewFolder(name);
+  if (!currentImage.value) return;
+  const success = await createNewFolder(name, currentImage.value.id);
   if (success) showCreateFolder.value = false;
 }
 

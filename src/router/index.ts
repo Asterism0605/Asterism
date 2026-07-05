@@ -7,6 +7,8 @@ import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import Playground from '@/pages/Playground.vue';
 import PictureDetail from '@/pages/PictureDetail.vue';
 import SignUp from '@/pages/SignUp.vue';
+import ForgotPassword from '@/pages/ForgotPassword.vue';
+import ResetPassword from '@/pages/ResetPassword.vue';
 import StyleDna from '@/pages/StyleDna.vue';
 import StyleDnaResult from '@/pages/StyleDnaResult.vue';
 import StyleConsultant from '@/pages/StyleConsultant.vue';
@@ -54,6 +56,16 @@ const router = createRouter({
       path: '/sign-up',
       name: 'sign-up',
       component: SignUp
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: ForgotPassword
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: ResetPassword
     },
     {
       path: '/moodboard/:slug?',

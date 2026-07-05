@@ -4,8 +4,10 @@ import {
   loginApi,
   logoutApi,
   registerApi,
+  requestPasswordResetApi,
   resendSignupApi,
   signInWithGoogleApi,
+  updatePasswordApi,
   verifyOtpApi
 } from '@/api/auth.api';
 import type { AuthSession, LoginPayload, RegisterPayload } from '@/types/auth';
@@ -38,6 +40,14 @@ export async function resendSignup(email: string): Promise<void> {
 
 export async function signInWithGoogle(redirectTo: string): Promise<void> {
   await signInWithGoogleApi(redirectTo);
+}
+
+export async function requestPasswordReset(email: string, redirectTo: string): Promise<void> {
+  await requestPasswordResetApi(email, redirectTo);
+}
+
+export async function updatePassword(newPassword: string): Promise<void> {
+  await updatePasswordApi(newPassword);
 }
 
 export async function verifyOtp(tokenHash: string, type: EmailOtpType): Promise<AuthSession> {
