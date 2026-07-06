@@ -26,7 +26,12 @@ import {
   buildMoodboardOrbitImages
 } from '@/components/feature/moodboard/config';
 import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
-import type { MoodboardMobilePhoto, MoodboardPositionedPhoto } from '@/types/moodboard';
+import type {
+  MoodboardFolder,
+  MoodboardMobilePhoto,
+  MoodboardPositionedPhoto,
+  SavedImage
+} from '@/types/moodboard';
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useMobileOrbit } from '@/components/feature/moodboard/useMobileOrbit';
@@ -46,10 +51,21 @@ const route = useRoute();
 const moodboardStore = useMoodboardStore();
 const authStore = useAuthStore();
 
+const activeSphereFolderId = ref<string | null>(null);
 const folderCount = computed(() => moodboardStore.folders.length);
 const folderNames = computed(() => moodboardStore.folders.map((folder) => folder.name));
-const allSavedImages = computed(() => moodboardStore.folders.flatMap((folder) => folder.images));
-const orbitImages = computed(() => buildMoodboardOrbitImages(allSavedImages.value));
+const sphereFolder = computed(() => {
+  const activeFolder = moodboardStore.folders.find(
+    (folder) => folder.id === activeSphereFolderId.value && folder.images.length > 0
+  );
+  if (activeFolder) return activeFolder;
+
+  return moodboardStore.folders.reduce<MoodboardFolder | undefined>((newest, folder) => {
+    if (folder.images.length === 0) return newest;
+    return !newest || folder.createdAt > newest.createdAt ? folder : newest;
+  }, undefined);
+});
+const orbitImages = computed(() => buildMoodboardOrbitImages(sphereFolder.value?.images ?? []));
 
 /* ---- reactive state ---- */
 const scale = ref(1);
@@ -167,7 +183,19 @@ function getFolderName(index: number): string {
   return folderNames.value[index % folderNames.value.length] ?? '';
 }
 
-function toPhotos(images: typeof allSavedImages.value, mobile = false) {
+function hoverFolder(index: number) {
+  const folder = moodboardStore.folders[index];
+  if (!folder?.images.length) return;
+
+  hoverIdx.value = index;
+  activeSphereFolderId.value = folder.id;
+}
+
+function leaveFolder() {
+  hoverIdx.value = -1;
+}
+
+function toPhotos(images: SavedImage[], mobile = false) {
   const sizes = mobile ? mDetailBase : photos;
 
   return images.map((image, index) => ({
@@ -373,10 +401,18 @@ async function retryMoodboard() {
 }
 
 function initializeSphere() {
-  sphereHandle?.dispose();
-  sphereHandle = null;
+  if (orbitImages.value.length === 0) {
+    sphereHandle?.dispose();
+    sphereHandle = null;
+    return;
+  }
 
-  if (!sphereCanvas.value || orbitImages.value.length === 0) {
+  if (!sphereCanvas.value) {
+    return;
+  }
+
+  if (sphereHandle) {
+    sphereHandle.updateImages(orbitImages.value);
     return;
   }
 
@@ -388,9 +424,7 @@ function initializeSphere() {
   );
 }
 
-watch(orbitImages, (images) => {
-  if (images.length === 0) initializeSphere();
-});
+watch(orbitImages, () => nextTick(initializeSphere));
 
 onMounted(async () => {
   onResize();
@@ -707,6 +741,7 @@ onBeforeUnmount(() => {
           <div
             v-for="fv in folderView"
             :key="'f' + fv.i"
+            :data-testid="`moodboard-folder-${fv.i}`"
             class="absolute"
             :style="{
               left: fv.left + 'px',
@@ -721,8 +756,8 @@ onBeforeUnmount(() => {
               zIndex: fv.active ? 30 : 2,
               cursor: 'pointer'
             }"
-            @mouseenter="hoverIdx = fv.i"
-            @mouseleave="hoverIdx = -1"
+            @mouseenter="hoverFolder(fv.i)"
+            @mouseleave="leaveFolder"
             @click="openFolder(fv.i)"
           >
             <img
