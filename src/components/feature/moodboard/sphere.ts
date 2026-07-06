@@ -82,12 +82,6 @@ export function initSphere(
   const finishOne = () => { if (++done >= images.length) build() }
 
   images.forEach((image, i) => {
-    if (image.isPlaceholder) {
-      textures[i] = makeFallbackTexture(i)
-      finishOne()
-      return
-    }
-
     loader.load(
       image.src,
       (tex) => {
@@ -115,7 +109,7 @@ export function initSphere(
     for (const sp of sprites) {
       sp.getWorldPosition(tmp)
       const k = Math.max(0, Math.min(1, (tmp.z + SPRITE_RADIUS) / (2 * SPRITE_RADIUS)))
-      sp.material.opacity = sp.userData.isPlaceholder ? 0.18 : 0.55 + 0.45 * k
+      sp.material.opacity = sp.userData.isPlaceholder ? 0.35 : 0.55 + 0.45 * k
     }
     renderer.render(scene, camera)
   }
