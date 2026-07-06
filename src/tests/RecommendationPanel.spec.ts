@@ -3,11 +3,12 @@ import { nextTick } from 'vue'
 import { describe, expect, it } from 'vitest'
 import RecommendationPanel from '@/components/feature/consultant/RecommendationPanel.vue'
 
-function mountPanel() {
+function mountPanel(props: { submitting?: boolean } = {}) {
   return mount(RecommendationPanel, {
     props: {
       accountName: 'Ruwen Hsieh',
       accountEmail: 'ruwen@example.com',
+      ...props,
     },
   })
 }
@@ -62,7 +63,7 @@ describe('RecommendationPanel', () => {
     expect(wrapper.text()).toContain('NT$500 deposit')
     expect(wrapper.text()).toContain('A consultation deposit is required to submit your request.')
     expect(wrapper.text()).toContain('I understand and agree to continue to payment.')
-    expect(wrapper.text()).toContain('For demo purposes only. No real payment will be charged.')
+    expect(wrapper.text()).not.toContain('For demo purposes only. No real payment will be charged.')
     expect(wrapper.text()).toContain('Confirm & Pay')
     expect(wrapper.text()).toContain('Reset')
     expect(wrapper.text()).not.toContain('Use my account info')
@@ -267,5 +268,20 @@ describe('RecommendationPanel', () => {
     expect((inputs[2].element as HTMLInputElement).value).toBe('')
     expect((wrapper.get('input[type="checkbox"]').element as HTMLInputElement).checked).toBe(false)
     expect(wrapper.emitted('reset')).toHaveLength(1)
+  })
+
+  it('blocks submit and reset while checkout is being prepared', async () => {
+    const wrapper = mountPanel({ submitting: true })
+    const [submitButton, resetButton] = wrapper.findAll('.recommendation-panel__actions button')
+
+    expect(submitButton.attributes('disabled')).toBeDefined()
+    expect(resetButton.attributes('disabled')).toBeDefined()
+    expect(submitButton.text()).toBe('Preparing checkout...')
+
+    await wrapper.get('form').trigger('submit')
+    await resetButton.trigger('click')
+
+    expect(wrapper.emitted('submit')).toBeUndefined()
+    expect(wrapper.emitted('reset')).toBeUndefined()
   })
 })
