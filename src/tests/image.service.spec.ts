@@ -88,7 +88,9 @@ describe('image.service', () => {
       expect(lowest.find((image) => image.medium === 'Graphic Design')?.id).toBe('y2k-graphic-001');
 
       const highest = getMediumGroupImages('y2k-main-001', { rng: () => 0.999 });
-      expect(highest.find((image) => image.medium === 'Graphic Design')?.id).toBe('y2k-graphic-001');
+      expect(highest.find((image) => image.medium === 'Graphic Design')?.id).toBe(
+        'y2k-graphic-001'
+      );
       expect(highest.every((image) => !image.subMedium)).toBe(true);
     });
 
@@ -117,20 +119,26 @@ describe('image.service', () => {
       expect(images).toHaveLength(0);
     });
 
-    it('keeps the current subMedium group when the center image is its only representative', () => {
+    it('does not return the center image when it is the only representative in its subMedium group', () => {
       const images = getSubMediumGroupImages('ftdp-graphic-brand-001', {
         visitedImageIds: ['ftdp-graphic-001'],
         rng: () => 0
       });
 
       expect(images.map((image) => image.subMedium).sort()).toEqual([
-        'Brand Identity',
         'Editorial Design',
         'Poster Design'
       ]);
-      expect(images.find((image) => image.subMedium === 'Brand Identity')?.id).toBe(
-        'ftdp-graphic-brand-001'
-      );
+      expect(images.map((image) => image.id)).not.toContain('ftdp-graphic-brand-001');
+    });
+
+    it('does not recommend eag-interior-chair-001 to itself', () => {
+      const images = getSubMediumGroupImages('eag-interior-chair-001', {
+        visitedImageIds: ['ext-pexels-15207412'],
+        rng: () => 0
+      });
+
+      expect(images.map((image) => image.id)).not.toContain('eag-interior-chair-001');
     });
   });
 

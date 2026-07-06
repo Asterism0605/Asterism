@@ -7,7 +7,6 @@ import type {
   StyleImage
 } from '@/types/image';
 
-
 interface RelatedImageOptions {
   limit?: number;
   visitedImageIds?: string[];
@@ -57,10 +56,7 @@ function countPreferredStyleMatches(image: StyleImage, preferredStyles: Set<stri
   return image.style.filter((style) => preferredStyles.has(style)).length;
 }
 
-function sortByPreferredStyles(
-  images: StyleImage[],
-  preferredStyles: string[] = []
-): StyleImage[] {
+function sortByPreferredStyles(images: StyleImage[], preferredStyles: string[] = []): StyleImage[] {
   const preferredStyleSet = new Set(preferredStyles.filter(Boolean));
 
   if (preferredStyleSet.size === 0) {
@@ -221,7 +217,10 @@ export function getSubMediumGroupImages(
     rng
   );
 
-  return subMediumImages.slice(0, limit).map(toSpreadNode);
+  return subMediumImages
+    .filter((image) => image.id !== imageId)
+    .slice(0, limit)
+    .map(toSpreadNode);
 }
 
 function pickRelatedCandidates(
