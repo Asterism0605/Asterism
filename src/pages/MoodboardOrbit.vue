@@ -553,31 +553,14 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- header: asterisk logo + plain profile (NAME kept compact) -->
-      <div
-        v-if="authStore.isAuthenticated"
-        class="absolute flex items-center gap-3"
-        style="left: 20px; top: 28px"
-      >
-        <div
-          style="
-            width: 34px;
-            height: 34px;
-            border-radius: 9999px;
-            background: radial-gradient(120% 120% at 35% 30%, #e9eaec, #c0c1c4 60%, #9c9da0);
-          "
-        ></div>
-        <div style="line-height: 1.25">
-          <div
-            class="text-white/90"
-            style="font-size: 12px; font-weight: 500; letter-spacing: 0.5px"
-          >
-            {{ authStore.user?.displayName ?? '' }}
-          </div>
-          <div class="text-white/45" style="font-size: 11px">
-            {{ authStore.user?.email ?? '' }}
-          </div>
-        </div>
+      <!-- header: asterisk logo + profile (shared ProfileCard, sm size to fit compact header) -->
+      <div v-if="authStore.isAuthenticated" class="absolute" style="left: 20px; top: 28px">
+        <ProfileCard
+          avatar-size="sm"
+          class="p-0!"
+          :name="authStore.user?.displayName ?? ''"
+          :subtitle="authStore.user?.email ?? ''"
+        />
       </div>
 
       <!-- detail: back (just above the name tab) + docked folder-name tab -->
@@ -814,9 +797,11 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- ===== PROFILE (teammate's ProfileCard component, full size) ===== -->
+      <!-- ===== PROFILE (teammate's ProfileCard component, sm size — 組長回饋原尺寸太大，
+           介於改動前的 scale(0.5) 跟改動後全尺寸之間) ===== -->
       <div v-if="authStore.isAuthenticated" class="absolute" style="left: 100px; top: 150px">
         <ProfileCard
+          avatar-size="sm"
           :name="authStore.user?.displayName ?? ''"
           :subtitle="authStore.user?.email ?? ''"
         />

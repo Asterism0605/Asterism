@@ -7,13 +7,17 @@ type ProfileProps = {
   avatarUrl?: string;
   showFollow?: boolean;
   followLabel?: string;
+  // md（size-12/48px）是原本預設大小；sm（size-8/32px）給空間較緊的場景用
+  // （例如 Moodboard），不用 CSS transform 縮放整個元件，文字才不會跟著模糊。
+  avatarSize?: 'sm' | 'md';
 };
 
 const props = withDefaults(defineProps<ProfileProps>(), {
   subtitle: '',
   avatarUrl: '',
   showFollow: false,
-  followLabel: '+ Follow'
+  followLabel: '+ Follow',
+  avatarSize: 'md'
 });
 
 const initials = computed(() =>
@@ -24,6 +28,10 @@ const initials = computed(() =>
     .map((word) => word[0]?.toUpperCase() ?? '')
     .join('')
 );
+
+const avatarSizeClass = computed(() =>
+  props.avatarSize === 'sm' ? 'size-8 text-xs' : 'size-12 text-sm sm:text-base'
+);
 </script>
 
 <template>
@@ -31,14 +39,15 @@ const initials = computed(() =>
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
       <div class="flex min-w-0 items-center gap-4 sm:gap-5">
         <div
-          class="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gold-dim text-mono text-sm font-semibold text-text-primary sm:text-base"
+          :class="avatarSizeClass"
+          class="flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-gold-dim text-mono font-semibold text-text-primary"
         >
           <img v-if="avatarUrl" :src="avatarUrl" :alt="name" class="size-full object-cover" />
           <span v-else>{{ initials }}</span>
         </div>
 
         <div class="min-w-0">
-          <p class="truncate text-body font-medium leading-tight">
+          <p class="truncate text-[12px] font-medium leading-tight">
             {{ name }}
           </p>
           <p v-if="subtitle" class="mt-1 truncate text-xs text-text-secondary sm:text-sm">
