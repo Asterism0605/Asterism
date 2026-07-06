@@ -6,6 +6,7 @@ import {
 
 describe('pendingMoodboardAction.service', () => {
   beforeEach(() => {
+    localStorage.clear();
     sessionStorage.clear();
     vi.useRealTimers();
   });
@@ -13,7 +14,10 @@ describe('pendingMoodboardAction.service', () => {
   it('stores and consumes a matching save-menu intent once', () => {
     savePendingMoodboardAction('image-1', '/images/image-1');
 
+    expect(localStorage.getItem('asterism:pending-moodboard-action')).not.toBeNull();
+    expect(sessionStorage.getItem('asterism:pending-moodboard-action')).toBeNull();
     expect(consumePendingMoodboardAction('image-1')).toBe('ready');
+    expect(localStorage.getItem('asterism:pending-moodboard-action')).toBeNull();
     expect(consumePendingMoodboardAction('image-1')).toBeNull();
   });
 

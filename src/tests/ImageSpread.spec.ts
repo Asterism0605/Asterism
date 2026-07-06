@@ -72,7 +72,7 @@ const testSavedImage: SavedImage = {
 describe('ImageSpread', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    sessionStorage.clear();
+    localStorage.clear();
     // 代表圖選取已改為隨機（#94）；頁面不注入 rng、走 Math.random。
     // 固定成 0＝每組取資料序第一張（medium 入口圖），讓標籤/導航斷言維持決定性。
     vi.spyOn(Math, 'random').mockReturnValue(0);
@@ -134,7 +134,7 @@ describe('ImageSpread', () => {
     await flushPromises();
 
     expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
-    expect(sessionStorage.getItem('asterism:pending-moodboard-action')).toBeNull();
+    expect(localStorage.getItem('asterism:pending-moodboard-action')).toBeNull();
   });
 
   it('第一層相關圖片以 medium 標示標籤', async () => {

@@ -61,7 +61,7 @@ function withSetup<T>(composable: () => T): T {
 describe('useSaveToMoodboard', () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    sessionStorage.clear();
+    localStorage.clear();
     setActivePinia(createPinia());
     const authStore = useAuthStore();
     authStore.user = {
@@ -182,7 +182,7 @@ describe('useSaveToMoodboard', () => {
       name: 'login',
       query: { next: '/images/img-1' }
     });
-    expect(sessionStorage.getItem('asterism:pending-moodboard-action')).toContain(
+    expect(localStorage.getItem('asterism:pending-moodboard-action')).toContain(
       '"imageId":"img-1"'
     );
   });
@@ -201,7 +201,7 @@ describe('useSaveToMoodboard', () => {
       name: 'login',
       query: { next: '/images/img-1' }
     });
-    expect(sessionStorage.getItem('asterism:pending-moodboard-action')).toContain(
+    expect(localStorage.getItem('asterism:pending-moodboard-action')).toContain(
       '"imageId":"img-1"'
     );
   });

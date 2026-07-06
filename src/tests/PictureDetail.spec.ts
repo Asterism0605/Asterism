@@ -96,7 +96,7 @@ async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = tr
 describe('PictureDetail', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    sessionStorage.clear();
+    localStorage.clear();
     setActivePinia(createPinia());
     useAuthStore().user = fakeUser;
     useMoodboardStore().$patch({
@@ -221,7 +221,7 @@ describe('PictureDetail', () => {
     await flushPromises();
 
     expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
-    expect(sessionStorage.getItem('asterism:pending-moodboard-action')).toBeNull();
+    expect(localStorage.getItem('asterism:pending-moodboard-action')).toBeNull();
   });
 
   it('導向選取的 stage 圖片詳情頁', async () => {

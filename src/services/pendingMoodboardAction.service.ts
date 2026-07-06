@@ -19,7 +19,7 @@ export function savePendingMoodboardAction(imageId: string, returnTo: string): v
   };
 
   try {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(action));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(action));
   } catch {
     // Redirect still works when browser storage is unavailable.
   }
@@ -27,7 +27,7 @@ export function savePendingMoodboardAction(imageId: string, returnTo: string): v
 
 export function consumePendingMoodboardAction(imageId: string): PendingMoodboardActionResult {
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
 
     const action = JSON.parse(raw) as Partial<PendingMoodboardAction>;
@@ -40,17 +40,17 @@ export function consumePendingMoodboardAction(imageId: string): PendingMoodboard
       age <= MAX_AGE_MS;
 
     if (!isValid) {
-      sessionStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY);
       return 'discarded';
     }
 
     if (action.imageId !== imageId) return null;
 
-    sessionStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY);
     return 'ready';
   } catch {
     try {
-      sessionStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY);
     } catch {
       // Storage is unavailable; there is nothing else to recover.
     }
