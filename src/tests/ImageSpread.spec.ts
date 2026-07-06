@@ -1,10 +1,12 @@
 import { flushPromises, mount } from '@vue/test-utils';
+import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import ImageSpread from '@/pages/ImageSpread.vue';
 import { getImageById } from '@/services/image.service';
-import { addItem } from '@/services/moodboard.service';
+import { addItem, createFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
+import { useMoodboardStore } from '@/stores/moodboard.store';
 
 vi.mock('@/services/moodboard.service', () => ({
   addItem: vi.fn(),
@@ -45,19 +47,25 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
   return { wrapper, push, router };
 }
 
+let folderId: string;
+
 describe('ImageSpread', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // 代表圖選取已改為隨機（#94）；頁面不注入 rng、走 Math.random。
     // 固定成 0＝每組取資料序第一張（medium 入口圖），讓標籤/導航斷言維持決定性。
     vi.spyOn(Math, 'random').mockReturnValue(0);
+    setActivePinia(createPinia());
+    const store = useMoodboardStore();
+    store.createFolder('test');
+    folderId = store.folders[0].id;
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it('renders the center image, action buttons, and four related images', async () => {
+  it('渲染中心圖片、操作按鈕與四張相關圖片', async () => {
     const { wrapper } = await mountImageSpread();
 
     expect(wrapper.find('[data-testid="spread-main-image"]').attributes('src')).toContain(
@@ -68,7 +76,7 @@ describe('ImageSpread', () => {
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4);
   });
 
-  it('labels first-depth related images by medium', async () => {
+  it('第一層相關圖片以 medium 標示標籤', async () => {
     const { wrapper } = await mountImageSpread();
     const labels = wrapper
       .findAll('[data-testid="related-image-card"]')
@@ -82,7 +90,7 @@ describe('ImageSpread', () => {
     ]);
   });
 
-  it('labels second-depth related images by subMedium', async () => {
+  it('第二層相關圖片以 subMedium 標示標籤', async () => {
     const { wrapper } = await mountImageSpread();
 
     await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click');
@@ -100,7 +108,7 @@ describe('ImageSpread', () => {
     ]);
   });
 
-  it('marks every image surface as cursor pointer', async () => {
+  it('每個圖片區塊都標示為 cursor pointer', async () => {
     const { wrapper } = await mountImageSpread();
 
     expect(wrapper.find('[data-testid="spread-main-image-frame"]').classes()).toContain(
@@ -116,7 +124,7 @@ describe('ImageSpread', () => {
     }
   });
 
-  it('moves a related image to the center on the first related click', async () => {
+  it('點擊第一張相關圖片後將其移到中心', async () => {
     const { wrapper, router } = await mountImageSpread();
     const firstRelatedImage = wrapper.findAll('[data-testid="related-image-card"]')[0];
     const firstRelatedSrc = firstRelatedImage.find('img').attributes('src');
@@ -133,7 +141,7 @@ describe('ImageSpread', () => {
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4);
   });
 
-  it('hides the center label for main images and labels medium entry images', async () => {
+  it('主圖不顯示中心標籤，medium 入口圖片顯示標籤', async () => {
     const { wrapper } = await mountImageSpread();
 
     expect(wrapper.find('[data-testid="spread-main-image-label"]').exists()).toBe(false);
@@ -144,7 +152,7 @@ describe('ImageSpread', () => {
     expect(wrapper.find('[data-testid="spread-main-image-label"]').text()).toBe('Graphic Design');
   });
 
-  it('routes to the future detail page on second-depth related click', async () => {
+  it('點擊第二層相關圖片後導向未來的詳情頁', async () => {
     const { wrapper, router } = await mountImageSpread();
     const firstRelatedImage = wrapper.findAll('[data-testid="related-image-card"]')[0];
 
@@ -157,7 +165,7 @@ describe('ImageSpread', () => {
     expect(router.currentRoute.value.params.imageId).toBeDefined();
   });
 
-  it('returns to the previous spread layer after the first related click', async () => {
+  it('點擊第一張相關圖片後可返回上一層 spread', async () => {
     const { wrapper, push, router } = await mountImageSpread();
     const initialSrc = wrapper.find('[data-testid="spread-main-image"]').attributes('src');
     const firstRelatedImage = wrapper.findAll('[data-testid="related-image-card"]')[0];
@@ -179,7 +187,7 @@ describe('ImageSpread', () => {
     expect(push).not.toHaveBeenCalledWith({ name: 'home' });
   });
 
-  it('routes home when returning from the root spread layer', async () => {
+  it('從根層 spread 返回時導向首頁', async () => {
     const { wrapper, push } = await mountImageSpread();
     const back = vi.spyOn(wrapper.vm.$router, 'back');
 
@@ -189,7 +197,7 @@ describe('ImageSpread', () => {
     expect(push).toHaveBeenCalledWith({ name: 'home' });
   });
 
-  it('returns from a medium spread layer to root, then home', async () => {
+  it('從 medium spread 層返回根層，再返回首頁', async () => {
     const { wrapper, push, router } = await mountImageSpread('rpl-interior-001?rootId=rpl-main-001');
 
     await wrapper.find('[data-testid="return-home"]').trigger('click');
@@ -205,14 +213,14 @@ describe('ImageSpread', () => {
     expect(push).toHaveBeenCalledWith({ name: 'home' });
   });
 
-  it('shows an error state for unknown image ids', async () => {
+  it('未知圖片 id 顯示錯誤狀態', async () => {
     const { wrapper } = await mountImageSpread('missing-image');
 
     expect(wrapper.text()).toContain('Image not found');
     expect(wrapper.find('[data-testid="return-home"]').exists()).toBe(true);
   });
 
-  it('shows an error toast when addItem throws', async () => {
+  it('當 addItem 拋出錯誤時顯示錯誤提示', async () => {
     vi.mocked(addItem).mockImplementationOnce(() => { throw new Error('save failed') });
     const { wrapper } = await mountImageSpread();
 
@@ -220,12 +228,14 @@ describe('ImageSpread', () => {
     await addBtn!.trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
+    const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
+    await folderBtn!.trigger('click');
     await flushPromises();
 
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
   });
 
-  it('disables ADD TO MOODBOARD while a save is in flight and re-enables after', async () => {
+  it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
     let resolve!: () => void;
     vi.mocked(addItem).mockImplementationOnce(() => new Promise<void>((r) => { resolve = r; }));
     const { wrapper } = await mountImageSpread();
@@ -234,6 +244,8 @@ describe('ImageSpread', () => {
     await addBtn!.trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
+    const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
+    await folderBtn!.trigger('click');
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
 
@@ -244,20 +256,115 @@ describe('ImageSpread', () => {
     expect(addItem).toHaveBeenCalledOnce();
   });
 
-  it('calls addItem with the center image id when SAVE TO FOLDER is clicked', async () => {
+  it('點擊 SAVE TO FOLDER 時以中心圖片 id 呼叫 addItem', async () => {
     const { wrapper } = await mountImageSpread();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
     await addBtn!.trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
     await saveBtn!.trigger('click');
+    const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
+    await folderBtn!.trigger('click');
     await flushPromises();
 
     expect(addItem).toHaveBeenCalledOnce();
-    expect(addItem).toHaveBeenCalledWith('default', 'y2k-main-001');
+    expect(addItem).toHaveBeenCalledWith(folderId, 'y2k-main-001');
   });
 
-  it('重開 CREATE NEW FOLDER modal 後 input 不再 disabled', async () => {
+  it('送出 SAVE TO NEW FOLDER 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
+    vi.mocked(createFolder).mockReturnValueOnce('new-folder-id');
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: { template: '<div />' } },
+        { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread },
+        { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } }
+      ]
+    });
+    router.push('/images/y2k-main-001/spread');
+    await router.isReady();
+
+    const wrapper = mount(ImageSpread, {
+      attachTo: document.body,
+      global: { plugins: [router], stubs: { ConstellationBackground: true } }
+    });
+
+    try {
+      const findBtn = (text: string) =>
+        wrapper.findAll('button').find((b) => b.text().includes(text))!;
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      const input = document.querySelector('input') as HTMLInputElement;
+      input.value = 'My Folder';
+      input.dispatchEvent(new Event('input'));
+      await flushPromises();
+
+      const sendBtn = Array.from(document.querySelectorAll('button')).find((b) =>
+        b.textContent?.includes('SEND')
+      ) as HTMLButtonElement;
+      sendBtn.click();
+      await flushPromises();
+
+      expect(createFolder).toHaveBeenCalledWith('My Folder');
+      expect(addItem).toHaveBeenCalledWith('new-folder-id', 'y2k-main-001');
+    } finally {
+      wrapper.unmount();
+      document.body.innerHTML = '';
+    }
+  });
+
+  it('createFolder 成功但 addItem 失敗時顯示錯誤提示，且 modal 不關閉', async () => {
+    vi.mocked(createFolder).mockReturnValueOnce('new-folder-id');
+    vi.mocked(addItem).mockImplementationOnce(() => {
+      throw new Error('save failed');
+    });
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: { template: '<div />' } },
+        { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread },
+        { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } }
+      ]
+    });
+    router.push('/images/y2k-main-001/spread');
+    await router.isReady();
+
+    const wrapper = mount(ImageSpread, {
+      attachTo: document.body,
+      global: { plugins: [router], stubs: { ConstellationBackground: true } }
+    });
+
+    try {
+      const findBtn = (text: string) =>
+        wrapper.findAll('button').find((b) => b.text().includes(text))!;
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      const input = document.querySelector('input') as HTMLInputElement;
+      input.value = 'My Folder';
+      input.dispatchEvent(new Event('input'));
+      await flushPromises();
+
+      const sendBtn = Array.from(document.querySelectorAll('button')).find((b) =>
+        b.textContent?.includes('SEND')
+      ) as HTMLButtonElement;
+      sendBtn.click();
+      await flushPromises();
+
+      expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
+      expect(document.querySelector('input')).not.toBeNull();
+    } finally {
+      wrapper.unmount();
+      document.body.innerHTML = '';
+    }
+  });
+
+  it('重開 SAVE TO NEW FOLDER modal 後 input 不再 disabled', async () => {
     vi.useFakeTimers();
     const router = createRouter({
       history: createMemoryHistory(),
@@ -280,7 +387,7 @@ describe('ImageSpread', () => {
         wrapper.findAll('button').find((b) => b.text().includes(text))!;
 
       await findBtn('ADD TO MOODBOARD').trigger('click');
-      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
       await flushPromises();
 
       const input = document.querySelector('input') as HTMLInputElement;
@@ -297,7 +404,7 @@ describe('ImageSpread', () => {
       await flushPromises();
 
       await findBtn('ADD TO MOODBOARD').trigger('click');
-      await findBtn('CREATE NEW FOLDER').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
       await flushPromises();
 
       expect((document.querySelector('input') as HTMLInputElement).disabled).toBe(false);

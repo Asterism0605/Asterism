@@ -31,7 +31,7 @@ function isPersistedMoodboard(value: unknown): value is { folders: MoodboardFold
 }
 
 export const useMoodboardStore = defineStore('moodboard', () => {
-  const folders = ref<MoodboardFolder[]>([{ id: 'default', name: '我的收藏', images: [] }]);
+  const folders = ref<MoodboardFolder[]>([]);
 
   function persist(): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ folders: folders.value }));
@@ -52,9 +52,11 @@ export const useMoodboardStore = defineStore('moodboard', () => {
     persist();
   }
 
-  function createFolder(name: string): void {
-    folders.value.push({ id: crypto.randomUUID(), name, images: [] });
+  function createFolder(name: string): string {
+    const id = crypto.randomUUID();
+    folders.value.push({ id, name, images: [] });
     persist();
+    return id;
   }
 
   function hydrate(): void {

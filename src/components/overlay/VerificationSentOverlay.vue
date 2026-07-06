@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import Button from '@/components/ui/Button.vue';
 
-defineProps<{
-  email: string;
-  resendMessage: string;
-  countdown: number;
-}>();
+withDefaults(
+  defineProps<{
+    email: string;
+    resendMessage: string;
+    countdown: number;
+    title?: string;
+    leadText?: string;
+    detailText?: string;
+  }>(),
+  {
+    title: 'Check your email',
+    leadText: 'We sent a verification link to',
+    detailText: 'Open it to activate your account and finish signing up.'
+  }
+);
 
 defineEmits<{ resend: [] }>();
 </script>
@@ -17,11 +27,11 @@ defineEmits<{ resend: [] }>();
     role="main"
     aria-label="Verification email sent"
   >
-    <h2 class="overlay-title">Check your email</h2>
+    <h2 class="overlay-title">{{ title }}</h2>
     <p class="overlay-description">
-      We sent a verification link to <strong>{{ email }}</strong>.
+      {{ leadText }} <strong>{{ email }}</strong>.
       <span class="verification-sent__detail">
-        Open it to activate your account and finish signing up.
+        {{ detailText }}
       </span>
     </p>
 

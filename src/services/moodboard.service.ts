@@ -15,12 +15,15 @@ export function removeItem(folderId: string, imageId: string): void {
   store.removeImage(folderId, imageId);
 }
 
-export function createFolder(name: string): void {
+export function createFolder(name: string): string {
   const store = useMoodboardStore();
   if (store.folders.length >= 10) {
     throw new Error('You have reached the maximum of 10 folders.');
   }
-  store.createFolder(name);
+  if (store.folders.some((f) => f.name.trim() === name.trim())) {
+    throw new Error('A folder with this name already exists.');
+  }
+  return store.createFolder(name.trim());
 }
 
 export function isImageSaved(imageId: string): boolean {

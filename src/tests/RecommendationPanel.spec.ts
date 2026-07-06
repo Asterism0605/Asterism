@@ -90,7 +90,7 @@ describe('RecommendationPanel', () => {
     const inputs = wrapper.findAll('input.overlay-input')
     const selectedDate = await pickFirstAvailableDate(wrapper)
     const selectedIsoDate = displayDateToIso(selectedDate)
-    await wrapper.get('input[value="in-person"]').setValue()
+    await wrapper.get('input[value="in_person"]').setValue()
     await pickDropdownOption(wrapper, 0, 'AM')
     await pickDropdownOption(wrapper, 1, 'Interior Design')
     await pickDropdownOption(wrapper, 2, 'Spatial Mood')

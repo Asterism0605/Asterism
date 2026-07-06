@@ -151,7 +151,7 @@ onBeforeUnmount(() => {
             variant="secondary"
             class="overlay-close"
             type="button"
-            aria-label="Close dialog"
+            :aria-label="$t('common.closeDialog')"
             @click="closeModal"
           >
             <span aria-hidden="true">&times;</span>

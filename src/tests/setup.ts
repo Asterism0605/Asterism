@@ -1,3 +1,9 @@
+import { config } from '@vue/test-utils';
+import { i18n } from '@/i18n';
+
+// 讓每個測試 mount 都有 $t（預設 en，字串與既有英文斷言一致）
+config.global.plugins.push(i18n);
+
 const createStorageMock = (): Storage => {
   let entries = new Map<string, string>();
 

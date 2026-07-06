@@ -59,7 +59,18 @@ describe('MoodboardOrbit', () => {
 
   it('keeps the orbit view when saved images exist', async () => {
     const store = useMoodboardStore();
-    store.addImage('default', { id: 'saved-1', src: '/style-image/saved-1.webp' });
+    store.createFolder('test');
+    store.addImage(store.folders[0].id, { id: 'saved-1', src: '/style-image/saved-1.webp' });
+
+    const { wrapper } = await mountMoodboard();
+
+    expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
+    expect(wrapper.find('canvas').exists()).toBe(true);
+  });
+
+  it('keeps the orbit view when a folder exists with no saved images', async () => {
+    const store = useMoodboardStore();
+    store.createFolder('test');
 
     const { wrapper } = await mountMoodboard();
 

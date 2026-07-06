@@ -12,6 +12,7 @@ import {
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import { useAuthStore } from '@/stores/auth.store';
 import { isImageSaved } from '@/services/moodboard.service';
+import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
@@ -33,8 +34,17 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess } = useSaveToMoodboard();
+const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
+  useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
+const moodboardStore = useMoodboardStore();
+const folders = computed(() =>
+  moodboardStore.folders.map((f) => ({
+    id: f.id,
+    name: f.name,
+    saved: f.images.some((image) => image.id === currentImage.value?.id)
+  }))
+);
 const showCreateFolder = ref(false);
 
 function handleBack() {
@@ -61,7 +71,8 @@ function handleCreateFolder() {
 }
 
 async function handleSubmitFolder(name: string) {
-  const success = await createNewFolder(name);
+  if (!currentImage.value) return;
+  const success = await createNewFolder(name, currentImage.value.id);
   if (success) showCreateFolder.value = false;
 }
 
@@ -88,9 +99,9 @@ function handleSelectImage(imageId: string) {
   router.push({ name: 'picture-detail', params: { imageId } });
 }
 
-async function handleSaveToFolder() {
+async function handleSaveToFolder(folderId: string) {
   if (!currentImage.value) return;
-  await saveToMoodboard('default', currentImage.value.id);
+  await saveToMoodboard(folderId, currentImage.value.id);
 }
 
 </script>
@@ -119,6 +130,8 @@ async function handleSaveToFolder() {
         photographer-date="Aug 19, 2025"
         :saved="isSaved"
         :disabled="isSaving"
+        :folders="folders"
+        :just-saved-folder-id="justSavedFolderId"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
