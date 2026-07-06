@@ -13,6 +13,7 @@ export const useMoodboardStore = defineStore('moodboard', () => {
   const error = ref<string | null>(null);
   const loadedProfileId = ref<string | null>(null);
   let requestId = 0;
+  let inFlight: { profileId: string; promise: Promise<void> } | null = null;
 
   const totalSavedItemCount = computed(() =>
     folders.value.reduce((count, folder) => count + folder.images.length, 0)
@@ -30,31 +31,44 @@ export const useMoodboardStore = defineStore('moodboard', () => {
     () => status.value === 'success' && totalSavedItemCount.value >= 20
   );
 
-  async function fetchMoodboard(profileId: string): Promise<void> {
+  function fetchMoodboard(profileId: string): Promise<void> {
+    if (inFlight?.profileId === profileId) {
+      return inFlight.promise;
+    }
+
     const currentRequestId = ++requestId;
     status.value = 'loading';
     error.value = null;
 
-    try {
-      const viewModel = await getMoodboardViewModel(profileId);
+    const promise = (async () => {
+      try {
+        const viewModel = await getMoodboardViewModel(profileId);
 
-      if (currentRequestId !== requestId) {
-        return;
+        if (currentRequestId !== requestId) {
+          return;
+        }
+
+        folders.value = viewModel.folders;
+        loadedProfileId.value = profileId;
+        status.value = 'success';
+      } catch (cause) {
+        if (currentRequestId !== requestId) {
+          return;
+        }
+
+        folders.value = [];
+        loadedProfileId.value = profileId;
+        error.value = cause instanceof Error ? cause.message : 'Unable to load moodboard.';
+        status.value = 'error';
+      } finally {
+        if (currentRequestId === requestId) {
+          inFlight = null;
+        }
       }
+    })();
 
-      folders.value = viewModel.folders;
-      loadedProfileId.value = profileId;
-      status.value = 'success';
-    } catch (cause) {
-      if (currentRequestId !== requestId) {
-        return;
-      }
-
-      folders.value = [];
-      loadedProfileId.value = profileId;
-      error.value = cause instanceof Error ? cause.message : 'Unable to load moodboard.';
-      status.value = 'error';
-    }
+    inFlight = { profileId, promise };
+    return promise;
   }
 
   function addFolder(folder: MoodboardFolder): void {
@@ -73,6 +87,7 @@ export const useMoodboardStore = defineStore('moodboard', () => {
 
   function clear(): void {
     requestId += 1;
+    inFlight = null;
     status.value = 'idle';
     folders.value = [];
     error.value = null;

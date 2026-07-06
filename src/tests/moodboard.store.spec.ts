@@ -81,6 +81,45 @@ describe('moodboard store', () => {
     expect(store.status).toBe('success');
   });
 
+  it('reuses the in-flight request for the same profile', async () => {
+    let resolveRequest!: (value: {
+      folders: MoodboardFolder[];
+      allItems: MoodboardFolder['images'];
+      totalFolderCount: number;
+      totalSavedItemCount: number;
+    }) => void;
+    getMoodboardViewModel.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveRequest = resolve;
+        })
+    );
+    const store = useMoodboardStore();
+
+    const first = store.fetchMoodboard('user-1');
+    const second = store.fetchMoodboard('user-1');
+    let secondSettled = false;
+    void second.then(() => {
+      secondSettled = true;
+    });
+    await Promise.resolve();
+
+    expect(getMoodboardViewModel).toHaveBeenCalledTimes(1);
+    expect(secondSettled).toBe(false);
+
+    resolveRequest({
+      folders: [folder],
+      allItems: folder.images,
+      totalFolderCount: 1,
+      totalSavedItemCount: 1
+    });
+    await Promise.all([first, second]);
+
+    expect(secondSettled).toBe(true);
+    expect(store.status).toBe('success');
+    expect(store.folders).toEqual([folder]);
+  });
+
   it('keeps Data API failures distinct from the empty state', async () => {
     getMoodboardViewModel.mockRejectedValue(new Error('network down'));
     const store = useMoodboardStore();
