@@ -34,7 +34,11 @@ describe('ImageMetaPanel', () => {
 
   it('點擊 SAVE TO FOLDER 時觸發 save-to-folder', async () => {
     const wrapper = mount(ImageMetaPanel, {
-      props: { ...defaultProps, folders: [{ id: 'folder-001', name: 'test' }] }
+      props: {
+        ...defaultProps,
+        folders: [{ id: 'folder-001', name: 'test' }],
+        canSave: true
+      }
     });
 
     const buttons = wrapper.findAll('button');
