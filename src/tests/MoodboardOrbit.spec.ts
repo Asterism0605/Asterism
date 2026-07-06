@@ -5,8 +5,13 @@ import { createMemoryHistory, createRouter } from 'vue-router';
 import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 
+const { disposeSphere, initSphere } = vi.hoisted(() => ({
+  disposeSphere: vi.fn(),
+  initSphere: vi.fn()
+}));
+
 vi.mock('@/components/feature/moodboard/sphere', () => ({
-  initSphere: vi.fn(() => ({ resize: vi.fn(), dispose: vi.fn() }))
+  initSphere
 }));
 
 function createTestRouter() {
@@ -37,6 +42,9 @@ describe('MoodboardOrbit', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     localStorage.clear();
+    disposeSphere.mockReset();
+    initSphere.mockReset();
+    initSphere.mockReturnValue({ resize: vi.fn(), dispose: disposeSphere });
   });
 
   it('shows the empty state when no images are saved', async () => {
@@ -90,6 +98,39 @@ describe('MoodboardOrbit', () => {
     expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
     expect(wrapper.find('canvas').exists()).toBe(true);
     expect(wrapper.text()).toContain('Studio');
+  });
+
+  it('disposes the active sphere when moodboard data is cleared', async () => {
+    const store = useMoodboardStore();
+    store.$patch({
+      status: 'success',
+      folders: [
+        {
+          id: 'folder-1',
+          name: 'Studio',
+          createdAt: '2026-07-05T00:00:00.000Z',
+          images: [
+            {
+              itemId: 'item-1',
+              id: 'saved-1',
+              src: '/style-image/saved-1.webp',
+              title: 'Saved',
+              styleGroup: 'minimal',
+              style: [],
+              createdAt: '2026-07-05T00:00:00.000Z'
+            }
+          ]
+        }
+      ]
+    });
+    await mountMoodboard();
+    await flushPromises();
+    expect(initSphere).toHaveBeenCalled();
+
+    store.clear();
+    await flushPromises();
+
+    expect(disposeSphere).toHaveBeenCalled();
   });
 
   it('keeps an empty folder in the empty state because it has no saved images', async () => {

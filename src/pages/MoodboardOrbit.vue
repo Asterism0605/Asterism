@@ -373,11 +373,13 @@ async function retryMoodboard() {
 }
 
 function initializeSphere() {
+  sphereHandle?.dispose();
+  sphereHandle = null;
+
   if (!sphereCanvas.value || orbitImages.value.length === 0) {
     return;
   }
 
-  sphereHandle?.dispose();
   sphereHandle = initSphere(
     sphereCanvas.value,
     () => scale.value,
@@ -385,6 +387,10 @@ function initializeSphere() {
     orbitImages.value
   );
 }
+
+watch(orbitImages, (images) => {
+  if (images.length === 0) initializeSphere();
+});
 
 onMounted(async () => {
   onResize();
@@ -404,7 +410,8 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize);
   cancelAnimationFrame(orbitRaf);
-  if (sphereHandle) sphereHandle.dispose();
+  sphereHandle?.dispose();
+  sphereHandle = null;
 });
 </script>
 
