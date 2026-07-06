@@ -28,6 +28,14 @@ function handleSubmit(payload: LoginPayload) {
     router.push(getSafeRedirectPath(route.query.next, '/'));
   }, t('auth.genericError'));
 }
+
+function handleSignUp() {
+  const next = getSafeRedirectPath(route.query.next, '');
+  void router.push({
+    name: 'sign-up',
+    query: next ? { next } : undefined
+  });
+}
 </script>
 
 <template>
@@ -87,6 +95,7 @@ function handleSubmit(payload: LoginPayload) {
         :is-submitting="isSubmitting"
         :error-message="errorMessage"
         @submit="handleSubmit"
+        @signup="handleSignUp"
       />
     </div>
   </main>

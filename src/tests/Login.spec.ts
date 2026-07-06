@@ -25,6 +25,7 @@ function createTestRouter(): Router {
     routes: [
       { path: '/', name: 'home', component: { template: '<div />' } },
       { path: '/login', name: 'login', component: { template: '<div />' } },
+      { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
       { path: '/forgot-password', name: 'forgot-password', component: { template: '<div />' } }
     ]
   });
@@ -76,6 +77,24 @@ describe('Login', () => {
 
     expect(push).toHaveBeenCalledWith('/');
     expect(reconcileWithServer).toHaveBeenCalledWith('u1');
+  });
+
+  it('routes new users to sign-up with the safe next path', async () => {
+    const router = createTestRouter();
+    router.push('/login?next=/images/image-1');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+    const wrapper = mountLogin(router);
+
+    await wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('Sign Up'))!
+      .trigger('click');
+
+    expect(push).toHaveBeenCalledWith({
+      name: 'sign-up',
+      query: { next: '/images/image-1' }
+    });
   });
 
   it('still redirects when Style DNA reconcile fails after login', async () => {
