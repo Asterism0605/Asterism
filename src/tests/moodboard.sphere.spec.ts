@@ -2,12 +2,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   canvasTextureCreated: vi.fn(),
-  loadTexture: vi.fn()
+  loadTexture: vi.fn(),
+  materialDisposed: vi.fn(),
+  rendererCreated: vi.fn(),
+  textureDisposed: vi.fn()
 }));
 
 vi.mock('three', () => {
   class WebGLRenderer {
     capabilities = { getMaxAnisotropy: () => 1 };
+    constructor() {
+      mocks.rendererCreated();
+    }
     setPixelRatio() {}
     setClearColor() {}
     setSize() {}
@@ -28,10 +34,14 @@ vi.mock('three', () => {
   class Group {
     rotation = { x: 0, y: 0 };
     add() {}
+    remove() {}
   }
 
   class SpriteMaterial {
     opacity = 1;
+    dispose() {
+      mocks.materialDisposed();
+    }
   }
 
   class Sprite {
@@ -86,6 +96,9 @@ describe('moodboard sphere textures', () => {
   beforeEach(() => {
     mocks.canvasTextureCreated.mockReset();
     mocks.loadTexture.mockReset();
+    mocks.materialDisposed.mockReset();
+    mocks.rendererCreated.mockReset();
+    mocks.textureDisposed.mockReset();
     mocks.loadTexture.mockImplementation(
       (
         _src: string,
@@ -124,5 +137,47 @@ describe('moodboard sphere textures', () => {
       expect.any(Function)
     );
     expect(mocks.canvasTextureCreated).not.toHaveBeenCalled();
+  });
+
+  it('ignores a texture that finishes loading after the sphere is disposed', () => {
+    let finishLoad:
+      | ((texture: {
+          image: { naturalWidth: number; naturalHeight: number };
+          dispose: () => void;
+        }) => void)
+      | undefined;
+    mocks.loadTexture.mockImplementation((_src: string, onLoad: typeof finishLoad) => {
+      finishLoad = onLoad;
+    });
+    const sphere = initSphere(
+      document.createElement('canvas'),
+      () => 1,
+      () => false,
+      [{ id: 'saved-1', src: '/saved-1.webp', isPlaceholder: false }]
+    );
+
+    sphere.dispose();
+    finishLoad?.({
+      image: { naturalWidth: 3, naturalHeight: 4 },
+      dispose: mocks.textureDisposed
+    });
+
+    expect(mocks.textureDisposed).toHaveBeenCalledOnce();
+    expect(requestAnimationFrame).not.toHaveBeenCalled();
+  });
+
+  it('updates images without creating another WebGL renderer', () => {
+    const sphere = initSphere(
+      document.createElement('canvas'),
+      () => 1,
+      () => true,
+      [{ id: 'saved-1', src: '/saved-1.webp', isPlaceholder: false }]
+    );
+
+    sphere.updateImages([{ id: 'saved-2', src: '/saved-2.webp', isPlaceholder: false }]);
+
+    expect(mocks.rendererCreated).toHaveBeenCalledOnce();
+    expect(mocks.loadTexture).toHaveBeenCalledTimes(2);
+    expect(mocks.materialDisposed).toHaveBeenCalledOnce();
   });
 });
