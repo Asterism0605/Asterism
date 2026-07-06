@@ -50,12 +50,18 @@ describe('auth.api (supabase)', () => {
     auth.signUp.mockResolvedValue({ data: { session: fakeSession }, error: null });
     single.mockResolvedValue({ data: null, error: null });
 
-    const res = await registerApi({ email: 'a@b.com', password: 'password123', displayName: 'Al' });
+    const res = await registerApi(
+      { email: 'a@b.com', password: 'password123', displayName: 'Al' },
+      'https://x/auth/callback?next=%2Ffoo'
+    );
 
     expect(auth.signUp).toHaveBeenCalledWith({
       email: 'a@b.com',
       password: 'password123',
-      options: { data: { display_name: 'Al' } }
+      options: {
+        data: { display_name: 'Al' },
+        emailRedirectTo: 'https://x/auth/callback?next=%2Ffoo'
+      }
     });
     expect(res.data.user.isAdmin).toBe(false);
   });
@@ -77,9 +83,13 @@ describe('auth.api (supabase)', () => {
   it('resendSignup 以 type=signup + email 呼叫 resend', async () => {
     auth.resend.mockResolvedValue({ error: null });
 
-    await resendSignupApi('a@b.com');
+    await resendSignupApi('a@b.com', 'https://x/auth/callback?next=%2Ffoo');
 
-    expect(auth.resend).toHaveBeenCalledWith({ type: 'signup', email: 'a@b.com' });
+    expect(auth.resend).toHaveBeenCalledWith({
+      type: 'signup',
+      email: 'a@b.com',
+      options: { emailRedirectTo: 'https://x/auth/callback?next=%2Ffoo' }
+    });
   });
 
   it('resendSignup 失敗 → 丟出對應錯誤', async () => {

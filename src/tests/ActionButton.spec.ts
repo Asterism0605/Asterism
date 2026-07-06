@@ -8,6 +8,16 @@ const folders = [
 ];
 
 describe('ActionButton', () => {
+  it('opens the save menu when an authenticated return requests it', async () => {
+    const wrapper = mount(ActionButton, {
+      props: { canSave: true, openRequest: 1 }
+    });
+
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
+  });
+
   it('未登入點擊收藏時 emit auth-required 且不開啟選單', async () => {
     const wrapper = mount(ActionButton, {
       props: { canSave: false }
@@ -23,7 +33,7 @@ describe('ActionButton', () => {
   });
 
   it('folders 為空陣列時不渲染 SAVE TO FOLDER 區塊', async () => {
-    const wrapper = mount(ActionButton, { props: { folders: [] } });
+    const wrapper = mount(ActionButton, { props: { folders: [], canSave: true } });
 
     await wrapper.find('button').trigger('click');
 
@@ -32,7 +42,7 @@ describe('ActionButton', () => {
   });
 
   it('點擊 SAVE TO FOLDER 展開第二層並列出所有資料夾名稱', async () => {
-    const wrapper = mount(ActionButton, { props: { folders } });
+    const wrapper = mount(ActionButton, { props: { folders, canSave: true } });
 
     await wrapper.find('button').trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
@@ -46,6 +56,7 @@ describe('ActionButton', () => {
   it('資料夾清單中已儲存該圖片的資料夾顯示實心書籤，其餘為空心', async () => {
     const wrapper = mount(ActionButton, {
       props: {
+        canSave: true,
         folders: [
           { id: 'folder-1', name: 'My Folder', saved: true },
           { id: 'folder-2', name: 'Another Folder', saved: false }
@@ -65,7 +76,7 @@ describe('ActionButton', () => {
   });
 
   it('點擊第二層資料夾名稱時 emit save-to-folder 帶正確的 folderId', async () => {
-    const wrapper = mount(ActionButton, { props: { folders } });
+    const wrapper = mount(ActionButton, { props: { folders, canSave: true } });
 
     await wrapper.find('button').trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
@@ -77,7 +88,7 @@ describe('ActionButton', () => {
   });
 
   it('點擊資料夾當下尚未收到 parent 儲存成功前，不顯示「✓ Saved」', async () => {
-    const wrapper = mount(ActionButton, { props: { folders } });
+    const wrapper = mount(ActionButton, { props: { folders, canSave: true } });
 
     await wrapper.find('button').trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
@@ -90,7 +101,9 @@ describe('ActionButton', () => {
   });
 
   it('parent 透過 justSavedFolderId prop 回報成功後顯示「✓ Saved」', async () => {
-    const wrapper = mount(ActionButton, { props: { folders, justSavedFolderId: 'folder-1' } });
+    const wrapper = mount(ActionButton, {
+      props: { folders, justSavedFolderId: 'folder-1', canSave: true }
+    });
 
     await wrapper.find('button').trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
@@ -100,7 +113,9 @@ describe('ActionButton', () => {
   });
 
   it('parent 回報儲存失敗（justSavedFolderId 維持 null）時不顯示「✓ Saved」', async () => {
-    const wrapper = mount(ActionButton, { props: { folders, justSavedFolderId: null } });
+    const wrapper = mount(ActionButton, {
+      props: { folders, justSavedFolderId: null, canSave: true }
+    });
 
     await wrapper.find('button').trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
@@ -112,7 +127,9 @@ describe('ActionButton', () => {
   });
 
   it('justSavedFolderId 有值（顯示 ✓ Saved 期間）時資料夾按鈕停用，避免點擊觸發第二次儲存', async () => {
-    const wrapper = mount(ActionButton, { props: { folders, justSavedFolderId: 'folder-1' } });
+    const wrapper = mount(ActionButton, {
+      props: { folders, justSavedFolderId: 'folder-1', canSave: true }
+    });
 
     await wrapper.find('button').trigger('click');
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
@@ -128,7 +145,7 @@ describe('ActionButton', () => {
 
   it('justSavedFolderId 從有值變回 null 時自動關閉兩層選單', async () => {
     const wrapper = mount(ActionButton, {
-      props: { folders, justSavedFolderId: 'folder-1' as string | null }
+      props: { folders, justSavedFolderId: 'folder-1' as string | null, canSave: true }
     });
 
     await wrapper.find('button').trigger('click');
@@ -142,7 +159,7 @@ describe('ActionButton', () => {
   });
 
   it('重新打開第一層 dropdown 時第二層資料夾清單重置為收合', async () => {
-    const wrapper = mount(ActionButton, { props: { folders } });
+    const wrapper = mount(ActionButton, { props: { folders, canSave: true } });
     const toggleBtn = wrapper.find('button');
 
     await toggleBtn.trigger('click');
@@ -159,7 +176,7 @@ describe('ActionButton', () => {
   it('點擊選單外部時關閉 dropdown', async () => {
     const wrapper = mount(ActionButton, {
       attachTo: document.body,
-      props: { folders }
+      props: { folders, canSave: true }
     });
 
     try {
@@ -177,7 +194,7 @@ describe('ActionButton', () => {
   });
 
   it('點擊 SAVE TO NEW FOLDER 時 emit create-folder 並關閉 dropdown', async () => {
-    const wrapper = mount(ActionButton, { props: { folders } });
+    const wrapper = mount(ActionButton, { props: { folders, canSave: true } });
 
     await wrapper.find('button').trigger('click');
     const createBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO NEW FOLDER'));

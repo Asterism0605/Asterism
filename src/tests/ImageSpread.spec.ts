@@ -8,6 +8,7 @@ import { addItem, createFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
+import { savePendingMoodboardAction } from '@/services/pendingMoodboardAction.service';
 import type { MoodboardFolder, SavedImage } from '@/types/moodboard';
 
 vi.mock('@/services/moodboard.service', () => ({
@@ -30,7 +31,8 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
       { path: '/', name: 'home', component: { template: '<div />' } },
       { path: '/images/:imageId/spread', name: 'image-spread', component: ImageSpread },
       { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } },
-      { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } }
+      { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
+      { path: '/login', name: 'login', component: { template: '<div />' } }
     ]
   });
   const push = vi.spyOn(router, 'push');
@@ -70,6 +72,7 @@ const testSavedImage: SavedImage = {
 describe('ImageSpread', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    sessionStorage.clear();
     // 代表圖選取已改為隨機（#94）；頁面不注入 rng、走 Math.random。
     // 固定成 0＝每組取資料序第一張（medium 入口圖），讓標籤/導航斷言維持決定性。
     vi.spyOn(Math, 'random').mockReturnValue(0);
@@ -114,10 +117,20 @@ describe('ImageSpread', () => {
     await addButton!.trigger('click');
     await flushPromises();
 
-    expect(router.currentRoute.value.name).toBe('sign-up');
+    expect(router.currentRoute.value.name).toBe('login');
     expect(router.currentRoute.value.query.next).toBe('/images/y2k-main-001/spread');
     expect(addItem).not.toHaveBeenCalled();
     expect(createFolder).not.toHaveBeenCalled();
+  });
+
+  it('reopens the save menu once after returning authenticated', async () => {
+    savePendingMoodboardAction('y2k-main-001', '/images/y2k-main-001/spread');
+
+    const { wrapper } = await mountImageSpread();
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
+    expect(sessionStorage.getItem('asterism:pending-moodboard-action')).toBeNull();
   });
 
   it('第一層相關圖片以 medium 標示標籤', async () => {

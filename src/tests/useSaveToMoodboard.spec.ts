@@ -61,6 +61,7 @@ function withSetup<T>(composable: () => T): T {
 describe('useSaveToMoodboard', () => {
   beforeEach(() => {
     vi.useFakeTimers();
+    sessionStorage.clear();
     setActivePinia(createPinia());
     const authStore = useAuthStore();
     authStore.user = {
@@ -153,7 +154,7 @@ describe('useSaveToMoodboard', () => {
     expect(store.folders[0].images).toEqual([savedImage]);
   });
 
-  it('routes guests to sign-up before saving and never calls the Supabase service', async () => {
+  it('stores the save intent and routes guests to login before saving', async () => {
     useAuthStore().user = null;
     const { saveToMoodboard } = withSetup(() => useSaveToMoodboard());
 
@@ -163,12 +164,15 @@ describe('useSaveToMoodboard', () => {
     expect(addItemMock).not.toHaveBeenCalled();
     expect(showToast).not.toHaveBeenCalled();
     expect(routerPush).toHaveBeenCalledWith({
-      name: 'sign-up',
+      name: 'login',
       query: { next: '/images/img-1' }
     });
+    expect(sessionStorage.getItem('asterism:pending-moodboard-action')).toContain(
+      '"imageId":"img-1"'
+    );
   });
 
-  it('routes guests to sign-up before creating a folder and never calls the Supabase service', async () => {
+  it('stores the save intent and routes guests to login before creating a folder', async () => {
     useAuthStore().user = null;
     const { createNewFolder } = withSetup(() => useSaveToMoodboard());
 
@@ -179,8 +183,11 @@ describe('useSaveToMoodboard', () => {
     expect(addItemMock).not.toHaveBeenCalled();
     expect(showToast).not.toHaveBeenCalled();
     expect(routerPush).toHaveBeenCalledWith({
-      name: 'sign-up',
+      name: 'login',
       query: { next: '/images/img-1' }
     });
+    expect(sessionStorage.getItem('asterism:pending-moodboard-action')).toContain(
+      '"imageId":"img-1"'
+    );
   });
 });

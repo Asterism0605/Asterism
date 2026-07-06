@@ -8,6 +8,7 @@ import { addItem, createFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { useAuthStore } from '@/stores/auth.store';
 import { useMoodboardStore } from '@/stores/moodboard.store';
+import { savePendingMoodboardAction } from '@/services/pendingMoodboardAction.service';
 import type { MoodboardFolder, SavedImage } from '@/types/moodboard';
 
 vi.mock('@/services/moodboard.service', () => ({
@@ -91,6 +92,7 @@ async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = tr
 describe('PictureDetail', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    sessionStorage.clear();
     setActivePinia(createPinia());
     useAuthStore().user = fakeUser;
     vi.mocked(addItem).mockResolvedValue(testSavedImage);
@@ -188,7 +190,7 @@ describe('PictureDetail', () => {
     );
   });
 
-  it('routes unauthenticated moodboard clicks to sign-up with the current image target', async () => {
+  it('routes unauthenticated moodboard clicks to login with the current image target', async () => {
     const { router, wrapper } = await mountPictureDetail('y2k-main-001', false);
 
     const addButton = wrapper
@@ -197,10 +199,20 @@ describe('PictureDetail', () => {
     await addButton!.trigger('click');
     await flushPromises();
 
-    expect(router.currentRoute.value.name).toBe('sign-up');
+    expect(router.currentRoute.value.name).toBe('login');
     expect(router.currentRoute.value.query.next).toBe('/images/y2k-main-001');
     expect(addItem).not.toHaveBeenCalled();
     expect(createFolder).not.toHaveBeenCalled();
+  });
+
+  it('reopens the save menu once after returning authenticated', async () => {
+    savePendingMoodboardAction('y2k-main-001', '/images/y2k-main-001');
+
+    const { wrapper } = await mountPictureDetail();
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
+    expect(sessionStorage.getItem('asterism:pending-moodboard-action')).toBeNull();
   });
 
   it('導向選取的 stage 圖片詳情頁', async () => {
