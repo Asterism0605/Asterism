@@ -78,16 +78,9 @@ describe('ImageSpread', () => {
 
   it('第一層相關圖片以 medium 標示標籤', async () => {
     const { wrapper } = await mountImageSpread();
-    const labels = wrapper
-      .findAll('[data-testid="related-image-card"]')
-      .map((card) => card.text());
+    const labels = wrapper.findAll('[data-testid="related-image-card"]').map((card) => card.text());
 
-    expect(labels).toEqual([
-      'Graphic Design',
-      'Outfit',
-      'Interior Design',
-      'Architecture'
-    ]);
+    expect(labels).toEqual(['Graphic Design', 'Outfit', 'Interior Design', 'Architecture']);
   });
 
   it('第二層相關圖片以 subMedium 標示標籤', async () => {
@@ -96,9 +89,7 @@ describe('ImageSpread', () => {
     await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click');
     await flushPromises();
 
-    const labels = wrapper
-      .findAll('[data-testid="related-image-card"]')
-      .map((card) => card.text());
+    const labels = wrapper.findAll('[data-testid="related-image-card"]').map((card) => card.text());
 
     expect(labels).toEqual([
       'Poster Design',
@@ -163,8 +154,12 @@ describe('ImageSpread', () => {
 
     expect(router.currentRoute.value.name).toBe('picture-detail');
     expect(router.currentRoute.value.params.imageId).toBeDefined();
+    expect(router.currentRoute.value.query.spreadDetailImageId).toBe(
+      router.currentRoute.value.params.imageId
+    );
     expect(router.currentRoute.value.query).toEqual({
       spreadImageId: 'y2k-graphic-001',
+      spreadDetailImageId: router.currentRoute.value.params.imageId,
       spreadRootId: 'y2k-main-001'
     });
   });
@@ -202,7 +197,9 @@ describe('ImageSpread', () => {
   });
 
   it('從 medium spread 層返回根層，再返回首頁', async () => {
-    const { wrapper, push, router } = await mountImageSpread('rpl-interior-001?rootId=rpl-main-001');
+    const { wrapper, push, router } = await mountImageSpread(
+      'rpl-interior-001?rootId=rpl-main-001'
+    );
 
     await wrapper.find('[data-testid="return-home"]').trigger('click');
     await flushPromises();
@@ -225,7 +222,9 @@ describe('ImageSpread', () => {
   });
 
   it('當 addItem 拋出錯誤時顯示錯誤提示', async () => {
-    vi.mocked(addItem).mockImplementationOnce(() => { throw new Error('save failed') });
+    vi.mocked(addItem).mockImplementationOnce(() => {
+      throw new Error('save failed');
+    });
     const { wrapper } = await mountImageSpread();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
@@ -241,7 +240,12 @@ describe('ImageSpread', () => {
 
   it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
     let resolve!: () => void;
-    vi.mocked(addItem).mockImplementationOnce(() => new Promise<void>((r) => { resolve = r; }));
+    vi.mocked(addItem).mockImplementationOnce(
+      () =>
+        new Promise<void>((r) => {
+          resolve = r;
+        })
+    );
     const { wrapper } = await mountImageSpread();
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));

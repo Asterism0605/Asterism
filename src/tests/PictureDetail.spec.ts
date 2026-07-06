@@ -25,7 +25,7 @@ vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
   default: {
     emits: ['select'],
     template:
-      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'stage-related-001\')" />'
+      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'ftdp-graphic-poster-001\')" />'
   }
 }));
 
@@ -183,7 +183,7 @@ describe('PictureDetail', () => {
     await flushPromises();
 
     expect(router.currentRoute.value.name).toBe('picture-detail');
-    expect(router.currentRoute.value.params.imageId).toBe('stage-related-001');
+    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-poster-001');
   });
 
   it('導向選取的相似圖片詳情頁', async () => {
@@ -219,31 +219,45 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
   });
 
-  it('有 spread path context 時返回原本路徑上的 spread target', async () => {
+  it('有符合目前圖片的 spread path context 時返回原本路徑上的 spread target', async () => {
     const { router, wrapper } = await mountPictureDetail(
-      'ftdp-graphic-poster-001?spreadImageId=ftdp-graphic-brand-001&spreadRootId=ftdp-main-001'
+      'ftdp-graphic-poster-001?spreadImageId=ftdp-graphic-001&spreadRootId=ftdp-main-001&spreadDetailImageId=ftdp-graphic-poster-001'
     );
 
     await wrapper.find('button').trigger('click');
     await flushPromises();
 
     expect(router.currentRoute.value.name).toBe('image-spread');
-    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-brand-001');
+    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-001');
     expect(router.currentRoute.value.query.rootId).toBe('ftdp-main-001');
   });
 
-  it('在詳情頁切換圖片時保留 spread path context', async () => {
+  it('spread path context 不符合目前圖片時，返回目前圖片自己的 spread 路徑', async () => {
     const { router, wrapper } = await mountPictureDetail(
-      'ftdp-graphic-poster-001?spreadImageId=ftdp-graphic-brand-001&spreadRootId=ftdp-main-001'
+      'ftdp-graphic-poster-001?spreadImageId=ftdp-graphic-brand-001&spreadRootId=ftdp-main-001&spreadDetailImageId=ftdp-graphic-brand-001'
+    );
+
+    await wrapper.find('button').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-001');
+    expect(router.currentRoute.value.query.rootId).toBe('ftdp-main-001');
+  });
+
+  it('在詳情頁切換圖片時將 spread path context 改指向下一張圖片', async () => {
+    const { router, wrapper } = await mountPictureDetail(
+      'ftdp-graphic-brand-001?spreadImageId=ftdp-graphic-001&spreadRootId=ftdp-main-001&spreadDetailImageId=ftdp-graphic-brand-001'
     );
 
     await wrapper.find('[data-test="image-stage-panel"]').trigger('click');
     await flushPromises();
 
     expect(router.currentRoute.value.name).toBe('picture-detail');
-    expect(router.currentRoute.value.params.imageId).toBe('stage-related-001');
+    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-poster-001');
     expect(router.currentRoute.value.query).toEqual({
-      spreadImageId: 'ftdp-graphic-brand-001',
+      spreadImageId: 'ftdp-graphic-001',
+      spreadDetailImageId: 'ftdp-graphic-poster-001',
       spreadRootId: 'ftdp-main-001'
     });
   });

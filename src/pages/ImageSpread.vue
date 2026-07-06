@@ -21,8 +21,14 @@ const route = useRoute();
 const router = useRouter();
 const { localizeTaxon } = useTaxonomyLabel();
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
-  useSaveToMoodboard();
+const {
+  isSaving,
+  saveToMoodboard,
+  createNewFolder,
+  isCreatingFolder,
+  isCreateFolderSuccess,
+  justSavedFolderId
+} = useSaveToMoodboard();
 const isSaved = computed(() => isImageSaved(centerImage.value?.id ?? ''));
 const moodboardStore = useMoodboardStore();
 const folders = computed(() =>
@@ -145,6 +151,7 @@ function handleRelatedSelect(image: ImageSpreadNode) {
       params: { imageId: image.id },
       query: {
         spreadImageId: centerImage.value?.id,
+        spreadDetailImageId: image.id,
         spreadRootId: rootImage.value?.id
       }
     });
@@ -256,14 +263,21 @@ watch(
       v-else
       class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] max-w-xl flex-col items-center justify-center gap-5 px-6 text-center"
     >
-      <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">{{ $t('image.notFoundEyebrow') }}</p>
+      <p class="text-caption font-mono uppercase tracking-[0.24em] text-gold-dim">
+        {{ $t('image.notFoundEyebrow') }}
+      </p>
       <h1 class="text-3xl font-bold tracking-normal sm:text-5xl">
         {{ $t('image.notFoundTitle') }}
       </h1>
       <p class="text-sm leading-7 text-text-secondary sm:text-base">
         {{ $t('image.notFoundDesc') }}
       </p>
-      <Button data-testid="return-home" type="button" variant="primary" @click="returnToPreviousLayer">
+      <Button
+        data-testid="return-home"
+        type="button"
+        variant="primary"
+        @click="returnToPreviousLayer"
+      >
         {{ $t('image.returnHome') }}
       </Button>
     </section>
@@ -296,5 +310,4 @@ watch(
   background-size: 128px 128px;
   mask-image: linear-gradient(180deg, transparent, black 16%, black 82%, transparent);
 }
-
 </style>
