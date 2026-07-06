@@ -86,7 +86,11 @@ describe('ImageSpread', () => {
       createdAt: '2026-07-05T00:00:00.000Z'
     };
     const store = useMoodboardStore();
-    store.$patch({ status: 'success', folders: [{ ...testFolder, images: [] }] });
+    store.$patch({
+      status: 'success',
+      loadedProfileId: 'user-1',
+      folders: [{ ...testFolder, images: [] }]
+    });
     folderId = testFolder.id;
     vi.mocked(addItem).mockResolvedValue(testSavedImage);
     vi.mocked(createFolder).mockResolvedValue({ ...testFolder, id: 'new-folder-id', images: [] });

@@ -105,6 +105,7 @@ describe('useSaveToMoodboard', () => {
 
   it('建立資料夾進行中時重複呼叫 createNewFolder 會直接回傳 false（防重送 guard）', async () => {
     createFolderMock.mockResolvedValue(folder);
+    useMoodboardStore().$patch({ status: 'success', loadedProfileId: 'user-1' });
     let resolveAddItem!: (image: SavedImage) => void;
     addItemMock.mockImplementation(
       () =>
@@ -142,7 +143,7 @@ describe('useSaveToMoodboard', () => {
     createFolderMock.mockResolvedValue(folder);
     addItemMock.mockResolvedValue(savedImage);
     const store = useMoodboardStore();
-    store.$patch({ folders: [], status: 'success' });
+    store.$patch({ folders: [], status: 'success', loadedProfileId: 'user-1' });
     const { createNewFolder } = withSetup(() => useSaveToMoodboard());
 
     const request = createNewFolder('新資料夾', 'img-1');
@@ -152,6 +153,20 @@ describe('useSaveToMoodboard', () => {
     expect(createFolderMock).toHaveBeenCalledWith('user-1', '新資料夾', []);
     expect(addItemMock).toHaveBeenCalledWith('folder-1', 'img-1');
     expect(store.folders[0].images).toEqual([savedImage]);
+  });
+
+  it('blocks folder creation when the moodboard snapshot failed to load', async () => {
+    useMoodboardStore().$patch({ folders: [], status: 'error', error: 'network down' });
+    const { createNewFolder } = withSetup(() => useSaveToMoodboard());
+
+    const result = await createNewFolder('Studio', 'img-1');
+
+    expect(result).toBe(false);
+    expect(createFolderMock).not.toHaveBeenCalled();
+    expect(showToast).toHaveBeenCalledWith({
+      type: 'error',
+      message: "We couldn't load your moodboard."
+    });
   });
 
   it('stores the save intent and routes guests to login before saving', async () => {

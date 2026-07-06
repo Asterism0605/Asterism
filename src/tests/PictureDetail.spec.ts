@@ -78,7 +78,11 @@ async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = tr
   }
 
   const moodboardStore = useMoodboardStore(pinia);
-  moodboardStore.$patch({ status: 'success', folders: [{ ...testFolder, images: [] }] });
+  moodboardStore.$patch({
+    status: 'success',
+    loadedProfileId: 'user-1',
+    folders: [{ ...testFolder, images: [] }]
+  });
   const folderId = testFolder.id;
 
   await router.push(`/images/${imageId}`);
@@ -95,6 +99,11 @@ describe('PictureDetail', () => {
     sessionStorage.clear();
     setActivePinia(createPinia());
     useAuthStore().user = fakeUser;
+    useMoodboardStore().$patch({
+      status: 'success',
+      loadedProfileId: 'user-1',
+      folders: []
+    });
     vi.mocked(addItem).mockResolvedValue(testSavedImage);
     vi.mocked(createFolder).mockResolvedValue({ ...testFolder, id: 'new-folder-id', images: [] });
   });

@@ -88,11 +88,17 @@ export function useSaveToMoodboard() {
   async function createNewFolder(name: string, imageId: string): Promise<boolean> {
     if (!authStore.user?.id) return redirectGuestToLogin(imageId);
     if (isCreatingFolder.value) return false;
+    const profileId = authStore.user.id;
+    if (
+      moodboardStore.status !== 'success' ||
+      moodboardStore.loadedProfileId !== profileId
+    ) {
+      showToast({ type: 'error', message: t('moodboard.loadError') });
+      return false;
+    }
     isCreatingFolder.value = true;
     isCreateFolderSuccess.value = false;
     try {
-      const profileId = authStore.user.id;
-
       const folder = await createFolder(profileId, name, [...moodboardStore.folders]);
       moodboardStore.addFolder(folder);
       try {
