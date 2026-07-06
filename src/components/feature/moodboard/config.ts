@@ -88,17 +88,23 @@ export function buildMoodboardOrbitImages(savedImages: SavedImage[]): MoodboardO
     return [];
   }
 
-  const realImages = savedImages.map((image) => ({
+  const seen = new Set<string>();
+  const uniqueImages = savedImages.filter((image) => {
+    if (seen.has(image.id)) return false;
+    seen.add(image.id);
+    return true;
+  });
+  const realImages = uniqueImages.map((image) => ({
     id: image.id,
     src: image.src,
     isPlaceholder: false
   }));
 
-  if (savedImages.length >= 20) {
+  if (uniqueImages.length >= 20) {
     return realImages;
   }
 
-  const placeholders = Array.from({ length: 20 - savedImages.length }, (_, index) => ({
+  const placeholders = Array.from({ length: 20 - uniqueImages.length }, (_, index) => ({
     id: `placeholder-${index}`,
     src: photos[index % photos.length].src,
     isPlaceholder: true
