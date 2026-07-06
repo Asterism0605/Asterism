@@ -77,44 +77,6 @@ function sortByPreferredStyles(
     .map(({ image }) => image);
 }
 
-function interleaveImagesByStyleGroup(images: StyleImage[]): StyleImage[] {
-  const groups = new Map<string, StyleImage[]>();
-
-  for (const image of images) {
-    const list = groups.get(image.styleGroup);
-    if (list) list.push(image);
-    else groups.set(image.styleGroup, [image]);
-  }
-
-  const groupQueues = [...groups.values()];
-  const orderedImages: StyleImage[] = [];
-  let previousStyleGroup: string | undefined;
-  let cursor = 0;
-
-  while (orderedImages.length < images.length) {
-    const nextIndex = groupQueues.findIndex((_, offset) => {
-      const group = groupQueues[(cursor + offset) % groupQueues.length];
-
-      return group.length > 0 && group[0].styleGroup !== previousStyleGroup;
-    });
-    const fallbackIndex = groupQueues.findIndex((group) => group.length > 0);
-    const queueIndex =
-      nextIndex >= 0 ? (cursor + nextIndex) % groupQueues.length : fallbackIndex;
-    const nextGroup = queueIndex >= 0 ? groupQueues[queueIndex] : undefined;
-
-    if (!nextGroup) break;
-
-    const nextImage = nextGroup.shift();
-    if (!nextImage) continue;
-
-    orderedImages.push(nextImage);
-    previousStyleGroup = nextImage.styleGroup;
-    cursor = (queueIndex + 1) % groupQueues.length;
-  }
-
-  return orderedImages;
-}
-
 // 依 keyOf 把候選分組（已先排除 excludedIds），每組用 rng 隨機選一張代表。
 // 先排除再分組：排除某張圖只是換該組代表，不會讓整組消失（#94）。
 function pickOneImagePerGroup(
@@ -275,7 +237,55 @@ export function getRelatedImages(
   return pickRelatedCandidates(candidates, baseImage, limit).map(toSpreadNode);
 }
 
-// 首頁放團體概念照（沒有 medium 的圖），資料源為本地 style-data.json。
+// 首頁：把不同風格（styleGroup）的圖片穿插排在一起。
+function interleaveImagesByStyleGroup(images: StyleImage[], maxConsecutive = 2): StyleImage[] {
+  const groups = new Map<string, StyleImage[]>();
+
+  for (const image of images) {
+    const list = groups.get(image.styleGroup);
+    if (list) list.push(image);
+    else groups.set(image.styleGroup, [image]);
+  }
+
+  const groupQueues = [...groups.values()];
+  const orderedImages: StyleImage[] = [];
+  let previousStyleGroup: string | undefined;
+  let consecutiveCount = 0;
+  let cursor = 0;
+
+  while (orderedImages.length < images.length) {
+    const nextIndex = groupQueues.findIndex((_, offset) => {
+      const group = groupQueues[(cursor + offset) % groupQueues.length];
+      const nextStyleGroup = group[0]?.styleGroup;
+      const canUseSameGroup =
+        nextStyleGroup !== previousStyleGroup || consecutiveCount < maxConsecutive;
+
+      return group.length > 0 && canUseSameGroup;
+    });
+    const fallbackIndex = groupQueues.findIndex((group) => group.length > 0);
+    const queueIndex =
+      nextIndex >= 0 ? (cursor + nextIndex) % groupQueues.length : fallbackIndex;
+    const nextGroup = queueIndex >= 0 ? groupQueues[queueIndex] : undefined;
+
+    if (!nextGroup) break;
+
+    const nextImage = nextGroup.shift();
+    if (!nextImage) continue;
+
+    orderedImages.push(nextImage);
+    consecutiveCount =
+      nextImage.styleGroup === previousStyleGroup ? consecutiveCount + 1 : 1;
+    previousStyleGroup = nextImage.styleGroup;
+    cursor =
+      nextGroup.length > 0 && consecutiveCount < maxConsecutive
+        ? queueIndex
+        : (queueIndex + 1) % groupQueues.length;
+  }
+
+  return orderedImages;
+}
+
+// 首頁：放團體概念照（沒有 medium 的圖），資料源為本地 style-data.json。
 export async function getHomeInspirationImages(
   options: HomeInspirationOptions = {}
 ): Promise<HomeInspirationImage[]> {
