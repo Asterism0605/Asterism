@@ -1,4 +1,5 @@
 import type {
+  MoodboardFolder,
   MoodboardHomePhoto,
   MoodboardOrbitParams,
   MoodboardPhoto,
@@ -105,6 +106,10 @@ export function buildMoodboardOrbitImages(savedImages: SavedImage[]): MoodboardO
   }));
 
   return [...realImages, ...placeholders];
+}
+
+export function isFolderDimmed(folder?: MoodboardFolder): boolean {
+  return !folder || folder.images.length === 0;
 }
 
 const mImg = (n: number) => `/images/image${n}.png`;

@@ -171,4 +171,80 @@ describe('MoodboardOrbit', () => {
     expect(wrapper.text()).toContain("We couldn't load your moodboard.");
     expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
   });
+
+  describe('fixed 10-slot orbit with dimmed states', () => {
+    const savedImage = (id: string) => ({
+      itemId: `item-${id}`,
+      id,
+      src: `/style-image/${id}.webp`,
+      title: id,
+      styleGroup: 'minimal',
+      style: [],
+      createdAt: '2026-07-05T00:00:00.000Z'
+    });
+
+    function patchFolders() {
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        folders: [
+          {
+            id: 'folder-1',
+            name: 'Studio',
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [savedImage('saved-1')]
+          },
+          {
+            id: 'folder-2',
+            name: 'Empty Folder',
+            createdAt: '2026-07-05T00:00:00.000Z',
+            images: []
+          }
+        ]
+      });
+      return store;
+    }
+
+    it('always renders exactly 10 folder positions regardless of folder count', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+
+      expect(wrapper.findAll('[data-testid^="moodboard-folder-"]')).toHaveLength(10);
+    });
+
+    it('dims an empty slot that has no folder and blocks hover/click on it', async () => {
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+
+      const emptySlot = wrapper.get('[data-testid="moodboard-folder-5"]');
+      expect(emptySlot.get('img').attributes('style')).toContain('grayscale(1)');
+
+      await emptySlot.trigger('mouseenter');
+      expect(emptySlot.get('img').attributes('src')).toBe('/images/folder-idle.png');
+
+      await emptySlot.trigger('click');
+      await flushPromises();
+      expect(router.currentRoute.value.path).toBe('/moodboard');
+    });
+
+    it('dims a folder that has no saved images but still opens it on click', async () => {
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+
+      const emptyFolder = wrapper.get('[data-testid="moodboard-folder-1"]');
+      expect(emptyFolder.get('img').attributes('style')).toContain('grayscale(1)');
+
+      await emptyFolder.trigger('click');
+      await flushPromises();
+      expect(router.currentRoute.value.path).toBe('/moodboard/empty-folder');
+    });
+
+    it('does not dim a folder that has saved images', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+
+      const populatedFolder = wrapper.get('[data-testid="moodboard-folder-0"]');
+      expect(populatedFolder.get('img').attributes('style')).not.toContain('grayscale(1)');
+    });
+  });
 });
