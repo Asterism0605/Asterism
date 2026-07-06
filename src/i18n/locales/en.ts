@@ -141,6 +141,9 @@ export default {
     emptyTitle2: 'still empty.',
     emptyDesc:
       "You haven't saved any images yet. Explore the homepage to discover and collect inspiration that fits your style constellation.",
+    loading: 'Loading your moodboard...',
+    loadError: "We couldn't load your moodboard.",
+    retry: 'Try again',
     startExploring: 'Start Exploring',
     createFolderTitle: 'SAVE TO NEW FOLDER',
     folderNamePlaceholder: 'Folder name',

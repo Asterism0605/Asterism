@@ -3,7 +3,7 @@ import * as THREE from 'three'
 
 type TextureWithAspect = THREE.Texture & { _aspect: number }
 import { fibSphere } from './layout'
-import { IMG_URLS, SPRITE_RADIUS } from './config'
+import { SPRITE_RADIUS, type MoodboardOrbitImage } from './config'
 
 export interface SphereHandle {
   resize: () => void
@@ -13,7 +13,8 @@ export interface SphereHandle {
 export function initSphere(
   canvas: HTMLCanvasElement,
   getScale: () => number,
-  getHasFolders: () => boolean
+  getHasFolders: () => boolean,
+  images: MoodboardOrbitImage[]
 ): SphereHandle {
   // sphereDPR as private closure (uses getScale() instead of scale.value)
   function sphereDPR() {
@@ -35,26 +36,35 @@ export function initSphere(
 
   // makeFallbackTexture as private closure (from original lines 1135–1161, logic unchanged)
   function makeFallbackTexture(i: number) {
-    const w = 240, h = 320, cv = document.createElement('canvas')
-    cv.width = w; cv.height = h
+    const w = 240,
+      h = 320,
+      cv = document.createElement('canvas')
+    cv.width = w
+    cv.height = h
     const ctx = cv.getContext('2d')!
     const tones: [string, string][] = [
-      ['#3c3d42', '#17181c'], ['#47484d', '#1d1e22'],
-      ['#2f3034', '#141519'], ['#4a4b51', '#222329'], ['#36373c', '#1a1b1f']
+      ['#3c3d42', '#17181c'],
+      ['#47484d', '#1d1e22'],
+      ['#2f3034', '#141519'],
+      ['#4a4b51', '#222329'],
+      ['#36373c', '#1a1b1f']
     ]
     const [c0, c1] = tones[i % tones.length]
     const g = ctx.createLinearGradient(0, 0, w, h)
-    g.addColorStop(0, c0); g.addColorStop(1, c1)
-    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h)
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 2
+    g.addColorStop(0, c0)
+    g.addColorStop(1, c1)
+    ctx.fillStyle = g
+    ctx.fillRect(0, 0, w, h)
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'
+    ctx.lineWidth = 2
     ctx.strokeRect(1, 1, w - 2, h - 2)
     const t = new THREE.CanvasTexture(cv)
     ;(t as unknown as TextureWithAspect)._aspect = w / h
     return t
   }
 
-  const positions = fibSphere(IMG_URLS.length, SPRITE_RADIUS)
-  const textures: THREE.Texture[] = new Array(IMG_URLS.length)
+  const positions = fibSphere(images.length, SPRITE_RADIUS)
+  const textures: THREE.Texture[] = new Array(images.length)
   const sprites: THREE.Sprite[] = []
   const loader = new THREE.TextureLoader()
   loader.crossOrigin = 'anonymous'
@@ -67,6 +77,7 @@ export function initSphere(
       const sp = new THREE.Sprite(
         new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false })
       )
+      sp.userData.isPlaceholder = images[i].isPlaceholder
       const a = (tex as unknown as TextureWithAspect)._aspect || 0.75
       sp.scale.set(0.9 * a, 0.9, 1)
       sp.position.copy(pos)
@@ -77,24 +88,30 @@ export function initSphere(
   }
 
   let done = 0
-  const finishOne = () => { if (++done >= IMG_URLS.length) build() }
+  const finishOne = () => {
+    if (++done >= images.length) build()
+  }
 
-  IMG_URLS.forEach((url, i) =>
+  images.forEach((image, i) => {
     loader.load(
-      url,
+      image.src,
       (tex) => {
         tex.colorSpace = THREE.SRGBColorSpace
         tex.anisotropy = renderer.capabilities.getMaxAnisotropy()
         tex.minFilter = THREE.LinearFilter
         tex.generateMipmaps = false
-        ;(tex as unknown as TextureWithAspect)._aspect = (tex.image?.naturalWidth || 3) / (tex.image?.naturalHeight || 4)
+        ;(tex as unknown as TextureWithAspect)._aspect =
+          (tex.image?.naturalWidth || 3) / (tex.image?.naturalHeight || 4)
         textures[i] = tex
         finishOne()
       },
       undefined,
-      () => { textures[i] = makeFallbackTexture(i); finishOne() }
+      () => {
+        textures[i] = makeFallbackTexture(i)
+        finishOne()
+      }
     )
-  )
+  })
 
   const tmp = new THREE.Vector3()
   let t = 0
@@ -107,14 +124,15 @@ export function initSphere(
     for (const sp of sprites) {
       sp.getWorldPosition(tmp)
       const k = Math.max(0, Math.min(1, (tmp.z + SPRITE_RADIUS) / (2 * SPRITE_RADIUS)))
-      sp.material.opacity = 0.55 + 0.45 * k
+      sp.material.opacity = sp.userData.isPlaceholder ? 0.15 : 0.65 + 0.45 * k
     }
     renderer.render(scene, camera)
   }
 
   // resize (from original resizeSphere lines 1108–1118, uses sphereDPR() closure)
   function resize() {
-    const W2 = canvas.clientWidth, H2 = canvas.clientHeight
+    const W2 = canvas.clientWidth,
+      H2 = canvas.clientHeight
     if (!W2 || !H2) return
     renderer.setPixelRatio(sphereDPR())
     renderer.setSize(W2, H2, false)
@@ -124,6 +142,7 @@ export function initSphere(
 
   function dispose() {
     cancelAnimationFrame(rafId)
+    textures.forEach((texture) => texture.dispose())
     renderer.dispose()
   }
 

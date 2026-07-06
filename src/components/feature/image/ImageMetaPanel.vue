@@ -20,13 +20,29 @@ interface Props {
   disabled?: boolean;
   folders?: { id: string; name: string; saved?: boolean }[];
   justSavedFolderId?: string | null;
+  canSave?: boolean;
+  saveMenuOpenRequest?: number;
 }
 
-defineProps<Props>();
+withDefaults(defineProps<Props>(), {
+  sourceUrl: undefined,
+  sourceLabel: undefined,
+  photographerName: undefined,
+  photographerRole: undefined,
+  photographerDate: undefined,
+  similarImages: () => [],
+  saved: false,
+  disabled: false,
+  folders: () => [],
+  justSavedFolderId: null,
+  canSave: false,
+  saveMenuOpenRequest: 0
+});
 
 const emit = defineEmits<{
   back: [];
   consult: [];
+  'auth-required': [];
   'create-folder': [];
   'save-to-folder': [folderId: string];
   'select-image': [imageId: string];
@@ -88,8 +104,11 @@ const siteLogoSrc = '/sitelogo.png';
         class="flex-1"
         :saved="saved"
         :disabled="disabled"
+        :can-save="canSave"
+        :open-request="saveMenuOpenRequest"
         :folders="folders"
         :just-saved-folder-id="justSavedFolderId"
+        @auth-required="emit('auth-required')"
         @create-folder="emit('create-folder')"
         @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
       />

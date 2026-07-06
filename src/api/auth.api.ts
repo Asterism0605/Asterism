@@ -64,11 +64,17 @@ function envelope(session: AuthSession): ApiResponse<AuthSession> {
   return { data: session, meta: { timestamp: new Date().toISOString() } };
 }
 
-export async function registerApi(payload: RegisterPayload): Promise<ApiResponse<AuthSession>> {
+export async function registerApi(
+  payload: RegisterPayload,
+  emailRedirectTo?: string
+): Promise<ApiResponse<AuthSession>> {
   const { data, error } = await getSupabase().auth.signUp({
     email: payload.email,
     password: payload.password,
-    options: { data: { display_name: payload.displayName ?? '' } }
+    options: {
+      data: { display_name: payload.displayName ?? '' },
+      ...(emailRedirectTo ? { emailRedirectTo } : {})
+    }
   });
   if (error) {
     throw mapSupabaseAuthError(error);
@@ -120,8 +126,12 @@ export async function verifyOtpApi(
 }
 
 // 重寄信箱驗證信：用同一個 Confirm signup 模板再寄一次（連結仍回 /auth/callback?type=signup）。
-export async function resendSignupApi(email: string): Promise<void> {
-  const { error } = await getSupabase().auth.resend({ type: 'signup', email });
+export async function resendSignupApi(email: string, emailRedirectTo?: string): Promise<void> {
+  const { error } = await getSupabase().auth.resend({
+    type: 'signup',
+    email,
+    ...(emailRedirectTo ? { options: { emailRedirectTo } } : {})
+  });
   if (error) {
     throw mapSupabaseAuthError(error);
   }
