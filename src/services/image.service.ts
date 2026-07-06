@@ -7,7 +7,6 @@ import type {
   StyleImage
 } from '@/types/image';
 
-
 interface RelatedImageOptions {
   limit?: number;
   visitedImageIds?: string[];
@@ -57,10 +56,7 @@ function countPreferredStyleMatches(image: StyleImage, preferredStyles: Set<stri
   return image.style.filter((style) => preferredStyles.has(style)).length;
 }
 
-function sortByPreferredStyles(
-  images: StyleImage[],
-  preferredStyles: string[] = []
-): StyleImage[] {
+function sortByPreferredStyles(images: StyleImage[], preferredStyles: string[] = []): StyleImage[] {
   const preferredStyleSet = new Set(preferredStyles.filter(Boolean));
 
   if (preferredStyleSet.size === 0) {
@@ -83,23 +79,28 @@ function pickOneImagePerGroup(
   images: StyleImage[],
   keyOf: (image: StyleImage) => string | undefined,
   excludedIds: Set<string>,
-  rng: () => number
+  rng: () => number,
+  options: { preserveGroups?: boolean } = {}
 ): StyleImage[] {
   const groups = new Map<string, StyleImage[]>();
 
   for (const image of images) {
     const key = keyOf(image);
     if (!key) continue;
-    if (excludedIds.has(image.id)) continue;
     const list = groups.get(key);
     if (list) list.push(image);
     else groups.set(key, [image]);
   }
 
   // clamp：注入的 rng 若回傳 1（floor(1*len)=len）不得越界。
-  return [...groups.values()].map(
-    (list) => list[Math.min(Math.floor(rng() * list.length), list.length - 1)]
-  );
+  return [...groups.values()]
+    .map((list) => {
+      const available = list.filter((image) => !excludedIds.has(image.id));
+      const candidates = available.length > 0 || !options.preserveGroups ? available : list;
+
+      return candidates[Math.min(Math.floor(rng() * candidates.length), candidates.length - 1)];
+    })
+    .filter((image): image is StyleImage => Boolean(image));
 }
 
 function getRandomImagePerMedium(
@@ -107,12 +108,30 @@ function getRandomImagePerMedium(
   excludedIds: Set<string>,
   rng: () => number
 ): StyleImage[] {
-  return pickOneImagePerGroup(
-    styleImages.filter((image) => image.styleGroup === styleGroup),
-    (image) => image.medium,
-    excludedIds,
-    rng
-  );
+  const groups = new Map<string, StyleImage[]>();
+
+  for (const image of styleImages) {
+    if (image.styleGroup !== styleGroup || !image.medium) continue;
+    const list = groups.get(image.medium);
+    if (list) list.push(image);
+    else groups.set(image.medium, [image]);
+  }
+
+  return [...groups.values()].map((list) => {
+    const mediumOnly = list.filter((image) => !image.subMedium);
+    const unvisitedMediumOnly = mediumOnly.filter((image) => !excludedIds.has(image.id));
+    const unvisited = list.filter((image) => !excludedIds.has(image.id));
+    const candidates =
+      unvisitedMediumOnly.length > 0
+        ? unvisitedMediumOnly
+        : unvisited.length > 0
+          ? unvisited
+          : mediumOnly.length > 0
+            ? mediumOnly
+            : list;
+
+    return candidates[Math.min(Math.floor(rng() * candidates.length), candidates.length - 1)];
+  });
 }
 
 function getRandomImagePerSubMedium(
@@ -122,10 +141,13 @@ function getRandomImagePerSubMedium(
   rng: () => number
 ): StyleImage[] {
   return pickOneImagePerGroup(
-    styleImages.filter((image) => image.styleGroup === styleGroup && image.medium === medium),
+    styleImages.filter(
+      (image) => image.styleGroup === styleGroup && image.medium === medium && image.subMedium
+    ),
     (image) => image.subMedium,
     excludedIds,
-    rng
+    rng,
+    { preserveGroups: true }
   );
 }
 
@@ -195,7 +217,10 @@ export function getSubMediumGroupImages(
     rng
   );
 
-  return subMediumImages.slice(0, limit).map(toSpreadNode);
+  return subMediumImages
+    .filter((image) => image.id !== imageId)
+    .slice(0, limit)
+    .map(toSpreadNode);
 }
 
 function pickRelatedCandidates(

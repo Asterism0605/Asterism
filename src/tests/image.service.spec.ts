@@ -106,18 +106,18 @@ describe('image.service', () => {
         'Outfit'
       ]);
       expect(images.map((image) => image.id)).not.toContain('y2k-graphic-001');
+      expect(images.find((image) => image.medium === 'Graphic Design')?.subMedium).toBeTruthy();
     });
 
-    it('selects each medium representative using the injected rng', () => {
-      // Graphic Design 候選依資料序：graphic-001 / poster / editorial / brand / packaging（5 張）。
-      // index = floor(rng * 長度)，故 rng=0 取第一張、rng≈1 取最後一張。
+    it('prefers medium-only representatives even when rng would otherwise pick subMedium images', () => {
       const lowest = getMediumGroupImages('y2k-main-001', { rng: () => 0 });
       expect(lowest.find((image) => image.medium === 'Graphic Design')?.id).toBe('y2k-graphic-001');
 
       const highest = getMediumGroupImages('y2k-main-001', { rng: () => 0.999 });
       expect(highest.find((image) => image.medium === 'Graphic Design')?.id).toBe(
-        'y2k-graphic-packaging-001'
+        'y2k-graphic-001'
       );
+      expect(highest.every((image) => !image.subMedium)).toBe(true);
     });
 
     it('clamps to the last candidate when rng returns 1', () => {
@@ -125,9 +125,8 @@ describe('image.service', () => {
       const images = getMediumGroupImages('y2k-main-001', { rng: () => 1 });
 
       expect(images).toHaveLength(4);
-      expect(images.find((image) => image.medium === 'Graphic Design')?.id).toBe(
-        'y2k-graphic-packaging-001'
-      );
+      expect(images.find((image) => image.medium === 'Graphic Design')?.id).toBe('y2k-graphic-001');
+      expect(images.every((image) => !image.subMedium)).toBe(true);
     });
   });
 
@@ -144,6 +143,28 @@ describe('image.service', () => {
       const images = getSubMediumGroupImages('y2k-main-001');
 
       expect(images).toHaveLength(0);
+    });
+
+    it('does not return the center image when it is the only representative in its subMedium group', () => {
+      const images = getSubMediumGroupImages('ftdp-graphic-brand-001', {
+        visitedImageIds: ['ftdp-graphic-001'],
+        rng: () => 0
+      });
+
+      expect(images.map((image) => image.subMedium).sort()).toEqual([
+        'Editorial Design',
+        'Poster Design'
+      ]);
+      expect(images.map((image) => image.id)).not.toContain('ftdp-graphic-brand-001');
+    });
+
+    it('does not recommend eag-interior-chair-001 to itself', () => {
+      const images = getSubMediumGroupImages('eag-interior-chair-001', {
+        visitedImageIds: ['ext-pexels-15207412'],
+        rng: () => 0
+      });
+
+      expect(images.map((image) => image.id)).not.toContain('eag-interior-chair-001');
     });
   });
 

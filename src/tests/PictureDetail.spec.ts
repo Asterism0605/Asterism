@@ -25,7 +25,7 @@ vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
   default: {
     emits: ['select'],
     template:
-      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'stage-related-001\')" />'
+      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'ftdp-graphic-poster-001\')" />'
   }
 }));
 
@@ -37,7 +37,11 @@ const fakeUser = {
   createdAt: '2026-01-01T00:00:00Z'
 };
 
-async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = true) {
+async function mountPictureDetail(
+  imageId = 'y2k-main-001',
+  isAuthenticated = true,
+  options: { attachTo?: HTMLElement } = {}
+) {
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
@@ -67,7 +71,10 @@ async function mountPictureDetail(imageId = 'y2k-main-001', isAuthenticated = tr
   await router.push(`/images/${imageId}`);
   await router.isReady();
 
-  const wrapper = mount(PictureDetail, { global: { plugins: [router, pinia] } });
+  const wrapper = mount(PictureDetail, {
+    attachTo: options.attachTo,
+    global: { plugins: [router, pinia] }
+  });
 
   return { router, wrapper, folderId };
 }
@@ -176,7 +183,7 @@ describe('PictureDetail', () => {
     await flushPromises();
 
     expect(router.currentRoute.value.name).toBe('picture-detail');
-    expect(router.currentRoute.value.params.imageId).toBe('stage-related-001');
+    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-poster-001');
   });
 
   it('導向選取的相似圖片詳情頁', async () => {
@@ -212,23 +219,52 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
   });
 
+  it('有符合目前圖片的 spread path context 時返回原本路徑上的 spread target', async () => {
+    const { router, wrapper } = await mountPictureDetail(
+      'ftdp-graphic-poster-001?spreadImageId=ftdp-graphic-001&spreadRootId=ftdp-main-001&spreadDetailImageId=ftdp-graphic-poster-001'
+    );
+
+    await wrapper.find('button').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-001');
+    expect(router.currentRoute.value.query.rootId).toBe('ftdp-main-001');
+  });
+
+  it('spread path context 不符合目前圖片時，返回目前圖片自己的 spread 路徑', async () => {
+    const { router, wrapper } = await mountPictureDetail(
+      'ftdp-graphic-poster-001?spreadImageId=ftdp-graphic-brand-001&spreadRootId=ftdp-main-001&spreadDetailImageId=ftdp-graphic-brand-001'
+    );
+
+    await wrapper.find('button').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-001');
+    expect(router.currentRoute.value.query.rootId).toBe('ftdp-main-001');
+  });
+
+  it('在詳情頁切換圖片時將 spread path context 改指向下一張圖片', async () => {
+    const { router, wrapper } = await mountPictureDetail(
+      'ftdp-graphic-brand-001?spreadImageId=ftdp-graphic-001&spreadRootId=ftdp-main-001&spreadDetailImageId=ftdp-graphic-brand-001'
+    );
+
+    await wrapper.find('[data-test="image-stage-panel"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('picture-detail');
+    expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-poster-001');
+    expect(router.currentRoute.value.query).toEqual({
+      spreadImageId: 'ftdp-graphic-001',
+      spreadDetailImageId: 'ftdp-graphic-poster-001',
+      spreadRootId: 'ftdp-main-001'
+    });
+  });
+
   it('送出 SAVE TO NEW FOLDER 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
     vi.mocked(createFolder).mockReturnValueOnce('new-folder-id');
-    const router = createRouter({
-      history: createMemoryHistory(),
-      routes: [
-        { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
-        { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
-        { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
-      ]
-    });
-    await router.push('/images/y2k-main-001');
-    await router.isReady();
-
-    const wrapper = mount(PictureDetail, {
-      attachTo: document.body,
-      global: { plugins: [router] }
-    });
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: document.body });
 
     try {
       const findBtn = (text: string) =>
@@ -262,21 +298,7 @@ describe('PictureDetail', () => {
     vi.mocked(addItem).mockImplementationOnce(() => {
       throw new Error('save failed');
     });
-    const router = createRouter({
-      history: createMemoryHistory(),
-      routes: [
-        { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
-        { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
-        { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
-      ]
-    });
-    await router.push('/images/y2k-main-001');
-    await router.isReady();
-
-    const wrapper = mount(PictureDetail, {
-      attachTo: document.body,
-      global: { plugins: [router] }
-    });
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: document.body });
 
     try {
       const findBtn = (text: string) =>
@@ -307,25 +329,7 @@ describe('PictureDetail', () => {
 
   it('重開 SAVE TO NEW FOLDER modal 後 input 不再 disabled', async () => {
     vi.useFakeTimers();
-    const router = createRouter({
-      history: createMemoryHistory(),
-      routes: [
-        { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
-        {
-          path: '/images/:imageId/spread',
-          name: 'image-spread',
-          component: { template: '<div />' }
-        },
-        { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
-      ]
-    });
-    await router.push('/images/y2k-main-001');
-    await router.isReady();
-
-    const wrapper = mount(PictureDetail, {
-      attachTo: document.body,
-      global: { plugins: [router] }
-    });
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: document.body });
 
     try {
       const findBtn = (text: string) =>
