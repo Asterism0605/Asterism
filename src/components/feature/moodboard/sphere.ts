@@ -36,18 +36,27 @@ export function initSphere(
 
   // makeFallbackTexture as private closure (from original lines 1135–1161, logic unchanged)
   function makeFallbackTexture(i: number) {
-    const w = 240, h = 320, cv = document.createElement('canvas')
-    cv.width = w; cv.height = h
+    const w = 240,
+      h = 320,
+      cv = document.createElement('canvas')
+    cv.width = w
+    cv.height = h
     const ctx = cv.getContext('2d')!
     const tones: [string, string][] = [
-      ['#3c3d42', '#17181c'], ['#47484d', '#1d1e22'],
-      ['#2f3034', '#141519'], ['#4a4b51', '#222329'], ['#36373c', '#1a1b1f']
+      ['#3c3d42', '#17181c'],
+      ['#47484d', '#1d1e22'],
+      ['#2f3034', '#141519'],
+      ['#4a4b51', '#222329'],
+      ['#36373c', '#1a1b1f']
     ]
     const [c0, c1] = tones[i % tones.length]
     const g = ctx.createLinearGradient(0, 0, w, h)
-    g.addColorStop(0, c0); g.addColorStop(1, c1)
-    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h)
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 2
+    g.addColorStop(0, c0)
+    g.addColorStop(1, c1)
+    ctx.fillStyle = g
+    ctx.fillRect(0, 0, w, h)
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'
+    ctx.lineWidth = 2
     ctx.strokeRect(1, 1, w - 2, h - 2)
     const t = new THREE.CanvasTexture(cv)
     ;(t as unknown as TextureWithAspect)._aspect = w / h
@@ -79,7 +88,9 @@ export function initSphere(
   }
 
   let done = 0
-  const finishOne = () => { if (++done >= images.length) build() }
+  const finishOne = () => {
+    if (++done >= images.length) build()
+  }
 
   images.forEach((image, i) => {
     loader.load(
@@ -89,12 +100,16 @@ export function initSphere(
         tex.anisotropy = renderer.capabilities.getMaxAnisotropy()
         tex.minFilter = THREE.LinearFilter
         tex.generateMipmaps = false
-        ;(tex as unknown as TextureWithAspect)._aspect = (tex.image?.naturalWidth || 3) / (tex.image?.naturalHeight || 4)
+        ;(tex as unknown as TextureWithAspect)._aspect =
+          (tex.image?.naturalWidth || 3) / (tex.image?.naturalHeight || 4)
         textures[i] = tex
         finishOne()
       },
       undefined,
-      () => { textures[i] = makeFallbackTexture(i); finishOne() }
+      () => {
+        textures[i] = makeFallbackTexture(i)
+        finishOne()
+      }
     )
   })
 
@@ -109,14 +124,15 @@ export function initSphere(
     for (const sp of sprites) {
       sp.getWorldPosition(tmp)
       const k = Math.max(0, Math.min(1, (tmp.z + SPRITE_RADIUS) / (2 * SPRITE_RADIUS)))
-      sp.material.opacity = sp.userData.isPlaceholder ? 0.35 : 0.55 + 0.45 * k
+      sp.material.opacity = sp.userData.isPlaceholder ? 0.15 : 0.65 + 0.45 * k
     }
     renderer.render(scene, camera)
   }
 
   // resize (from original resizeSphere lines 1108–1118, uses sphereDPR() closure)
   function resize() {
-    const W2 = canvas.clientWidth, H2 = canvas.clientHeight
+    const W2 = canvas.clientWidth,
+      H2 = canvas.clientHeight
     if (!W2 || !H2) return
     renderer.setPixelRatio(sphereDPR())
     renderer.setSize(W2, H2, false)
