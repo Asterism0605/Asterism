@@ -21,6 +21,7 @@ interface Props {
   folders?: { id: string; name: string; saved?: boolean }[];
   justSavedFolderId?: string | null;
   canSave?: boolean;
+  saveMenuOpenRequest?: number;
 }
 
 withDefaults(defineProps<Props>(), {
@@ -34,7 +35,8 @@ withDefaults(defineProps<Props>(), {
   disabled: false,
   folders: () => [],
   justSavedFolderId: null,
-  canSave: true
+  canSave: false,
+  saveMenuOpenRequest: 0
 });
 
 const emit = defineEmits<{
@@ -103,6 +105,7 @@ const siteLogoSrc = '/sitelogo.png';
         :saved="saved"
         :disabled="disabled"
         :can-save="canSave"
+        :open-request="saveMenuOpenRequest"
         :folders="folders"
         :just-saved-folder-id="justSavedFolderId"
         @auth-required="emit('auth-required')"

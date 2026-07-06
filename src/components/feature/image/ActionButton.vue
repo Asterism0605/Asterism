@@ -25,13 +25,15 @@ interface Props {
   folders?: FolderItem[];
   justSavedFolderId?: string | null;
   canSave?: boolean;
+  openRequest?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'bookmark',
   folders: () => [],
   justSavedFolderId: null,
-  canSave: true
+  canSave: false,
+  openRequest: 0
 });
 
 const emit = defineEmits<{
@@ -68,6 +70,14 @@ function handleSaveToFolderClick(folder: FolderItem) {
   if (isBusy.value) return;
   emit('save-to-folder', folder.id);
 }
+
+watch(
+  () => props.openRequest,
+  (current) => {
+    if (current > 0 && props.canSave) isOpen.value = true;
+  },
+  { immediate: true }
+);
 
 watch(
   () => props.justSavedFolderId,

@@ -18,13 +18,15 @@ const props = withDefaults(
     folders?: { id: string; name: string; saved?: boolean }[];
     justSavedFolderId?: string | null;
     canSave?: boolean;
+    saveMenuOpenRequest?: number;
   }>(),
   {
     saved: false,
     disabled: false,
     folders: () => [],
     justSavedFolderId: null,
-    canSave: true
+    canSave: false,
+    saveMenuOpenRequest: 0
   }
 );
 
@@ -110,6 +112,7 @@ const mainImageLabel = computed(() => {
         :saved="props.saved"
         :disabled="props.disabled"
         :can-save="props.canSave"
+        :open-request="props.saveMenuOpenRequest"
         :folders="props.folders"
         :just-saved-folder-id="props.justSavedFolderId"
         @auth-required="emit('auth-required')"

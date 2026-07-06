@@ -6,6 +6,10 @@ import { showToast } from '@/composables/useToast';
 import { MOODBOARD_FEEDBACK_DISPLAY_MS } from '@/constants/moodboard.constants';
 import { useAuthStore } from '@/stores/auth.store';
 import { useMoodboardStore } from '@/stores/moodboard.store';
+import {
+  consumePendingMoodboardAction,
+  savePendingMoodboardAction
+} from '@/services/pendingMoodboardAction.service';
 
 export function useSaveToMoodboard() {
   const { t } = useI18n();
@@ -37,16 +41,27 @@ export function useSaveToMoodboard() {
       : t('toast.saveFailed');
   }
 
-  function redirectGuestToSignUp(): false {
+  function redirectGuestToLogin(imageId: string): false {
+    savePendingMoodboardAction(imageId, route.fullPath);
     void router.push({
-      name: 'sign-up',
+      name: 'login',
       query: { next: route.fullPath }
     });
     return false;
   }
 
+  function consumePendingSaveMenu(imageId: string, imageExists = true): boolean {
+    if (!authStore.user?.id) return false;
+
+    const result = consumePendingMoodboardAction(imageId);
+    if (result === 'discarded' || (result === 'ready' && !imageExists)) {
+      showToast({ type: 'warning', message: t('toast.saveFailed') });
+    }
+    return result === 'ready' && imageExists;
+  }
+
   async function saveToMoodboard(folderId: string, imageId: string): Promise<boolean> {
-    if (!authStore.user?.id) return redirectGuestToSignUp();
+    if (!authStore.user?.id) return redirectGuestToLogin(imageId);
     if (isSaving.value) return false;
     isSaving.value = true;
     saveError.value = null;
@@ -71,7 +86,7 @@ export function useSaveToMoodboard() {
   }
 
   async function createNewFolder(name: string, imageId: string): Promise<boolean> {
-    if (!authStore.user?.id) return redirectGuestToSignUp();
+    if (!authStore.user?.id) return redirectGuestToLogin(imageId);
     if (isCreatingFolder.value) return false;
     isCreatingFolder.value = true;
     isCreateFolderSuccess.value = false;
@@ -111,7 +126,8 @@ export function useSaveToMoodboard() {
   return {
     isSaving,
     canSave,
-    redirectGuestToSignUp,
+    redirectGuestToLogin,
+    consumePendingSaveMenu,
     saveError,
     saveToMoodboard,
     isCreatingFolder,

@@ -24,7 +24,8 @@ const { localizeTaxon } = useTaxonomyLabel();
 const {
   isSaving,
   canSave,
-  redirectGuestToSignUp,
+  redirectGuestToLogin,
+  consumePendingSaveMenu,
   saveToMoodboard,
   createNewFolder,
   isCreatingFolder,
@@ -43,6 +44,7 @@ const folders = computed(() =>
   }))
 );
 const showCreateFolder = ref(false);
+const saveMenuOpenRequest = ref(0);
 const centerImage = ref<ImageSpreadNode | undefined>();
 const rootImage = ref<ImageSpreadNode | undefined>();
 const relatedImages = ref<ImageSpreadNode[]>([]);
@@ -189,6 +191,16 @@ watch(
   },
   { immediate: true }
 );
+
+watch(
+  [routeImageId, canSave],
+  ([imageId, authenticated]) => {
+    if (imageId && authenticated && consumePendingSaveMenu(imageId, Boolean(centerImage.value))) {
+      saveMenuOpenRequest.value += 1;
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -220,9 +232,10 @@ watch(
           :saved="isSaved"
           :disabled="isSaving"
           :can-save="canSave"
+          :save-menu-open-request="saveMenuOpenRequest"
           :folders="folders"
           :just-saved-folder-id="justSavedFolderId"
-          @auth-required="redirectGuestToSignUp"
+          @auth-required="redirectGuestToLogin(centerImage.id)"
           @return="returnToPreviousLayer"
           @create-folder="handleCreateFolder"
           @save-to-folder="handleSaveToFolder"

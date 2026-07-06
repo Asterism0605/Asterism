@@ -37,7 +37,8 @@ const similarImages = computed(() => relatedImages.value.slice(2, 6));
 const {
   isSaving,
   canSave,
-  redirectGuestToSignUp,
+  redirectGuestToLogin,
+  consumePendingSaveMenu,
   saveToMoodboard,
   createNewFolder,
   isCreatingFolder,
@@ -56,6 +57,17 @@ const folders = computed(() =>
   }))
 );
 const showCreateFolder = ref(false);
+const saveMenuOpenRequest = ref(0);
+
+watch(
+  [imageId, canSave],
+  ([currentImageId, authenticated]) => {
+    if (authenticated && consumePendingSaveMenu(currentImageId, Boolean(currentImage.value))) {
+      saveMenuOpenRequest.value += 1;
+    }
+  },
+  { immediate: true }
+);
 
 function handleBack() {
   if (!currentImage.value) {
@@ -140,9 +152,10 @@ async function handleSaveToFolder(folderId: string) {
         :saved="isSaved"
         :disabled="isSaving"
         :can-save="canSave"
+        :save-menu-open-request="saveMenuOpenRequest"
         :folders="folders"
         :just-saved-folder-id="justSavedFolderId"
-        @auth-required="redirectGuestToSignUp"
+        @auth-required="redirectGuestToLogin(currentImage.id)"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
