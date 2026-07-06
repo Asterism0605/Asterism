@@ -33,10 +33,16 @@ function toSavedImage(row: MoodboardItemRow): SavedImage | null {
 }
 
 function toMoodboardFolder(row: MoodboardFolderRow): MoodboardFolder {
+  const seen = new Set<string>();
   const images = row.moodboard_items
     .map(toSavedImage)
     .filter((image): image is SavedImage => image !== null)
-    .sort((first, second) => second.createdAt.localeCompare(first.createdAt));
+    .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
+    .filter((image) => {
+      if (seen.has(image.id)) return false;
+      seen.add(image.id);
+      return true;
+    });
 
   return {
     id: row.id,

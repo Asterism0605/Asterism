@@ -75,6 +75,46 @@ describe('moodboard.service', () => {
     });
   });
 
+  it('keeps only the newest fetched item for each image id', async () => {
+    const image = {
+      id: 'image-1',
+      url: '/image-1.webp',
+      title: 'Image 1',
+      style_group: 'minimal',
+      style: ['Minimalism']
+    };
+    fetchMoodboardFolders.mockResolvedValue([
+      {
+        id: 'folder-1',
+        profile_id: 'user-1',
+        name: 'Studio',
+        created_at: '2026-07-05T00:00:00.000Z',
+        updated_at: '2026-07-05T00:00:00.000Z',
+        moodboard_items: [
+          {
+            id: 'new-item',
+            folder_id: 'folder-1',
+            image_id: 'image-1',
+            created_at: '2026-07-06T00:00:00.000Z',
+            images: image
+          },
+          {
+            id: 'old-item',
+            folder_id: 'folder-1',
+            image_id: 'image-1',
+            created_at: '2026-07-05T00:00:00.000Z',
+            images: image
+          }
+        ]
+      }
+    ]);
+
+    const viewModel = await getMoodboardViewModel('user-1');
+
+    expect(viewModel.folders[0].images).toHaveLength(1);
+    expect(viewModel.folders[0].images[0].itemId).toBe('new-item');
+  });
+
   it('creates a trimmed folder through the Data API', async () => {
     createMoodboardFolder.mockResolvedValue({
       id: 'folder-1',
