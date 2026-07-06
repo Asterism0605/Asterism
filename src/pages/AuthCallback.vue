@@ -3,11 +3,13 @@ import type { EmailOtpType } from '@supabase/supabase-js';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 const failed = ref(false);
 
 function hasOAuthError(): boolean {
@@ -38,7 +40,17 @@ onMounted(async () => {
         void router.replace({ name: 'reset-password' });
         return;
       }
-      void router.replace(getSafeRedirectPath(route.query.next, '/'));
+      // 第三方（Google/LINE）登入跟信箱驗證都會走這裡，跟 Login.vue/SignUp.vue
+      // 一樣先跟後端同步 Style DNA 結果，再決定沒有 next 時的預設落點：
+      // 還沒做過測驗的人（不管是新註冊還是舊帳號一直沒做）導去測驗入口，
+      // 已經做過的人才回首頁，避免第三方註冊的使用者被晾在首頁找不到入口。
+      try {
+        await styleDnaStore.reconcileWithServer(authStore.user!.id);
+      } catch (error) {
+        console.warn('[style-dna] sync after oauth/verification failed:', error);
+      }
+      const fallback = styleDnaStore.hasCompletedQuiz ? '/' : '/discover-dna';
+      void router.replace(getSafeRedirectPath(route.query.next, fallback));
       return;
     }
   }
