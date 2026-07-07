@@ -480,6 +480,50 @@ describe('StyleConsultant', () => {
     );
   });
 
+  it('polls a canceled return when backend payment is still pending', async () => {
+    vi.useFakeTimers();
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    const router = createTestRouter();
+    const pendingDetail: ConsultationBookingDetail = {
+      booking: {
+        id: 'booking-1',
+        status: 'pending_payment',
+        method: 'online',
+        consultationDate: '2026-07-10',
+        timeSlot: 'am',
+        contactEmail: 'member@example.com',
+        createdAt: '2026-07-07T00:00:00Z',
+        updatedAt: '2026-07-07T00:00:00Z'
+      },
+      payment: { status: 'pending', amount: 500, currency: 'TWD' }
+    };
+    const canceledDetail: ConsultationBookingDetail = {
+      ...pendingDetail,
+      booking: { ...pendingDetail.booking, status: 'canceled' },
+      payment: { ...pendingDetail.payment, status: 'canceled' }
+    };
+    getBookingMock
+      .mockResolvedValueOnce({ success: true, data: pendingDetail, error: null })
+      .mockResolvedValueOnce({ success: true, data: canceledDetail, error: null });
+    await router.push('/consultant?payment=cancel&bookingId=booking-1');
+    await router.isReady();
+    const wrapper = mountPage(router, pinia);
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('Payment is processing');
+
+    await vi.advanceTimersByTimeAsync(2000);
+    await flushPromises();
+
+    expect(getBookingMock).toHaveBeenCalledTimes(2);
+    expect(wrapper.text()).toContain('Payment canceled');
+    expect(wrapper.text()).not.toContain('Payment is processing');
+  });
+
   it('checks a canceled return once and lets paid backend state win', async () => {
     const pinia = createPinia();
     setActivePinia(pinia);

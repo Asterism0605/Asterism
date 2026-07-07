@@ -304,7 +304,7 @@ export function useConsultationPaymentFlow(
     paymentReturnStatus.value = paymentQuery === 'success' ? 'confirming' : 'canceled';
     const status = await fetchBookingPaymentStatus(bookingId);
 
-    if (paymentQuery === 'success' && status === 'processing') {
+    if (status === 'processing') {
       schedulePaymentPolling(bookingId);
     }
   }
