@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
@@ -184,6 +184,17 @@ async function handleSaveToFolder(folderId: string) {
   if (!currentImage.value) return;
   await saveToMoodboard(folderId, currentImage.value.id);
 }
+
+// Esc 返回是全頁級的慣例快捷鍵，不需要先 Tab 聚焦到哪個區塊；
+// 跳過 showCreateFolder 開啟中的情況，避免使用者想關彈窗卻整頁被導走。
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && !showCreateFolder.value) {
+    handleBack();
+  }
+}
+
+onMounted(() => window.addEventListener('keydown', handleKeydown));
+onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
 </script>
 
 <template>
