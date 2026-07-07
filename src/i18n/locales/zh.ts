@@ -31,6 +31,11 @@ export default {
     themeTags: '主題標籤',
     colorPalette: '色彩配置'
   },
+  legalLinks: {
+    ariaLabel: '法律連結',
+    privacy: '隱私權政策',
+    terms: '服務條款'
+  },
   toast: {
     saveContactSupport: '發生錯誤，請聯絡客服。',
     saveFailed: '儲存失敗，請再試一次。',

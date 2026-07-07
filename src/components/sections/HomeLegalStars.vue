@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 type LegalLink = 'privacy' | 'terms';
 
 const router = useRouter();
+const { t } = useI18n();
 const activeLegalLink = ref<LegalLink | null>(null);
 const legalStarsRef = ref<HTMLElement | null>(null);
 
@@ -51,7 +53,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <nav ref="legalStarsRef" class="home-legal-stars" aria-label="Legal links">
+  <nav ref="legalStarsRef" class="home-legal-stars" :aria-label="t('legalLinks.ariaLabel')">
     <div
       class="home-legal-star-item home-legal-star-item--privacy"
       :class="{ 'home-legal-star-item--active': activeLegalLink === 'privacy' }"
@@ -59,7 +61,7 @@ onBeforeUnmount(() => {
       <button
         type="button"
         class="home-legal-star"
-        aria-label="Privacy Policy"
+        :aria-label="t('legalLinks.privacy')"
         aria-haspopup="true"
         :aria-expanded="activeLegalLink === 'privacy'"
         data-testid="home-privacy-star"
@@ -73,7 +75,7 @@ onBeforeUnmount(() => {
         data-testid="home-privacy-tooltip-link"
         @click="closeLegalTooltip"
       >
-        Privacy Policy
+        {{ t('legalLinks.privacy') }}
       </RouterLink>
     </div>
 
@@ -84,7 +86,7 @@ onBeforeUnmount(() => {
       <button
         type="button"
         class="home-legal-star"
-        aria-label="Terms of Service"
+        :aria-label="t('legalLinks.terms')"
         aria-haspopup="true"
         :aria-expanded="activeLegalLink === 'terms'"
         data-testid="home-terms-star"
@@ -98,7 +100,7 @@ onBeforeUnmount(() => {
         data-testid="home-terms-tooltip-link"
         @click="closeLegalTooltip"
       >
-        Terms of Service
+        {{ t('legalLinks.terms') }}
       </RouterLink>
     </div>
   </nav>
@@ -130,8 +132,7 @@ onBeforeUnmount(() => {
   --star-size: 7px;
   --star-color: rgb(240 237 230 / 0.86);
   --star-hover-glow:
-    0 0 50px rgb(240 237 230 / 0.98),
-    0 0 38px rgb(168 137 58 / 0.7),
+    0 0 50px rgb(240 237 230 / 0.98), 0 0 38px rgb(168 137 58 / 0.7),
     0 0 62px rgb(168 137 58 / 0.34);
   --star-float-delay: 0s;
 }
@@ -141,13 +142,9 @@ onBeforeUnmount(() => {
   --star-left: 130px;
   --star-size: 5px;
   --star-color: rgb(240 237 230 / 0.74);
-  --star-glow:
-    0 0 9px rgb(240 237 230 / 0.72),
-    0 0 22px rgb(196 92 58 / 0.34);
+  --star-glow: 0 0 9px rgb(240 237 230 / 0.72), 0 0 22px rgb(196 92 58 / 0.34);
   --star-hover-glow:
-    0 0 13px rgb(240 237 230 / 0.92),
-    0 0 34px rgb(196 92 58 / 0.6),
-    0 0 56px rgb(196 92 58 / 0.28);
+    0 0 13px rgb(240 237 230 / 0.92), 0 0 34px rgb(196 92 58 / 0.6), 0 0 56px rgb(196 92 58 / 0.28);
   --star-float-delay: 1.1s;
 }
 
@@ -242,7 +239,6 @@ onBeforeUnmount(() => {
     --star-top: 20px;
     --star-left: 0px;
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {

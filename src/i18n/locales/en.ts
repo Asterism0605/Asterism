@@ -31,6 +31,11 @@ export default {
     themeTags: 'Theme Tags',
     colorPalette: 'Color Palette'
   },
+  legalLinks: {
+    ariaLabel: 'Legal links',
+    privacy: 'Privacy Policy',
+    terms: 'Terms of Service'
+  },
   toast: {
     saveContactSupport: 'Something went wrong. Please contact support.',
     saveFailed: 'Failed to save. Please try again.',
