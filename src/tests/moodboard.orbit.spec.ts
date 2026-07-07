@@ -32,4 +32,20 @@ describe('buildMoodboardOrbitImages', () => {
     expect(images).toHaveLength(21);
     expect(images.every((image) => image.isPlaceholder === false)).toBe(true);
   });
+
+  it('shows the same image only once when it belongs to multiple folders', () => {
+    const [savedImage] = createSavedImages(1);
+    const images = buildMoodboardOrbitImages([
+      savedImage,
+      { ...savedImage, itemId: 'item-from-another-folder' }
+    ]);
+
+    expect(images.filter((image) => !image.isPlaceholder)).toEqual([
+      {
+        id: savedImage.id,
+        src: savedImage.src,
+        isPlaceholder: false
+      }
+    ]);
+  });
 });

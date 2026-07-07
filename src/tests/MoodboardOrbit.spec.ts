@@ -5,9 +5,10 @@ import { createMemoryHistory, createRouter } from 'vue-router';
 import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 
-const { disposeSphere, initSphere } = vi.hoisted(() => ({
+const { disposeSphere, initSphere, updateSphereImages } = vi.hoisted(() => ({
   disposeSphere: vi.fn(),
-  initSphere: vi.fn()
+  initSphere: vi.fn(),
+  updateSphereImages: vi.fn()
 }));
 
 vi.mock('@/components/feature/moodboard/sphere', () => ({
@@ -44,7 +45,12 @@ describe('MoodboardOrbit', () => {
     localStorage.clear();
     disposeSphere.mockReset();
     initSphere.mockReset();
-    initSphere.mockReturnValue({ resize: vi.fn(), dispose: disposeSphere });
+    updateSphereImages.mockReset();
+    initSphere.mockReturnValue({
+      resize: vi.fn(),
+      updateImages: updateSphereImages,
+      dispose: disposeSphere
+    });
   });
 
   it('shows the empty state when no images are saved', async () => {
@@ -98,6 +104,59 @@ describe('MoodboardOrbit', () => {
     expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
     expect(wrapper.find('canvas').exists()).toBe(true);
     expect(wrapper.text()).toContain('Studio');
+  });
+
+  it('shows the newest populated folder until another populated folder is hovered', async () => {
+    const savedImage = (id: string) => ({
+      itemId: `item-${id}`,
+      id,
+      src: `/style-image/${id}.webp`,
+      title: id,
+      styleGroup: 'minimal',
+      style: [],
+      createdAt: '2026-07-05T00:00:00.000Z'
+    });
+    const store = useMoodboardStore();
+    store.$patch({
+      status: 'success',
+      folders: [
+        {
+          id: 'newest-folder',
+          name: 'Newest',
+          createdAt: '2026-07-06T00:00:00.000Z',
+          images: [savedImage('newest-image')]
+        },
+        {
+          id: 'empty-folder',
+          name: 'Empty',
+          createdAt: '2026-07-04T00:00:00.000Z',
+          images: []
+        },
+        {
+          id: 'oldest-folder',
+          name: 'Oldest',
+          createdAt: '2026-07-03T00:00:00.000Z',
+          images: [savedImage('oldest-image')]
+        }
+      ]
+    });
+
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+
+    expect(initSphere.mock.calls.at(-1)?.[3][0].id).toBe('newest-image');
+
+    await wrapper.get('[data-testid="moodboard-folder-2"]').trigger('mouseenter');
+    await flushPromises();
+    expect(initSphere).toHaveBeenCalledOnce();
+    expect(updateSphereImages.mock.calls.at(-1)?.[0][0].id).toBe('oldest-image');
+
+    const updateCount = updateSphereImages.mock.calls.length;
+    await wrapper.get('[data-testid="moodboard-folder-2"]').trigger('mouseleave');
+    await wrapper.get('[data-testid="moodboard-folder-1"]').trigger('mouseenter');
+    await flushPromises();
+
+    expect(updateSphereImages).toHaveBeenCalledTimes(updateCount);
   });
 
   it('disposes the active sphere when moodboard data is cleared', async () => {
