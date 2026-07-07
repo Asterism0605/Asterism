@@ -263,6 +263,17 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001')
   })
 
+  it('按 Esc 不用先聚焦任何區塊就能返回（跟點返回按鈕效果一致）', async () => {
+    const { router } = await mountPictureDetail('rpl-interior-001')
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await flushPromises()
+
+    expect(router.currentRoute.value.name).toBe('image-spread')
+    expect(router.currentRoute.value.params.imageId).toBe('rpl-interior-001')
+    expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001')
+  })
+
   it('將 sub-medium 詳情圖片返回其 medium spread 入口', async () => {
     const { router, wrapper } = await mountPictureDetail('rpl-interior-lighting-001')
 

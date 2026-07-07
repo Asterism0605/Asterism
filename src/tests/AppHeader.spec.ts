@@ -5,7 +5,9 @@ import router from '@/router';
 import AppHeader from '@/layouts/AppHeader.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { AuthSession } from '@/types/auth';
+import type { StyleDnaAnswer } from '@/types/style-dna';
 
 const supaAuth = {
   signUp: vi.fn(),
@@ -99,5 +101,50 @@ describe('AppHeader', () => {
 
     expect(authStore.isAuthenticated).toBe(false);
     expect(wrapper.text()).toContain('Log in');
+  });
+});
+
+describe('AppHeader Style DNA 導向', () => {
+  beforeEach(async () => {
+    setActivePinia(createPinia());
+    await router.push('/');
+    await router.isReady();
+  });
+
+  function authenticateAndOpenMenu(wrapper: ReturnType<typeof createMountedHeader>['wrapper']) {
+    const authStore = useAuthStore();
+    const session = createAuthenticatedSession();
+    authStore.session = session;
+    authStore.user = session.user;
+    return wrapper.vm.$nextTick();
+  }
+
+  it('沒測驗結果 → 導向 /discover-dna', async () => {
+    const { wrapper } = createMountedHeader();
+    await authenticateAndOpenMenu(wrapper);
+
+    const push = vi.spyOn(router, 'push');
+    wrapper.findComponent(UserMenu).vm.$emit('styleDna');
+
+    expect(push).toHaveBeenCalledWith('/discover-dna');
+  });
+
+  it('有測驗結果 → 導向 /style-dna/result', async () => {
+    const { wrapper } = createMountedHeader();
+    await authenticateAndOpenMenu(wrapper);
+
+    const styleDnaStore = useStyleDnaStore();
+    const answer: StyleDnaAnswer = {
+      questionId: 'q1',
+      selectedOptionId: 'o1',
+      selectedImage: { id: 'img-1', url: 'test.jpg', style: [] },
+      weights: {}
+    };
+    styleDnaStore.completeQuiz([answer], null);
+
+    const push = vi.spyOn(router, 'push');
+    wrapper.findComponent(UserMenu).vm.$emit('styleDna');
+
+    expect(push).toHaveBeenCalledWith('/style-dna/result');
   });
 });

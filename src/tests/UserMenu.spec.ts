@@ -55,4 +55,14 @@ describe('UserMenu', () => {
     expect(wrapper.find('[aria-haspopup="true"]').attributes('aria-expanded')).toBe('false');
     expect(wrapper.text()).not.toContain('Signed in as');
   });
+
+  it('emits styleDna when the Style DNA item is clicked', async () => {
+    const wrapper = mountUserMenu();
+    await wrapper.find('[aria-haspopup="true"]').trigger('click');
+
+    expect(wrapper.text()).toContain('Style DNA');
+    await findButtonByText(wrapper, 'Style DNA')?.trigger('click');
+
+    expect(wrapper.emitted('styleDna')).toHaveLength(1);
+  });
 });

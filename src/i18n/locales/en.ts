@@ -40,6 +40,7 @@ export default {
   userMenu: {
     signedInAs: 'Signed in as',
     moodboard: 'Moodboard',
+    styleDna: 'Style DNA',
     logout: 'Log out'
   },
   consult: {
