@@ -354,6 +354,35 @@ describe('StyleConsultant', () => {
     expect(wrapper.text()).not.toContain('backend debug idempotency text');
   });
 
+  it('falls back to checkout status copy for rejected errors without a code', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    const router = createTestRouter();
+    await router.push('/consultant');
+    await router.isReady();
+    createCheckoutMock.mockRejectedValue({ status: 429 });
+    const wrapper = mountPage(router, pinia);
+
+    wrapper.getComponent({ name: 'RecommendationPanel' }).vm.$emit('submit', {
+      method: 'online',
+      date: '2026-07-10',
+      timeSlot: 'am',
+      designField: '',
+      designFocus: '',
+      name: 'Member',
+      email: 'member@example.com',
+      contactPhone: '0912345678',
+      notes: '',
+      paymentConfirmed: true
+    });
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('Too many attempts. Please try again later.');
+  });
+
   it('uses backend state instead of a success query and polls pending payment', async () => {
     vi.useFakeTimers();
     const pinia = createPinia();
