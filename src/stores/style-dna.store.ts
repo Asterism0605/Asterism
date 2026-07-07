@@ -9,6 +9,10 @@ import { fetchStyleDnaProfile, saveStyleDnaResult } from '@/services/style-dna.s
 
 const STORAGE_KEY = 'asterism:style-dna-result:v1';
 
+// 呼叫端（AuthCallback）要靠這個判斷同步失敗時該不該把使用者導去 /discover-dna：
+// 'failed' 時不能當成 'not-found'，否則已經做過測驗的人會因為單純的網路問題被誤導去重新測驗。
+export type StyleDnaSyncResult = 'synced' | 'not-found' | 'failed';
+
 interface PersistedStyleDnaResult {
   answers: StyleDnaAnswer[];
   completedAt: string;
@@ -93,7 +97,7 @@ export const useStyleDnaStore = defineStore('style-dna', () => {
     }
   }
 
-  async function reconcileWithServer(userId: string): Promise<void> {
+  async function reconcileWithServer(userId: string): Promise<StyleDnaSyncResult> {
     try {
       if (hasLocalResult.value && localUserId.value !== userId) {
         clearResult();
@@ -103,14 +107,18 @@ export const useStyleDnaStore = defineStore('style-dna', () => {
 
       if (profile.result) {
         serverResult.value = profile.result;
-        return;
+        return 'synced';
       }
 
       if (hasLocalResult.value) {
         await saveCurrentResultToServer(userId);
+        return 'synced';
       }
+
+      return 'not-found';
     } catch (error) {
       console.warn('[style-dna] sync with Supabase failed:', error);
+      return 'failed';
     }
   }
 

@@ -39,6 +39,7 @@ export default {
   userMenu: {
     signedInAs: '目前登入身分',
     moodboard: '情緒板',
+    styleDna: 'Style DNA',
     logout: '登出'
   },
   consult: {

@@ -122,7 +122,7 @@ describe('style-dna store', () => {
     const store = useStyleDnaStore();
     store.completeQuiz([createAnswer('1', 'Minimalism', 1)], 'user-1');
 
-    await store.reconcileWithServer('user-1');
+    await expect(store.reconcileWithServer('user-1')).resolves.toBe('synced');
 
     expect(saveStyleDnaResult).not.toHaveBeenCalled();
     expect(store.serverResult).toEqual(serverResult);
@@ -134,9 +134,18 @@ describe('style-dna store', () => {
     const store = useStyleDnaStore();
     store.completeQuiz([createAnswer('1', 'Minimalism', 1)], 'user-1');
 
-    await store.reconcileWithServer('user-1');
+    await expect(store.reconcileWithServer('user-1')).resolves.toBe('synced');
 
     expect(saveStyleDnaResult).toHaveBeenCalledWith('user-1', store.result);
+  });
+
+  it('reports not-found when neither server nor local has a result', async () => {
+    fetchStyleDnaProfile.mockResolvedValue({ result: null });
+    const store = useStyleDnaStore();
+
+    await expect(store.reconcileWithServer('user-1')).resolves.toBe('not-found');
+
+    expect(saveStyleDnaResult).not.toHaveBeenCalled();
   });
 
   it('does not upload another user local result during reconciliation', async () => {
@@ -145,7 +154,7 @@ describe('style-dna store', () => {
     store.completeQuiz([createAnswer('1', 'Minimalism', 1)], 'user-a');
     await store.saveCurrentResultToServer('user-a');
 
-    await store.reconcileWithServer('user-b');
+    await expect(store.reconcileWithServer('user-b')).resolves.toBe('not-found');
 
     expect(saveStyleDnaResult).toHaveBeenCalledTimes(1);
     expect(store.answers).toEqual([]);
@@ -153,13 +162,13 @@ describe('style-dna store', () => {
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
   });
 
-  it('keeps localStorage intact when server sync fails', async () => {
+  it('reports failed (not undefined) so callers can tell a sync error apart from "no result"', async () => {
     fetchStyleDnaProfile.mockRejectedValue(new Error('network down'));
     const store = useStyleDnaStore();
     store.completeQuiz([createAnswer('1', 'Minimalism', 1)], 'user-1');
     const persisted = localStorage.getItem(STORAGE_KEY);
 
-    await expect(store.reconcileWithServer('user-1')).resolves.toBeUndefined();
+    await expect(store.reconcileWithServer('user-1')).resolves.toBe('failed');
 
     expect(localStorage.getItem(STORAGE_KEY)).toBe(persisted);
     expect(store.hasCompletedQuiz).toBe(true);
