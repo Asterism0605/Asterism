@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const effectiveDate = 'June 25, 2026';
+const effectiveDate = 'July 7, 2026';
 </script>
 
 <template>
