@@ -88,7 +88,7 @@ export function useConsultationPaymentFlow(
       designFocus: payload.designFocus || undefined,
       sourceImageId: toValue(sourceImageId) || undefined,
       notes: payload.notes || undefined,
-      paymentConsentAccepted: true
+      paymentConsentAccepted: payload.paymentConfirmed
     };
   }
 
@@ -103,6 +103,14 @@ export function useConsultationPaymentFlow(
   }
 
   function checkoutErrorFor(error: unknown): string {
+    const normalizedCode =
+      typeof error === 'object' && error !== null && 'code' in error
+        ? (error as { code?: unknown }).code
+        : undefined;
+    if (typeof normalizedCode === 'string') {
+      return checkoutErrorMessageForCode(normalizedCode);
+    }
+
     const code =
       typeof error === 'object' && error !== null && 'response' in error
         ? (error as { response?: { data?: { error?: { code?: unknown } } } }).response?.data

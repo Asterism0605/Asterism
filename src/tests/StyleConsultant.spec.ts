@@ -320,6 +320,40 @@ describe('StyleConsultant', () => {
     expect(wrapper.text()).not.toContain('backend debug idempotency text');
   });
 
+  it('maps rejected checkout error codes to localized copy instead of backend messages', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    const router = createTestRouter();
+    await router.push('/consultant');
+    await router.isReady();
+    createCheckoutMock.mockRejectedValue({
+      code: 'IDEMPOTENCY_KEY_REUSED',
+      status: 409,
+      message: 'backend debug idempotency text'
+    });
+    const wrapper = mountPage(router, pinia);
+
+    wrapper.getComponent({ name: 'RecommendationPanel' }).vm.$emit('submit', {
+      method: 'online',
+      date: '2026-07-10',
+      timeSlot: 'am',
+      designField: '',
+      designFocus: '',
+      name: 'Member',
+      email: 'member@example.com',
+      contactPhone: '0912345678',
+      notes: '',
+      paymentConfirmed: true
+    });
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('This checkout request has expired. Please try again.');
+    expect(wrapper.text()).not.toContain('backend debug idempotency text');
+  });
+
   it('uses backend state instead of a success query and polls pending payment', async () => {
     vi.useFakeTimers();
     const pinia = createPinia();

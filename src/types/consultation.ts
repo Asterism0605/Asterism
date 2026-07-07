@@ -42,7 +42,7 @@ export interface ConsultationCheckoutRequest {
   designFocus?: string;
   sourceImageId?: string;
   notes?: string;
-  paymentConsentAccepted: true;
+  paymentConsentAccepted: boolean;
 }
 
 export interface ConsultationSummary {
