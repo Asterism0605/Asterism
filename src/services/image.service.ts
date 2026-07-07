@@ -35,7 +35,8 @@ function toSpreadNode(image: StyleImage): ImageSpreadNode {
     medium: image.medium,
     subMedium: image.subMedium,
     colorPalette: image.colorPalette,
-    attribution: image.attribution
+    attribution: image.attribution,
+    sourceUrl: image.sourceUrl
   };
 }
 
@@ -55,6 +56,18 @@ export function resolvePhotographerInfo(attribution?: string): PhotographerInfo 
 
   const match = trimmed.match(/^Photo by (.+?) \/ .+$/);
   return { name: match?.[1] ?? trimmed };
+}
+
+// 詳情頁「SOURCE URL」連結的顯示文字：只取網域（例如 unsplash.com），不顯示一長串完整路徑。
+// sourceUrl 格式不是有效網址時回傳 undefined，交給呼叫端決定要不要退回顯示原始字串。
+export function getSourceLabel(sourceUrl?: string): string | undefined {
+  if (!sourceUrl) return undefined;
+
+  try {
+    return new URL(sourceUrl).hostname;
+  } catch {
+    return undefined;
+  }
 }
 
 function countSharedStyles(baseImage: StyleImage, candidate: StyleImage): number {

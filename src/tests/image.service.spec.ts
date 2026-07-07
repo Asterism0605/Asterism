@@ -4,6 +4,7 @@ import {
   getImageById,
   getMediumGroupImages,
   getRelatedImages,
+  getSourceLabel,
   getSubMediumGroupImages,
   resolvePhotographerInfo
 } from '@/services/image.service';
@@ -57,6 +58,23 @@ describe('image.service', () => {
         name: 'Unexpected format',
         avatarUrl: undefined
       });
+    });
+  });
+
+  describe('getSourceLabel', () => {
+    it('只取網域當顯示文字，不顯示完整路徑', () => {
+      expect(getSourceLabel('https://unsplash.com/photos/abc123')).toBe('unsplash.com');
+      expect(getSourceLabel('https://www.pexels.com/photo/xxxx-1234567/')).toBe(
+        'www.pexels.com'
+      );
+    });
+
+    it('沒有 sourceUrl（本地/Asterism 自製圖）回傳 undefined', () => {
+      expect(getSourceLabel(undefined)).toBeUndefined();
+    });
+
+    it('不是合法網址時回傳 undefined，不丟例外', () => {
+      expect(getSourceLabel('not a url')).toBeUndefined();
     });
   });
 
