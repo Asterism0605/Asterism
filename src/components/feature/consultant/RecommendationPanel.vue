@@ -31,10 +31,12 @@ const props = withDefaults(
   defineProps<{
     accountName?: string;
     accountEmail?: string;
+    submitting?: boolean;
   }>(),
   {
     accountName: '',
-    accountEmail: ''
+    accountEmail: '',
+    submitting: false
   }
 );
 
@@ -76,25 +78,23 @@ const timeSlotOptions: Array<{ label: string; value: Exclude<TimeSlot, ''> }> = 
   { label: 'PM', value: 'pm' }
 ];
 
-// ponytail: label===value（皆隨語言變）。預約是 mock、沒接後端，語言化的值不影響任何送出。
-// 若日後接真後端要固定英文值，改成 value 存英文、label 顯譯文，並讓下拉 trigger 顯示 label。
 const fieldOptions = computed(() =>
   [
-    t('consult.fieldStyling'),
-    t('consult.fieldGraphic'),
-    t('consult.fieldInterior'),
-    t('consult.fieldArchitecture')
-  ].map((field) => ({ label: field, value: field }))
+    { label: t('consult.fieldStyling'), value: 'styling' },
+    { label: t('consult.fieldGraphic'), value: 'graphic' },
+    { label: t('consult.fieldInterior'), value: 'interior' },
+    { label: t('consult.fieldArchitecture'), value: 'architecture' }
+  ]
 );
 
 const focusOptions = computed(() =>
   [
-    t('consult.focusSpatial'),
-    t('consult.focusMaterial'),
-    t('consult.focusColor'),
-    t('consult.focusFurniture'),
-    t('consult.focusVisual')
-  ].map((focus) => ({ label: focus, value: focus }))
+    { label: t('consult.focusSpatial'), value: 'spatial' },
+    { label: t('consult.focusMaterial'), value: 'material' },
+    { label: t('consult.focusColor'), value: 'color' },
+    { label: t('consult.focusFurniture'), value: 'furniture' },
+    { label: t('consult.focusVisual'), value: 'visual' }
+  ]
 );
 
 const fieldErrors = computed(() => {
@@ -176,6 +176,10 @@ function handleDropdownOpen(field: 'timeSlot' | 'designField' | 'designFocus', v
 }
 
 function resetForm() {
+  if (props.submitting) {
+    return;
+  }
+
   Object.assign(form, defaultForm());
   hasSubmitted.value = false;
   hasEditedName.value = false;
@@ -187,6 +191,10 @@ function resetForm() {
 }
 
 function handleSubmit() {
+  if (props.submitting) {
+    return;
+  }
+
   hasSubmitted.value = true;
 
   if (Object.values(fieldErrors.value).some(Boolean)) {
@@ -263,7 +271,11 @@ function handleSubmit() {
     <div class="recommendation-panel__grid">
       <label class="recommendation-panel__field">
         <span>{{ $t('consult.name') }}</span>
-        <FormInput :model-value="form.name" :placeholder="$t('consult.namePlaceholder')" @update:model-value="updateName" />
+        <FormInput
+          :model-value="form.name"
+          :placeholder="$t('consult.namePlaceholder')"
+          @update:model-value="updateName"
+        />
         <small v-if="fieldErrors.name">{{ fieldErrors.name }}</small>
       </label>
 
@@ -309,14 +321,25 @@ function handleSubmit() {
         <span>{{ $t('consult.paymentConfirm') }}</span>
       </label>
       <small v-if="fieldErrors.paymentConfirmed">{{ fieldErrors.paymentConfirmed }}</small>
-      <p class="recommendation-panel__demo-note">
-        {{ $t('consult.demoNote') }}
-      </p>
     </section>
 
     <div class="recommendation-panel__actions">
-      <Button type="submit">{{ $t('consult.confirmPay') }}</Button>
-      <Button type="button" variant="secondary" @click="resetForm">{{ $t('consult.reset') }}</Button>
+      <Button
+        type="submit"
+        :disabled="submitting"
+        class="disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+      >
+        {{ submitting ? $t('consult.preparingCheckout') : $t('consult.confirmPay') }}
+      </Button>
+      <Button
+        type="button"
+        variant="secondary"
+        :disabled="submitting"
+        class="disabled:cursor-not-allowed disabled:opacity-50"
+        @click="resetForm"
+      >
+        {{ $t('consult.reset') }}
+      </Button>
     </div>
   </form>
 </template>
@@ -330,9 +353,7 @@ function handleSubmit() {
   padding: clamp(24px, 5vw, 46px);
   border: 1px solid #ffffff29;
   border-radius: 8px;
-  background:
-    radial-gradient(circle at 14% 0%, #ffffff2e, transparent 34%),
-    #ffffff0e;
+  background: radial-gradient(circle at 14% 0%, #ffffff2e, transparent 34%), #ffffff0e;
   box-shadow:
     inset 1px 1px 1px #ffffff29,
     0 24px 80px #00000057;

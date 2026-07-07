@@ -10,6 +10,7 @@ interface ApiErrorPayload {
   code?: unknown;
   message?: unknown;
   details?: unknown;
+  error?: unknown;
 }
 
 function isApiErrorPayload(value: unknown): value is ApiErrorPayload {
@@ -28,14 +29,16 @@ export function normalizeApiError(error: unknown): ApiError {
     const payload = axiosError.response?.data;
 
     if (isApiErrorPayload(payload)) {
+      const apiError = isApiErrorPayload(payload.error) ? payload.error : payload;
+
       return {
-        code: typeof payload.code === 'string' ? payload.code : 'API_ERROR',
+        code: typeof apiError.code === 'string' ? apiError.code : 'API_ERROR',
         message:
-          typeof payload.message === 'string'
-            ? payload.message
+          typeof apiError.message === 'string'
+            ? apiError.message
             : axiosError.message || 'Request failed',
         status: axiosError.response?.status,
-        details: normalizeDetails(payload.details)
+        details: normalizeDetails(apiError.details)
       };
     }
 
