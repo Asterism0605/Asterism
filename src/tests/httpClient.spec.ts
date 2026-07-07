@@ -29,6 +29,31 @@ describe('httpClient', () => {
     });
   });
 
+  it('normalizes backend nested error envelopes into the shared ApiError shape', () => {
+    const error = {
+      isAxiosError: true,
+      response: {
+        status: 409,
+        data: {
+          success: false,
+          data: null,
+          error: {
+            code: 'IDEMPOTENCY_KEY_REUSED',
+            message: 'backend debug idempotency text',
+            details: { idempotencyKey: 'used-key' }
+          }
+        }
+      }
+    } as AxiosError;
+
+    expect(normalizeApiError(error)).toEqual({
+      code: 'IDEMPOTENCY_KEY_REUSED',
+      message: 'backend debug idempotency text',
+      status: 409,
+      details: { idempotencyKey: 'used-key' }
+    });
+  });
+
   it('uses a safe fallback for unknown errors', () => {
     expect(normalizeApiError(new Error('Network down'))).toEqual({
       code: 'UNKNOWN_ERROR',
