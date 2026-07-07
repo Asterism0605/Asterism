@@ -37,6 +37,14 @@ const PAYMENT_RETURN_COPY = {
     title: 'consult.paymentFailedTitle',
     description: 'consult.paymentFailedDescription'
   },
+  'processing-timeout': {
+    title: 'consult.paymentTimeoutTitle',
+    description: 'consult.paymentTimeoutDescription'
+  },
+  unauthenticated: {
+    title: 'consult.paymentUnauthenticatedTitle',
+    description: 'consult.paymentUnauthenticatedDescription'
+  },
   canceled: {
     title: 'consult.paymentCanceledTitle',
     description: 'consult.paymentCanceledDescription'

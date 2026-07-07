@@ -78,25 +78,23 @@ const timeSlotOptions: Array<{ label: string; value: Exclude<TimeSlot, ''> }> = 
   { label: 'PM', value: 'pm' }
 ];
 
-// ponytail: label===value（皆隨語言變）。預約是 mock、沒接後端，語言化的值不影響任何送出。
-// 若日後接真後端要固定英文值，改成 value 存英文、label 顯譯文，並讓下拉 trigger 顯示 label。
 const fieldOptions = computed(() =>
   [
-    t('consult.fieldStyling'),
-    t('consult.fieldGraphic'),
-    t('consult.fieldInterior'),
-    t('consult.fieldArchitecture')
-  ].map((field) => ({ label: field, value: field }))
+    { label: t('consult.fieldStyling'), value: 'styling' },
+    { label: t('consult.fieldGraphic'), value: 'graphic' },
+    { label: t('consult.fieldInterior'), value: 'interior' },
+    { label: t('consult.fieldArchitecture'), value: 'architecture' }
+  ]
 );
 
 const focusOptions = computed(() =>
   [
-    t('consult.focusSpatial'),
-    t('consult.focusMaterial'),
-    t('consult.focusColor'),
-    t('consult.focusFurniture'),
-    t('consult.focusVisual')
-  ].map((focus) => ({ label: focus, value: focus }))
+    { label: t('consult.focusSpatial'), value: 'spatial' },
+    { label: t('consult.focusMaterial'), value: 'material' },
+    { label: t('consult.focusColor'), value: 'color' },
+    { label: t('consult.focusFurniture'), value: 'furniture' },
+    { label: t('consult.focusVisual'), value: 'visual' }
+  ]
 );
 
 const fieldErrors = computed(() => {
