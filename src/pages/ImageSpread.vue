@@ -1,118 +1,122 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
-import ImageSpreadOverlay from '@/components/feature/image/ImageSpreadOverlay.vue';
-import RelatedImageCluster from '@/components/feature/image/RelatedImageCluster.vue';
-import Button from '@/components/ui/Button.vue';
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue'
+import ImageSpreadOverlay from '@/components/feature/image/ImageSpreadOverlay.vue'
+import RelatedImageCluster from '@/components/feature/image/RelatedImageCluster.vue'
+import Button from '@/components/ui/Button.vue'
 import {
   getImageById,
   getMediumGroupImages,
   getSubMediumGroupImages
-} from '@/services/image.service';
-import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
-import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel';
-import { isImageSaved } from '@/services/moodboard.service';
-import { useMoodboardStore } from '@/stores/moodboard.store';
-import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
-import type { ImageSpreadNode } from '@/types/image';
+} from '@/services/image.service'
+import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard'
+import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel'
+import { isImageSaved } from '@/services/moodboard.service'
+import { useMoodboardStore } from '@/stores/moodboard.store'
+import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue'
+import type { ImageSpreadNode } from '@/types/image'
 
-const route = useRoute();
-const router = useRouter();
-const { localizeTaxon } = useTaxonomyLabel();
+const route = useRoute()
+const router = useRouter()
+const { localizeTaxon } = useTaxonomyLabel()
 
 const {
   isSaving,
+  canSave,
+  redirectGuestToLogin,
+  consumePendingSaveMenu,
   saveToMoodboard,
   createNewFolder,
   isCreatingFolder,
   isCreateFolderSuccess,
   justSavedFolderId
-} = useSaveToMoodboard();
-const isSaved = computed(() => isImageSaved(centerImage.value?.id ?? ''));
-const moodboardStore = useMoodboardStore();
+} = useSaveToMoodboard()
+const moodboardStore = useMoodboardStore()
+const isSaved = computed(() => isImageSaved(moodboardStore.folders, centerImage.value?.id ?? ''))
 const folders = computed(() =>
   moodboardStore.folders.map((f) => ({
     id: f.id,
     name: f.name,
     saved: f.images.some((image) => image.id === centerImage.value?.id)
   }))
-);
-const showCreateFolder = ref(false);
-const centerImage = ref<ImageSpreadNode | undefined>();
-const rootImage = ref<ImageSpreadNode | undefined>();
-const relatedImages = ref<ImageSpreadNode[]>([]);
-const visitedImageIds = ref<string[]>([]);
-const spreadDepth = ref(0);
-let syncedRouteImageId: string | undefined;
+)
+const showCreateFolder = ref(false)
+const saveMenuOpenRequest = ref(0)
+const centerImage = ref<ImageSpreadNode | undefined>()
+const rootImage = ref<ImageSpreadNode | undefined>()
+const relatedImages = ref<ImageSpreadNode[]>([])
+const visitedImageIds = ref<string[]>([])
+const spreadDepth = ref(0)
+let syncedRouteImageId: string | undefined
 
 const routeImageId = computed(() => {
-  const rawImageId = route.params.imageId;
+  const rawImageId = route.params.imageId
 
-  return Array.isArray(rawImageId) ? rawImageId[0] : rawImageId;
-});
+  return Array.isArray(rawImageId) ? rawImageId[0] : rawImageId
+})
 
 function refreshRelatedImages(imageId: string) {
-  const fn = spreadDepth.value === 0 ? getMediumGroupImages : getSubMediumGroupImages;
+  const fn = spreadDepth.value === 0 ? getMediumGroupImages : getSubMediumGroupImages
 
   relatedImages.value = fn(imageId, {
     visitedImageIds: visitedImageIds.value
-  });
+  })
 }
 
 function getRelatedImageLabel(image: ImageSpreadNode) {
-  return localizeTaxon(spreadDepth.value === 0 ? image.medium : image.subMedium);
+  return localizeTaxon(spreadDepth.value === 0 ? image.medium : image.subMedium)
 }
 
 function loadImageSpread(imageId: string | undefined) {
   if (!imageId) {
-    centerImage.value = undefined;
-    rootImage.value = undefined;
-    relatedImages.value = [];
-    visitedImageIds.value = [];
-    spreadDepth.value = 0;
-    return;
+    centerImage.value = undefined
+    rootImage.value = undefined
+    relatedImages.value = []
+    visitedImageIds.value = []
+    spreadDepth.value = 0
+    return
   }
 
-  const image = getImageById(imageId);
-  const rawRootId = route.query.rootId;
-  const rootId = Array.isArray(rawRootId) ? rawRootId[0] : rawRootId;
+  const image = getImageById(imageId)
+  const rawRootId = route.query.rootId
+  const rootId = Array.isArray(rawRootId) ? rawRootId[0] : rawRootId
 
   if (image) {
     if (rootId && typeof rootId === 'string' && rootId !== imageId) {
-      const rImage = getImageById(rootId);
+      const rImage = getImageById(rootId)
       if (rImage && rImage.styleGroup === image.styleGroup) {
-        rootImage.value = rImage;
-        centerImage.value = image;
-        spreadDepth.value = 1;
-        visitedImageIds.value = [rImage.id, image.id];
-        refreshRelatedImages(image.id);
-        return;
+        rootImage.value = rImage
+        centerImage.value = image
+        spreadDepth.value = 1
+        visitedImageIds.value = [rImage.id, image.id]
+        refreshRelatedImages(image.id)
+        return
       }
     }
 
-    centerImage.value = image;
-    rootImage.value = image;
-    spreadDepth.value = 0;
-    visitedImageIds.value = [image.id];
-    refreshRelatedImages(image.id);
+    centerImage.value = image
+    rootImage.value = image
+    spreadDepth.value = 0
+    visitedImageIds.value = [image.id]
+    refreshRelatedImages(image.id)
   } else {
-    centerImage.value = undefined;
-    rootImage.value = undefined;
-    relatedImages.value = [];
-    visitedImageIds.value = [];
-    spreadDepth.value = 0;
+    centerImage.value = undefined
+    rootImage.value = undefined
+    relatedImages.value = []
+    visitedImageIds.value = []
+    spreadDepth.value = 0
   }
 }
 
 function syncSpreadRoute(imageId: string) {
-  const currentRootId = spreadDepth.value === 1 ? rootImage.value?.id : undefined;
+  const currentRootId = spreadDepth.value === 1 ? rootImage.value?.id : undefined
   if (routeImageId.value === imageId && route.query.rootId === currentRootId) {
-    return;
+    return
   }
 
-  syncedRouteImageId = imageId;
-  const query = currentRootId ? { rootId: currentRootId } : undefined;
+  syncedRouteImageId = imageId
+  const query = currentRootId ? { rootId: currentRootId } : undefined
 
   void router
     .replace({
@@ -122,9 +126,9 @@ function syncSpreadRoute(imageId: string) {
     })
     .catch(() => {
       if (syncedRouteImageId === imageId) {
-        syncedRouteImageId = undefined;
+        syncedRouteImageId = undefined
       }
-    });
+    })
 }
 
 function returnToPreviousLayer() {
@@ -133,15 +137,15 @@ function returnToPreviousLayer() {
   // medium Return -> main spread
   // main Return -> 首頁
   if (spreadDepth.value > 0 && rootImage.value) {
-    centerImage.value = rootImage.value;
-    visitedImageIds.value = [rootImage.value.id];
-    spreadDepth.value = 0;
-    refreshRelatedImages(rootImage.value.id);
-    syncSpreadRoute(rootImage.value.id);
-    return;
+    centerImage.value = rootImage.value
+    visitedImageIds.value = [rootImage.value.id]
+    spreadDepth.value = 0
+    refreshRelatedImages(rootImage.value.id)
+    syncSpreadRoute(rootImage.value.id)
+    return
   }
 
-  router.push({ name: 'home' });
+  router.push({ name: 'home' })
 }
 
 function handleRelatedSelect(image: ImageSpreadNode) {
@@ -154,45 +158,55 @@ function handleRelatedSelect(image: ImageSpreadNode) {
         spreadDetailImageId: image.id,
         spreadRootId: rootImage.value?.id
       }
-    });
-    return;
+    })
+    return
   }
 
-  centerImage.value = image;
-  visitedImageIds.value = [...visitedImageIds.value, image.id];
-  spreadDepth.value = 1;
-  refreshRelatedImages(image.id);
-  syncSpreadRoute(image.id);
+  centerImage.value = image
+  visitedImageIds.value = [...visitedImageIds.value, image.id]
+  spreadDepth.value = 1
+  refreshRelatedImages(image.id)
+  syncSpreadRoute(image.id)
 }
 
 function handleCreateFolder() {
-  isCreateFolderSuccess.value = false;
-  showCreateFolder.value = true;
+  isCreateFolderSuccess.value = false
+  showCreateFolder.value = true
 }
 
 async function handleSubmitFolder(name: string) {
-  if (!centerImage.value) return;
-  const success = await createNewFolder(name, centerImage.value.id);
-  if (success) showCreateFolder.value = false;
+  if (!centerImage.value) return
+  const success = await createNewFolder(name, centerImage.value.id)
+  if (success) showCreateFolder.value = false
 }
 
 async function handleSaveToFolder(folderId: string) {
-  if (!centerImage.value) return;
-  await saveToMoodboard(folderId, centerImage.value.id);
+  if (!centerImage.value) return
+  await saveToMoodboard(folderId, centerImage.value.id)
 }
 
 watch(
   routeImageId,
   (imageId) => {
     if (imageId && syncedRouteImageId === imageId) {
-      syncedRouteImageId = undefined;
-      return;
+      syncedRouteImageId = undefined
+      return
     }
 
-    loadImageSpread(imageId);
+    loadImageSpread(imageId)
   },
   { immediate: true }
-);
+)
+
+watch(
+  [routeImageId, canSave],
+  ([imageId, authenticated]) => {
+    if (imageId && authenticated && consumePendingSaveMenu(imageId, Boolean(centerImage.value))) {
+      saveMenuOpenRequest.value += 1
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -223,8 +237,11 @@ watch(
           :image="centerImage"
           :saved="isSaved"
           :disabled="isSaving"
+          :can-save="canSave"
+          :save-menu-open-request="saveMenuOpenRequest"
           :folders="folders"
           :just-saved-folder-id="justSavedFolderId"
+          @auth-required="redirectGuestToLogin(centerImage.id)"
           @return="returnToPreviousLayer"
           @create-folder="handleCreateFolder"
           @save-to-folder="handleSaveToFolder"

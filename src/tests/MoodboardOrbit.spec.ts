@@ -5,8 +5,14 @@ import { createMemoryHistory, createRouter } from 'vue-router';
 import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 
+const { disposeSphere, initSphere, updateSphereImages } = vi.hoisted(() => ({
+  disposeSphere: vi.fn(),
+  initSphere: vi.fn(),
+  updateSphereImages: vi.fn()
+}));
+
 vi.mock('@/components/feature/moodboard/sphere', () => ({
-  initSphere: vi.fn(() => ({ resize: vi.fn(), dispose: vi.fn() }))
+  initSphere
 }));
 
 function createTestRouter() {
@@ -37,9 +43,19 @@ describe('MoodboardOrbit', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     localStorage.clear();
+    disposeSphere.mockReset();
+    initSphere.mockReset();
+    updateSphereImages.mockReset();
+    initSphere.mockReturnValue({
+      resize: vi.fn(),
+      updateImages: updateSphereImages,
+      dispose: disposeSphere
+    });
   });
 
   it('shows the empty state when no images are saved', async () => {
+    const store = useMoodboardStore();
+    store.$patch({ status: 'success', folders: [] });
     const { wrapper } = await mountMoodboard();
 
     expect(wrapper.text()).toContain('Your moodboard is still empty.');
@@ -49,6 +65,8 @@ describe('MoodboardOrbit', () => {
   });
 
   it('routes the empty state CTA back to the homepage', async () => {
+    const store = useMoodboardStore();
+    store.$patch({ status: 'success', folders: [] });
     const { wrapper, router } = await mountMoodboard();
 
     await wrapper.get('[data-testid="moodboard-empty-cta"]').trigger('click');
@@ -59,22 +77,157 @@ describe('MoodboardOrbit', () => {
 
   it('keeps the orbit view when saved images exist', async () => {
     const store = useMoodboardStore();
-    store.createFolder('test');
-    store.addImage(store.folders[0].id, { id: 'saved-1', src: '/style-image/saved-1.webp' });
+    store.$patch({
+      status: 'success',
+      folders: [
+        {
+          id: 'folder-1',
+          name: 'Studio',
+          createdAt: '2026-07-05T00:00:00.000Z',
+          images: [
+            {
+              itemId: 'item-1',
+              id: 'saved-1',
+              src: '/style-image/saved-1.webp',
+              title: 'Saved',
+              styleGroup: 'minimal',
+              style: [],
+              createdAt: '2026-07-05T00:00:00.000Z'
+            }
+          ]
+        }
+      ]
+    });
 
     const { wrapper } = await mountMoodboard();
 
     expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
     expect(wrapper.find('canvas').exists()).toBe(true);
+    expect(wrapper.text()).toContain('Studio');
   });
 
-  it('keeps the orbit view when a folder exists with no saved images', async () => {
+  it('shows the newest populated folder until another populated folder is hovered', async () => {
+    const savedImage = (id: string) => ({
+      itemId: `item-${id}`,
+      id,
+      src: `/style-image/${id}.webp`,
+      title: id,
+      styleGroup: 'minimal',
+      style: [],
+      createdAt: '2026-07-05T00:00:00.000Z'
+    });
     const store = useMoodboardStore();
-    store.createFolder('test');
+    store.$patch({
+      status: 'success',
+      folders: [
+        {
+          id: 'newest-folder',
+          name: 'Newest',
+          createdAt: '2026-07-06T00:00:00.000Z',
+          images: [savedImage('newest-image')]
+        },
+        {
+          id: 'empty-folder',
+          name: 'Empty',
+          createdAt: '2026-07-04T00:00:00.000Z',
+          images: []
+        },
+        {
+          id: 'oldest-folder',
+          name: 'Oldest',
+          createdAt: '2026-07-03T00:00:00.000Z',
+          images: [savedImage('oldest-image')]
+        }
+      ]
+    });
+
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+
+    expect(initSphere.mock.calls.at(-1)?.[3][0].id).toBe('newest-image');
+
+    await wrapper.get('[data-testid="moodboard-folder-2"]').trigger('mouseenter');
+    await flushPromises();
+    expect(initSphere).toHaveBeenCalledOnce();
+    expect(updateSphereImages.mock.calls.at(-1)?.[0][0].id).toBe('oldest-image');
+
+    const updateCount = updateSphereImages.mock.calls.length;
+    await wrapper.get('[data-testid="moodboard-folder-2"]').trigger('mouseleave');
+    await wrapper.get('[data-testid="moodboard-folder-1"]').trigger('mouseenter');
+    await flushPromises();
+
+    expect(updateSphereImages).toHaveBeenCalledTimes(updateCount);
+  });
+
+  it('disposes the active sphere when moodboard data is cleared', async () => {
+    const store = useMoodboardStore();
+    store.$patch({
+      status: 'success',
+      folders: [
+        {
+          id: 'folder-1',
+          name: 'Studio',
+          createdAt: '2026-07-05T00:00:00.000Z',
+          images: [
+            {
+              itemId: 'item-1',
+              id: 'saved-1',
+              src: '/style-image/saved-1.webp',
+              title: 'Saved',
+              styleGroup: 'minimal',
+              style: [],
+              createdAt: '2026-07-05T00:00:00.000Z'
+            }
+          ]
+        }
+      ]
+    });
+    await mountMoodboard();
+    await flushPromises();
+    expect(initSphere).toHaveBeenCalled();
+
+    store.clear();
+    await flushPromises();
+
+    expect(disposeSphere).toHaveBeenCalled();
+  });
+
+  it('keeps an empty folder in the empty state because it has no saved images', async () => {
+    const store = useMoodboardStore();
+    store.$patch({
+      status: 'success',
+      folders: [
+        {
+          id: 'folder-1',
+          name: 'Studio',
+          createdAt: '2026-07-05T00:00:00.000Z',
+          images: []
+        }
+      ]
+    });
 
     const { wrapper } = await mountMoodboard();
 
+    expect(wrapper.text()).toContain('Your moodboard is still empty.');
+  });
+
+  it('shows a loading state without flashing the empty state', async () => {
+    const store = useMoodboardStore();
+    store.$patch({ status: 'loading', folders: [] });
+
+    const { wrapper } = await mountMoodboard();
+
+    expect(wrapper.text()).toContain('Loading your moodboard...');
     expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
-    expect(wrapper.find('canvas').exists()).toBe(true);
+  });
+
+  it('shows a Data API error separately from the empty state', async () => {
+    const store = useMoodboardStore();
+    store.$patch({ status: 'error', error: 'network down', folders: [] });
+
+    const { wrapper } = await mountMoodboard();
+
+    expect(wrapper.text()).toContain("We couldn't load your moodboard.");
+    expect(wrapper.text()).not.toContain('Your moodboard is still empty.');
   });
 });

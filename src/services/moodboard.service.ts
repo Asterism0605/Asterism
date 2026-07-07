@@ -1,32 +1,118 @@
-import type { SavedImage } from '@/types/moodboard';
-import { useMoodboardStore } from '@/stores/moodboard.store';
+import {
+  addMoodboardItem,
+  createMoodboardFolder,
+  fetchMoodboardFolders,
+  type MoodboardFolderRow,
+  type MoodboardItemRow
+} from '@/api/moodboard.api';
 import { getImageById } from '@/services/image.service';
+import type {
+  MoodboardFolder,
+  MoodboardViewModel,
+  SavedImage
+} from '@/types/moodboard';
 
-export function addItem(folderId: string, imageId: string): void {
-  const store = useMoodboardStore();
-  const image = getImageById(imageId);
-  if (!image) throw new Error('Image not found.');
-  const savedImage: SavedImage = { id: imageId, src: image.src };
-  store.addImage(folderId, savedImage);
+const MAX_FOLDERS = 10;
+
+function toSavedImage(row: MoodboardItemRow): SavedImage | null {
+  const image = Array.isArray(row.images) ? row.images[0] : row.images;
+
+  if (!image) {
+    return null;
+  }
+
+  return {
+    itemId: row.id,
+    id: row.image_id,
+    src: image.url,
+    title: image.title,
+    styleGroup: image.style_group,
+    style: image.style ?? [],
+    createdAt: row.created_at
+  };
 }
 
-export function removeItem(folderId: string, imageId: string): void {
-  const store = useMoodboardStore();
-  store.removeImage(folderId, imageId);
+function toMoodboardFolder(row: MoodboardFolderRow): MoodboardFolder {
+  const seen = new Set<string>();
+  const images = row.moodboard_items
+    .map(toSavedImage)
+    .filter((image): image is SavedImage => image !== null)
+    .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
+    .filter((image) => {
+      if (seen.has(image.id)) return false;
+      seen.add(image.id);
+      return true;
+    });
+
+  return {
+    id: row.id,
+    name: row.name,
+    createdAt: row.created_at,
+    images
+  };
 }
 
-export function createFolder(name: string): string {
-  const store = useMoodboardStore();
-  if (store.folders.length >= 10) {
+export async function getMoodboardViewModel(profileId: string): Promise<MoodboardViewModel> {
+  const rows = await fetchMoodboardFolders(profileId);
+  const folders = rows.map(toMoodboardFolder);
+  const allItems = folders.flatMap((folder) => folder.images);
+
+  return {
+    folders,
+    allItems,
+    totalFolderCount: folders.length,
+    totalSavedItemCount: allItems.length
+  };
+}
+
+export async function createFolder(
+  profileId: string,
+  name: string,
+  folders: MoodboardFolder[]
+): Promise<MoodboardFolder> {
+  const normalizedName = name.trim();
+
+  if (folders.length >= MAX_FOLDERS) {
     throw new Error('You have reached the maximum of 10 folders.');
   }
-  if (store.folders.some((f) => f.name.trim() === name.trim())) {
+
+  if (folders.some((folder) => folder.name.trim() === normalizedName)) {
     throw new Error('A folder with this name already exists.');
   }
-  return store.createFolder(name.trim());
+
+  const row = await createMoodboardFolder({
+    profileId,
+    name: normalizedName
+  });
+
+  return {
+    id: row.id,
+    name: row.name,
+    createdAt: row.created_at,
+    images: []
+  };
 }
 
-export function isImageSaved(imageId: string): boolean {
-  const store = useMoodboardStore();
-  return store.folders.some((folder) => folder.images.some((img) => img.id === imageId));
+export async function addItem(folderId: string, imageId: string): Promise<SavedImage> {
+  const image = getImageById(imageId);
+
+  if (!image) {
+    throw new Error('Image not found.');
+  }
+
+  const row = await addMoodboardItem({ folderId, imageId });
+
+  return {
+    itemId: row.id,
+    id: imageId,
+    src: image.src,
+    title: image.title,
+    styleGroup: image.styleGroup,
+    style: image.style,
+    createdAt: row.created_at
+  };
+}
+
+export function isImageSaved(folders: MoodboardFolder[], imageId: string): boolean {
+  return folders.some((folder) => folder.images.some((image) => image.id === imageId));
 }

@@ -36,14 +36,19 @@ const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
 const {
   isSaving,
+  canSave,
+  redirectGuestToLogin,
+  consumePendingSaveMenu,
   saveToMoodboard,
   createNewFolder,
   isCreatingFolder,
   isCreateFolderSuccess,
   justSavedFolderId
 } = useSaveToMoodboard();
-const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
 const moodboardStore = useMoodboardStore();
+const isSaved = computed(() =>
+  isImageSaved(moodboardStore.folders, currentImage.value?.id ?? '')
+);
 const folders = computed(() =>
   moodboardStore.folders.map((f) => ({
     id: f.id,
@@ -52,6 +57,17 @@ const folders = computed(() =>
   }))
 );
 const showCreateFolder = ref(false);
+const saveMenuOpenRequest = ref(0);
+
+watch(
+  [imageId, canSave],
+  ([currentImageId, authenticated]) => {
+    if (authenticated && consumePendingSaveMenu(currentImageId, Boolean(currentImage.value))) {
+      saveMenuOpenRequest.value += 1;
+    }
+  },
+  { immediate: true }
+);
 
 function firstQueryValue(value: unknown): string | undefined {
   if (Array.isArray(value)) return typeof value[0] === 'string' ? value[0] : undefined;
@@ -193,8 +209,11 @@ async function handleSaveToFolder(folderId: string) {
         photographer-date="Aug 19, 2025"
         :saved="isSaved"
         :disabled="isSaving"
+        :can-save="canSave"
+        :save-menu-open-request="saveMenuOpenRequest"
         :folders="folders"
         :just-saved-folder-id="justSavedFolderId"
+        @auth-required="redirectGuestToLogin(currentImage.id)"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"

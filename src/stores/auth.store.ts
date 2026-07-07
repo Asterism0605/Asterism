@@ -35,8 +35,11 @@ export const useAuthStore = defineStore('auth', () => {
     isPasswordRecovery.value = false;
   }
 
-  async function register(payload: RegisterPayload): Promise<AuthSession> {
-    return applySession(await registerService(payload));
+  async function register(
+    payload: RegisterPayload,
+    emailRedirectTo?: string
+  ): Promise<AuthSession> {
+    return applySession(await registerService(payload, emailRedirectTo));
   }
 
   async function login(payload: LoginPayload): Promise<AuthSession> {
@@ -78,8 +81,8 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // 重寄信箱驗證信（純動作、不改登入狀態）。
-  async function resendSignup(email: string): Promise<void> {
-    await resendSignupService(email);
+  async function resendSignup(email: string, emailRedirectTo?: string): Promise<void> {
+    await resendSignupService(email, emailRedirectTo);
   }
 
   // 忘記密碼：寄重設連結，回流到 /auth/callback（帶 type=recovery，比照 Google 組 redirectTo）。

@@ -31,6 +31,12 @@ describe('router', () => {
     )
   })
 
+  it('protects the moodboard route with the existing auth guard', () => {
+    const moodboardRoute = router.getRoutes().find((route) => route.name === 'moodboard')
+
+    expect(moodboardRoute?.meta.requiresAuth).toBe(true)
+  })
+
   it('keeps one image detail path and falls back only when the image id is missing', async () => {
     const imageDetailRoutes = router
       .getRoutes()

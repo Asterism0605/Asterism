@@ -10,16 +10,29 @@ import type { ImageSpreadNode } from '@/types/image';
 
 const { localizeTaxon } = useTaxonomyLabel();
 
-const props = defineProps<{
-  image: ImageSpreadNode;
-  saved?: boolean;
-  disabled?: boolean;
-  folders?: { id: string; name: string; saved?: boolean }[];
-  justSavedFolderId?: string | null;
-}>();
+const props = withDefaults(
+  defineProps<{
+    image: ImageSpreadNode;
+    saved?: boolean;
+    disabled?: boolean;
+    folders?: { id: string; name: string; saved?: boolean }[];
+    justSavedFolderId?: string | null;
+    canSave?: boolean;
+    saveMenuOpenRequest?: number;
+  }>(),
+  {
+    saved: false,
+    disabled: false,
+    folders: () => [],
+    justSavedFolderId: null,
+    canSave: false,
+    saveMenuOpenRequest: 0
+  }
+);
 
 const emit = defineEmits<{
   return: [];
+  'auth-required': [];
   'create-folder': [];
   'save-to-folder': [folderId: string];
 }>();
@@ -94,8 +107,11 @@ const mainImageLabel = computed(() => {
         spread
         :saved="props.saved"
         :disabled="props.disabled"
+        :can-save="props.canSave"
+        :open-request="props.saveMenuOpenRequest"
         :folders="props.folders"
         :just-saved-folder-id="props.justSavedFolderId"
+        @auth-required="emit('auth-required')"
         @create-folder="emit('create-folder')"
         @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
       />

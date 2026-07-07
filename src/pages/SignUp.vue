@@ -27,10 +27,16 @@ const sentToEmail = ref('');
 const resendMessage = ref('');
 const { countdown: resendCountdown, start: startCooldown } = useCountdown(60);
 
+function getEmailRedirectTo(): string {
+  const callback = new URL('/auth/callback', window.location.origin);
+  callback.searchParams.set('next', getSafeRedirectPath(route.query.next, '/discover-dna'));
+  return callback.toString();
+}
+
 async function handleResend() {
   resendMessage.value = '';
   try {
-    await authStore.resendSignup(sentToEmail.value);
+    await authStore.resendSignup(sentToEmail.value, getEmailRedirectTo());
     resendMessage.value = 'Verification email resent.';
     startCooldown();
   } catch (error) {
@@ -47,7 +53,7 @@ async function handleSubmit(payload: RegisterPayload) {
   errorMessage.value = '';
 
   try {
-    const session = await authStore.register(payload);
+    const session = await authStore.register(payload, getEmailRedirectTo());
     try {
       await styleDnaStore.reconcileWithServer(session.user.id);
     } catch (error) {
