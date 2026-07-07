@@ -11,17 +11,23 @@ export type LegalContact = {
   suffix?: string;
 };
 
+export type LegalSubsection = {
+  title: string;
+  paragraphs?: string[];
+  bullets?: LegalBullet[];
+};
+
 export type LegalSection = {
   title: string;
   paragraphs?: string[];
   bullets?: LegalBullet[];
+  subsections?: LegalSubsection[];
   contact?: LegalContact;
 };
 
 export type LegalDocument = {
   eyebrow: string;
   title: string;
-  lastUpdated: string;
   intro: string[];
   sections: LegalSection[];
   copyright?: string;

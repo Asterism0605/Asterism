@@ -3,7 +3,6 @@ import type { LegalDocument } from './types';
 const termsEn: LegalDocument = {
   eyebrow: 'Terms of Service',
   title: 'Terms of Service',
-  lastUpdated: 'July 7, 2026',
   intro: [
     'Welcome to Asterism ("the Service"). By accessing or using asterism.pics, users agree to be bound by these Terms of Service. If users do not agree to these Terms, they should not use the Service.'
   ],

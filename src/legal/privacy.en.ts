@@ -3,7 +3,6 @@ import type { LegalDocument } from './types';
 const privacyEn: LegalDocument = {
   eyebrow: 'Privacy Policy',
   title: 'Privacy Policy',
-  lastUpdated: 'June 25, 2026',
   intro: [
     'Asterism ("the Service") respects your privacy. This policy explains how we collect, use, and protect your personal information when you use asterism.pics. By using the Service, you agree to the terms of this policy.'
   ],
