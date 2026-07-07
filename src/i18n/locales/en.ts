@@ -34,7 +34,8 @@ export default {
   toast: {
     saveContactSupport: 'Something went wrong. Please contact support.',
     saveFailed: 'Failed to save. Please try again.',
-    folderLimit: 'You have reached the maximum of 10 folders.'
+    folderLimit: 'You have reached the maximum of 10 folders.',
+    folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.'
   },
   userMenu: {
     signedInAs: 'Signed in as',
@@ -147,7 +148,8 @@ export default {
     startExploring: 'Start Exploring',
     createFolderTitle: 'SAVE TO NEW FOLDER',
     folderNamePlaceholder: 'Folder name',
-    send: 'SEND'
+    send: 'SEND',
+    goToMoodboard: 'Go to Moodboard'
   },
   home: {
     guestHint: 'Sign up or log in to keep exploring',

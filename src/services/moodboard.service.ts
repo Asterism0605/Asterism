@@ -1,6 +1,7 @@
 import {
   addMoodboardItem,
   createMoodboardFolder,
+  deleteMoodboardFolder,
   fetchMoodboardFolders,
   type MoodboardFolderRow,
   type MoodboardItemRow
@@ -91,6 +92,10 @@ export async function createFolder(
     createdAt: row.created_at,
     images: []
   };
+}
+
+export async function deleteFolder(folderId: string): Promise<void> {
+  await deleteMoodboardFolder(folderId);
 }
 
 export async function addItem(folderId: string, imageId: string): Promise<SavedImage> {

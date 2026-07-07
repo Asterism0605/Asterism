@@ -6,7 +6,9 @@ const select = vi.fn(() => ({ eq }));
 const single = vi.fn();
 const insertSelect = vi.fn(() => ({ single }));
 const insert = vi.fn(() => ({ select: insertSelect }));
-const from = vi.fn(() => ({ select, insert }));
+const deleteEq = vi.fn();
+const del = vi.fn(() => ({ eq: deleteEq }));
+const from = vi.fn(() => ({ select, insert, delete: del }));
 
 vi.mock('@/api/supabaseClient', () => ({
   getSupabase: () => ({ from })
@@ -15,6 +17,7 @@ vi.mock('@/api/supabaseClient', () => ({
 import {
   addMoodboardItem,
   createMoodboardFolder,
+  deleteMoodboardFolder,
   fetchMoodboardFolders
 } from '@/api/moodboard.api';
 
@@ -80,5 +83,22 @@ describe('moodboard.api', () => {
     order.mockResolvedValue({ data: null, error });
 
     await expect(fetchMoodboardFolders('user-1')).rejects.toBe(error);
+  });
+
+  it('deletes a folder by id and relies on the DB cascade for its items', async () => {
+    deleteEq.mockResolvedValue({ error: null });
+
+    await deleteMoodboardFolder('folder-1');
+
+    expect(from).toHaveBeenCalledWith('moodboard_folders');
+    expect(del).toHaveBeenCalled();
+    expect(deleteEq).toHaveBeenCalledWith('id', 'folder-1');
+  });
+
+  it('propagates folder delete errors', async () => {
+    const error = { message: 'permission denied' };
+    deleteEq.mockResolvedValue({ error });
+
+    await expect(deleteMoodboardFolder('folder-1')).rejects.toBe(error);
   });
 });
