@@ -78,6 +78,14 @@ describe('SignUp', () => {
 
     expect(push).toHaveBeenCalledWith('/login');
     expect(reconcileWithServer).toHaveBeenCalledWith('u1');
+    expect(supaAuth.signUp).toHaveBeenCalledWith({
+      email: 'new-user@example.com',
+      password: 'password123',
+      options: {
+        data: { display_name: '' },
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=%2Flogin`
+      }
+    });
   });
 
   it('still redirects when Style DNA reconcile fails after registration', async () => {
@@ -201,7 +209,11 @@ describe('SignUp', () => {
       await wrapper.find('[data-testid="resend-button"]').trigger('click');
       await vi.advanceTimersByTimeAsync(0);
 
-      expect(supaAuth.resend).toHaveBeenCalledWith({ type: 'signup', email: 'new-user@example.com' });
+      expect(supaAuth.resend).toHaveBeenCalledWith({
+        type: 'signup',
+        email: 'new-user@example.com',
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=%2Fdiscover-dna` }
+      });
       expect(wrapper.find('[data-testid="resend-message"]').text()).toContain('resent');
     } finally {
       vi.useRealTimers();

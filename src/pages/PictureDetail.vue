@@ -34,10 +34,21 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
-  useSaveToMoodboard();
-const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
+const {
+  isSaving,
+  canSave,
+  redirectGuestToLogin,
+  consumePendingSaveMenu,
+  saveToMoodboard,
+  createNewFolder,
+  isCreatingFolder,
+  isCreateFolderSuccess,
+  justSavedFolderId
+} = useSaveToMoodboard();
 const moodboardStore = useMoodboardStore();
+const isSaved = computed(() =>
+  isImageSaved(moodboardStore.folders, currentImage.value?.id ?? '')
+);
 const folders = computed(() =>
   moodboardStore.folders.map((f) => ({
     id: f.id,
@@ -46,6 +57,44 @@ const folders = computed(() =>
   }))
 );
 const showCreateFolder = ref(false);
+const saveMenuOpenRequest = ref(0);
+
+watch(
+  [imageId, canSave],
+  ([currentImageId, authenticated]) => {
+    if (authenticated && consumePendingSaveMenu(currentImageId, Boolean(currentImage.value))) {
+      saveMenuOpenRequest.value += 1;
+    }
+  },
+  { immediate: true }
+);
+
+function firstQueryValue(value: unknown): string | undefined {
+  if (Array.isArray(value)) return typeof value[0] === 'string' ? value[0] : undefined;
+
+  return typeof value === 'string' ? value : undefined;
+}
+
+function getSpreadPathContext() {
+  const spreadImageId = firstQueryValue(route.query.spreadImageId);
+  const spreadRootId = firstQueryValue(route.query.spreadRootId);
+  const spreadDetailImageId = firstQueryValue(route.query.spreadDetailImageId);
+  const spreadImage = spreadImageId ? getImageById(spreadImageId) : undefined;
+  const spreadRoot = spreadRootId ? getImageById(spreadRootId) : undefined;
+
+  if (spreadDetailImageId !== currentImage.value?.id) return undefined;
+  if (!spreadImage) return undefined;
+
+  return {
+    imageId: spreadImage.id,
+    rootId:
+      spreadRoot &&
+      spreadRoot.id !== spreadImage.id &&
+      spreadRoot.styleGroup === spreadImage.styleGroup
+        ? spreadRoot.id
+        : undefined
+  };
+}
 
 function handleBack() {
   if (!currentImage.value) {
@@ -53,10 +102,20 @@ function handleBack() {
     return;
   }
 
+  const spreadPathContext = getSpreadPathContext();
+
+  if (spreadPathContext) {
+    router.push({
+      name: 'image-spread',
+      params: { imageId: spreadPathContext.imageId },
+      query: spreadPathContext.rootId ? { rootId: spreadPathContext.rootId } : undefined
+    });
+    return;
+  }
+
   const rootImage = getStyleGroupRootImage(currentImage.value.id);
   const spreadImage = getMediumEntryImage(currentImage.value.id) ?? currentImage.value;
-  const query =
-    rootImage && rootImage.id !== spreadImage.id ? { rootId: rootImage.id } : undefined;
+  const query = rootImage && rootImage.id !== spreadImage.id ? { rootId: rootImage.id } : undefined;
 
   router.push({
     name: 'image-spread',
@@ -96,14 +155,35 @@ function handleConsult() {
 }
 
 function handleSelectImage(imageId: string) {
-  router.push({ name: 'picture-detail', params: { imageId } });
+  const spreadPathContext = getSpreadPathContext();
+  const nextImage = getImageById(imageId);
+  const spreadRoot = spreadPathContext?.rootId ? getImageById(spreadPathContext.rootId) : undefined;
+  const spreadImage = spreadPathContext ? getImageById(spreadPathContext.imageId) : undefined;
+  const isInSameSpreadPath =
+    nextImage &&
+    spreadImage &&
+    nextImage.styleGroup === spreadImage.styleGroup &&
+    nextImage.medium === spreadImage.medium;
+  const nextQuery =
+    spreadPathContext && nextImage && isInSameSpreadPath
+      ? {
+          spreadImageId: spreadPathContext.imageId,
+          spreadDetailImageId: nextImage.id,
+          ...(spreadRoot &&
+          spreadRoot.id !== spreadPathContext.imageId &&
+          spreadRoot.styleGroup === spreadImage.styleGroup
+            ? { spreadRootId: spreadRoot.id }
+            : {})
+        }
+      : undefined;
+
+  router.push({ name: 'picture-detail', params: { imageId }, query: nextQuery });
 }
 
 async function handleSaveToFolder(folderId: string) {
   if (!currentImage.value) return;
   await saveToMoodboard(folderId, currentImage.value.id);
 }
-
 </script>
 
 <template>
@@ -130,8 +210,11 @@ async function handleSaveToFolder(folderId: string) {
         photographer-date="Aug 19, 2025"
         :saved="isSaved"
         :disabled="isSaving"
+        :can-save="canSave"
+        :save-menu-open-request="saveMenuOpenRequest"
         :folders="folders"
         :just-saved-folder-id="justSavedFolderId"
+        @auth-required="redirectGuestToLogin(currentImage.id)"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"

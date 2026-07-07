@@ -24,16 +24,21 @@ interface Props {
   spread?: boolean;
   folders?: FolderItem[];
   justSavedFolderId?: string | null;
+  canSave?: boolean;
+  openRequest?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'bookmark',
   folders: () => [],
-  justSavedFolderId: null
+  justSavedFolderId: null,
+  canSave: false,
+  openRequest: 0
 });
 
 const emit = defineEmits<{
   consult: [];
+  'auth-required': [];
   'create-folder': [];
   'save-to-folder': [folderId: string];
 }>();
@@ -45,6 +50,11 @@ const containerRef = ref<HTMLElement | null>(null);
 const isBusy = computed(() => props.disabled || props.justSavedFolderId !== null);
 
 function toggleDropdown() {
+  if (!props.canSave) {
+    emit('auth-required');
+    return;
+  }
+
   isOpen.value = !isOpen.value;
   showFolderList.value = false;
 }
@@ -60,6 +70,14 @@ function handleSaveToFolderClick(folder: FolderItem) {
   if (isBusy.value) return;
   emit('save-to-folder', folder.id);
 }
+
+watch(
+  () => props.openRequest,
+  (current) => {
+    if (current > 0 && props.canSave) isOpen.value = true;
+  },
+  { immediate: true }
+);
 
 watch(
   () => props.justSavedFolderId,

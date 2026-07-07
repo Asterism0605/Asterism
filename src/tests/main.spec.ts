@@ -4,6 +4,12 @@ const mocks = vi.hoisted(() => {
   const hydrateResult = vi.fn();
   const reconcileWithServer = vi.fn().mockResolvedValue(undefined);
   const useStyleDnaStore = vi.fn((_pinia?: unknown) => ({ hydrateResult, reconcileWithServer }));
+  const fetchMoodboard = vi.fn().mockResolvedValue(undefined);
+  const clearMoodboard = vi.fn();
+  const useMoodboardStore = vi.fn((_pinia?: unknown) => ({
+    fetchMoodboard,
+    clear: clearMoodboard
+  }));
   const app = {
     use: vi.fn(),
     mount: vi.fn()
@@ -14,9 +20,12 @@ const mocks = vi.hoisted(() => {
     app,
     createApp: vi.fn(() => app),
     hydrateResult,
+    fetchMoodboard,
+    clearMoodboard,
     reconcileWithServer,
     router: { install: vi.fn() },
-    useStyleDnaStore
+    useStyleDnaStore,
+    useMoodboardStore
   };
 });
 
@@ -32,6 +41,7 @@ vi.mock('vue', async (importOriginal) => {
 vi.mock('@/App.vue', () => ({ default: { template: '<div />' } }));
 vi.mock('@/router', () => ({ default: mocks.router }));
 vi.mock('@/stores/style-dna.store', () => ({ useStyleDnaStore: mocks.useStyleDnaStore }));
+vi.mock('@/stores/moodboard.store', () => ({ useMoodboardStore: mocks.useMoodboardStore }));
 vi.mock('@/stores/auth.store', () => ({
   useAuthStore: () => ({
     hydrate: vi.fn().mockResolvedValue(undefined),
@@ -50,6 +60,7 @@ describe('main', () => {
     expect(mocks.useStyleDnaStore).toHaveBeenCalledTimes(1);
     expect(mocks.hydrateResult).toHaveBeenCalledTimes(1);
     expect(mocks.reconcileWithServer).toHaveBeenCalledWith('user-1');
+    expect(mocks.fetchMoodboard).toHaveBeenCalledWith('user-1');
     expect(mocks.app.use).toHaveBeenNthCalledWith(1, pinia);
     expect(mocks.app.use).toHaveBeenNthCalledWith(2, mocks.router);
     expect(mocks.app.mount).toHaveBeenCalledWith('#app');
