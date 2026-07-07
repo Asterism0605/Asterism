@@ -31,6 +31,8 @@ export type PaymentReturnStatus =
   | 'failed'
   | 'canceled'
   | 'error'
+  | 'processing-timeout'
+  | 'unauthenticated'
   | 'missing-booking-id';
 
 interface UseConsultationPaymentFlowReturn {
@@ -43,9 +45,21 @@ interface UseConsultationPaymentFlowReturn {
 }
 
 const CHECKOUT_BOOKING_ID_KEY = 'asterism.consultation.checkoutBookingId';
-const CHECKOUT_IDEMPOTENCY_KEY = 'asterism.consultation.checkoutIdempotencyKey';
 const PAYMENT_POLLING_INTERVAL_MS = 2000;
 const PAYMENT_POLLING_MAX_ATTEMPTS = 6;
+
+const checkoutErrorMessageKeyMap: Record<string, string> = {
+  SLOT_UNAVAILABLE: 'consult.checkoutErrorSlotUnavailable',
+  PROFILE_EMAIL_REQUIRED: 'consult.checkoutErrorProfileEmailRequired',
+  PROFILE_NOT_FOUND: 'consult.checkoutErrorProfileNotFound',
+  SOURCE_IMAGE_NOT_FOUND: 'consult.checkoutErrorSourceImageNotFound',
+  IDEMPOTENCY_KEY_REUSED: 'consult.checkoutErrorIdempotencyKeyReused',
+  CHECKOUT_ALREADY_COMPLETED: 'consult.checkoutErrorAlreadyCompleted',
+  CHECKOUT_EXPIRED: 'consult.checkoutErrorExpired',
+  CHECKOUT_PROVIDER_ERROR: 'consult.checkoutErrorProvider',
+  CHECKOUT_CONFIGURATION_ERROR: 'consult.checkoutErrorConfiguration',
+  INTERNAL_SERVER_ERROR: 'consult.checkoutErrorGeneric'
+};
 
 export function useConsultationPaymentFlow(
   sourceImageId: MaybeRefOrGetter<string>
@@ -56,7 +70,6 @@ export function useConsultationPaymentFlow(
   const { t } = useI18n();
   const checkoutStatus = ref<CheckoutStatus>('idle');
   const checkoutErrorMessage = ref('');
-  const currentIdempotencyKey = ref<string | null>(null);
   const paymentReturnStatus = ref<PaymentReturnStatus>('idle');
   const paymentPollingAttempts = ref(0);
   let paymentPollingTimer: ReturnType<typeof window.setTimeout> | null = null;
@@ -79,30 +92,26 @@ export function useConsultationPaymentFlow(
     };
   }
 
-  function getOrCreateCheckoutIdempotencyKey(): string {
-    if (currentIdempotencyKey.value) {
-      return currentIdempotencyKey.value;
-    }
-
-    const storedKey = sessionStorage.getItem(CHECKOUT_IDEMPOTENCY_KEY);
-    if (storedKey) {
-      currentIdempotencyKey.value = storedKey;
-      return storedKey;
-    }
-
-    const newKey = crypto.randomUUID();
-    currentIdempotencyKey.value = newKey;
-    sessionStorage.setItem(CHECKOUT_IDEMPOTENCY_KEY, newKey);
-    return newKey;
-  }
-
   function clearCheckoutSessionState(): void {
-    currentIdempotencyKey.value = null;
-    sessionStorage.removeItem(CHECKOUT_IDEMPOTENCY_KEY);
     sessionStorage.removeItem(CHECKOUT_BOOKING_ID_KEY);
   }
 
+  function checkoutErrorMessageForCode(code?: string): string {
+    const key = code ? checkoutErrorMessageKeyMap[code] : undefined;
+
+    return t(key || 'consult.checkoutErrorGeneric');
+  }
+
   function checkoutErrorFor(error: unknown): string {
+    const code =
+      typeof error === 'object' && error !== null && 'response' in error
+        ? (error as { response?: { data?: { error?: { code?: unknown } } } }).response?.data
+            ?.error?.code
+        : undefined;
+    if (typeof code === 'string') {
+      return checkoutErrorMessageForCode(code);
+    }
+
     const status =
       typeof error === 'object' && error !== null && 'status' in error
         ? (error as { status?: unknown }).status
@@ -118,7 +127,7 @@ export function useConsultationPaymentFlow(
       case 429:
         return t('consult.checkoutError429');
       default:
-        return t('consult.checkoutErrorGeneric');
+        return checkoutErrorMessageForCode();
     }
   }
 
@@ -143,12 +152,12 @@ export function useConsultationPaymentFlow(
       const response = await createConsultationCheckoutSession(
         toCheckoutRequest(payload),
         accessToken.value,
-        getOrCreateCheckoutIdempotencyKey()
+        crypto.randomUUID()
       );
 
       if (!response.success) {
         checkoutStatus.value = 'error';
-        checkoutErrorMessage.value = response.error.message;
+        checkoutErrorMessage.value = checkoutErrorMessageForCode(response.error.code);
         return;
       }
 
@@ -193,7 +202,15 @@ export function useConsultationPaymentFlow(
   }
 
   function isTerminalPaymentStatus(status: PaymentReturnStatus): boolean {
-    return ['paid', 'failed', 'canceled', 'error', 'missing-booking-id'].includes(status);
+    return [
+      'paid',
+      'failed',
+      'canceled',
+      'error',
+      'processing-timeout',
+      'unauthenticated',
+      'missing-booking-id'
+    ].includes(status);
   }
 
   function clearPaymentPolling(): void {
@@ -205,8 +222,12 @@ export function useConsultationPaymentFlow(
 
   async function fetchBookingPaymentStatus(bookingId: string): Promise<PaymentReturnStatus> {
     if (!accessToken.value) {
-      paymentReturnStatus.value = 'error';
-      return 'error';
+      paymentReturnStatus.value = 'unauthenticated';
+      await router.push({
+        path: '/login',
+        query: { next: route.fullPath }
+      });
+      return 'unauthenticated';
     }
 
     try {
@@ -245,6 +266,7 @@ export function useConsultationPaymentFlow(
       }
 
       if (paymentPollingAttempts.value >= PAYMENT_POLLING_MAX_ATTEMPTS) {
+        paymentReturnStatus.value = 'processing-timeout';
         clearPaymentPolling();
         return;
       }

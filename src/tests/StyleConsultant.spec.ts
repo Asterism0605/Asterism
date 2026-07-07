@@ -234,6 +234,90 @@ describe('StyleConsultant', () => {
       )
     );
     expect(sessionStorage.getItem('asterism.consultation.checkoutBookingId')).toBe('booking-1');
+    expect(sessionStorage.getItem('asterism.consultation.checkoutIdempotencyKey')).toBeNull();
+  });
+
+  it('uses a fresh idempotency key for each checkout submit intent', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    const router = createTestRouter();
+    await router.push('/consultant');
+    await router.isReady();
+    createCheckoutMock
+      .mockResolvedValueOnce({
+        success: false,
+        data: null,
+        error: { code: 'SLOT_UNAVAILABLE', message: 'backend debug slot text' }
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        data: {
+          bookingId: 'booking-1',
+          paymentId: 'payment-1',
+          checkoutUrl: '#stripe-checkout',
+          matchedConsultant: { id: 'consultant-1', displayName: 'Mira', title: 'Consultant' }
+        },
+        error: null
+      });
+    const wrapper = mountPage(router, pinia);
+    const payload = {
+      method: 'online',
+      date: '2026-07-10',
+      timeSlot: 'am',
+      designField: '',
+      designFocus: '',
+      name: 'Member',
+      email: 'member@example.com',
+      contactPhone: '0912345678',
+      notes: '',
+      paymentConfirmed: true
+    };
+
+    wrapper.getComponent({ name: 'RecommendationPanel' }).vm.$emit('submit', payload);
+    await flushPromises();
+    wrapper.getComponent({ name: 'RecommendationPanel' }).vm.$emit('submit', payload);
+    await flushPromises();
+
+    expect(createCheckoutMock).toHaveBeenCalledTimes(2);
+    expect(createCheckoutMock.mock.calls[0][2]).not.toBe(createCheckoutMock.mock.calls[1][2]);
+    expect(sessionStorage.getItem('asterism.consultation.checkoutIdempotencyKey')).toBeNull();
+  });
+
+  it('maps checkout error codes to localized copy instead of backend messages', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    const router = createTestRouter();
+    await router.push('/consultant');
+    await router.isReady();
+    createCheckoutMock.mockResolvedValue({
+      success: false,
+      data: null,
+      error: { code: 'IDEMPOTENCY_KEY_REUSED', message: 'backend debug idempotency text' }
+    });
+    const wrapper = mountPage(router, pinia);
+
+    wrapper.getComponent({ name: 'RecommendationPanel' }).vm.$emit('submit', {
+      method: 'online',
+      date: '2026-07-10',
+      timeSlot: 'am',
+      designField: '',
+      designFocus: '',
+      name: 'Member',
+      email: 'member@example.com',
+      contactPhone: '0912345678',
+      notes: '',
+      paymentConfirmed: true
+    });
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('This checkout request has expired. Please try again.');
+    expect(wrapper.text()).not.toContain('backend debug idempotency text');
   });
 
   it('uses backend state instead of a success query and polls pending payment', async () => {
@@ -278,6 +362,59 @@ describe('StyleConsultant', () => {
 
     expect(getBookingMock).toHaveBeenCalledTimes(2);
     expect(wrapper.text()).toContain('Booking confirmed');
+  });
+
+  it('shows a timeout state when payment polling stays pending', async () => {
+    vi.useFakeTimers();
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    const router = createTestRouter();
+    const pendingDetail: ConsultationBookingDetail = {
+      booking: {
+        id: 'booking-1',
+        status: 'pending_payment',
+        method: 'online',
+        consultationDate: '2026-07-10',
+        timeSlot: 'am',
+        contactEmail: 'member@example.com',
+        createdAt: '2026-07-07T00:00:00Z',
+        updatedAt: '2026-07-07T00:00:00Z'
+      },
+      payment: { status: 'pending', amount: 500, currency: 'TWD' }
+    };
+    getBookingMock.mockResolvedValue({ success: true, data: pendingDetail, error: null });
+    await router.push('/consultant?payment=success&bookingId=booking-1');
+    await router.isReady();
+    const wrapper = mountPage(router, pinia);
+    await flushPromises();
+
+    for (let i = 0; i < 6; i += 1) {
+      await vi.advanceTimersByTimeAsync(2000);
+      await flushPromises();
+    }
+
+    expect(wrapper.text()).toContain('Payment is still processing');
+    expect(getBookingMock).toHaveBeenCalledTimes(7);
+  });
+
+  it('redirects payment returns without an access token to login with the return URL', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const router = createTestRouter();
+    await router.push('/consultant?payment=success&bookingId=booking-1');
+    await router.isReady();
+
+    mountPage(router, pinia);
+    await flushPromises();
+
+    expect(getBookingMock).not.toHaveBeenCalled();
+    expect(router.currentRoute.value.path).toBe('/login');
+    expect(router.currentRoute.value.query.next).toBe(
+      '/consultant?payment=success&bookingId=booking-1'
+    );
   });
 
   it('checks a canceled return once and lets paid backend state win', async () => {
