@@ -19,7 +19,12 @@ const emit = defineEmits<{
   <!-- 點圖片以外的空白區（背景/星座線）＝返回，等同右側「返回」按鈕；hover 時輕微反白提示可點擊 -->
   <div
     class="relative w-3/5 cursor-pointer overflow-hidden bg-void transition-colors duration-200 hover:bg-white/5"
+    role="button"
+    tabindex="0"
+    :aria-label="$t('image.back')"
     @click="emit('back')"
+    @keydown.enter.prevent="emit('back')"
+    @keydown.space.prevent="emit('back')"
   >
     <div class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
       <ConstellationBackground

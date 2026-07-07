@@ -13,8 +13,7 @@ const store = {
 vi.mock('@/stores/auth.store', () => ({ useAuthStore: () => store }));
 
 const styleDnaStore = {
-  reconcileWithServer: vi.fn().mockResolvedValue(undefined),
-  hasCompletedQuiz: true
+  reconcileWithServer: vi.fn().mockResolvedValue('synced')
 };
 vi.mock('@/stores/style-dna.store', () => ({ useStyleDnaStore: () => styleDnaStore }));
 
@@ -38,8 +37,7 @@ describe('AuthCallback', () => {
     store.isAuthenticated = false;
     store.isPasswordRecovery = false;
     store.user = { id: 'user-1' };
-    styleDnaStore.reconcileWithServer = vi.fn().mockResolvedValue(undefined);
-    styleDnaStore.hasCompletedQuiz = true;
+    styleDnaStore.reconcileWithServer = vi.fn().mockResolvedValue('synced');
   });
 
   it('還原後已登入 → replace 到 next', async () => {
@@ -163,11 +161,11 @@ describe('AuthCallback', () => {
     expect(wrapper.text()).toContain('Sign-in failed');
   });
 
-  it('第三方登入無 next、尚未完成測驗 → 導去 /discover-dna（不再晾在首頁）', async () => {
+  it('第三方登入無 next、確定尚未完成測驗（not-found）→ 導去 /discover-dna（不再晾在首頁）', async () => {
     store.hydrate = vi.fn(async () => {
       store.isAuthenticated = true;
     });
-    styleDnaStore.hasCompletedQuiz = false;
+    styleDnaStore.reconcileWithServer = vi.fn().mockResolvedValue('not-found');
     const router = makeRouter();
     const replace = vi.spyOn(router, 'replace');
     router.push('/auth/callback');
@@ -180,11 +178,27 @@ describe('AuthCallback', () => {
     expect(replace).toHaveBeenCalledWith('/discover-dna');
   });
 
-  it('第三方登入無 next、已完成測驗 → 正常回首頁', async () => {
+  it('第三方登入無 next、已完成測驗（synced）→ 正常回首頁', async () => {
     store.hydrate = vi.fn(async () => {
       store.isAuthenticated = true;
     });
-    styleDnaStore.hasCompletedQuiz = true;
+    styleDnaStore.reconcileWithServer = vi.fn().mockResolvedValue('synced');
+    const router = makeRouter();
+    const replace = vi.spyOn(router, 'replace');
+    router.push('/auth/callback');
+    await router.isReady();
+
+    mount(AuthCallback, { global: { plugins: [router] } });
+    await flushPromises();
+
+    expect(replace).toHaveBeenCalledWith('/');
+  });
+
+  it('第三方登入無 next、Style DNA 同步失敗（failed）→ 保守回首頁，不誤導去重測', async () => {
+    store.hydrate = vi.fn(async () => {
+      store.isAuthenticated = true;
+    });
+    styleDnaStore.reconcileWithServer = vi.fn().mockResolvedValue('failed');
     const router = makeRouter();
     const replace = vi.spyOn(router, 'replace');
     router.push('/auth/callback');

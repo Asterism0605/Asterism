@@ -42,14 +42,10 @@ onMounted(async () => {
       }
       // 第三方（Google/LINE）登入跟信箱驗證都會走這裡，跟 Login.vue/SignUp.vue
       // 一樣先跟後端同步 Style DNA 結果，再決定沒有 next 時的預設落點：
-      // 還沒做過測驗的人（不管是新註冊還是舊帳號一直沒做）導去測驗入口，
-      // 已經做過的人才回首頁，避免第三方註冊的使用者被晾在首頁找不到入口。
-      try {
-        await styleDnaStore.reconcileWithServer(authStore.user!.id);
-      } catch (error) {
-        console.warn('[style-dna] sync after oauth/verification failed:', error);
-      }
-      const fallback = styleDnaStore.hasCompletedQuiz ? '/' : '/discover-dna';
+      // 確定沒做過測驗（'not-found'）才導去測驗入口；同步失敗（'failed'）時無法區分
+      // 「真的沒做過」跟「做過但這次抓不到」，保守回首頁，避免誤導已完成測驗的人重測。
+      const syncResult = await styleDnaStore.reconcileWithServer(authStore.user!.id);
+      const fallback = syncResult === 'not-found' ? '/discover-dna' : '/';
       void router.replace(getSafeRedirectPath(route.query.next, fallback));
       return;
     }
