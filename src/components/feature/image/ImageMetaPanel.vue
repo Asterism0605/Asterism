@@ -15,6 +15,7 @@ interface Props {
   photographerName?: string;
   photographerRole?: string;
   photographerDate?: string;
+  photographerAvatarUrl?: string;
   similarImages?: ImageSpreadNode[];
   saved?: boolean;
   disabled?: boolean;
@@ -74,6 +75,7 @@ const siteLogoSrc = '/sitelogo.png';
         class="pt-0!"
         :name="photographerName"
         :subtitle="photographerRole"
+        :avatar-url="photographerAvatarUrl"
         :show-follow="true"
       />
     </div>

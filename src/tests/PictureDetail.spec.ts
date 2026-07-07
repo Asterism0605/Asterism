@@ -82,6 +82,15 @@ describe('PictureDetail', () => {
     vi.useRealTimers();
   });
 
+  it('本地圖（attribution=Asterism）顯示 Asterism 站徽當作者頭像', async () => {
+    const { wrapper } = await mountPictureDetail();
+
+    expect(wrapper.text()).toContain('Asterism');
+    const avatarImgs = wrapper.findAll('img[alt="Asterism"]');
+    expect(avatarImgs.length).toBeGreaterThan(0);
+    expect(avatarImgs[0].attributes('src')).toBe('/sitelogo.png');
+  });
+
   it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
     let resolve!: () => void;
     vi.mocked(addItem).mockImplementationOnce(

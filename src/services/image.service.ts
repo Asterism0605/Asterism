@@ -34,8 +34,28 @@ function toSpreadNode(image: StyleImage): ImageSpreadNode {
     style: image.style,
     medium: image.medium,
     subMedium: image.subMedium,
-    colorPalette: image.colorPalette
+    colorPalette: image.colorPalette,
+    attribution: image.attribution
   };
+}
+
+const ASTERISM_LOGO_SRC = '/sitelogo.png';
+
+export interface PhotographerInfo {
+  name: string;
+  avatarUrl?: string;
+}
+
+// attribution 格式：本地／自製圖是 "Asterism"，外部圖是 "Photo by {攝影師} / {Pexels|Unsplash}"
+// （見 asterism-backend/scripts/enrich/buildImageRow.ts）。是 Asterism 自己的圖就用站徽當頭像，
+// 外部攝影師沒有頭像可用，回傳 avatarUrl: undefined，交給 UI 端的姓名縮寫 fallback。
+export function resolvePhotographerInfo(attribution?: string): PhotographerInfo {
+  if (!attribution || attribution === 'Asterism') {
+    return { name: 'Asterism', avatarUrl: ASTERISM_LOGO_SRC };
+  }
+
+  const match = attribution.match(/^Photo by (.+?) \/ .+$/);
+  return { name: match?.[1] ?? attribution };
 }
 
 function countSharedStyles(baseImage: StyleImage, candidate: StyleImage): number {
