@@ -19,7 +19,7 @@ const hasTriggeredLimit = ref(false);
 const showGuestHint = ref(false);
 const inspirationImages = ref<HomeInspirationImage[]>([]);
 
-const HOME_DENSITY_PER_100VH = 5;
+const HOME_DENSITY_PER_100VH = 3;
 const homePreferredStyles = computed(() =>
   styleDnaStore.hasCompletedQuiz ? styleDnaStore.preferredStyles : []
 );
