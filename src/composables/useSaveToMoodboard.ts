@@ -123,7 +123,7 @@ export function useSaveToMoodboard() {
         return false;
       }
       isCreateFolderSuccess.value = true;
-      showToast({ type: 'success', message: 'Folder created and image saved.' });
+      showToast({ type: 'success', message: t('toast.folderCreatedAndSaved') });
       await new Promise((resolve) => setTimeout(resolve, MOODBOARD_FEEDBACK_DISPLAY_MS));
       return true;
     } catch (e) {

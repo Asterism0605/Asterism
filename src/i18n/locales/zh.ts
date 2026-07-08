@@ -35,7 +35,8 @@ export default {
     saveContactSupport: '發生錯誤，請聯絡客服。',
     saveFailed: '儲存失敗，請再試一次。',
     folderLimit: '你已達到資料夾數量上限（10 個）。',
-    folderCleanupFailed: '圖片儲存失敗，且資料夾清除失敗，請至情緒板手動刪除此資料夾。'
+    folderCleanupFailed: '圖片儲存失敗，且資料夾清除失敗，請至情緒板手動刪除此資料夾。',
+    folderCreatedAndSaved: '資料夾已建立，圖片已儲存。'
   },
   userMenu: {
     signedInAs: '目前登入身分',
@@ -149,7 +150,8 @@ export default {
     resultYour: '你的',
     homepagePersonalized: '你的首頁已根據你的 Style DNA 個人化。',
     startExploring: '開始探索',
-    retakeQuiz: '重新測驗'
+    retakeQuiz: '重新測驗',
+    sampleResultNotice: '目前還沒有測驗結果，這是範例 Style DNA 結果。'
   },
   image: {
     back: '返回',
