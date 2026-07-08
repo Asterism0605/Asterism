@@ -23,7 +23,8 @@ import {
   M_DETAIL_ORBIT,
   photos,
   mDetailBase,
-  buildMoodboardOrbitImages
+  buildMoodboardOrbitImages,
+  isFolderDimmed
 } from '@/components/feature/moodboard/config';
 import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
 import type {
@@ -46,13 +47,14 @@ const props = defineProps({
 });
 const emit = defineEmits(['open', 'home']);
 
+const DIMMED_OPACITY = 0.4;
+
 const router = useRouter();
 const route = useRoute();
 const moodboardStore = useMoodboardStore();
 const authStore = useAuthStore();
 
 const activeSphereFolderId = ref<string | null>(null);
-const folderCount = computed(() => moodboardStore.folders.length);
 const folderNames = computed(() => moodboardStore.folders.map((folder) => folder.name));
 const sphereFolder = computed(() => {
   const activeFolder = moodboardStore.folders.find(
@@ -163,12 +165,21 @@ const mOrbitInner = computed(() =>
 
 const mFolders = computed(() => {
   const o = M_HOME_ORBIT,
-    n = Math.min(folderCount.value, MAX_FOLDERS),
+    n = MAX_FOLDERS,
     w = 86,
     h = 66;
   return Array.from({ length: n }, (_, i) => {
     const ang = (i / n) * Math.PI * 2 - Math.PI / 2 + orbitPhase.value;
-    return { i, cx: o.cx + o.rx * Math.cos(ang), cy: o.cy + o.ry * Math.sin(ang), w, h };
+    const folder = moodboardStore.folders[i];
+    return {
+      i,
+      cx: o.cx + o.rx * Math.cos(ang),
+      cy: o.cy + o.ry * Math.sin(ang),
+      w,
+      h,
+      dimmed: isFolderDimmed(folder),
+      hasFolder: !!folder
+    };
   });
 });
 
@@ -181,7 +192,7 @@ const outerPath = computed(() => ellipsePath(1));
 const innerPath = computed(() => ellipsePath(INNER_K));
 
 const folderView = computed(() => {
-  const n = Math.min(folderCount.value, MAX_FOLDERS),
+  const n = MAX_FOLDERS,
     w = 100,
     h = 50;
   return Array.from({ length: n }, (_, i) => {
@@ -190,12 +201,15 @@ const folderView = computed(() => {
     const cy = HO.cy + HO.ry * Math.sin(ang);
     const deg = ((((ang * 180) / Math.PI) % 360) + 360) % 360;
     const onLine = deg >= 105 && deg <= 350;
+    const folder = moodboardStore.folders[i];
     return {
       i,
       w,
       h,
       active: hoverIdx.value === i,
       onLine,
+      dimmed: isFolderDimmed(folder),
+      hasFolder: !!folder,
       left: cx - w / 2 - 10,
       top: cy - h / 2 - 30
     };
@@ -206,7 +220,7 @@ const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
 const showEmpty = computed(() => moodboardStore.status === 'idle' || moodboardStore.isEmpty);
 
 function getFolderName(index: number): string {
-  return folderNames.value[index % folderNames.value.length] ?? '';
+  return folderNames.value[index] ?? '';
 }
 
 function hoverFolder(index: number) {
@@ -339,6 +353,8 @@ function buildMobileHome() {
 }
 
 function openFolder(i: number) {
+  if (!moodboardStore.folders[i]) return;
+
   selectedFolder.value = i;
   hasFolders.value = false;
   if (isMobile.value) buildMobileDetail();
@@ -380,6 +396,11 @@ watch(
 function onFolderClick(i: number) {
   if (consumeDidDrag()) return;
   openFolder(i);
+}
+
+function hoverMobileFolderAt(i: number) {
+  if (!moodboardStore.folders[i]) return;
+  mHover.value = i;
 }
 
 let sphereHandle: SphereHandle | null = null;
@@ -521,6 +542,7 @@ onBeforeUnmount(() => {
           <div
             v-for="f in mFolders"
             :key="'mf' + f.i"
+            :data-testid="`moodboard-folder-mobile-${f.i}`"
             class="absolute"
             :style="{
               left: f.cx - f.w / 2 + 'px',
@@ -530,9 +552,10 @@ onBeforeUnmount(() => {
               transform: mHover === f.i ? 'scale(1.06)' : 'scale(1)',
               transition: 'transform .22s ease',
               zIndex: mHover === f.i ? 20 : 5,
-              cursor: 'pointer'
+              cursor: f.hasFolder ? 'pointer' : 'default',
+              pointerEvents: f.hasFolder ? 'auto' : 'none'
             }"
-            @pointerenter="mHover = f.i"
+            @pointerenter="hoverMobileFolderAt(f.i)"
             @pointerleave="mHover = -1"
             @click="onFolderClick(f.i)"
           >
@@ -540,12 +563,15 @@ onBeforeUnmount(() => {
               :src="mHover === f.i ? '/images/folder-active.png' : '/images/folder-idle.png'"
               draggable="false"
               class="w-full h-full select-none"
-              style="
-                object-fit: contain;
-                display: block;
-                pointer-events: none;
-                filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5));
-              "
+              :style="{
+                objectFit: 'contain',
+                display: 'block',
+                pointerEvents: 'none',
+                filter: f.dimmed
+                  ? 'drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5)) grayscale(1)'
+                  : 'drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5))',
+                opacity: f.dimmed ? DIMMED_OPACITY : 1
+              }"
             />
           </div>
 
@@ -782,10 +808,10 @@ onBeforeUnmount(() => {
               transform: fv.active ? 'scale(1.07)' : 'scale(1)',
               transformOrigin: 'center center',
               transition: 'transform .28s ease, opacity .35s ease',
-              opacity: fv.onLine ? 1 : 0,
-              pointerEvents: fv.onLine ? 'auto' : 'none',
+              opacity: fv.onLine ? (fv.dimmed ? DIMMED_OPACITY : 1) : 0,
+              pointerEvents: fv.onLine && fv.hasFolder ? 'auto' : 'none',
               zIndex: fv.active ? 30 : 2,
-              cursor: dragging ? 'grabbing' : 'grab'
+              cursor: fv.hasFolder ? (dragging ? 'grabbing' : 'grab') : 'default'
             }"
             @mouseenter="hoverFolder(fv.i)"
             @mouseleave="leaveFolder"
@@ -795,7 +821,12 @@ onBeforeUnmount(() => {
               :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
               draggable="false"
               class="w-full h-full select-none"
-              style="object-fit: contain; display: block; pointer-events: none"
+              :style="{
+                objectFit: 'contain',
+                display: 'block',
+                pointerEvents: 'none',
+                filter: fv.dimmed ? 'grayscale(1)' : 'none'
+              }"
             />
           </div>
         </div>
