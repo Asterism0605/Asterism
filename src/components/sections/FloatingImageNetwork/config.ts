@@ -76,7 +76,7 @@ export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
     }
   },
   home: {
-    widths: [260, 260, 260, 260, 260, 260],
+    widths: [240, 240, 240, 240, 240, 240],
     aspects: ['3/4', '16/10', '3/4', '3/4', '4/3', '3/4'],
     randomX: [0.14, 0.86],
     randomY: [0.12, 0.78],
