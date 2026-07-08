@@ -7,6 +7,21 @@ import {
   getSubMediumGroupImages
 } from '@/services/image.service';
 
+function getMaxConsecutiveStyleGroupCount(styleGroups: string[]): number {
+  return styleGroups.reduce(
+    (maxCount, styleGroup, index) => {
+      const currentCount =
+        index > 0 && styleGroup === styleGroups[index - 1] ? maxCount.current + 1 : 1;
+
+      return {
+        current: currentCount,
+        max: Math.max(maxCount.max, currentCount)
+      };
+    },
+    { current: 0, max: 0 }
+  ).max;
+}
+
 describe('image.service', () => {
   it('finds an image by id and returns undefined for unknown ids', () => {
     expect(getImageById('y2k-main-001')?.id).toBe('y2k-main-001');
@@ -38,10 +53,19 @@ describe('image.service', () => {
     );
   });
 
+  it('interleaves home inspiration images with at most two adjacent images per style group', async () => {
+    const images = await getHomeInspirationImages();
+    const styleGroups = images.map((image) => image.styleGroup);
+
+    expect(new Set(styleGroups.slice(0, 18)).size).toBe(9);
+    expect(getMaxConsecutiveStyleGroupCount(styleGroups)).toBeLessThanOrEqual(2);
+  });
+
   it('prioritizes concept images that match preferred styles', async () => {
     const images = await getHomeInspirationImages({
       preferredStyles: ['Art Deco', 'Baroque']
     });
+    const styleGroups = images.map((image) => image.styleGroup);
 
     expect(images).toHaveLength(45);
     expect(images[0]).toEqual(
@@ -50,6 +74,8 @@ describe('image.service', () => {
         styleGroup: 'Decorative & Opulent Art'
       })
     );
+    expect(new Set(styleGroups.slice(0, 18)).size).toBe(9);
+    expect(getMaxConsecutiveStyleGroupCount(styleGroups)).toBeLessThanOrEqual(2);
   });
 
   describe('getMediumGroupImages', () => {

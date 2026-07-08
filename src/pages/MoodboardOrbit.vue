@@ -3,7 +3,7 @@
 //   config.ts         — 常數與靜態資料
 //   layout.ts         — 純幾何算法（packPhotos, ellipsePath...）
 //   sphere.ts         — Three.js 球體邏輯
-//   useMobileOrbit.ts — 手機拖曳 composable
+//   useOrbitDrag.ts   — 拖拉旋轉軌道 composable（手機/桌機共用）
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import type { CSSProperties } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -23,7 +23,8 @@ import {
   M_DETAIL_ORBIT,
   photos,
   mDetailBase,
-  buildMoodboardOrbitImages
+  buildMoodboardOrbitImages,
+  isFolderDimmed
 } from '@/components/feature/moodboard/config';
 import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
 import type {
@@ -34,7 +35,7 @@ import type {
 } from '@/types/moodboard';
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
-import { useMobileOrbit } from '@/components/feature/moodboard/useMobileOrbit';
+import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -46,13 +47,14 @@ const props = defineProps({
 });
 const emit = defineEmits(['open', 'home']);
 
+const DIMMED_OPACITY = 0.4;
+
 const router = useRouter();
 const route = useRoute();
 const moodboardStore = useMoodboardStore();
 const authStore = useAuthStore();
 
 const activeSphereFolderId = ref<string | null>(null);
-const folderCount = computed(() => moodboardStore.folders.length);
 const folderNames = computed(() => moodboardStore.folders.map((folder) => folder.name));
 const sphereFolder = computed(() => {
   const activeFolder = moodboardStore.folders.find(
@@ -81,16 +83,42 @@ const deskVisibleH = ref(1024);
 const deskBackTop = computed(() => Math.round(deskVisibleH.value - 130));
 const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96));
 const mStage = ref<HTMLElement | null>(null);
+const deskStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
 const mDetailPhotos = ref<MoodboardMobilePhoto[]>([]);
 const mHomePhotosRandom = ref<MoodboardMobilePhoto[]>([]);
 
-const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useMobileOrbit(
-  mStage,
+// 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
+const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
+  () => (isMobile.value ? mStage.value : deskStage.value),
   scale,
   orbitPhase,
-  hasFolders
+  hasFolders,
+  () => (isMobile.value ? M_HOME_ORBIT : HO),
+  // 手機/桌機都只有點在資料夾附近才起拖。
+  (p) => (isMobile.value ? nearMobileFolder(p) : nearDeskFolder(p))
 );
+
+// pointerdown 是否落在任一手機資料夾範圍內（含 18px 邊距）。
+function nearMobileFolder(p: { x: number; y: number }): boolean {
+  const m = 18;
+  return mFolders.value.some(
+    (f) => Math.abs(p.x - f.cx) <= f.w / 2 + m && Math.abs(p.y - f.cy) <= f.h / 2 + m
+  );
+}
+
+// 桌機同理：只算目前顯示（onLine）的資料夾，用其 left/top + 尺寸還原中心點判定（含 18px 邊距）。
+function nearDeskFolder(p: { x: number; y: number }): boolean {
+  const m = 18;
+  return folderView.value.some((fv) => {
+    if (!fv.onLine) return false;
+    const w = fv.w + 20;
+    const h = fv.h + 30;
+    const cx = fv.left + w / 2;
+    const cy = fv.top + h / 2;
+    return Math.abs(p.x - cx) <= w / 2 + m && Math.abs(p.y - cy) <= h / 2 + m;
+  });
+}
 
 /* ---- derived ---- */
 const stageStyle = computed<CSSProperties>(() => ({
@@ -137,12 +165,21 @@ const mOrbitInner = computed(() =>
 
 const mFolders = computed(() => {
   const o = M_HOME_ORBIT,
-    n = Math.min(folderCount.value, MAX_FOLDERS),
+    n = MAX_FOLDERS,
     w = 86,
     h = 66;
   return Array.from({ length: n }, (_, i) => {
     const ang = (i / n) * Math.PI * 2 - Math.PI / 2 + orbitPhase.value;
-    return { i, cx: o.cx + o.rx * Math.cos(ang), cy: o.cy + o.ry * Math.sin(ang), w, h };
+    const folder = moodboardStore.folders[i];
+    return {
+      i,
+      cx: o.cx + o.rx * Math.cos(ang),
+      cy: o.cy + o.ry * Math.sin(ang),
+      w,
+      h,
+      dimmed: isFolderDimmed(folder),
+      hasFolder: !!folder
+    };
   });
 });
 
@@ -155,7 +192,7 @@ const outerPath = computed(() => ellipsePath(1));
 const innerPath = computed(() => ellipsePath(INNER_K));
 
 const folderView = computed(() => {
-  const n = Math.min(folderCount.value, MAX_FOLDERS),
+  const n = MAX_FOLDERS,
     w = 100,
     h = 50;
   return Array.from({ length: n }, (_, i) => {
@@ -164,12 +201,15 @@ const folderView = computed(() => {
     const cy = HO.cy + HO.ry * Math.sin(ang);
     const deg = ((((ang * 180) / Math.PI) % 360) + 360) % 360;
     const onLine = deg >= 105 && deg <= 350;
+    const folder = moodboardStore.folders[i];
     return {
       i,
       w,
       h,
       active: hoverIdx.value === i,
       onLine,
+      dimmed: isFolderDimmed(folder),
+      hasFolder: !!folder,
       left: cx - w / 2 - 10,
       top: cy - h / 2 - 30
     };
@@ -180,7 +220,7 @@ const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
 const showEmpty = computed(() => moodboardStore.status === 'idle' || moodboardStore.isEmpty);
 
 function getFolderName(index: number): string {
-  return folderNames.value[index % folderNames.value.length] ?? '';
+  return folderNames.value[index] ?? '';
 }
 
 function hoverFolder(index: number) {
@@ -313,6 +353,8 @@ function buildMobileHome() {
 }
 
 function openFolder(i: number) {
+  if (!moodboardStore.folders[i]) return;
+
   selectedFolder.value = i;
   hasFolders.value = false;
   if (isMobile.value) buildMobileDetail();
@@ -354,6 +396,11 @@ watch(
 function onFolderClick(i: number) {
   if (consumeDidDrag()) return;
   openFolder(i);
+}
+
+function hoverMobileFolderAt(i: number) {
+  if (!moodboardStore.folders[i]) return;
+  mHover.value = i;
 }
 
 let sphereHandle: SphereHandle | null = null;
@@ -472,6 +519,7 @@ onBeforeUnmount(() => {
         @pointerup="onDragEnd"
         @pointercancel="onDragEnd"
         @pointerleave="onDragEnd"
+        @dragstart.prevent
       >
         <!-- orbit line stays the SAME on detail — only the folders disappear -->
         <svg
@@ -489,11 +537,12 @@ onBeforeUnmount(() => {
         <div
           v-show="hasFolders"
           class="absolute inset-0"
-          :style="{ cursor: dragging ? 'grabbing' : 'grab', touchAction: 'none' }"
+          :style="{ cursor: dragging ? 'grabbing' : 'default', touchAction: 'none' }"
         >
           <div
             v-for="f in mFolders"
             :key="'mf' + f.i"
+            :data-testid="`moodboard-folder-mobile-${f.i}`"
             class="absolute"
             :style="{
               left: f.cx - f.w / 2 + 'px',
@@ -503,9 +552,10 @@ onBeforeUnmount(() => {
               transform: mHover === f.i ? 'scale(1.06)' : 'scale(1)',
               transition: 'transform .22s ease',
               zIndex: mHover === f.i ? 20 : 5,
-              cursor: 'pointer'
+              cursor: f.hasFolder ? 'pointer' : 'default',
+              pointerEvents: f.hasFolder ? 'auto' : 'none'
             }"
-            @pointerenter="mHover = f.i"
+            @pointerenter="hoverMobileFolderAt(f.i)"
             @pointerleave="mHover = -1"
             @click="onFolderClick(f.i)"
           >
@@ -513,12 +563,15 @@ onBeforeUnmount(() => {
               :src="mHover === f.i ? '/images/folder-active.png' : '/images/folder-idle.png'"
               draggable="false"
               class="w-full h-full select-none"
-              style="
-                object-fit: contain;
-                display: block;
-                pointer-events: none;
-                filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5));
-              "
+              :style="{
+                objectFit: 'contain',
+                display: 'block',
+                pointerEvents: 'none',
+                filter: f.dimmed
+                  ? 'drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5)) grayscale(1)'
+                  : 'drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5))',
+                opacity: f.dimmed ? DIMMED_OPACITY : 1
+              }"
             />
           </div>
 
@@ -635,25 +688,14 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <!-- header: asterisk logo + plain profile (NAME kept compact) -->
-        <div class="absolute flex items-center gap-3" style="left: 20px; top: 28px">
-          <div
-            style="
-              width: 34px;
-              height: 34px;
-              border-radius: 9999px;
-              background: radial-gradient(120% 120% at 35% 30%, #e9eaec, #c0c1c4 60%, #9c9da0);
-            "
-          ></div>
-          <div style="line-height: 1.25">
-            <div
-              class="text-white/90"
-              style="font-size: 12px; font-weight: 500; letter-spacing: 0.5px"
-            >
-              NAME
-            </div>
-            <div class="text-white/45" style="font-size: 11px">alawhoagua@gmail.com</div>
-          </div>
+        <!-- header: asterisk logo + profile (shared ProfileCard, sm size to fit compact header) -->
+        <div v-if="authStore.isAuthenticated" class="absolute" style="left: 20px; top: 28px">
+          <ProfileCard
+            avatar-size="sm"
+            class="p-0!"
+            :name="authStore.user?.displayName ?? ''"
+            :subtitle="authStore.user?.email ?? ''"
+          />
         </div>
 
         <!-- detail: back (just above the name tab) + docked folder-name tab -->
@@ -720,7 +762,18 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- ===================== DESKTOP STAGE (1440×1024) ===================== -->
-      <div v-else class="relative" :style="stageStyle">
+      <div
+        v-else
+        ref="deskStage"
+        class="relative"
+        :style="stageStyle"
+        @pointerdown="onDragStart"
+        @pointermove="onDragMove"
+        @pointerup="onDragEnd"
+        @pointercancel="onDragEnd"
+        @pointerleave="onDragEnd"
+        @dragstart.prevent
+      >
         <!-- ===== ORBIT LINES (same arc on both pages) ===== -->
         <svg
           class="absolute inset-0 pointer-events-none"
@@ -734,7 +787,11 @@ onBeforeUnmount(() => {
         </svg>
 
         <!-- ===== STATE A : HAS FOLDERS (orbit + photo sphere) ===== -->
-        <div v-show="hasFolders" class="absolute inset-0">
+        <div
+          v-show="hasFolders"
+          class="absolute inset-0"
+          :style="{ cursor: dragging ? 'grabbing' : 'default', touchAction: 'none' }"
+        >
           <canvas ref="sphereCanvas" class="absolute" :style="sphereStyle"></canvas>
 
           <!-- folder images orbit the ellipse; hovering swaps to the active image + pauses the orbit -->
@@ -751,20 +808,25 @@ onBeforeUnmount(() => {
               transform: fv.active ? 'scale(1.07)' : 'scale(1)',
               transformOrigin: 'center center',
               transition: 'transform .28s ease, opacity .35s ease',
-              opacity: fv.onLine ? 1 : 0,
-              pointerEvents: fv.onLine ? 'auto' : 'none',
+              opacity: fv.onLine ? (fv.dimmed ? DIMMED_OPACITY : 1) : 0,
+              pointerEvents: fv.onLine && fv.hasFolder ? 'auto' : 'none',
               zIndex: fv.active ? 30 : 2,
-              cursor: 'pointer'
+              cursor: fv.hasFolder ? (dragging ? 'grabbing' : 'grab') : 'default'
             }"
             @mouseenter="hoverFolder(fv.i)"
             @mouseleave="leaveFolder"
-            @click="openFolder(fv.i)"
+            @click="onFolderClick(fv.i)"
           >
             <img
               :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
               draggable="false"
               class="w-full h-full select-none"
-              style="object-fit: contain; display: block; pointer-events: none"
+              :style="{
+                objectFit: 'contain',
+                display: 'block',
+                pointerEvents: 'none',
+                filter: fv.dimmed ? 'grayscale(1)' : 'none'
+              }"
             />
           </div>
         </div>
@@ -876,12 +938,14 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <!-- ===== PROFILE (teammate's ProfileCard component, scaled down a touch) ===== -->
-        <div
-          class="absolute"
-          style="left: 100px; top: 150px; transform: scale(0.5); transform-origin: top left"
-        >
-          <ProfileCard name="NAME" subtitle="alawhoagua@gmail.com" />
+        <!-- ===== PROFILE (teammate's ProfileCard component, sm size — 組長回饋原尺寸太大，
+             介於改動前的 scale(0.5) 跟改動後全尺寸之間) ===== -->
+        <div v-if="authStore.isAuthenticated" class="absolute" style="left: 100px; top: 150px">
+          <ProfileCard
+            avatar-size="sm"
+            :name="authStore.user?.displayName ?? ''"
+            :subtitle="authStore.user?.email ?? ''"
+          />
         </div>
 
         <!-- hover title block: dark halo + glowing title + underline with a dot at its left -->

@@ -61,6 +61,43 @@ describe('consultation.api', () => {
     );
   });
 
+  it('passes through explicit payment consent instead of assuming true', async () => {
+    const payload: ConsultationCheckoutRequest = {
+      method: 'online',
+      consultationDate: '2026-07-10',
+      timeSlot: 'am',
+      paymentConsentAccepted: false
+    };
+    const response = {
+      success: false as const,
+      data: null,
+      error: {
+        code: 'PAYMENT_CONSENT_REQUIRED',
+        message: 'Payment consent is required.'
+      }
+    };
+    post.mockResolvedValue({ data: response });
+
+    await expect(
+      createConsultationCheckoutSession(payload, 'access-token', 'idempotency-key')
+    ).resolves.toEqual(response);
+    expect(post).toHaveBeenCalledWith(
+      '/api/v1/consultations/checkout',
+      {
+        method: 'online',
+        consultationDate: '2026-07-10',
+        timeSlot: 'am',
+        paymentConsentAccepted: false
+      },
+      {
+        headers: {
+          Authorization: 'Bearer access-token',
+          'Idempotency-Key': 'idempotency-key'
+        }
+      }
+    );
+  });
+
   it('creates checkout with auth, idempotency, and only allowed body fields', async () => {
     const payload: ConsultationCheckoutRequest & {
       amount: number;

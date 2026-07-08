@@ -89,6 +89,21 @@ function createStyleDnaAnswer(id: string, style: string, weight: number): StyleD
   };
 }
 
+function getMaxConsecutiveStyleGroupCount(styleGroups: string[]): number {
+  return styleGroups.reduce(
+    (maxCount, styleGroup, index) => {
+      const currentCount =
+        index > 0 && styleGroup === styleGroups[index - 1] ? maxCount.current + 1 : 1;
+
+      return {
+        current: currentCount,
+        max: Math.max(maxCount.max, currentCount)
+      };
+    },
+    { current: 0, max: 0 }
+  ).max;
+}
+
 describe('Home', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -252,7 +267,7 @@ describe('Home', () => {
     });
   });
 
-  it('passes grouped home inspiration entry points to the floating network', async () => {
+  it('passes diverse home inspiration entry points to the floating network', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
@@ -273,7 +288,10 @@ describe('Home', () => {
 
     expect(floatingNetwork.props('height')).toBe('900vh');
     expect(images).toHaveLength(45);
-    expect(new Set(images.map((image) => image.styleGroup)).size).toBe(9);
+    const styleGroups = images.map((image) => image.styleGroup);
+    expect(new Set(styleGroups).size).toBe(9);
+    expect(new Set(styleGroups.slice(0, 18)).size).toBe(9);
+    expect(getMaxConsecutiveStyleGroupCount(styleGroups)).toBeLessThanOrEqual(2);
     const perGroup = images.reduce<Record<string, number>>((acc, image) => {
       acc[image.styleGroup] = (acc[image.styleGroup] ?? 0) + 1;
       return acc;
