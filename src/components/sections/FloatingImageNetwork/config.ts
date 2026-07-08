@@ -44,6 +44,12 @@ export interface LayoutPreset {
   ticks: number;
   avoidAreas?: AvoidArea[];
   evenYDistribution?: boolean;
+  // home 首屏的主視覺錨點：固定在一個安全區內隨機，不是固定死座標。
+  homeHeroAnchor?: {
+    index: number;
+    x: readonly [number, number];
+    y: readonly [number, number];
+  };
   clampPosition: (node: NodePosition, width: number, height: number) => NodePosition;
 }
 
@@ -80,6 +86,12 @@ export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
     collideMultiplier: 0.72,
     ticks: 600,
     evenYDistribution: true,
+    // 讓標題右側一定有一張完整圖片；x/y 是可隨機的比例範圍。
+    homeHeroAnchor: {
+      index: 0,
+      x: [0.7, 0.84],
+      y: [0.34, 0.5]
+    },
     avoidAreas: [
       {
         left: 0,

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   computeEvenYPositions,
   buildFloatingImageLayout,
@@ -108,6 +108,51 @@ describe('buildFloatingImageLayout (home)', () => {
     const offenders = nodes.filter((node) => rectsOverlap(nodeRect(node), titleBox));
 
     expect(offenders).toHaveLength(0);
+  });
+
+  it('keeps a randomized home hero image to the right of the title without cropping', () => {
+    const width = 1440;
+    const height = 9000;
+    const viewportHeight = 900;
+    const aspects = Array.from({ length: 45 }, (_, i) =>
+      ['1122/1402', '1536/1024', '3/4', '1402/1122', '4/3'][i % 5]
+    );
+
+    const lowRandom = vi.spyOn(Math, 'random').mockReturnValue(0.2);
+    const firstLayout = buildFloatingImageLayout(
+      45,
+      width,
+      height,
+      LAYOUT_PRESETS.home,
+      viewportHeight,
+      aspects
+    );
+    lowRandom.mockRestore();
+
+    const highRandom = vi.spyOn(Math, 'random').mockReturnValue(0.8);
+    const secondLayout = buildFloatingImageLayout(
+      45,
+      width,
+      height,
+      LAYOUT_PRESETS.home,
+      viewportHeight,
+      aspects
+    );
+    highRandom.mockRestore();
+
+    const firstHero = firstLayout[0];
+    const secondHero = secondLayout[0];
+    const firstRect = nodeRect(firstHero);
+    const secondRect = nodeRect(secondHero);
+
+    expect(firstHero.x).toBeGreaterThan(width * 0.62);
+    expect(secondHero.x).toBeGreaterThan(width * 0.62);
+    expect(firstRect.top).toBeGreaterThanOrEqual(0);
+    expect(firstRect.bottom).toBeLessThanOrEqual(viewportHeight);
+    expect(secondRect.top).toBeGreaterThanOrEqual(0);
+    expect(secondRect.bottom).toBeLessThanOrEqual(viewportHeight);
+    expect(secondHero.x).not.toBe(firstHero.x);
+    expect(secondHero.y).not.toBe(firstHero.y);
   });
 });
 
