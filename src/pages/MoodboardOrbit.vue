@@ -346,6 +346,7 @@ function buildMobileHome() {
     w: d.w,
     h: d.h,
     faded: d.faded,
+    placeholder: d.placeholder,
     delay: d.delay,
     cx: d.x,
     cy: d.y
@@ -658,11 +659,8 @@ onBeforeUnmount(() => {
         >
           <div
             class="image-card w-full h-full"
-            :style="{
-              opacity: p.placeholder ? 0.2 : p.faded ? 0.5 : 1,
-              filter: p.placeholder ? 'grayscale(1)' : 'none',
-              animationDelay: p.delay + 's'
-            }"
+            :class="{ 'photo-placeholder': p.placeholder, 'photo-faded': !p.placeholder && p.faded }"
+            :style="{ animationDelay: p.delay + 's' }"
           >
             <img
               :src="p.src"
@@ -1043,5 +1041,12 @@ onBeforeUnmount(() => {
 }
 .photo-enter {
   animation: fadeInUp 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.photo-placeholder {
+  opacity: 0.2;
+  filter: grayscale(1);
+}
+.photo-faded {
+  opacity: 0.5;
 }
 </style>

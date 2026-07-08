@@ -51,6 +51,7 @@ describe('MoodboardOrbit', () => {
       updateImages: updateSphereImages,
       dispose: disposeSphere
     });
+    Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true, writable: true });
   });
 
   it('shows the empty state when no images are saved', async () => {
@@ -304,6 +305,48 @@ describe('MoodboardOrbit', () => {
 
       const populatedFolder = wrapper.get('[data-testid="moodboard-folder-0"]');
       expect(populatedFolder.get('img').attributes('style')).not.toContain('grayscale(1)');
+    });
+  });
+
+  describe('mobile home orbit placeholder photos', () => {
+    it('applies the photo-placeholder class only to placeholder photos, not real ones', async () => {
+      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        folders: [
+          {
+            id: 'folder-1',
+            name: 'Studio',
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [
+              {
+                itemId: 'item-1',
+                id: 'saved-1',
+                src: '/style-image/saved-1.webp',
+                title: 'Saved',
+                styleGroup: 'minimal',
+                style: [],
+                createdAt: '2026-07-06T00:00:00.000Z'
+              }
+            ]
+          }
+        ]
+      });
+
+      const { wrapper } = await mountMoodboard();
+
+      const cards = wrapper.findAll('.photo-enter .image-card');
+      expect(cards.length).toBeGreaterThan(0);
+
+      const placeholderCards = cards.filter((card) => card.classes().includes('photo-placeholder'));
+      const realCards = cards.filter((card) => !card.classes().includes('photo-placeholder'));
+
+      expect(placeholderCards.length).toBeGreaterThan(0);
+      expect(realCards.length).toBeGreaterThan(0);
+      expect(realCards.some((card) => card.find('img').attributes('src') === '/style-image/saved-1.webp')).toBe(
+        true
+      );
     });
   });
 });
