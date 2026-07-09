@@ -1,5 +1,5 @@
-import { createStarStyle } from '@/components/ui/starStyle';
-import type { StarStyleConfig, StarStyleVars } from '@/components/ui/starStyle';
+import { createStarStyle } from './starStyle';
+import type { StarStyleConfig, StarStyleVars } from './starStyle';
 
 export type HomeStarLinkKey = 'privacy' | 'terms';
 
