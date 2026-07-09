@@ -14,7 +14,7 @@ const reviewed = {
   url: 'u',
   style_group: 'doa',
   medium: 'Outfit',
-  sub_medium: 'Top',
+  sub_medium: 'Top Focus',
   confidence: { styleGroup: 1, medium: 1, subMedium: 1 },
   needs_review: { styleGroup: false, medium: false, subMedium: false }
 };

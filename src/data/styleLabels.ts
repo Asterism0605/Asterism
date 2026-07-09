@@ -15,23 +15,42 @@ export const SUB_MEDIUM_ZH: Record<string, string> = {
   'Editorial Design': '編輯設計',
   'Packaging Design': '包裝設計',
 
-  // Outfit
+  // Outfit（issue #137 場景型；抓圖標籤帶 Focus，中文顯示不含 Focus）
+  'Full Look': '整體穿搭',
+  'Top Focus': '上身',
+  'Bottom Focus': '下身',
+  'Accessory Focus': '配件',
+
+  // Interior Design（issue #137 場景型）
+  'Living & Dining Space': '起居餐飲空間',
+  'Bedroom': '臥室',
+  'Lighting': '燈具照明',
+  'Decor Detail': '裝飾細節',
+
+  // Architecture（issue #137 場景型）
+  'Building Exterior': '建築外觀',
+  'Facade': '建築立面',
+  'Entrance': '入口',
+  'Passage': '通道',
+
+  // 舊分類（issue #137 改版前），策展凍結資料 style-data.json 仍在用，只留顯示對照
   'Top': '上衣',
   'Bottom': '下著',
   'Dress': '洋裝',
   'Accessory': '配件',
-
-  // Interior Design
-  'Lighting': '燈具照明',
   'Table': '桌子',
   'Wall Paint': '牆面塗裝',
   'Chair': '椅子',
-
-  // Architecture
   'Window': '窗戶',
-  'Staircase': '樓梯',
-  'Facade': '立面',
-  'Entrance': '入口'
+  'Staircase': '樓梯'
+};
+
+// 英文顯示覆寫：Outfit 的 "...Focus" 抓圖標籤在前端英文介面拿掉 Focus。
+// 只覆寫這三個；其餘 subMedium 英文顯示 = 原標籤（localizeTaxon 對非 zh 的 fallback）。
+export const SUB_MEDIUM_EN: Record<string, string> = {
+  'Top Focus': 'Top',
+  'Bottom Focus': 'Bottom',
+  'Accessory Focus': 'Accessory'
 };
 
 export const STYLE_GROUP_ZH: Record<string, string> = {
@@ -112,9 +131,9 @@ export const MEDIUMS = ['Outfit', 'Graphic Design', 'Interior Design', 'Architec
 
 export const SUB_MEDIUMS_BY_MEDIUM: Record<string, string[]> = {
   'Graphic Design': ['Brand Identity', 'Poster Design', 'Editorial Design', 'Packaging Design'],
-  Outfit: ['Top', 'Bottom', 'Dress', 'Accessory'],
-  'Interior Design': ['Lighting', 'Table', 'Wall Paint', 'Chair'],
-  Architecture: ['Window', 'Staircase', 'Facade', 'Entrance']
+  Outfit: ['Full Look', 'Top Focus', 'Bottom Focus', 'Accessory Focus'],
+  'Interior Design': ['Living & Dining Space', 'Bedroom', 'Lighting', 'Decor Detail'],
+  Architecture: ['Building Exterior', 'Facade', 'Entrance', 'Passage']
 };
 
 export function styleGroupZh(value?: string | null): string {
