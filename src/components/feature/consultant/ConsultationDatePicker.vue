@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { Calendar, ChevronLeft, ChevronRight } from '@lucide/vue';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { ConsultationAvailabilityResult } from '@/types/consultation';
 
 const { locale } = useI18n();
 
 const props = defineProps<{
   modelValue: string;
   error?: string;
+  availabilityByDate?: Record<string, ConsultationAvailabilityResult>;
+  availabilityLoadingByDate?: Record<string, boolean>;
 }>();
 
 const emit = defineEmits<{
   'update:modelValue': [value: string];
+  'visible-month-change': [value: string];
 }>();
 
 const isOpen = defineModel<boolean>('open', { default: false });
@@ -37,6 +41,13 @@ function formatDateOption(date: Date) {
   const day = String(date.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
+}
+
+function formatMonthOption(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+
+  return `${year}-${month}`;
 }
 
 function formatDisplayDate(value: string) {
@@ -84,6 +95,9 @@ const calendarDays = computed(() => {
       day: date.getDate(),
       isCurrentMonth: date.getMonth() === monthStart.getMonth(),
       isPast: getDayStart(date) < today,
+      isFullyBooked:
+        props.availabilityByDate?.[value]?.slots.every((slot) => !slot.available) ?? false,
+      isAvailabilityLoading: props.availabilityLoadingByDate?.[value] ?? false,
       isToday: isSameDate(date, today)
     };
   });
@@ -106,6 +120,12 @@ function moveVisibleMonth(direction: -1 | 1) {
 }
 
 function selectDate(value: string) {
+  const day = calendarDays.value.find((calendarDay) => calendarDay.value === value);
+
+  if (day?.isPast || day?.isFullyBooked || day?.isAvailabilityLoading) {
+    return;
+  }
+
   emit('update:modelValue', value);
   isOpen.value = false;
 }
@@ -135,6 +155,12 @@ onMounted(() => {
   document.addEventListener('pointerdown', handleDocumentPointerDown);
   document.addEventListener('keydown', handleDocumentKeydown);
 });
+
+watch(
+  () => formatMonthOption(visibleMonth.value),
+  (month) => emit('visible-month-change', month),
+  { immediate: true }
+);
 
 onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', handleDocumentPointerDown);
@@ -202,7 +228,7 @@ defineExpose({ resetMonth });
               'recommendation-panel__calendar-day--today': day.isToday,
               'recommendation-panel__calendar-day--selected': modelValue === day.value
             }"
-            :disabled="day.isPast"
+            :disabled="day.isPast || day.isFullyBooked || day.isAvailabilityLoading"
             @click="selectDate(day.value)"
           >
             {{ day.day }}

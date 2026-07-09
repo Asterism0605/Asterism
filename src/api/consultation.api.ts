@@ -1,6 +1,7 @@
 import { httpClient } from '@/api/httpClient';
 import type {
   ConsultationApiResponse,
+  ConsultationAvailabilityResult,
   ConsultationBookingDetail,
   ConsultationCheckoutRequest,
   ConsultationCheckoutResult
@@ -51,6 +52,21 @@ export async function getConsultationBookingDetail(
   const response = await httpClient.get<ConsultationApiResponse<ConsultationBookingDetail>>(
     `/api/v1/consultations/${bookingId}`,
     {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    }
+  );
+
+  return response.data;
+}
+
+export async function getConsultationAvailability(
+  date: string,
+  accessToken: string
+): Promise<ConsultationApiResponse<ConsultationAvailabilityResult>> {
+  const response = await httpClient.get<ConsultationApiResponse<ConsultationAvailabilityResult>>(
+    '/api/v1/consultations/availability',
+    {
+      params: { date },
       headers: { Authorization: `Bearer ${accessToken}` }
     }
   );
