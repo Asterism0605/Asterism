@@ -1,7 +1,7 @@
 import { computed, onScopeDispose, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { addItem, createFolder } from '@/services/moodboard.service';
+import { addItem, createFolder, deleteFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { MOODBOARD_FEEDBACK_DISPLAY_MS } from '@/constants/moodboard.constants';
 import { useAuthStore } from '@/stores/auth.store';
@@ -106,14 +106,24 @@ export function useSaveToMoodboard() {
         moodboardStore.addImage(folder.id, savedImage);
       } catch (e) {
         const message = mapSaveImageError(e, t);
-        showToast({
-          type: 'error',
-          message: `Folder created, but ${message.charAt(0).toLowerCase()}${message.slice(1)}`
-        });
+        try {
+          await deleteFolder(folder.id);
+          moodboardStore.removeFolder(folder.id);
+          showToast({ type: 'error', message });
+        } catch {
+          showToast({
+            type: 'error',
+            message: t('toast.folderCleanupFailed'),
+            actionText: t('moodboard.goToMoodboard'),
+            onAction: () => {
+              void router.push({ name: 'moodboard' });
+            }
+          });
+        }
         return false;
       }
       isCreateFolderSuccess.value = true;
-      showToast({ type: 'success', message: 'Folder created and image saved.' });
+      showToast({ type: 'success', message: t('toast.folderCreatedAndSaved') });
       await new Promise((resolve) => setTimeout(resolve, MOODBOARD_FEEDBACK_DISPLAY_MS));
       return true;
     } catch (e) {

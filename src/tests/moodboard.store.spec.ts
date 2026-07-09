@@ -172,6 +172,22 @@ describe('moodboard store', () => {
     expect(store.isNormal).toBe(true);
   });
 
+  it('removes a folder locally without calling the Data API', async () => {
+    getMoodboardViewModel.mockResolvedValue({
+      folders: [folder],
+      allItems: folder.images,
+      totalFolderCount: 1,
+      totalSavedItemCount: 1
+    });
+    const store = useMoodboardStore();
+    await store.fetchMoodboard('user-1');
+
+    store.removeFolder('folder-1');
+
+    expect(store.folders).toEqual([]);
+    expect(getMoodboardViewModel).toHaveBeenCalledTimes(1);
+  });
+
   it('clears user-owned state on logout or account change', async () => {
     getMoodboardViewModel.mockResolvedValue({
       folders: [folder],

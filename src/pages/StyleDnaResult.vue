@@ -2,6 +2,7 @@
 import { Check } from '@lucide/vue';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import DnaLoadingState from '@/components/feature/dna/DnaLoadingState.vue';
 import StyleAnnotationDisplay from '@/components/feature/dna/StyleAnnotationDisplay.vue';
@@ -14,6 +15,7 @@ const { result } = storeToRefs(useStyleDnaStore());
 const HERO_IMAGE = '/images/astronaut-dna.png';
 const isLoading = ref(true);
 const router = useRouter();
+const { t } = useI18n();
 
 let loadingTimer: ReturnType<typeof window.setTimeout> | null = null;
 
@@ -32,8 +34,8 @@ onMounted(() => {
     if (result.value.isFallback) {
       showToast({
         type: 'info',
-        message: 'We do not have quiz result yet, so this is a sample Style DNA result.',
-        actionText: 'Retake quiz',
+        message: t('dna.sampleResultNotice'),
+        actionText: t('dna.retakeQuiz'),
         duration: 5000,
         onAction: () => {
           retakeQuiz();
