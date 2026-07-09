@@ -5,6 +5,7 @@ import ThemeTag from '@/components/ui/ThemeTag.vue';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
 import { ArrowLeft, ExternalLink } from '@lucide/vue';
 import SimilarImages from '@/components/feature/image/SimilarImages.vue';
+import { SITE_LOGO_SRC } from '@/constants/assets.constants';
 import type { ImageSpreadNode } from '@/types/image';
 
 interface Props {
@@ -33,7 +34,7 @@ const emit = defineEmits<{
   'select-image': [imageId: string];
 }>();
 
-const siteLogoSrc = '/sitelogo.png';
+const siteLogoSrc = SITE_LOGO_SRC;
 </script>
 
 <template>

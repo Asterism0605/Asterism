@@ -8,6 +8,7 @@ import Button from '@/components/ui/Button.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { getImageById } from '@/services/image.service';
 import { setLocale, SUPPORTED_LOCALES, type AppLocale } from '@/i18n';
+import { SITE_LOGO_SRC } from '@/constants/assets.constants';
 
 const { locale } = useI18n();
 
@@ -31,7 +32,7 @@ function handleLangClickOutside(event: MouseEvent) {
 onMounted(() => document.addEventListener('click', handleLangClickOutside, true));
 onUnmounted(() => document.removeEventListener('click', handleLangClickOutside, true));
 
-const siteLogoSrc = '/sitelogo.png';
+const siteLogoSrc = SITE_LOGO_SRC;
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();

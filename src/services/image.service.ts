@@ -1,5 +1,6 @@
 import rawStyleImages from '@/data/style-data.json';
 import { fetchImagesApi } from '@/api/image.api';
+import { SITE_LOGO_SRC } from '@/constants/assets.constants';
 import type {
   HomeInspirationImage,
   HomeInspirationOptions,
@@ -39,8 +40,6 @@ function toSpreadNode(image: StyleImage): ImageSpreadNode {
   };
 }
 
-const ASTERISM_LOGO_SRC = '/sitelogo.png';
-
 export interface PhotographerInfo {
   name: string;
   avatarUrl?: string;
@@ -50,12 +49,13 @@ export interface PhotographerInfo {
 // （見 asterism-backend/scripts/enrich/buildImageRow.ts）。是 Asterism 自己的圖就用站徽當頭像，
 // 外部攝影師沒有頭像可用，回傳 avatarUrl: undefined，交給 UI 端的姓名縮寫 fallback。
 export function resolvePhotographerInfo(attribution?: string): PhotographerInfo {
-  if (!attribution || attribution === 'Asterism') {
-    return { name: 'Asterism', avatarUrl: ASTERISM_LOGO_SRC };
+  const trimmed = attribution?.trim();
+  if (!trimmed || trimmed === 'Asterism') {
+    return { name: 'Asterism', avatarUrl: SITE_LOGO_SRC };
   }
 
-  const match = attribution.match(/^Photo by (.+?) \/ .+$/);
-  return { name: match?.[1] ?? attribution };
+  const match = trimmed.match(/^Photo by (.+?) \/ .+$/);
+  return { name: match?.[1] ?? trimmed };
 }
 
 function countSharedStyles(baseImage: StyleImage, candidate: StyleImage): number {
