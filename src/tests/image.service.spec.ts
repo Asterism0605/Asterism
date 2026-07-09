@@ -4,7 +4,8 @@ import {
   getImageById,
   getMediumGroupImages,
   getRelatedImages,
-  getSubMediumGroupImages
+  getSubMediumGroupImages,
+  resolvePhotographerInfo
 } from '@/services/image.service';
 
 function getMaxConsecutiveStyleGroupCount(styleGroups: string[]): number {
@@ -26,6 +27,37 @@ describe('image.service', () => {
   it('finds an image by id and returns undefined for unknown ids', () => {
     expect(getImageById('y2k-main-001')?.id).toBe('y2k-main-001');
     expect(getImageById('missing-image')).toBeUndefined();
+  });
+
+  describe('resolvePhotographerInfo', () => {
+    it('本地圖（attribution 是 Asterism 或沒帶欄位）回傳站徽當頭像', () => {
+      expect(resolvePhotographerInfo('Asterism')).toEqual({
+        name: 'Asterism',
+        avatarUrl: '/sitelogo.png'
+      });
+      expect(resolvePhotographerInfo(undefined)).toEqual({
+        name: 'Asterism',
+        avatarUrl: '/sitelogo.png'
+      });
+    });
+
+    it('外部圖從 "Photo by {攝影師} / {來源}" 解析出攝影師姓名，不給頭像', () => {
+      expect(resolvePhotographerInfo('Photo by Mikhail Nilov / Pexels')).toEqual({
+        name: 'Mikhail Nilov',
+        avatarUrl: undefined
+      });
+      expect(resolvePhotographerInfo('Photo by Miguel Bruna / Unsplash')).toEqual({
+        name: 'Miguel Bruna',
+        avatarUrl: undefined
+      });
+    });
+
+    it('格式不符預期時，原樣顯示整段 attribution 字串當後備', () => {
+      expect(resolvePhotographerInfo('Unexpected format')).toEqual({
+        name: 'Unexpected format',
+        avatarUrl: undefined
+      });
+    });
   });
 
   it('returns local concept images (no medium) across every style group for the home page', async () => {

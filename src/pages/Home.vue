@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
+import HomeStarLinks from '@/components/sections/HomeStarLinks';
 import { getHomeInspirationImages } from '@/services/image.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
@@ -166,6 +167,8 @@ watch(homePreferredStyles, () => {
         </div>
       </div>
     </section>
+
+    <HomeStarLinks />
 
     <Transition name="guest-hint">
       <p
