@@ -122,7 +122,7 @@ function moveVisibleMonth(direction: -1 | 1) {
 function selectDate(value: string) {
   const day = calendarDays.value.find((calendarDay) => calendarDay.value === value);
 
-  if (day?.isPast || day?.isFullyBooked) {
+  if (!day?.isCurrentMonth || day.isPast || day.isFullyBooked) {
     return;
   }
 
@@ -228,7 +228,7 @@ defineExpose({ resetMonth });
               'recommendation-panel__calendar-day--today': day.isToday,
               'recommendation-panel__calendar-day--selected': modelValue === day.value
             }"
-            :disabled="day.isPast || day.isFullyBooked"
+            :disabled="!day.isCurrentMonth || day.isPast || day.isFullyBooked"
             @click="selectDate(day.value)"
           >
             {{ day.day }}

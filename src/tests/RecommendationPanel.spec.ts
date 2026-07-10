@@ -326,6 +326,23 @@ describe('RecommendationPanel', () => {
     expect(wrapper.findAll('button.recommendation-panel__calendar-day')).toHaveLength(42);
   });
 
+  it('disables dates outside the visible month', async () => {
+    const wrapper = mountPanel();
+
+    await wrapper.get('button.recommendation-panel__date-trigger').trigger('click');
+
+    const mutedDates = wrapper
+      .findAll('button.recommendation-panel__calendar-day')
+      .filter((button) =>
+        button.classes().includes('recommendation-panel__calendar-day--muted')
+      );
+
+    expect(mutedDates.length).toBeGreaterThan(0);
+    mutedDates.forEach((button) => {
+      expect((button.element as HTMLButtonElement).disabled).toBe(true);
+    });
+  });
+
   it('disables dates when both AM and PM are unavailable', async () => {
     availabilityOverrides.set('2026-07-10', { am: false, pm: false });
     const wrapper = mountPanel();
