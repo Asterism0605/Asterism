@@ -190,6 +190,53 @@ describe('FloatingImageNetwork', () => {
     }
   });
 
+  it('keeps lazy image loads from re-shuffling cards after fallback ready', async () => {
+    vi.useFakeTimers();
+    let seed = 0;
+    const random = vi.spyOn(Math, 'random').mockImplementation(() => {
+      seed += 0.137;
+      return seed % 1;
+    });
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, {
+        attachTo: document.body,
+        props: { images: mockImages, layout: 'home' }
+      });
+      await wrapper.vm.$nextTick();
+
+      const imgs = wrapper.findAll('img');
+      expect(imgs[0].attributes('loading')).toBe('eager');
+      expect(imgs[0].attributes('fetchpriority')).toBe('high');
+      expect(imgs[1].attributes('loading')).toBe('lazy');
+      expect(imgs[1].attributes('fetchpriority')).toBe('auto');
+      expect(imgs[2].attributes('decoding')).toBe('async');
+
+      vi.advanceTimersByTime(1000);
+      await wrapper.vm.$nextTick();
+
+      const styleAfterReady = wrapper.findAll('[data-testid="image-card"]')[0].attributes('style');
+      const randomCallsAfterReady = random.mock.calls.length;
+
+      const lazyImage = imgs[1];
+      const el = lazyImage.element as HTMLImageElement;
+      Object.defineProperty(el, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(el, 'naturalHeight', { value: 600, configurable: true });
+      await lazyImage.trigger('load');
+      vi.advanceTimersByTime(120);
+      await wrapper.vm.$nextTick();
+
+      expect(random.mock.calls.length).toBe(randomCallsAfterReady);
+      expect(wrapper.findAll('[data-testid="image-card"]')[0].attributes('style')).toBe(
+        styleAfterReady
+      );
+
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('renders all home layout images without a hardcoded cap', () => {
     const sevenImages = Array.from({ length: 7 }, (_, i) => ({
       src: `/img${i}.jpg`,

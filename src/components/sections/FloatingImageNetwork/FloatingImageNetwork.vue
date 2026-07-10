@@ -50,24 +50,35 @@ function scheduleRecompute() {
   recomputeTimer = setTimeout(recomputeLayout, 120);
 }
 
+function markReady() {
+  if (isReady.value) return;
+
+  clearTimeout(recomputeTimer);
+  clearTimeout(readyTimer);
+
+  recomputeLayout();
+  isReady.value = true;
+}
+
 function onImageLoad(src: string, event: Event) {
   const img = event.target as HTMLImageElement;
+
   if (img.naturalWidth > 0 && img.naturalHeight > 0) {
     const aspect = `${img.naturalWidth}/${img.naturalHeight}`;
+
     if (naturalAspects.get(src) !== aspect) {
       naturalAspects.set(src, aspect);
-      scheduleRecompute();
+
+      if (!isReady.value) {
+        scheduleRecompute();
+      }
     }
   }
 
   loadedCount += 1;
+
   if (loadedCount >= visibleImages.value.length) {
-    // 全部載入完：用真實比例做最後一次排版，然後一次淡入。
-    // 同時清掉 1 秒後備計時器，否則它會在卡片已顯示後再重算一次隨機排版，造成二次跳動。
-    clearTimeout(recomputeTimer);
-    clearTimeout(readyTimer);
-    recomputeLayout();
-    isReady.value = true;
+    markReady();
   }
 }
 
@@ -76,11 +87,11 @@ function startLoadCycle() {
   loadedCount = 0;
   recomputeLayout();
   if (typeof window !== 'undefined') {
-    // 後備：就算有圖片載不出來，最多等一下也要顯示
+    // 後備：lazy 圖片可能尚未進入 viewport 而不觸發 load，
+    // 因此最多等待一段時間後仍要顯示第一版穩定 layout。
     clearTimeout(readyTimer);
     readyTimer = setTimeout(() => {
-      recomputeLayout();
-      isReady.value = true;
+      markReady();
     }, 1000);
   }
 }
@@ -194,6 +205,9 @@ onBeforeUnmount(() => {
           <img
             :src="image.src"
             :alt="image.alt ?? ''"
+            :loading="i === 0 ? 'eager' : 'lazy'"
+            :fetchpriority="i === 0 ? 'high' : 'auto'"
+            decoding="async"
             class="w-full"
             style="display: block; width: 100%; height: auto; border-radius: 4px"
             @load="onImageLoad(image.src, $event)"
