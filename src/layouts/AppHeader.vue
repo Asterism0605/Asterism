@@ -60,6 +60,10 @@ function goToStyleDna() {
   router.push(styleDnaStore.hasCompletedQuiz ? '/style-dna/result' : '/discover-dna');
 }
 
+function goToConsultations() {
+  router.push({ name: 'account-consultations' });
+}
+
 async function handleLogout() {
   try {
     await authStore.logout();
@@ -146,6 +150,7 @@ async function handleLogout() {
         :initials="initials"
         @moodboard="goToMoodboard"
         @style-dna="goToStyleDna"
+        @consultations="goToConsultations"
         @logout="handleLogout"
       />
     </div>
