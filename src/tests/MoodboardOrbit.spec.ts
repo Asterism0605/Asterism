@@ -1,6 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import { useMoodboardStore } from '@/stores/moodboard.store';
@@ -11,8 +11,26 @@ const { disposeSphere, initSphere, updateSphereImages } = vi.hoisted(() => ({
   updateSphereImages: vi.fn()
 }));
 
+const { deleteFolderMock, getMoodboardViewModelMock } = vi.hoisted(() => ({
+  deleteFolderMock: vi.fn(),
+  getMoodboardViewModelMock: vi.fn()
+}));
+
+const { showToastMock } = vi.hoisted(() => ({
+  showToastMock: vi.fn()
+}));
+
 vi.mock('@/components/feature/moodboard/sphere', () => ({
   initSphere
+}));
+
+vi.mock('@/services/moodboard.service', () => ({
+  deleteFolder: deleteFolderMock,
+  getMoodboardViewModel: getMoodboardViewModelMock
+}));
+
+vi.mock('@/composables/useToast', () => ({
+  showToast: showToastMock
 }));
 
 function createTestRouter() {
@@ -31,8 +49,10 @@ async function mountMoodboard() {
   await router.isReady();
 
   const wrapper = mount(MoodboardOrbit, {
+    attachTo: document.body,
     global: {
-      plugins: [router]
+      plugins: [router],
+      stubs: { Teleport: true }
     }
   });
 
@@ -46,12 +66,19 @@ describe('MoodboardOrbit', () => {
     disposeSphere.mockReset();
     initSphere.mockReset();
     updateSphereImages.mockReset();
+    deleteFolderMock.mockReset();
+    getMoodboardViewModelMock.mockReset();
+    showToastMock.mockReset();
     initSphere.mockReturnValue({
       resize: vi.fn(),
       updateImages: updateSphereImages,
       dispose: disposeSphere
     });
     Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true, writable: true });
+  });
+
+  afterEach(() => {
+    document.body.innerHTML = '';
   });
 
   it('shows the empty state when no images are saved', async () => {
@@ -347,6 +374,143 @@ describe('MoodboardOrbit', () => {
       expect(realCards.some((card) => card.find('img').attributes('src') === '/style-image/saved-1.webp')).toBe(
         true
       );
+    });
+  });
+
+  describe('delete folder flow', () => {
+    const savedImage = (id: string) => ({
+      itemId: `item-${id}`,
+      id,
+      src: `/style-image/${id}.webp`,
+      title: id,
+      styleGroup: 'minimal',
+      style: [],
+      createdAt: '2026-07-05T00:00:00.000Z'
+    });
+
+    function patchFolders() {
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        folders: [
+          {
+            id: 'folder-1',
+            name: 'Studio',
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [savedImage('saved-1')]
+          },
+          {
+            id: 'folder-2',
+            name: 'Empty Folder',
+            createdAt: '2026-07-05T00:00:00.000Z',
+            images: []
+          }
+        ]
+      });
+      return store;
+    }
+
+    it('desktop only shows the delete icon while hovering the folder, including empty folders', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+
+      expect(wrapper.get('[data-testid="folder-delete-0"]').attributes('style')).toContain(
+        'opacity: 0'
+      );
+
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseenter');
+      expect(wrapper.get('[data-testid="folder-delete-0"]').attributes('style')).toContain(
+        'opacity: 1'
+      );
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseleave');
+
+      await wrapper.get('[data-testid="moodboard-folder-1"]').trigger('mouseenter');
+      expect(wrapper.get('[data-testid="folder-delete-1"]').attributes('style')).toContain(
+        'opacity: 1'
+      );
+    });
+
+    it('clicking the delete icon only opens the confirm modal, without opening the folder', async () => {
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseenter');
+      await wrapper.get('[data-testid="folder-delete-0"]').trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard');
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(true);
+    });
+
+    it('removes the folder immediately and closes the modal after a successful delete', async () => {
+      deleteFolderMock.mockResolvedValue(undefined);
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseenter');
+      await wrapper.get('[data-testid="folder-delete-0"]').trigger('click');
+      await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(deleteFolderMock).toHaveBeenCalledWith('folder-1');
+      expect(store.folders.some((folder) => folder.id === 'folder-1')).toBe(false);
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(false);
+    });
+
+    it('keeps the modal open and the folder intact on a failed delete, showing an error toast, and allows retry', async () => {
+      deleteFolderMock.mockRejectedValueOnce(new Error('boom'));
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseenter');
+      await wrapper.get('[data-testid="folder-delete-0"]').trigger('click');
+      await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(true);
+      expect(store.folders.some((folder) => folder.id === 'folder-1')).toBe(true);
+      expect(showToastMock).toHaveBeenCalledWith({
+        type: 'error',
+        message: 'Failed to delete the folder. Please try again.'
+      });
+
+      deleteFolderMock.mockResolvedValueOnce(undefined);
+      await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(store.folders.some((folder) => folder.id === 'folder-1')).toBe(false);
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(false);
+    });
+
+    it('mobile shows the delete icon persistently and can delete without hovering first', async () => {
+      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      deleteFolderMock.mockResolvedValue(undefined);
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="folder-delete-mobile-0"]').trigger('click');
+      await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(deleteFolderMock).toHaveBeenCalledWith('folder-1');
+      expect(store.folders.some((folder) => folder.id === 'folder-1')).toBe(false);
+    });
+
+    it('mobile shows an error toast and keeps the folder on a failed delete', async () => {
+      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      deleteFolderMock.mockRejectedValueOnce(new Error('boom'));
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="folder-delete-mobile-0"]').trigger('click');
+      await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(store.folders.some((folder) => folder.id === 'folder-1')).toBe(true);
+      expect(showToastMock).toHaveBeenCalledWith({
+        type: 'error',
+        message: 'Failed to delete the folder. Please try again.'
+      });
     });
   });
 });
