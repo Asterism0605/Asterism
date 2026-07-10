@@ -193,7 +193,7 @@ export default {
     folderNamePlaceholder: 'Folder name',
     send: 'SEND',
     goToMoodboard: 'Go to Moodboard',
-    deleteFolderTitle: 'Delete Folder and All Images',
+    deleteFolderTitle: 'Delete {name} and All Images',
     deleteConfirm: 'Delete',
     deleteCancel: 'Close',
     deleteFolderAria: 'Delete folder'

@@ -4,7 +4,7 @@ import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConf
 
 function mountDeleteFolderConfirm(props: Record<string, unknown> = {}) {
   return mount(DeleteFolderConfirm, {
-    props: { modelValue: true, isDeleting: false, ...props },
+    props: { modelValue: true, isDeleting: false, folderName: 'Studio', ...props },
     attachTo: document.body,
     global: { stubs: { Teleport: true } }
   });
@@ -21,6 +21,18 @@ function getCancelButton(wrapper: ReturnType<typeof mount>) {
 describe('DeleteFolderConfirm', () => {
   afterEach(() => {
     document.body.innerHTML = '';
+  });
+
+  it('標題會帶入傳入的資料夾名稱', () => {
+    const wrapper = mountDeleteFolderConfirm({ folderName: 'Studio' });
+
+    expect(wrapper.text()).toContain('Delete Studio and All Images');
+  });
+
+  it('資料夾名稱超過 10 個字時，標題用 ... 省略', () => {
+    const wrapper = mountDeleteFolderConfirm({ folderName: '1234567890ABCDEFG' });
+
+    expect(wrapper.text()).toContain('Delete 1234567890... and All Images');
   });
 
   it('點擊確認鈕 emit confirm', async () => {

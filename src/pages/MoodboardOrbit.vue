@@ -1090,6 +1090,7 @@ onBeforeUnmount(() => {
     <DeleteFolderConfirm
       v-model="isDeleteModalOpen"
       :is-deleting="isDeletingFolder"
+      :folder-name="deleteTarget?.name ?? ''"
       @confirm="confirmDeleteFolder"
     />
   </div>

@@ -189,7 +189,7 @@ export default {
     folderNamePlaceholder: '資料夾名稱',
     send: '送出',
     goToMoodboard: '前往情緒板',
-    deleteFolderTitle: '刪除資料夾與已收藏圖片',
+    deleteFolderTitle: '刪除{name}與已收藏圖片',
     deleteConfirm: '刪除',
     deleteCancel: '關閉',
     deleteFolderAria: '刪除資料夾'
