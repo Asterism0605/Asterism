@@ -31,10 +31,17 @@ export default {
     themeTags: '主題標籤',
     colorPalette: '色彩配置'
   },
+  legalLinks: {
+    ariaLabel: '法律連結',
+    privacy: '隱私權政策',
+    terms: '服務條款'
+  },
   toast: {
     saveContactSupport: '發生錯誤，請聯絡客服。',
     saveFailed: '儲存失敗，請再試一次。',
-    folderLimit: '你已達到資料夾數量上限（10 個）。'
+    folderLimit: '你已達到資料夾數量上限（10 個）。',
+    folderCleanupFailed: '圖片儲存失敗，且資料夾清除失敗，請至情緒板手動刪除此資料夾。',
+    folderCreatedAndSaved: '資料夾已建立，圖片已儲存。'
   },
   userMenu: {
     signedInAs: '目前登入身分',
@@ -148,7 +155,8 @@ export default {
     resultYour: '你的',
     homepagePersonalized: '你的首頁已根據你的 Style DNA 個人化。',
     startExploring: '開始探索',
-    retakeQuiz: '重新測驗'
+    retakeQuiz: '重新測驗',
+    sampleResultNotice: '目前還沒有測驗結果，這是範例 Style DNA 結果。'
   },
   image: {
     back: '返回',
@@ -178,7 +186,8 @@ export default {
     startExploring: '開始探索',
     createFolderTitle: '建立新資料夾並收藏圖片',
     folderNamePlaceholder: '資料夾名稱',
-    send: '送出'
+    send: '送出',
+    goToMoodboard: '前往情緒板'
   },
   home: {
     guestHint: '註冊或登入，繼續探索',

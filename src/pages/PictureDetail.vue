@@ -7,7 +7,8 @@ import {
   getImageById,
   getMediumEntryImage,
   getRelatedImages,
-  getStyleGroupRootImage
+  getStyleGroupRootImage,
+  resolvePhotographerInfo
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import { useAuthStore } from '@/stores/auth.store';
@@ -22,6 +23,8 @@ const authStore = useAuthStore();
 
 const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
+
+const photographerInfo = computed(() => resolvePhotographerInfo(currentImage.value?.attribution));
 
 const relatedImages = ref<ImageSpreadNode[]>([]);
 watch(
@@ -216,8 +219,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
         :color-palette="currentImage.colorPalette"
         :style-tags="currentImage.style"
         :similar-images="similarImages"
-        photographer-name="Zhenya Rukhlov"
+        :photographer-name="photographerInfo.name"
         photographer-role="Photographer"
+        :photographer-avatar-url="photographerInfo.avatarUrl"
         photographer-date="Aug 19, 2025"
         :saved="isSaved"
         :disabled="isSaving"

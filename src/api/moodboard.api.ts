@@ -95,6 +95,17 @@ export async function createMoodboardFolder(
   return data as Omit<MoodboardFolderRow, 'moodboard_items'>;
 }
 
+export async function deleteMoodboardFolder(folderId: string): Promise<void> {
+  const { error } = await getSupabase()
+    .from('moodboard_folders')
+    .delete()
+    .eq('id', folderId);
+
+  if (error) {
+    throw error;
+  }
+}
+
 export async function addMoodboardItem(
   input: AddMoodboardItemInput
 ): Promise<Omit<MoodboardItemRow, 'images'>> {

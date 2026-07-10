@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
-import { addItem, createFolder } from '@/services/moodboard.service';
+import { addItem, createFolder, deleteFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { MOODBOARD_FEEDBACK_DISPLAY_MS } from '@/constants/moodboard.constants';
 import { useAuthStore } from '@/stores/auth.store';
@@ -20,7 +20,8 @@ vi.mock('vue-router', () => ({
 
 vi.mock('@/services/moodboard.service', () => ({
   addItem: vi.fn(),
-  createFolder: vi.fn()
+  createFolder: vi.fn(),
+  deleteFolder: vi.fn()
 }));
 
 vi.mock('@/composables/useToast', () => ({
@@ -29,6 +30,7 @@ vi.mock('@/composables/useToast', () => ({
 
 const addItemMock = vi.mocked(addItem);
 const createFolderMock = vi.mocked(createFolder);
+const deleteFolderMock = vi.mocked(deleteFolder);
 const savedImage: SavedImage = {
   itemId: 'item-1',
   id: 'img-1',
@@ -73,6 +75,7 @@ describe('useSaveToMoodboard', () => {
     };
     addItemMock.mockReset();
     createFolderMock.mockReset();
+    deleteFolderMock.mockReset();
     routerPush.mockReset();
     vi.mocked(showToast).mockReset();
   });
@@ -153,6 +156,61 @@ describe('useSaveToMoodboard', () => {
     expect(createFolderMock).toHaveBeenCalledWith('user-1', '新資料夾', []);
     expect(addItemMock).toHaveBeenCalledWith('folder-1', 'img-1');
     expect(store.folders[0].images).toEqual([savedImage]);
+  });
+
+  it('rolls back the folder when addItem fails but folder cleanup succeeds', async () => {
+    createFolderMock.mockResolvedValue(folder);
+    addItemMock.mockRejectedValue(new Error('boom'));
+    deleteFolderMock.mockResolvedValue(undefined);
+    const store = useMoodboardStore();
+    store.$patch({ folders: [], status: 'success', loadedProfileId: 'user-1' });
+    const { createNewFolder } = withSetup(() => useSaveToMoodboard());
+
+    const result = await createNewFolder('新資料夾', 'img-1');
+
+    expect(result).toBe(false);
+    expect(deleteFolderMock).toHaveBeenCalledWith('folder-1');
+    expect(store.folders).toEqual([]);
+    expect(showToast).toHaveBeenCalledWith({
+      type: 'error',
+      message: 'Failed to save. Please try again.'
+    });
+  });
+
+  it('keeps the folder and shows a manual-cleanup toast when rollback also fails', async () => {
+    createFolderMock.mockResolvedValue(folder);
+    addItemMock.mockRejectedValue(new Error('boom'));
+    deleteFolderMock.mockRejectedValue(new Error('delete failed'));
+    const store = useMoodboardStore();
+    store.$patch({ folders: [], status: 'success', loadedProfileId: 'user-1' });
+    const { createNewFolder } = withSetup(() => useSaveToMoodboard());
+
+    const result = await createNewFolder('新資料夾', 'img-1');
+
+    expect(result).toBe(false);
+    expect(store.folders).toEqual([folder]);
+    expect(showToast).toHaveBeenCalledWith({
+      type: 'error',
+      message:
+        'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
+      actionText: 'Go to Moodboard',
+      onAction: expect.any(Function)
+    });
+  });
+
+  it('routes to the moodboard when the manual-cleanup toast action is triggered', async () => {
+    createFolderMock.mockResolvedValue(folder);
+    addItemMock.mockRejectedValue(new Error('boom'));
+    deleteFolderMock.mockRejectedValue(new Error('delete failed'));
+    useMoodboardStore().$patch({ folders: [], status: 'success', loadedProfileId: 'user-1' });
+    const { createNewFolder } = withSetup(() => useSaveToMoodboard());
+
+    await createNewFolder('新資料夾', 'img-1');
+
+    const call = vi.mocked(showToast).mock.calls[0][0];
+    call.onAction?.();
+
+    expect(routerPush).toHaveBeenCalledWith({ name: 'moodboard' });
   });
 
   it('blocks folder creation when the moodboard snapshot failed to load', async () => {

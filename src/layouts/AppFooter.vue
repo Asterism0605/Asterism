@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 const year = new Date().getFullYear();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -15,13 +18,13 @@ const year = new Date().getFullYear();
           :to="{ name: 'privacy' }"
           class="transition-colors duration-200 hover:text-text-primary"
         >
-          Privacy Policy
+          {{ t('legalLinks.privacy') }}
         </RouterLink>
         <RouterLink
           :to="{ name: 'terms' }"
           class="transition-colors duration-200 hover:text-text-primary"
         >
-          Terms of Service
+          {{ t('legalLinks.terms') }}
         </RouterLink>
       </nav>
     </div>

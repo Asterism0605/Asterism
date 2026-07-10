@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
             @click.stop="showFolderList = !showFolderList"
           >
             <BookmarkPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span class="flex-1 min-w-0 text-center md:text-left">SAVE TO FOLDER</span>
+            <span class="flex-1 min-w-0 text-center md:text-left">{{ $t('image.saveToFolder') }}</span>
             <template v-if="props.spread">
               <ChevronDown class="ml-auto h-4 w-4 shrink-0 md:hidden" aria-hidden="true" />
               <ChevronRight class="ml-auto hidden h-4 w-4 shrink-0 md:block" aria-hidden="true" />

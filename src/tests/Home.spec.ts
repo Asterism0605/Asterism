@@ -64,7 +64,9 @@ function createTestRouter() {
         component: { template: '<div />' }
       },
       { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
-      { path: '/login', name: 'login', component: { template: '<div />' } }
+      { path: '/login', name: 'login', component: { template: '<div />' } },
+      { path: '/privacy', name: 'privacy', component: { template: '<div />' } },
+      { path: '/terms', name: 'terms', component: { template: '<div />' } }
     ]
   });
 }
@@ -127,6 +129,116 @@ describe('Home', () => {
 
     expect(wrapper.find('main.home-page').exists()).toBe(true);
     expect(wrapper.text()).toContain('Asterism');
+  });
+
+  it('renders accessible legal stars with privacy and terms links', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    const privacyStar = wrapper.find('[data-testid="home-privacy-star"]');
+    const termsStar = wrapper.find('[data-testid="home-terms-star"]');
+    const privacyTooltipLink = wrapper.find('[data-testid="home-privacy-tooltip-link"]');
+    const termsTooltipLink = wrapper.find('[data-testid="home-terms-tooltip-link"]');
+
+    expect(privacyStar.attributes('aria-label')).toBe('Privacy Policy');
+    expect(privacyStar.attributes('aria-haspopup')).toBe('true');
+    expect(privacyTooltipLink.attributes('href')).toBe('/privacy');
+    expect(privacyTooltipLink.text()).toContain('Privacy Policy');
+    expect(termsStar.attributes('aria-label')).toBe('Terms of Service');
+    expect(termsStar.attributes('aria-haspopup')).toBe('true');
+    expect(termsTooltipLink.attributes('href')).toBe('/terms');
+    expect(termsTooltipLink.text()).toContain('Terms of Service');
+  });
+
+  it('routes the legal stars directly to their pages', async () => {
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await wrapper.find('[data-testid="home-privacy-star"]').trigger('click');
+    await flushPromises();
+    expect(router.currentRoute.value.name).toBe('privacy');
+
+    await router.push('/');
+    await router.isReady();
+    await wrapper.find('[data-testid="home-terms-star"]').trigger('click');
+    await flushPromises();
+    expect(router.currentRoute.value.name).toBe('terms');
+
+    wrapper.unmount();
+  });
+
+  it('opens mobile legal tooltip on star tap and routes from the tooltip text', async () => {
+    const originalMatchMedia = window.matchMedia;
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: vi.fn().mockReturnValue({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn()
+      })
+    });
+
+    const router = createTestRouter();
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: floatingImageNetworkStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    const privacyStar = wrapper.find('[data-testid="home-privacy-star"]');
+
+    expect(privacyStar.attributes('aria-expanded')).toBe('false');
+
+    await privacyStar.trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('home');
+    expect(privacyStar.attributes('aria-expanded')).toBe('true');
+
+    await wrapper.find('[data-testid="home-privacy-tooltip-link"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('privacy');
+
+    wrapper.unmount();
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: originalMatchMedia
+    });
   });
 
   it('routes clicked inspiration images to the image spread page', async () => {
