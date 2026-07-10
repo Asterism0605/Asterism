@@ -267,9 +267,9 @@ function separatePair(
   // pinned card 是首屏主視覺，不被碰撞解算推走；只讓另一張卡片讓位。
   if (pinnedA) {
     aMove = 0;
-    bMove = bBlocked ? 0 : distance;
+    bMove = distance;
   } else if (pinnedB) {
-    aMove = aBlocked ? 0 : distance;
+    aMove = distance;
     bMove = 0;
   } else if (aBlocked && !bBlocked) {
     aMove = 0;
@@ -291,7 +291,7 @@ function separatePair(
 // 確定性鬆弛：把「卡片彼此不重疊」與「卡片避開標題」放在同一個迴圈解。
 // 標題避讓區當成「不可移動的障礙物」——卡片只會被推出障礙物、不會被推進去，
 // 兩兩重疊也沿最小軸推開且不推進障礙物。對稀疏版面幾輪就收斂。
-function resolveOverlaps(
+export function resolveOverlaps(
   nodes: NodePosition[],
   obstacles: PixelRect[],
   width: number,

@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   computeEvenYPositions,
   buildFloatingImageLayout,
-  HOME_MIN_GAP
+  HOME_MIN_GAP,
+  resolveOverlaps
 } from '@/components/sections/FloatingImageNetwork/layout';
 import { LAYOUT_PRESETS } from '@/components/sections/FloatingImageNetwork/config';
 
@@ -153,6 +154,18 @@ describe('buildFloatingImageLayout (home)', () => {
     expect(secondRect.bottom).toBeLessThanOrEqual(viewportHeight);
     expect(secondHero.x).not.toBe(firstHero.x);
     expect(secondHero.y).not.toBe(firstHero.y);
+  });
+
+  it('moves a non-pinned card away from a pinned hero even when its half-step is boundary-blocked', () => {
+    const nodes = [
+      { x: 150, y: 200, width: 200, aspect: '1/1' },
+      { x: 80, y: 200, width: 100, aspect: '1/1' }
+    ];
+
+    const resolved = resolveOverlaps(nodes, [], 500, 500, new Set([0]), 1);
+
+    expect(resolved[0].x).toBe(150);
+    expect(resolved[1].x).toBe(50);
   });
 });
 
