@@ -2,14 +2,14 @@
 import { Calendar, ChevronLeft, ChevronRight } from '@lucide/vue';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import type { ConsultationAvailabilityResult } from '@/types/consultation';
+import type { ConsultationDayAvailabilityResult } from '@/types/consultation';
 
 const { locale } = useI18n();
 
 const props = defineProps<{
   modelValue: string;
   error?: string;
-  availabilityByDate?: Record<string, ConsultationAvailabilityResult>;
+  availabilityByDate?: Record<string, ConsultationDayAvailabilityResult>;
   availabilityLoadingByDate?: Record<string, boolean>;
 }>();
 
@@ -122,7 +122,7 @@ function moveVisibleMonth(direction: -1 | 1) {
 function selectDate(value: string) {
   const day = calendarDays.value.find((calendarDay) => calendarDay.value === value);
 
-  if (day?.isPast || day?.isFullyBooked || day?.isAvailabilityLoading) {
+  if (day?.isPast || day?.isFullyBooked) {
     return;
   }
 
@@ -228,7 +228,7 @@ defineExpose({ resetMonth });
               'recommendation-panel__calendar-day--today': day.isToday,
               'recommendation-panel__calendar-day--selected': modelValue === day.value
             }"
-            :disabled="day.isPast || day.isFullyBooked || day.isAvailabilityLoading"
+            :disabled="day.isPast || day.isFullyBooked"
             @click="selectDate(day.value)"
           >
             {{ day.day }}

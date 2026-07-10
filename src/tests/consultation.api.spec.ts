@@ -194,25 +194,30 @@ describe('consultation.api', () => {
     });
   });
 
-  it('gets consultation availability for a date with auth', async () => {
+  it('gets consultation availability for a month with auth', async () => {
     const response = {
       success: true as const,
       data: {
-        date: '2026-07-10',
-        slots: [
-          { timeSlot: 'am' as const, available: true },
-          { timeSlot: 'pm' as const, available: false }
+        month: '2026-07',
+        startDate: '2026-07-01',
+        endDate: '2026-07-31',
+        days: [
+          {
+            date: '2026-07-10',
+            slots: [
+              { timeSlot: 'am' as const, available: true },
+              { timeSlot: 'pm' as const, available: false }
+            ]
+          }
         ]
       },
       error: null
     };
     get.mockResolvedValue({ data: response });
 
-    await expect(getConsultationAvailability('2026-07-10', 'access-token')).resolves.toEqual(
-      response
-    );
+    await expect(getConsultationAvailability('2026-07', 'access-token')).resolves.toEqual(response);
     expect(get).toHaveBeenCalledWith('/api/v1/consultations/availability', {
-      params: { date: '2026-07-10' },
+      params: { month: '2026-07' },
       headers: { Authorization: 'Bearer access-token' }
     });
   });

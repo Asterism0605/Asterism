@@ -1,7 +1,7 @@
 import { getConsultationAvailability } from '@/api/consultation.api';
-import type { ConsultationAvailabilityResult, ConsultationTimeSlot } from '@/types/consultation';
+import type { ConsultationDayAvailabilityResult, ConsultationTimeSlot } from '@/types/consultation';
 
-export type ConsultationAvailabilityByDate = Record<string, ConsultationAvailabilityResult>;
+export type ConsultationAvailabilityByDate = Record<string, ConsultationDayAvailabilityResult>;
 
 function getDayStart(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -37,26 +37,26 @@ export function getFutureConsultationDatesInMonth(month: string) {
   return dates;
 }
 
-export async function getConsultationAvailabilityByDate(
-  dates: string[],
+export async function getConsultationAvailabilityByMonth(
+  month: string,
   accessToken: string
 ): Promise<ConsultationAvailabilityByDate> {
-  const results = await Promise.allSettled(
-    dates.map((date) => getConsultationAvailability(date, accessToken))
-  );
+  const result = await getConsultationAvailability(month, accessToken);
   const availabilityByDate: ConsultationAvailabilityByDate = {};
 
-  results.forEach((result) => {
-    if (result.status === 'fulfilled' && result.value.success) {
-      availabilityByDate[result.value.data.date] = result.value.data;
-    }
+  if (!result.success) {
+    return availabilityByDate;
+  }
+
+  result.data.days.forEach((day) => {
+    availabilityByDate[day.date] = day;
   });
 
   return availabilityByDate;
 }
 
 export function getUnavailableConsultationTimeSlots(
-  availability?: ConsultationAvailabilityResult
+  availability?: ConsultationDayAvailabilityResult
 ): Set<ConsultationTimeSlot> {
   return new Set(
     availability?.slots.filter((slot) => !slot.available).map((slot) => slot.timeSlot) ?? []

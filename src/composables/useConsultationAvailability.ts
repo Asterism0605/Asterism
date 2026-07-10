@@ -1,7 +1,7 @@
 import { computed, ref, toValue, watch } from 'vue';
 import type { MaybeRefOrGetter } from 'vue';
 import {
-  getConsultationAvailabilityByDate,
+  getConsultationAvailabilityByMonth,
   getFutureConsultationDatesInMonth,
   getUnavailableConsultationTimeSlots,
   type ConsultationAvailabilityByDate
@@ -51,10 +51,7 @@ export function useConsultationAvailability(selectedDate: MaybeRefOrGetter<strin
     pendingAvailabilityMonths.value = new Set(pendingAvailabilityMonths.value).add(month);
 
     try {
-      const nextAvailability = await getConsultationAvailabilityByDate(
-        getFutureConsultationDatesInMonth(month),
-        accessToken.value
-      );
+      const nextAvailability = await getConsultationAvailabilityByMonth(month, accessToken.value);
 
       availabilityByDate.value = {
         ...availabilityByDate.value,

@@ -1,10 +1,10 @@
 import { httpClient } from '@/api/httpClient';
 import type {
   ConsultationApiResponse,
-  ConsultationAvailabilityResult,
   ConsultationBookingDetail,
   ConsultationCheckoutRequest,
-  ConsultationCheckoutResult
+  ConsultationCheckoutResult,
+  ConsultationMonthAvailabilityResult
 } from '@/types/consultation';
 
 export async function createConsultationCheckoutSession(
@@ -60,16 +60,15 @@ export async function getConsultationBookingDetail(
 }
 
 export async function getConsultationAvailability(
-  date: string,
+  month: string,
   accessToken: string
-): Promise<ConsultationApiResponse<ConsultationAvailabilityResult>> {
-  const response = await httpClient.get<ConsultationApiResponse<ConsultationAvailabilityResult>>(
-    '/api/v1/consultations/availability',
-    {
-      params: { date },
-      headers: { Authorization: `Bearer ${accessToken}` }
-    }
-  );
+): Promise<ConsultationApiResponse<ConsultationMonthAvailabilityResult>> {
+  const response = await httpClient.get<
+    ConsultationApiResponse<ConsultationMonthAvailabilityResult>
+  >('/api/v1/consultations/availability', {
+    params: { month },
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
 
   return response.data;
 }

@@ -65,6 +65,48 @@ function displayDateToIso(value: string) {
   return `${year}-${month}-${day}`;
 }
 
+function getMonthDates(month: string) {
+  const [yearValue, monthValue] = month.split('-').map(Number);
+  const date = new Date(yearValue, monthValue - 1, 1);
+  const dates: string[] = [];
+
+  while (date.getMonth() === monthValue - 1) {
+    const year = date.getFullYear();
+    const nextMonth = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    dates.push(`${year}-${nextMonth}-${day}`);
+    date.setDate(date.getDate() + 1);
+  }
+
+  return dates;
+}
+
+function createMonthAvailability(month: string) {
+  const dates = getMonthDates(month);
+
+  return {
+    success: true,
+    data: {
+      month,
+      startDate: dates[0],
+      endDate: dates.at(-1),
+      days: dates.map((date) => {
+        const slots = availabilityOverrides.get(date) ?? { am: true, pm: true };
+
+        return {
+          date,
+          slots: [
+            { timeSlot: 'am', available: slots.am },
+            { timeSlot: 'pm', available: slots.pm }
+          ]
+        };
+      })
+    },
+    error: null
+  };
+}
+
 async function pickDropdownOption(
   wrapper: ReturnType<typeof mountPanel>,
   dropdownIndex: number,
@@ -88,21 +130,9 @@ describe('RecommendationPanel', () => {
     vi.setSystemTime(new Date('2026-07-09T00:00:00.000+08:00'));
     vi.clearAllMocks();
     availabilityOverrides.clear();
-    getAvailabilityMock.mockImplementation((date: string) => {
-      const slots = availabilityOverrides.get(date) ?? { am: true, pm: true };
-
-      return Promise.resolve({
-        success: true,
-        data: {
-          date,
-          slots: [
-            { timeSlot: 'am', available: slots.am },
-            { timeSlot: 'pm', available: slots.pm }
-          ]
-        },
-        error: null
-      });
-    });
+    getAvailabilityMock.mockImplementation((month: string) =>
+      Promise.resolve(createMonthAvailability(month))
+    );
   });
 
   afterEach(() => {
@@ -135,8 +165,8 @@ describe('RecommendationPanel', () => {
     mountPanel();
     await flushPromises();
 
-    expect(getAvailabilityMock).toHaveBeenCalledWith('2026-07-09', 'access-token');
-    expect(getAvailabilityMock).toHaveBeenCalledWith('2026-07-31', 'access-token');
+    expect(getAvailabilityMock).toHaveBeenCalledTimes(1);
+    expect(getAvailabilityMock).toHaveBeenCalledWith('2026-07', 'access-token');
   });
 
   it('loads availability again when the visible month changes', async () => {
@@ -148,8 +178,8 @@ describe('RecommendationPanel', () => {
     await wrapper.get('button[aria-label="Next month"]').trigger('click');
     await flushPromises();
 
-    expect(getAvailabilityMock).toHaveBeenCalledWith('2026-08-01', 'access-token');
-    expect(getAvailabilityMock).toHaveBeenCalledWith('2026-08-31', 'access-token');
+    expect(getAvailabilityMock).toHaveBeenCalledTimes(1);
+    expect(getAvailabilityMock).toHaveBeenCalledWith('2026-08', 'access-token');
   });
 
   it('prefills contact fields from account info', () => {
@@ -313,6 +343,29 @@ describe('RecommendationPanel', () => {
 
     expect(fullDate).toBeTruthy();
     expect((fullDate!.element as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('keeps dates selectable while monthly availability is loading', async () => {
+    getAvailabilityMock.mockReturnValue(new Promise(() => {}));
+    const wrapper = mountPanel();
+
+    await wrapper.get('button.recommendation-panel__date-trigger').trigger('click');
+
+    const availableDate = wrapper
+      .findAll('button.recommendation-panel__calendar-day')
+      .find(
+        (button) =>
+          button.text() === '10' &&
+          !button.classes().includes('recommendation-panel__calendar-day--muted')
+      );
+
+    expect(availableDate).toBeTruthy();
+    expect((availableDate!.element as HTMLButtonElement).disabled).toBe(false);
+    await availableDate!.trigger('click');
+
+    expect(wrapper.get('button.recommendation-panel__date-trigger').text()).toBe(
+      '07 / 10 / 2026'
+    );
   });
 
   it('keeps partially unavailable dates selectable and disables only the unavailable slot', async () => {

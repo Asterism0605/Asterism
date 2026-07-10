@@ -10,7 +10,7 @@ vi.mock('@/api/consultation.api', () => ({
 
 import {
   formatConsultationDate,
-  getConsultationAvailabilityByDate,
+  getConsultationAvailabilityByMonth,
   getFutureConsultationDatesInMonth,
   getUnavailableConsultationTimeSlots
 } from '@/services/consultation-availability.service';
@@ -56,24 +56,41 @@ describe('consultation-availability.service', () => {
     expect(getFutureConsultationDatesInMonth('bad-month')).toEqual([]);
   });
 
-  it('collects successful availability responses by date and ignores failed hints', async () => {
-    getConsultationAvailability
-      .mockResolvedValueOnce({
-        success: true,
-        data: {
-          date: '2026-07-10',
-          slots: [
-            { timeSlot: 'am', available: true },
-            { timeSlot: 'pm', available: false }
-          ]
-        },
-        error: null
-      })
-      .mockRejectedValueOnce(new Error('availability down'));
+  it('collects monthly availability responses by date', async () => {
+    getConsultationAvailability.mockResolvedValueOnce({
+      success: true,
+      data: {
+        month: '2026-07',
+        startDate: '2026-07-01',
+        endDate: '2026-07-31',
+        days: [
+          {
+            date: '2026-07-09',
+            slots: [
+              { timeSlot: 'am', available: true },
+              { timeSlot: 'pm', available: true }
+            ]
+          },
+          {
+            date: '2026-07-10',
+            slots: [
+              { timeSlot: 'am', available: true },
+              { timeSlot: 'pm', available: false }
+            ]
+          }
+        ]
+      },
+      error: null
+    });
 
-    await expect(
-      getConsultationAvailabilityByDate(['2026-07-10', '2026-07-11'], 'access-token')
-    ).resolves.toEqual({
+    await expect(getConsultationAvailabilityByMonth('2026-07', 'access-token')).resolves.toEqual({
+      '2026-07-09': {
+        date: '2026-07-09',
+        slots: [
+          { timeSlot: 'am', available: true },
+          { timeSlot: 'pm', available: true }
+        ]
+      },
       '2026-07-10': {
         date: '2026-07-10',
         slots: [
@@ -82,8 +99,22 @@ describe('consultation-availability.service', () => {
         ]
       }
     });
-    expect(getConsultationAvailability).toHaveBeenCalledWith('2026-07-10', 'access-token');
-    expect(getConsultationAvailability).toHaveBeenCalledWith('2026-07-11', 'access-token');
+    expect(getConsultationAvailability).toHaveBeenCalledWith('2026-07', 'access-token');
+  });
+
+  it('returns an empty availability map when the monthly hint fails', async () => {
+    getConsultationAvailability.mockResolvedValueOnce({
+      success: false,
+      data: null,
+      error: {
+        code: 'AVAILABILITY_UNAVAILABLE',
+        message: 'availability down'
+      }
+    });
+
+    await expect(getConsultationAvailabilityByMonth('2026-07', 'access-token')).resolves.toEqual(
+      {}
+    );
   });
 
   it('returns unavailable time slots from a daily availability response', () => {

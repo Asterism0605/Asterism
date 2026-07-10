@@ -59,10 +59,21 @@ export interface ConsultationAvailabilitySlot {
   available: boolean;
 }
 
-export interface ConsultationAvailabilityResult {
+export interface ConsultationDayAvailabilityResult {
   date: string;
   slots: ConsultationAvailabilitySlot[];
 }
+
+export interface ConsultationMonthAvailabilityResult {
+  month: string;
+  startDate: string;
+  endDate: string;
+  days: ConsultationDayAvailabilityResult[];
+}
+
+export type ConsultationAvailabilityResult =
+  | ConsultationDayAvailabilityResult
+  | ConsultationMonthAvailabilityResult;
 
 export interface ConsultationBooking {
   id: string;
