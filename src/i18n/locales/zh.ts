@@ -47,7 +47,48 @@ export default {
     signedInAs: '目前登入身分',
     moodboard: '情緒板',
     styleDna: 'Style DNA',
+    myConsultations: '我的預約',
     logout: '登出'
+  },
+  accountConsultations: {
+    eyebrow: '帳戶',
+    title: '我的預約',
+    subtitle: '查看你的顧問預約與分配顧問資訊。',
+    loading: '正在載入你的預約...',
+    emptyTitle: '目前沒有預約',
+    emptyDescription: '準備好轉譯你的 Style DNA 時，可以預約顧問諮詢。',
+    bookConsultation: '前往預約',
+    errorTitle: '無法載入預約',
+    errorDescription: '請稍後再試一次。',
+    retry: '再試一次',
+    date: '日期',
+    timeSlot: '時段',
+    method: '方式',
+    status: '狀態',
+    consultant: '顧問',
+    unassignedConsultant: '尚未分配顧問',
+    details: '基本詳情',
+    collapse: '收合詳情',
+    expand: '查看詳情',
+    designField: '設計領域',
+    designFocus: '設計重點',
+    notes: '備註',
+    noExtraDetails: '這筆預約目前沒有其他詳情。',
+    methods: {
+      online: '線上',
+      in_person: '實體'
+    },
+    timeSlots: {
+      am: 'AM',
+      pm: 'PM'
+    },
+    bookingStatuses: {
+      pending_payment: '待付款',
+      confirmed: '已確認',
+      payment_failed: '付款失敗',
+      canceled: '已取消',
+      completed: '已完成'
+    }
   },
   consult: {
     eyebrow: 'Style DNA 轉譯',

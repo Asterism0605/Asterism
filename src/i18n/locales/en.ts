@@ -47,7 +47,48 @@ export default {
     signedInAs: 'Signed in as',
     moodboard: 'Moodboard',
     styleDna: 'Style DNA',
+    myConsultations: 'Consultation',
     logout: 'Log out'
+  },
+  accountConsultations: {
+    eyebrow: 'Account',
+    title: 'My Consultations',
+    subtitle: 'Review your consultation bookings and assigned consultant details.',
+    loading: 'Loading your consultations...',
+    emptyTitle: 'No consultations yet',
+    emptyDescription: 'Book a consultation when you are ready to translate your Style DNA.',
+    bookConsultation: 'Book consultation',
+    errorTitle: 'Unable to load consultations',
+    errorDescription: 'Please try again in a moment.',
+    retry: 'Try again',
+    date: 'Date',
+    timeSlot: 'Time slot',
+    method: 'Method',
+    status: 'Status',
+    consultant: 'Consultant',
+    unassignedConsultant: 'Consultant not assigned yet',
+    details: 'Details',
+    collapse: 'Collapse details',
+    expand: 'View details',
+    designField: 'Design field',
+    designFocus: 'Design focus',
+    notes: 'Notes',
+    noExtraDetails: 'No additional details for this consultation.',
+    methods: {
+      online: 'Online',
+      in_person: 'In-person'
+    },
+    timeSlots: {
+      am: 'AM',
+      pm: 'PM'
+    },
+    bookingStatuses: {
+      pending_payment: 'Pending payment',
+      confirmed: 'Confirmed',
+      payment_failed: 'Payment failed',
+      canceled: 'Canceled',
+      completed: 'Completed'
+    }
   },
   consult: {
     eyebrow: 'Style DNA translation',

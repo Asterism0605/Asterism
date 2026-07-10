@@ -86,3 +86,6 @@ export interface ConsultationBookingDetail {
   payment: ConsultationPayment;
   consultant?: ConsultationSummary | null;
 }
+
+export type ConsultationBookingListItem = ConsultationBookingDetail;
+export type ConsultationBookingList = ConsultationBookingListItem[];

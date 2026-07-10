@@ -7,6 +7,14 @@ describe('resolveAuthGuard', () => {
     expect(r).toEqual({ name: 'login', query: { next: '/moodboard' } });
   });
 
+  it('我的預約 requiresAuth 且未登入 → 導 login 帶 next', () => {
+    const r = resolveAuthGuard({ requiresAuth: true }, '/account/consultations', {
+      isAuthenticated: false,
+      isAdmin: false
+    });
+    expect(r).toEqual({ name: 'login', query: { next: '/account/consultations' } });
+  });
+
   it('requiresAdmin 且非 admin → 導 home', () => {
     const r = resolveAuthGuard({ requiresAdmin: true }, '/review', { isAuthenticated: true, isAdmin: false });
     expect(r).toEqual({ name: 'home' });
