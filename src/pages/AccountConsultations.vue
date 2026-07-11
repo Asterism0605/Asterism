@@ -7,7 +7,7 @@ type Reservation = {
   consultationDate: string;
   timeSlot: 'am' | 'pm';
   method: string;
-  designDomain: string;
+  designField: string;
   designFocus: string;
   notes: string;
 };
@@ -20,19 +20,19 @@ const reservations = (
       consultationDate: '2026-07-28',
       timeSlot: 'am',
       method: 'Online',
-      designDomain: 'Graphic Design',
+      designField: 'Graphic Design',
       designFocus: 'Visual Concept',
-      notes: 'Develop a clear visual direction for the new brand identity.'
+      notes: 'I would like help defining the visual direction for a new brand identity.'
     },
     {
       id: 'reservation-02',
       status: 'confirmed',
       consultationDate: '2026-08-10',
       timeSlot: 'pm',
-      method: 'In person',
-      designDomain: 'Interior Design',
+      method: 'In-Person',
+      designField: 'Interior Design',
       designFocus: 'Material Palette',
-      notes: 'Review natural finishes and a calm, cohesive material palette.'
+      notes: 'I need advice on natural finishes and a calm material palette for my home.'
     },
     {
       id: 'reservation-03',
@@ -40,9 +40,9 @@ const reservations = (
       consultationDate: '2026-10-01',
       timeSlot: 'am',
       method: 'Online',
-      designDomain: 'Product Design',
-      designFocus: 'Design Language',
-      notes: 'Define the form, proportion, and tactile details of the collection.'
+      designField: 'Architecture',
+      designFocus: 'Spatial Mood',
+      notes: 'I want to create a warm and quiet atmosphere for a small studio renovation.'
     },
     {
       id: 'reservation-04',
@@ -50,19 +50,19 @@ const reservations = (
       consultationDate: '2026-11-16',
       timeSlot: 'pm',
       method: 'Online',
-      designDomain: 'Brand Design',
-      designFocus: 'Art Direction',
-      notes: 'Align campaign imagery with the brand narrative and audience.'
+      designField: 'Styling Design',
+      designFocus: 'Color Direction',
+      notes: 'I would like to refine the color direction for an upcoming editorial shoot.'
     },
     {
       id: 'reservation-05',
       status: 'confirmed',
       consultationDate: '2027-01-08',
       timeSlot: 'am',
-      method: 'In person',
-      designDomain: 'Spatial Design',
-      designFocus: 'Guest Experience',
-      notes: 'Explore the arrival sequence and key moments within the space.'
+      method: 'In-Person',
+      designField: 'Interior Design',
+      designFocus: 'Furniture Selection',
+      notes: 'I need help selecting furniture that works with the scale of my living room.'
     }
   ] satisfies Reservation[]
 ).sort((a, b) => a.consultationDate.localeCompare(b.consultationDate));
@@ -80,164 +80,174 @@ function displayDate(date: string): string {
 
 <template>
   <main class="consultations-page">
-    <div class="orbit-scene" aria-hidden="true">
-      <i class="orbit orbit--hero-one"></i>
-      <i class="orbit orbit--hero-two"></i>
-      <i class="orbit orbit--corner"></i>
-      <i class="star star--one"></i>
-      <i class="star star--two"></i>
-      <i class="star star--three"></i>
-      <i class="star star--four"></i>
-      <i class="star star--five"></i>
-    </div>
+    <svg
+      class="timeline-orbit"
+      viewBox="0 0 1920 1080"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <path class="timeline-orbit__desktop" d="M 230 0 L 230 835" />
+      <path
+        class="timeline-orbit__desktop-arc-one"
+        d="M 0 728 C 100 755 175 790 230 835 C 330 915 400 1010 435 1080"
+      />
+      <path class="timeline-orbit__desktop-arc-two" d="M 0 835 C 150 838 300 900 470 1080" />
+      <path class="timeline-orbit__mobile" d="M 1920 720 C 1780 870 1640 1010 1500 1080" />
+    </svg>
 
-    <div class="consultations-layout">
-      <header class="page-heading">
-        <h1>My Consultations</h1>
-        <p>You have {{ reservations.length }} upcoming consultations</p>
-      </header>
+    <i class="orbit--one" aria-hidden="true"></i>
+    <i class="orbit--two" aria-hidden="true"></i>
+    <i class="star--one" aria-hidden="true"></i>
+    <i class="star--two" aria-hidden="true"></i>
+    <i class="star--three" aria-hidden="true"></i>
+    <i class="star--four" aria-hidden="true"></i>
+    <i class="star--five" aria-hidden="true"></i>
 
-      <nav class="date-timeline" aria-label="Upcoming consultation dates">
-        <span class="date-timeline__lead" aria-hidden="true"></span>
-        <button
-          v-for="reservation in visibleReservations"
-          :key="reservation.id"
-          type="button"
-          class="date-node"
-          :class="{ 'date-node--active': reservation.id === selectedId }"
-          :aria-current="reservation.id === selectedId ? 'date' : undefined"
-          @click="selectedId = reservation.id"
-        >
-          <span class="date-node__anchor" aria-hidden="true"></span>
-          <span class="date-node__connector" aria-hidden="true"></span>
-          <span class="date-node__end" aria-hidden="true"></span>
-          <span class="date-node__label">
-            {{ displayDate(reservation.consultationDate) }} {{ reservation.timeSlot.toUpperCase() }}
-          </span>
-        </button>
-      </nav>
+    <header class="page-heading">
+      <span class="page-heading__line" aria-hidden="true"></span>
+      <p>You have {{ reservations.length }} upcoming consultations</p>
+    </header>
 
-      <article class="details-panel glass-panel" aria-live="polite">
-        <button class="view-all" type="button" aria-label="View all consultations">
-          View all <span aria-hidden="true">↗</span>
-        </button>
+    <nav class="date-timeline" aria-label="Upcoming consultation dates">
+      <button
+        v-for="reservation in visibleReservations"
+        :key="reservation.id"
+        type="button"
+        class="date-node"
+        :class="{ 'date-node--active': reservation.id === selectedId }"
+        :aria-current="reservation.id === selectedId ? 'date' : undefined"
+        @click="selectedId = reservation.id"
+      >
+        <span class="date-node__anchor" aria-hidden="true"></span>
+        <span class="date-node__connector" aria-hidden="true"></span>
+        <span class="date-node__end" aria-hidden="true"></span>
+        <span class="date-node__label">
+          {{ displayDate(reservation.consultationDate) }} {{ reservation.timeSlot.toUpperCase() }}
+        </span>
+      </button>
+    </nav>
 
-        <div class="details-panel__date">
-          <time :datetime="selectedReservation.consultationDate">
-            {{ displayDate(selectedReservation.consultationDate) }}
-          </time>
-          <span>{{ selectedReservation.timeSlot.toUpperCase() }}</span>
+    <article class="details-panel glass-panel" aria-live="polite">
+      <button class="view-all" type="button" aria-label="View all consultations">
+        View all <span aria-hidden="true">↗</span>
+      </button>
+
+      <div class="details-panel__date">
+        <time :datetime="selectedReservation.consultationDate">
+          {{ displayDate(selectedReservation.consultationDate) }}
+        </time>
+        <span>{{ selectedReservation.timeSlot.toUpperCase() }}</span>
+      </div>
+
+      <dl class="consultation-details">
+        <div>
+          <dt>Consultation Method</dt>
+          <dd>{{ selectedReservation.method }}</dd>
         </div>
-
-        <dl class="consultation-details">
-          <div>
-            <dt>Consultation Method</dt>
-            <dd>{{ selectedReservation.method }}</dd>
-          </div>
-          <div>
-            <dt>Design Domain</dt>
-            <dd>{{ selectedReservation.designDomain }}</dd>
-          </div>
-          <div>
-            <dt>Design Focus</dt>
-            <dd>{{ selectedReservation.designFocus }}</dd>
-          </div>
-          <div>
-            <dt>Notes</dt>
-            <dd>{{ selectedReservation.notes }}</dd>
-          </div>
-        </dl>
-      </article>
-    </div>
+        <div>
+          <dt>Design Field</dt>
+          <dd>{{ selectedReservation.designField }}</dd>
+        </div>
+        <div>
+          <dt>Design Focus</dt>
+          <dd>{{ selectedReservation.designFocus }}</dd>
+        </div>
+        <div>
+          <dt>Notes</dt>
+          <dd>{{ selectedReservation.notes }}</dd>
+        </div>
+      </dl>
+    </article>
   </main>
 </template>
 
 <style scoped>
 .consultations-page {
-  --ink: rgb(240 237 230 / 92%);
   position: relative;
+  width: 100%;
   height: 100svh;
   overflow: hidden;
   background: #0d0d0f;
-  color: var(--ink);
+  color: rgb(240 237 230 / 92%);
   font-family: var(--font-family-title);
 }
 
-.consultations-layout {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(330px, 0.9fr) minmax(380px, 1.1fr);
-  grid-template-rows: auto 1fr;
-  column-gap: clamp(52px, 8vw, 130px);
-  width: min(1320px, calc(100% - 12vw));
-  height: 100%;
-  margin: 0 auto;
-  padding: clamp(92px, 12vh, 128px) 0 clamp(38px, 5vh, 58px);
-}
-
+/* ---------- 桌機：標題提示 ---------- */
 .page-heading {
-  grid-column: 1 / -1;
+  position: absolute;
+  left: 12%;
+  top: 15%;
+  z-index: 4;
   display: flex;
   align-items: center;
-  margin-left: 14%;
 }
 
-.page-heading h1 {
-  position: absolute;
-  left: 23%;
-  bottom: 3.5vh;
-  margin: 0;
-  font-size: clamp(4.25rem, 7vw, 7.5rem);
-  font-weight: 200;
-  line-height: 0.95;
-  letter-spacing: -0.045em;
-  white-space: nowrap;
-}
-
-.page-heading p {
-  margin: 0 0 0 138px;
-  color: rgb(240 237 230 / 82%);
-  font-size: clamp(1.05rem, 1.45vw, 1.65rem);
-  font-weight: 300;
-  letter-spacing: 0.015em;
-}
-
-.page-heading::before {
+.page-heading__line {
+  display: block;
   width: 140px;
   height: 32px;
-  content: '';
-  border-top: 1px solid rgb(240 237 230 / 75%);
-  border-left: 1px solid transparent;
   clip-path: polygon(0 100%, 38% 0, 100% 0, 100% 4%, 39% 4%, 1% 100%);
   background: rgb(240 237 230 / 75%);
 }
 
-.date-timeline {
-  position: relative;
-  display: grid;
-  align-content: center;
-  gap: clamp(30px, 5vh, 52px);
-  min-height: 0;
-  padding-left: 1px;
+.page-heading p {
+  margin: 0 0 0 20px;
+  color: rgb(240 237 230 / 82%);
+  font-size: 23px;
+  font-weight: 300;
+  letter-spacing: 0.015em;
 }
 
-.date-timeline::before {
+.timeline-orbit {
   position: absolute;
-  left: 0;
-  top: -120px;
-  bottom: -42px;
-  width: 1px;
-  content: '';
-  background: rgb(240 237 230 / 70%);
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.timeline-orbit__desktop {
+  fill: none;
+  stroke: rgb(240 237 230 / 70%);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.timeline-orbit__desktop-arc-one {
+  fill: none;
+  stroke: rgb(240 237 230 / 72%);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.timeline-orbit__desktop-arc-two {
+  fill: none;
+  stroke: rgb(240 237 230 / 46%);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.timeline-orbit__mobile {
+  display: none;
+}
+
+.date-timeline {
+  position: absolute;
+  left: 12%;
+  top: 0;
+  z-index: 4;
+  width: 430px;
+  height: 100%;
 }
 
 .date-node {
-  position: relative;
+  position: absolute;
+  left: 0;
   display: flex;
   align-items: center;
-  width: fit-content;
-  min-height: 44px;
+  width: 420px;
+  height: 44px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -246,12 +256,24 @@ function displayDate(date: string): string {
   cursor: pointer;
 }
 
+.date-node:nth-of-type(1) {
+  top: 30%;
+}
+
+.date-node:nth-of-type(2) {
+  top: 40%;
+}
+
+.date-node:nth-of-type(3) {
+  top: 50%;
+}
+
 .date-node__anchor {
-  width: 20px;
-  height: 20px;
-  margin-left: -10px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
   border-radius: 50%;
-  background: var(--ink);
+  background: rgb(240 237 230 / 92%);
   transition: transform 180ms ease;
 }
 
@@ -262,38 +284,41 @@ function displayDate(date: string): string {
 }
 
 .date-node__end {
-  width: 10px;
-  height: 10px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: var(--ink);
+  background: rgb(240 237 230 / 92%);
 }
 
 .date-node__label {
-  margin-left: 24px;
-  font-size: clamp(0.95rem, 1.25vw, 1.3rem);
-  font-weight: 300;
+  margin-left: 12px;
+  font-size: 16px;
+  font-weight: 500;
   letter-spacing: 0.025em;
   white-space: nowrap;
 }
 
 .date-node:is(:hover, :focus-visible),
 .date-node--active {
-  color: var(--ink);
+  color: rgb(240 237 230 / 92%);
 }
 
 .date-node--active .date-node__anchor {
   transform: scale(1.18);
 }
 
+/* ---------- 桌機：預約面板 ---------- */
 .details-panel {
-  align-self: center;
-  justify-self: center;
-  width: min(100%, 440px);
-  min-height: min(500px, 64vh);
-  margin-bottom: 2vh;
+  position: absolute;
+  right: 10%;
+  top: calc(50% + 32px);
+  z-index: 5;
+  width: 440px;
+  height: 500px;
   padding: 30px 46px 36px;
   border-radius: 58px;
   background-color: rgb(22 22 25 / 38%);
+  transform: translateY(-50%);
 }
 
 .view-all {
@@ -304,7 +329,7 @@ function displayDate(date: string): string {
   background: transparent;
   color: rgb(240 237 230 / 82%);
   font: inherit;
-  font-size: 0.88rem;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -324,19 +349,19 @@ function displayDate(date: string): string {
 }
 
 .details-panel__date time {
-  font-size: clamp(1.8rem, 2.35vw, 2.4rem);
+  font-size: 38px;
   letter-spacing: 0.025em;
 }
 
 .details-panel__date span {
   margin-top: 3px;
-  font-size: 1.25rem;
+  font-size: 20px;
 }
 
 .consultation-details {
   display: grid;
-  gap: clamp(14px, 2.2vh, 22px);
-  margin: clamp(36px, 5vh, 54px) 0 0;
+  gap: 17px;
+  margin: 40px 0 0;
 }
 
 .consultation-details div {
@@ -346,7 +371,7 @@ function displayDate(date: string): string {
 .consultation-details dt,
 .consultation-details dd {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 15px;
   line-height: 1.42;
 }
 
@@ -360,201 +385,203 @@ function displayDate(date: string): string {
   font-weight: 300;
 }
 
-.orbit-scene {
+.orbit--one {
   position: absolute;
-  inset: 0;
+  right: 8px;
+  top: calc(50% + 32px);
+  display: block;
+  width: 720px;
+  height: 490px;
+  border: 1px solid rgb(240 237 230 / 72%);
+  border-radius: 50%;
+  transform: translateY(-48%) rotate(-33deg);
+}
+
+.orbit--two {
+  position: absolute;
+  right: 14px;
+  top: calc(50% + 32px);
+  display: block;
+  width: 720px;
+  height: 435px;
+  border: 1px solid rgb(240 237 230 / 48%);
+  border-radius: 50%;
+  transform: translateY(-50%) rotate(-8deg);
+}
+
+.star--one {
+  position: absolute;
+  left: 44%;
+  top: 29%;
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgb(240 237 230 / 92%);
   pointer-events: none;
 }
 
-.orbit {
+.star--two {
   position: absolute;
-  display: block;
-  border: 1px solid rgb(240 237 230 / 72%);
-  border-radius: 50%;
-}
-
-.orbit--hero-one {
-  right: -2vw;
-  top: 23%;
-  width: 54vw;
-  height: 36vw;
-  transform: rotate(-29deg);
-}
-
-.orbit--hero-two {
-  right: 3vw;
-  top: 22%;
-  width: 49vw;
-  height: 31vw;
-  opacity: 0.65;
-  transform: rotate(-41deg);
-}
-
-.orbit--corner {
-  left: -18vw;
-  bottom: -29vw;
-  width: 48vw;
-  height: 48vw;
-}
-
-.star {
-  position: absolute;
+  left: 38%;
+  top: 39%;
   display: block;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--ink);
-}
-
-.star--one {
-  left: 44%;
-  top: 29%;
-  width: 16px;
-  height: 16px;
-}
-.star--two {
-  left: 38%;
-  top: 39%;
+  background: rgb(240 237 230 / 92%);
+  pointer-events: none;
 }
 .star--three {
+  position: absolute;
   right: 9%;
   top: 14%;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgb(240 237 230 / 92%);
+  pointer-events: none;
 }
 .star--four {
+  position: absolute;
   left: 34%;
   bottom: 24%;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgb(240 237 230 / 92%);
+  pointer-events: none;
 }
 .star--five {
+  position: absolute;
   right: 12%;
   bottom: 27%;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgb(240 237 230 / 92%);
+  pointer-events: none;
 }
 
+/* ---------- 手機 ---------- */
 @media (max-width: 900px) {
-  .consultations-page {
-    height: 100svh;
-    overflow: hidden;
-  }
-
-  .consultations-layout {
-    display: block;
-    width: 100%;
-    height: 100%;
-    padding: clamp(76px, 10vh, 92px) 0 20px;
-  }
-
-  .page-heading {
-    display: block;
-    margin: 0;
-    padding: 0 8vw;
-  }
-
-  .page-heading::before,
-  .page-heading p {
+  .timeline-orbit__desktop {
     display: none;
   }
 
-  .page-heading h1 {
-    position: static;
-    font-size: clamp(2.2rem, 8vw, 3.25rem);
-    letter-spacing: -0.025em;
-    white-space: normal;
+  .timeline-orbit__desktop-arc-one,
+  .timeline-orbit__desktop-arc-two {
+    display: none;
+  }
+
+  .timeline-orbit__mobile {
+    display: block;
+    fill: none;
+    stroke: rgb(240 237 230 / 70%);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .page-heading {
+    display: none;
   }
 
   .date-timeline {
-    display: block;
-    height: clamp(130px, 19vh, 170px);
-    min-height: 0;
-    margin: clamp(36px, 6vh, 54px) 8vw 0;
-    padding: 0;
+    left: 8%;
+    top: 100px;
+    width: 84%;
+    height: 190px;
   }
 
-  .date-timeline::before,
   .date-node__connector,
   .date-node__end {
     display: none;
   }
 
   .date-node {
-    position: absolute;
-    min-height: auto;
+    width: 300px;
+    height: 28px;
   }
 
-  .date-node:nth-child(2) {
+  .date-node:nth-of-type(1) {
     left: 0;
     top: 0;
   }
-  .date-node:nth-child(3) {
+
+  .date-node:nth-of-type(2) {
     left: 20%;
-    top: clamp(48px, 7vh, 62px);
+    top: 58px;
   }
-  .date-node:nth-child(4) {
+
+  .date-node:nth-of-type(3) {
     left: 43%;
-    top: clamp(96px, 14vh, 124px);
+    top: 116px;
   }
 
   .date-node__anchor {
     width: 10px;
     height: 10px;
-    margin: 0;
+    margin-left: 0;
   }
 
   .date-node__label {
     margin-left: 20px;
-    font-size: clamp(0.82rem, 3.3vw, 1.1rem);
+    font-size: 15px;
   }
 
   .details-panel {
-    position: relative;
-    width: calc(100% - 14vw);
-    height: clamp(390px, 56vh, 510px);
-    min-height: 0;
-    margin: clamp(20px, 3vh, 30px) auto 0;
-    padding: clamp(24px, 4vh, 36px) clamp(30px, 8vw, 60px) 30px;
-    border-radius: clamp(44px, 10vw, 64px);
+    left: 7%;
+    right: auto;
+    top: auto;
+    bottom: 24px;
+    width: 86%;
+    height: 385px;
+    padding: 24px 38px 28px;
+    border-radius: 52px;
+    transform: none;
   }
 
   .details-panel__date {
-    margin-top: clamp(24px, 4vh, 38px);
+    margin-top: 20px;
   }
 
   .details-panel__date time {
-    font-size: clamp(1.75rem, 7vw, 2.6rem);
+    font-size: 30px;
+  }
+
+  .details-panel__date span {
+    font-size: 17px;
   }
 
   .consultation-details {
-    gap: clamp(12px, 2vh, 20px);
-    margin-top: clamp(30px, 5vh, 48px);
+    gap: 10px;
+    margin-top: 24px;
   }
 
   .consultation-details dt,
   .consultation-details dd {
-    font-size: clamp(0.84rem, 3.5vw, 1.05rem);
+    font-size: 13px;
   }
 
-  .orbit--hero-one {
-    left: -42%;
+  .orbit--one {
+    left: -260px;
     right: auto;
-    top: 36%;
-    width: 155vw;
-    height: 86vw;
-    transform: rotate(24deg);
+    top: 46%;
+    width: 720px;
+    height: 400px;
+    transform: translateY(-50%) rotate(24deg);
   }
 
-  .orbit--hero-two {
-    left: -37%;
+  .orbit--two {
+    left: -230px;
     right: auto;
-    top: 37%;
-    width: 143vw;
-    height: 74vw;
-    transform: rotate(17deg);
-  }
-
-  .orbit--corner {
-    left: auto;
-    right: -72vw;
-    bottom: -36vw;
-    width: 106vw;
-    height: 106vw;
+    top: 47%;
+    width: 660px;
+    height: 340px;
+    transform: translateY(-50%) rotate(17deg);
   }
 
   .star--one {
@@ -582,47 +609,16 @@ function displayDate(date: string): string {
 }
 
 @media (max-width: 420px) {
-  .consultations-layout {
-    padding-top: 72px;
-  }
-
   .date-timeline {
-    margin-top: 34px;
+    top: 88px;
   }
 
   .details-panel {
+    left: 16px;
     width: calc(100% - 32px);
-    margin-top: 18px;
-  }
-}
-
-@media (max-width: 900px) and (max-height: 720px) {
-  .consultations-layout {
-    padding-top: 66px;
-  }
-
-  .page-heading h1 {
-    font-size: 2rem;
-  }
-
-  .date-timeline {
-    height: 116px;
-    margin-top: 22px;
-  }
-
-  .details-panel {
-    height: 385px;
-    margin-top: 12px;
-    padding-top: 20px;
-  }
-
-  .details-panel__date {
-    margin-top: 18px;
-  }
-
-  .consultation-details {
-    gap: 10px;
-    margin-top: 24px;
+    height: 370px;
+    padding: 20px 30px 24px;
+    border-radius: 46px;
   }
 }
 </style>

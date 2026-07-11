@@ -23,12 +23,12 @@ describe('AccountConsultations', () => {
     expect(panel.text()).toContain('AM');
     expect(panel.text()).toContain('Consultation Method');
     expect(panel.text()).toContain('Online');
-    expect(panel.text()).toContain('Design Domain');
+    expect(panel.text()).toContain('Design Field');
     expect(panel.text()).toContain('Graphic Design');
     expect(panel.text()).toContain('Design Focus');
     expect(panel.text()).toContain('Visual Concept');
     expect(panel.text()).toContain('Notes');
-    expect(panel.text()).toContain('Develop a clear visual direction');
+    expect(panel.text()).toContain('help defining the visual direction');
   });
 
   it('selects another reservation from the date timeline', async () => {
