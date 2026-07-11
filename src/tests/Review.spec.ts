@@ -19,7 +19,7 @@ const queue = {
       url: 'https://img/2.jpg',
       styleGroup: 'Street & Youth Culture',
       medium: 'Outfit',
-      subMedium: 'Top',
+      subMedium: 'Top Focus',
       confidence: { styleGroup: 0.8, medium: 0.5, subMedium: 0.4 },
       needsReview: { styleGroup: false, medium: true, subMedium: true }
     }
@@ -28,9 +28,9 @@ const queue = {
     mediums: ['Outfit', 'Graphic Design', 'Interior Design', 'Architecture'],
     subMediumsByMedium: {
       'Graphic Design': ['Brand Identity', 'Poster Design', 'Editorial Design', 'Packaging Design'],
-      Outfit: ['Top', 'Bottom', 'Dress', 'Accessory'],
-      'Interior Design': ['Lighting', 'Table', 'Wall Paint', 'Chair'],
-      Architecture: ['Window', 'Staircase', 'Facade', 'Entrance']
+      Outfit: ['Full Look', 'Top Focus', 'Bottom Focus', 'Accessory Focus'],
+      'Interior Design': ['Living & Dining Space', 'Bedroom', 'Lighting', 'Decor Detail'],
+      Architecture: ['Building Exterior', 'Facade', 'Entrance', 'Passage']
     }
   }
 };

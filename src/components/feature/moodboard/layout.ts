@@ -30,6 +30,7 @@ export function packPhotos(
     w: p.w,
     h: p.h,
     faded: p.faded,
+    placeholder: p.placeholder,
     hw: p.w / 2 + gap / 2, // half-extent incl. gutter (used for overlap test)
     hh: p.h / 2 + gap / 2,
     br: Math.hypot(p.w, p.h) / 2, // bounding-circle radius (used for ellipse containment)

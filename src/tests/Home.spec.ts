@@ -286,7 +286,7 @@ describe('Home', () => {
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 
-    expect(floatingNetwork.props('height')).toBe('900vh');
+    expect(floatingNetwork.props('height')).toBe('1500vh');
     expect(images).toHaveLength(45);
     const styleGroups = images.map((image) => image.styleGroup);
     expect(new Set(styleGroups).size).toBe(9);
@@ -324,7 +324,7 @@ describe('Home', () => {
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 
-    expect(floatingNetwork.props('height')).toBe('900vh');
+    expect(floatingNetwork.props('height')).toBe('1500vh');
     expect(images[0]).toEqual(
       expect.objectContaining({
         id: 'doa-main-001',

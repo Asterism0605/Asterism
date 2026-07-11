@@ -5,7 +5,8 @@ import type {
   ConsultationBookingDetail,
   ConsultationBookingList,
   ConsultationCheckoutRequest,
-  ConsultationCheckoutResult
+  ConsultationCheckoutResult,
+  ConsultationMonthAvailabilityResult
 } from '@/types/consultation';
 
 const MOCK_MY_CONSULTATION_BOOKINGS: ConsultationBookingList = [
@@ -133,6 +134,20 @@ export async function getMyConsultationBookings(
       headers: { Authorization: `Bearer ${accessToken}` }
     }
   );
+
+  return response.data;
+}
+
+export async function getConsultationAvailability(
+  month: string,
+  accessToken: string
+): Promise<ConsultationApiResponse<ConsultationMonthAvailabilityResult>> {
+  const response = await httpClient.get<
+    ConsultationApiResponse<ConsultationMonthAvailabilityResult>
+  >('/api/v1/consultations/availability', {
+    params: { month },
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
 
   return response.data;
 }
