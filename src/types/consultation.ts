@@ -27,12 +27,7 @@ export type ConsultationBookingStatus =
   | 'canceled'
   | 'completed';
 
-export type ConsultationPaymentStatus =
-  | 'pending'
-  | 'paid'
-  | 'failed'
-  | 'canceled'
-  | 'refunded';
+export type ConsultationPaymentStatus = 'pending' | 'paid' | 'failed' | 'canceled' | 'refunded';
 
 export interface ConsultationCheckoutRequest {
   method: ConsultationCheckoutMethod;
@@ -58,6 +53,27 @@ export interface ConsultationCheckoutResult {
   checkoutUrl: string;
   matchedConsultant: ConsultationSummary;
 }
+
+export interface ConsultationAvailabilitySlot {
+  timeSlot: ConsultationTimeSlot;
+  available: boolean;
+}
+
+export interface ConsultationDayAvailabilityResult {
+  date: string;
+  slots: ConsultationAvailabilitySlot[];
+}
+
+export interface ConsultationMonthAvailabilityResult {
+  month: string;
+  startDate: string;
+  endDate: string;
+  days: ConsultationDayAvailabilityResult[];
+}
+
+export type ConsultationAvailabilityResult =
+  | ConsultationDayAvailabilityResult
+  | ConsultationMonthAvailabilityResult;
 
 export interface ConsultationBooking {
   id: string;

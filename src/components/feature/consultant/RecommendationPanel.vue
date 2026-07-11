@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ConsultationDatePicker from '@/components/feature/consultant/ConsultationDatePicker.vue';
 import ConsultationDropdown from '@/components/feature/consultant/ConsultationDropdown.vue';
 import Button from '@/components/ui/Button.vue';
 import FormInput from '@/components/ui/FormInput.vue';
+import { useConsultationAvailability } from '@/composables/useConsultationAvailability';
 
 type ConsultationMethod = 'online' | 'in_person';
 type TimeSlot = '' | 'am' | 'pm';
@@ -72,30 +73,39 @@ const isTimeSlotOpen = ref(false);
 const isDesignFieldOpen = ref(false);
 const isDesignFocusOpen = ref(false);
 const datePickerRef = ref<InstanceType<typeof ConsultationDatePicker> | null>(null);
-
-const timeSlotOptions: Array<{ label: string; value: Exclude<TimeSlot, ''> }> = [
-  { label: 'AM', value: 'am' },
-  { label: 'PM', value: 'pm' }
-];
-
-const fieldOptions = computed(() =>
+const timeSlotDropdownRef = ref<HTMLElement | null>(null);
+const {
+  availabilityByDate,
+  availabilityLoadingByDate,
+  unavailableTimeSlots,
+  handleVisibleMonthChange
+} = useConsultationAvailability(() => form.date);
+const timeSlotOptions = computed<
+  Array<{ label: string; value: Exclude<TimeSlot, ''>; disabled: boolean }>
+>(() =>
   [
-    { label: t('consult.fieldStyling'), value: 'styling' },
-    { label: t('consult.fieldGraphic'), value: 'graphic' },
-    { label: t('consult.fieldInterior'), value: 'interior' },
-    { label: t('consult.fieldArchitecture'), value: 'architecture' }
-  ]
+    { label: 'AM', value: 'am' as const },
+    { label: 'PM', value: 'pm' as const }
+  ].map((option) => ({
+    ...option,
+    disabled: unavailableTimeSlots.value.has(option.value)
+  }))
 );
 
-const focusOptions = computed(() =>
-  [
-    { label: t('consult.focusSpatial'), value: 'spatial' },
-    { label: t('consult.focusMaterial'), value: 'material' },
-    { label: t('consult.focusColor'), value: 'color' },
-    { label: t('consult.focusFurniture'), value: 'furniture' },
-    { label: t('consult.focusVisual'), value: 'visual' }
-  ]
-);
+const fieldOptions = computed(() => [
+  { label: t('consult.fieldStyling'), value: 'styling' },
+  { label: t('consult.fieldGraphic'), value: 'graphic' },
+  { label: t('consult.fieldInterior'), value: 'interior' },
+  { label: t('consult.fieldArchitecture'), value: 'architecture' }
+]);
+
+const focusOptions = computed(() => [
+  { label: t('consult.focusSpatial'), value: 'spatial' },
+  { label: t('consult.focusMaterial'), value: 'material' },
+  { label: t('consult.focusColor'), value: 'color' },
+  { label: t('consult.focusFurniture'), value: 'furniture' },
+  { label: t('consult.focusVisual'), value: 'visual' }
+]);
 
 const fieldErrors = computed(() => {
   if (!hasSubmitted.value) {
@@ -148,6 +158,29 @@ function closeDropdowns() {
   isTimeSlotOpen.value = false;
   isDesignFieldOpen.value = false;
   isDesignFocusOpen.value = false;
+}
+
+function selectTimeSlot(value: Exclude<TimeSlot, ''>) {
+  const option = timeSlotOptions.value.find((item) => item.value === value);
+
+  if (option?.disabled) {
+    return;
+  }
+
+  form.timeSlot = value;
+  isTimeSlotOpen.value = false;
+}
+
+function handlePanelPointerDown(event: PointerEvent) {
+  if (!timeSlotDropdownRef.value?.contains(event.target as Node)) {
+    isTimeSlotOpen.value = false;
+  }
+}
+
+function handlePanelKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    isTimeSlotOpen.value = false;
+  }
 }
 
 function handleDatePickerOpen(value: boolean) {
@@ -206,6 +239,22 @@ function handleSubmit() {
     timeSlot: form.timeSlot as SubmittedTimeSlot
   });
 }
+
+watch([() => form.date, unavailableTimeSlots], () => {
+  if (form.timeSlot && unavailableTimeSlots.value.has(form.timeSlot)) {
+    form.timeSlot = '';
+  }
+});
+
+onMounted(() => {
+  document.addEventListener('pointerdown', handlePanelPointerDown);
+  document.addEventListener('keydown', handlePanelKeydown);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', handlePanelPointerDown);
+  document.removeEventListener('keydown', handlePanelKeydown);
+});
 </script>
 
 <template>
@@ -230,20 +279,54 @@ function handleSubmit() {
         v-model="form.date"
         :open="isDatePickerOpen"
         :error="fieldErrors.date"
+        :availability-by-date="availabilityByDate"
+        :availability-loading-by-date="availabilityLoadingByDate"
         @update:open="handleDatePickerOpen"
+        @visible-month-change="handleVisibleMonthChange"
       />
 
-      <ConsultationDropdown
-        v-model="form.timeSlot"
-        :open="isTimeSlotOpen"
-        :label="$t('consult.timeSlot')"
-        :placeholder="$t('consult.timeSlotPlaceholder')"
-        :list-label="$t('consult.chooseTimeSlot')"
-        :options="timeSlotOptions"
-        :error="fieldErrors.timeSlot"
-        uppercase-value
-        @update:open="(value) => handleDropdownOpen('timeSlot', value)"
-      />
+      <div class="recommendation-panel__field">
+        <span>{{ $t('consult.timeSlot') }}</span>
+        <div ref="timeSlotDropdownRef" class="recommendation-panel__dropdown">
+          <button
+            type="button"
+            class="recommendation-panel__dropdown-trigger"
+            :class="{ 'recommendation-panel__dropdown-trigger--placeholder': !form.timeSlot }"
+            :aria-expanded="isTimeSlotOpen"
+            aria-haspopup="listbox"
+            @click="handleDropdownOpen('timeSlot', !isTimeSlotOpen)"
+          >
+            <span>{{
+              form.timeSlot ? form.timeSlot.toUpperCase() : $t('consult.timeSlotPlaceholder')
+            }}</span>
+            <span aria-hidden="true" class="recommendation-panel__dropdown-icon"></span>
+          </button>
+
+          <div
+            v-if="isTimeSlotOpen"
+            class="recommendation-panel__dropdown-menu"
+            role="listbox"
+            :aria-label="$t('consult.chooseTimeSlot')"
+          >
+            <button
+              v-for="option in timeSlotOptions"
+              :key="option.value"
+              type="button"
+              class="recommendation-panel__dropdown-option"
+              :class="{
+                'recommendation-panel__dropdown-option--selected': form.timeSlot === option.value
+              }"
+              role="option"
+              :aria-selected="form.timeSlot === option.value"
+              :disabled="option.disabled"
+              @click="selectTimeSlot(option.value)"
+            >
+              {{ option.label }}
+            </button>
+          </div>
+        </div>
+        <small v-if="fieldErrors.timeSlot">{{ fieldErrors.timeSlot }}</small>
+      </div>
 
       <ConsultationDropdown
         v-model="form.designField"
@@ -408,6 +491,97 @@ function handleSubmit() {
 
 .recommendation-panel__field--wide {
   grid-column: 1 / -1;
+}
+
+.recommendation-panel__dropdown {
+  position: relative;
+}
+
+.recommendation-panel__dropdown-trigger {
+  width: 100%;
+  min-height: 47px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background-color: #ffffff12;
+  color: var(--color-text-primary);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  text-align: left;
+  outline: none;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+.recommendation-panel__dropdown-trigger:hover,
+.recommendation-panel__dropdown-trigger:focus {
+  background-color: #ffffff1c;
+}
+
+.recommendation-panel__dropdown-trigger--placeholder {
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.recommendation-panel__dropdown-icon {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.recommendation-panel__dropdown-menu {
+  position: absolute;
+  z-index: 6;
+  top: calc(100% + 10px);
+  left: 0;
+  display: grid;
+  width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #ffffff29;
+  border-radius: 8px;
+  background: var(--recommendation-panel-menu-bg);
+  box-shadow: 0 18px 44px #00000057;
+  backdrop-filter: blur(18px);
+}
+
+.recommendation-panel__dropdown-option {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #f0ede6c7;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  text-align: left;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.recommendation-panel__dropdown-option:hover:not(:disabled),
+.recommendation-panel__dropdown-option:focus:not(:disabled) {
+  background-color: #ffffff1f;
+  color: var(--color-text-primary);
+}
+
+.recommendation-panel__dropdown-option--selected {
+  color: var(--color-text-primary);
+}
+
+.recommendation-panel__dropdown-option:disabled {
+  cursor: not-allowed;
+  opacity: 0.36;
 }
 
 .recommendation-panel__textarea {
