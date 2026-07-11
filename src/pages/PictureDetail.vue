@@ -7,7 +7,7 @@ import {
   getImageById,
   getMediumEntryImage,
   getRelatedImages,
-  getSourceLabel,
+  getSourceLinkInfo,
   getStyleGroupRootImage,
   resolvePhotographerInfo
 } from '@/services/image.service';
@@ -26,7 +26,7 @@ const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
 
 const photographerInfo = computed(() => resolvePhotographerInfo(currentImage.value?.attribution));
-const sourceLabel = computed(() => getSourceLabel(currentImage.value?.sourceUrl));
+const sourceLinkInfo = computed(() => getSourceLinkInfo(currentImage.value?.sourceUrl));
 
 const relatedImages = ref<ImageSpreadNode[]>([]);
 watch(
@@ -216,8 +216,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
     <div class="w-full overflow-y-auto md:w-2/5 md:overflow-hidden">
       <ImageMetaPanel
         v-if="currentImage"
-        :source-url="currentImage.sourceUrl"
-        :source-label="sourceLabel"
+        :source-url="sourceLinkInfo?.url"
+        :source-label="sourceLinkInfo?.label"
         :color-palette="currentImage.colorPalette"
         :style-tags="currentImage.style"
         :similar-images="similarImages"
