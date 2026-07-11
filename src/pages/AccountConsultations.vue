@@ -1,536 +1,628 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-import { CalendarDays, RefreshCw, UserRound } from '@lucide/vue';
-import { getMyConsultationBookings } from '@/api/consultation.api';
-import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
-import Button from '@/components/ui/Button.vue';
-import { useAuthStore } from '@/stores/auth.store';
-import type {
-  ConsultationBookingList,
-  ConsultationBookingListItem,
-  ConsultationBookingMethod,
-  ConsultationTimeSlot
-} from '@/types/consultation';
+import { computed, ref } from 'vue';
 
-type PageStatus = 'loading' | 'success' | 'empty' | 'error';
+type Reservation = {
+  id: string;
+  status: 'confirmed';
+  consultationDate: string;
+  timeSlot: 'am' | 'pm';
+  method: string;
+  designDomain: string;
+  designFocus: string;
+  notes: string;
+};
 
-const authStore = useAuthStore();
-const router = useRouter();
-const { locale, t } = useI18n();
-
-const status = ref<PageStatus>('loading');
-const bookings = ref<ConsultationBookingList>([]);
-
-const successfulBookings = computed(() =>
-  bookings.value.filter((item) => ['confirmed', 'completed'].includes(item.booking.status))
-);
-const hasBookings = computed(() => successfulBookings.value.length > 0);
-
-function formatDate(value: string): string {
-  const parts = value.split('-').map(Number);
-  const date =
-    parts.length === 3 && parts.every((part) => Number.isFinite(part))
-      ? new Date(parts[0], parts[1] - 1, parts[2])
-      : new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return new Intl.DateTimeFormat(locale.value, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  }).format(date);
-}
-
-function methodLabel(method: ConsultationBookingMethod): string {
-  return t(`accountConsultations.methods.${method}`);
-}
-
-function timeSlotLabel(timeSlot: ConsultationTimeSlot): string {
-  return t(`accountConsultations.timeSlots.${timeSlot}`);
-}
-
-function consultantName(item: ConsultationBookingListItem): string {
-  return item.consultant?.displayName || t('accountConsultations.unassignedConsultant');
-}
-
-function consultantTitle(item: ConsultationBookingListItem): string {
-  return item.consultant?.title || '';
-}
-
-function hasExtraDetails(item: ConsultationBookingListItem): boolean {
-  return Boolean(item.booking.designField || item.booking.designFocus || item.booking.notes);
-}
-
-async function loadBookings(): Promise<void> {
-  const accessToken = authStore.session?.accessToken ?? '';
-
-  if (!accessToken) {
-    status.value = 'error';
-    return;
-  }
-
-  status.value = 'loading';
-
-  try {
-    const response = await getMyConsultationBookings(accessToken);
-
-    if (!response.success) {
-      status.value = 'error';
-      return;
+const reservations = (
+  [
+    {
+      id: 'reservation-01',
+      status: 'confirmed',
+      consultationDate: '2026-07-28',
+      timeSlot: 'am',
+      method: 'Online',
+      designDomain: 'Graphic Design',
+      designFocus: 'Visual Concept',
+      notes: 'Develop a clear visual direction for the new brand identity.'
+    },
+    {
+      id: 'reservation-02',
+      status: 'confirmed',
+      consultationDate: '2026-08-10',
+      timeSlot: 'pm',
+      method: 'In person',
+      designDomain: 'Interior Design',
+      designFocus: 'Material Palette',
+      notes: 'Review natural finishes and a calm, cohesive material palette.'
+    },
+    {
+      id: 'reservation-03',
+      status: 'confirmed',
+      consultationDate: '2026-10-01',
+      timeSlot: 'am',
+      method: 'Online',
+      designDomain: 'Product Design',
+      designFocus: 'Design Language',
+      notes: 'Define the form, proportion, and tactile details of the collection.'
+    },
+    {
+      id: 'reservation-04',
+      status: 'confirmed',
+      consultationDate: '2026-11-16',
+      timeSlot: 'pm',
+      method: 'Online',
+      designDomain: 'Brand Design',
+      designFocus: 'Art Direction',
+      notes: 'Align campaign imagery with the brand narrative and audience.'
+    },
+    {
+      id: 'reservation-05',
+      status: 'confirmed',
+      consultationDate: '2027-01-08',
+      timeSlot: 'am',
+      method: 'In person',
+      designDomain: 'Spatial Design',
+      designFocus: 'Guest Experience',
+      notes: 'Explore the arrival sequence and key moments within the space.'
     }
+  ] satisfies Reservation[]
+).sort((a, b) => a.consultationDate.localeCompare(b.consultationDate));
 
-    bookings.value = response.data;
-    status.value = successfulBookings.value.length > 0 ? 'success' : 'empty';
-  } catch {
-    status.value = 'error';
-  }
+const selectedId = ref(reservations[0].id);
+const visibleReservations = computed(() => reservations.slice(0, 3));
+const selectedReservation = computed(
+  () => reservations.find((reservation) => reservation.id === selectedId.value) ?? reservations[0]
+);
+
+function displayDate(date: string): string {
+  return date.replaceAll('-', ' ');
 }
-
-function goToConsultantBooking(): void {
-  router.push({ name: 'consultant' });
-}
-
-onMounted(loadBookings);
 </script>
 
 <template>
-  <main class="account-consultations">
-    <div class="account-consultations__background" aria-hidden="true">
-      <ConstellationBackground
-        class-name="account-consultations__constellation account-consultations__constellation--left consultations-constellation"
-        size="36vw"
-        :line-length="180"
-        :center-size="7"
-        :node-size="5"
-        :active="true"
-        :spacing="42"
-        :intensity="0.62"
-      />
-      <ConstellationBackground
-        class-name="account-consultations__constellation account-consultations__constellation--right consultations-constellation"
-        size="42vw"
-        :line-length="210"
-        :center-size="6"
-        :node-size="4"
-        :active="true"
-        :spacing="46"
-        :intensity="0.5"
-      />
+  <main class="consultations-page">
+    <div class="orbit-scene" aria-hidden="true">
+      <i class="orbit orbit--hero-one"></i>
+      <i class="orbit orbit--hero-two"></i>
+      <i class="orbit orbit--corner"></i>
+      <i class="star star--one"></i>
+      <i class="star star--two"></i>
+      <i class="star star--three"></i>
+      <i class="star star--four"></i>
+      <i class="star star--five"></i>
     </div>
 
-    <section class="account-consultations__shell">
-      <header class="account-consultations__header">
-        <p class="account-consultations__eyebrow">{{ $t('accountConsultations.eyebrow') }}</p>
-        <h1 class="text-h1">{{ $t('accountConsultations.title') }}</h1>
-        <p class="account-consultations__subtitle">{{ $t('accountConsultations.subtitle') }}</p>
+    <div class="consultations-layout">
+      <header class="page-heading">
+        <h1>My Consultations</h1>
+        <p>You have {{ reservations.length }} upcoming consultations</p>
       </header>
 
-      <section v-if="status === 'loading'" class="account-consultations__state" role="status">
-        <RefreshCw
-          class="account-consultations__state-icon account-consultations__state-icon--spin"
-        />
-        <p>{{ $t('accountConsultations.loading') }}</p>
-      </section>
-
-      <section
-        v-else-if="status === 'empty'"
-        class="account-consultations__state"
-        data-testid="consultations-empty"
-      >
-        <CalendarDays class="account-consultations__state-icon" />
-        <h2 class="text-h3">{{ $t('accountConsultations.emptyTitle') }}</h2>
-        <p>{{ $t('accountConsultations.emptyDescription') }}</p>
-        <Button type="button" @click="goToConsultantBooking">
-          {{ $t('accountConsultations.bookConsultation') }}
-        </Button>
-      </section>
-
-      <section
-        v-else-if="status === 'error'"
-        class="account-consultations__state"
-        role="alert"
-        data-testid="consultations-error"
-      >
-        <RefreshCw class="account-consultations__state-icon" />
-        <h2 class="text-h3">{{ $t('accountConsultations.errorTitle') }}</h2>
-        <p>{{ $t('accountConsultations.errorDescription') }}</p>
-        <Button type="button" variant="secondary" @click="loadBookings">
-          {{ $t('accountConsultations.retry') }}
-        </Button>
-      </section>
-
-      <section v-else-if="hasBookings" class="account-consultations__list" aria-live="polite">
-        <article
-          v-for="item in successfulBookings"
-          :key="item.booking.id"
-          class="consultation-card"
-          :data-booking-id="item.booking.id"
+      <nav class="date-timeline" aria-label="Upcoming consultation dates">
+        <span class="date-timeline__lead" aria-hidden="true"></span>
+        <button
+          v-for="reservation in visibleReservations"
+          :key="reservation.id"
+          type="button"
+          class="date-node"
+          :class="{ 'date-node--active': reservation.id === selectedId }"
+          :aria-current="reservation.id === selectedId ? 'date' : undefined"
+          @click="selectedId = reservation.id"
         >
-          <div class="consultation-card__main">
-            <div class="consultation-card__date">
-              <CalendarDays class="consultation-card__icon" />
-              {{ formatDate(item.booking.consultationDate) }}
-            </div>
+          <span class="date-node__anchor" aria-hidden="true"></span>
+          <span class="date-node__connector" aria-hidden="true"></span>
+          <span class="date-node__end" aria-hidden="true"></span>
+          <span class="date-node__label">
+            {{ displayDate(reservation.consultationDate) }} {{ reservation.timeSlot.toUpperCase() }}
+          </span>
+        </button>
+      </nav>
 
-            <div class="consultation-card__consultant">
-              <UserRound class="consultation-card__icon" />
-              <span>
-                <strong>{{ consultantName(item) }}</strong>
-                <small v-if="consultantTitle(item)">{{ consultantTitle(item) }}</small>
-              </span>
-            </div>
+      <article class="details-panel glass-panel" aria-live="polite">
+        <button class="view-all" type="button" aria-label="View all consultations">
+          View all <span aria-hidden="true">↗</span>
+        </button>
+
+        <div class="details-panel__date">
+          <time :datetime="selectedReservation.consultationDate">
+            {{ displayDate(selectedReservation.consultationDate) }}
+          </time>
+          <span>{{ selectedReservation.timeSlot.toUpperCase() }}</span>
+        </div>
+
+        <dl class="consultation-details">
+          <div>
+            <dt>Consultation Method</dt>
+            <dd>{{ selectedReservation.method }}</dd>
           </div>
-
-          <div class="consultation-card__meta" aria-label="booking summary">
-            <span>{{ timeSlotLabel(item.booking.timeSlot) }}</span>
-            <span>{{ methodLabel(item.booking.method) }}</span>
+          <div>
+            <dt>Design Domain</dt>
+            <dd>{{ selectedReservation.designDomain }}</dd>
           </div>
-
-          <dl v-if="hasExtraDetails(item)" class="consultation-card__detail-grid">
-            <div v-if="item.booking.designField">
-              <dt>{{ $t('accountConsultations.designField') }}</dt>
-              <dd>{{ item.booking.designField }}</dd>
-            </div>
-            <div v-if="item.booking.designFocus">
-              <dt>{{ $t('accountConsultations.designFocus') }}</dt>
-              <dd>{{ item.booking.designFocus }}</dd>
-            </div>
-            <div v-if="item.booking.notes" class="consultation-card__detail-grid-wide">
-              <dt>{{ $t('accountConsultations.notes') }}</dt>
-              <dd>{{ item.booking.notes }}</dd>
-            </div>
-          </dl>
-
-          <p v-else class="consultation-card__muted">
-            {{ $t('accountConsultations.noExtraDetails') }}
-          </p>
-        </article>
-      </section>
-    </section>
+          <div>
+            <dt>Design Focus</dt>
+            <dd>{{ selectedReservation.designFocus }}</dd>
+          </div>
+          <div>
+            <dt>Notes</dt>
+            <dd>{{ selectedReservation.notes }}</dd>
+          </div>
+        </dl>
+      </article>
+    </div>
   </main>
 </template>
 
 <style scoped>
-.account-consultations {
+.consultations-page {
+  --ink: rgb(240 237 230 / 92%);
   position: relative;
-  min-height: 100vh;
+  height: 100svh;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 72% 48%, #f0ede614, transparent 24%),
-    linear-gradient(135deg, var(--color-void) 0%, var(--color-deep) 62%, #15151b 100%);
-  color: var(--color-text-primary);
+  background: #0d0d0f;
+  color: var(--ink);
+  font-family: var(--font-family-title);
 }
 
-.account-consultations__background {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.72;
-}
-
-:deep(.account-consultations__constellation) {
-  position: absolute;
-}
-
-:deep(.account-consultations__constellation--left) {
-  left: -10vw;
-  bottom: -20px;
-  opacity: 0.4;
-}
-
-:deep(.account-consultations__constellation--right) {
-  right: -5vw;
-  top: 18vh;
-}
-
-:deep(.consultations-constellation) {
-  animation: consultations-fade-in 1500ms ease infinite alternate;
-}
-
-:deep(.account-consultations__constellation--left.consultations-constellation) {
-  animation-name: consultations-fade-in-muted;
-  animation-delay: 0ms;
-}
-
-:deep(.account-consultations__constellation--right.consultations-constellation) {
-  animation-delay: -3000ms;
-}
-
-:deep(.consultations-constellation .constellation-background__canvas) {
-  animation: consultations-scale-in 620ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-.account-consultations__shell {
+.consultations-layout {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 32px;
-  width: min(1180px, calc(100% - 40px));
-  min-height: 100vh;
+  grid-template-columns: minmax(330px, 0.9fr) minmax(380px, 1.1fr);
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(52px, 8vw, 130px);
+  width: min(1320px, calc(100% - 12vw));
+  height: 100%;
   margin: 0 auto;
-  padding: clamp(116px, 14vh, 148px) 0 68px;
+  padding: clamp(92px, 12vh, 128px) 0 clamp(38px, 5vh, 58px);
 }
 
-.account-consultations__header {
-  display: grid;
-  gap: 12px;
-  max-width: 720px;
-}
-
-.account-consultations__eyebrow {
-  font-family: var(--font-family-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
-  color: var(--color-gold-dim);
-  text-transform: uppercase;
-}
-
-.account-consultations__header h1 {
-  font-size: clamp(2rem, 5vw, 2.75rem);
-  font-weight: 500;
-  line-height: var(--leading-tight);
-}
-
-.account-consultations__subtitle {
-  max-width: 620px;
-  color: #f0ede6b8;
-  font-size: var(--text-body);
-  line-height: 1.6;
-}
-
-.account-consultations__state {
-  display: grid;
-  justify-items: start;
-  gap: 16px;
-  padding: clamp(24px, 5vw, 46px);
-  border: 1px solid #ffffff29;
-  border-radius: 8px;
-  background: radial-gradient(circle at 14% 0%, #ffffff2e, transparent 34%), #ffffff0e;
-  box-shadow:
-    inset 1px 1px 1px #ffffff29,
-    0 24px 80px #00000057;
-  backdrop-filter: blur(18px);
-}
-
-.account-consultations__state p {
-  color: #f0ede6b8;
-  line-height: 1.6;
-}
-
-.account-consultations__state-icon {
-  width: 28px;
-  height: 28px;
-  color: var(--color-gold-dim);
-}
-
-.account-consultations__state-icon--spin {
-  animation: consultations-spin 900ms linear infinite;
-}
-
-.account-consultations__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  align-items: stretch;
-  gap: 18px;
-}
-
-.consultation-card {
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  gap: 20px;
-  height: 360px;
-  overflow: hidden;
-  padding: clamp(22px, 4vw, 32px);
-  border: 1px solid #ffffff29;
-  border-radius: 8px;
-  background: radial-gradient(circle at 14% 0%, #ffffff2e, transparent 34%), #ffffff0e;
-  box-shadow:
-    inset 1px 1px 1px #ffffff29,
-    0 24px 80px #00000057;
-  backdrop-filter: blur(18px);
-}
-
-.consultation-card__main {
-  display: grid;
-  gap: 12px;
-  min-width: 0;
-}
-
-.consultation-card__date,
-.consultation-card__consultant {
+.page-heading {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
-  gap: 10px;
+  margin-left: 14%;
 }
 
-.consultation-card__date {
-  font-family: var(--font-family-title);
-  font-size: var(--text-h3);
-  font-weight: 600;
-  line-height: var(--leading-tight);
-}
-
-.consultation-card__consultant strong {
-  display: block;
-  color: #f0ede6d6;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.consultation-card__consultant small {
-  display: block;
-  margin-top: 2px;
-  color: #f0ede6ad;
-  font-size: 0.82rem;
-  line-height: 1.55;
-}
-
-.consultation-card__icon {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
-  color: var(--color-gold-dim);
-}
-
-.consultation-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.consultation-card__meta span {
-  min-height: 32px;
-  padding: 7px 10px;
-  border: 1px solid #ffffff14;
-  border-radius: 8px;
-  background: #ffffff08;
-  color: #f0ede6b8;
-  font-size: 0.82rem;
+.page-heading h1 {
+  position: absolute;
+  left: 23%;
+  bottom: 3.5vh;
+  margin: 0;
+  font-size: clamp(4.25rem, 7vw, 7.5rem);
+  font-weight: 200;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
   white-space: nowrap;
 }
 
-.consultation-card__detail-grid {
-  display: grid;
-  gap: 12px;
-  align-content: start;
-  min-height: 0;
+.page-heading p {
+  margin: 0 0 0 138px;
+  color: rgb(240 237 230 / 82%);
+  font-size: clamp(1.05rem, 1.45vw, 1.65rem);
+  font-weight: 300;
+  letter-spacing: 0.015em;
 }
 
-.consultation-card__detail-grid div {
+.page-heading::before {
+  width: 140px;
+  height: 32px;
+  content: '';
+  border-top: 1px solid rgb(240 237 230 / 75%);
+  border-left: 1px solid transparent;
+  clip-path: polygon(0 100%, 38% 0, 100% 0, 100% 4%, 39% 4%, 1% 100%);
+  background: rgb(240 237 230 / 75%);
+}
+
+.date-timeline {
+  position: relative;
+  display: grid;
+  align-content: center;
+  gap: clamp(30px, 5vh, 52px);
+  min-height: 0;
+  padding-left: 1px;
+}
+
+.date-timeline::before {
+  position: absolute;
+  left: 0;
+  top: -120px;
+  bottom: -42px;
+  width: 1px;
+  content: '';
+  background: rgb(240 237 230 / 70%);
+}
+
+.date-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(240 237 230 / 74%);
+  font: inherit;
+  cursor: pointer;
+}
+
+.date-node__anchor {
+  width: 20px;
+  height: 20px;
+  margin-left: -10px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform 180ms ease;
+}
+
+.date-node__connector {
+  width: 88px;
+  height: 1px;
+  background: rgb(240 237 230 / 76%);
+}
+
+.date-node__end {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.date-node__label {
+  margin-left: 24px;
+  font-size: clamp(0.95rem, 1.25vw, 1.3rem);
+  font-weight: 300;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+}
+
+.date-node:is(:hover, :focus-visible),
+.date-node--active {
+  color: var(--ink);
+}
+
+.date-node--active .date-node__anchor {
+  transform: scale(1.18);
+}
+
+.details-panel {
+  align-self: center;
+  justify-self: center;
+  width: min(100%, 440px);
+  min-height: min(500px, 64vh);
+  margin-bottom: 2vh;
+  padding: 30px 46px 36px;
+  border-radius: 58px;
+  background-color: rgb(22 22 25 / 38%);
+}
+
+.view-all {
+  display: block;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(240 237 230 / 82%);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.view-all span {
+  margin-left: 4px;
+}
+
+.details-panel__date {
+  display: grid;
+  justify-items: end;
+  margin-top: 38px;
+  color: rgb(240 237 230 / 72%);
+  font-weight: 200;
+}
+
+.details-panel__date time {
+  font-size: clamp(1.8rem, 2.35vw, 2.4rem);
+  letter-spacing: 0.025em;
+}
+
+.details-panel__date span {
+  margin-top: 3px;
+  font-size: 1.25rem;
+}
+
+.consultation-details {
+  display: grid;
+  gap: clamp(14px, 2.2vh, 22px);
+  margin: clamp(36px, 5vh, 54px) 0 0;
+}
+
+.consultation-details div {
   min-width: 0;
 }
 
-.consultation-card__detail-grid dt {
-  margin-bottom: 4px;
-  color: var(--color-text-secondary);
-  font-family: var(--font-family-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.consultation-details dt,
+.consultation-details dd {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.42;
 }
 
-.consultation-card__detail-grid dd {
-  color: #f0ede6d1;
-  font-size: 0.9rem;
-  line-height: 1.6;
+.consultation-details dt {
+  color: rgb(240 237 230 / 90%);
+  font-weight: 400;
 }
 
-.consultation-card__detail-grid-wide dd {
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+.consultation-details dd {
+  color: rgb(240 237 230 / 66%);
+  font-weight: 300;
 }
 
-.consultation-card__muted {
-  align-self: start;
-  color: #f0ede6ad;
-  font-size: 0.9rem;
-  line-height: 1.6;
+.orbit-scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-@media (max-width: 980px) {
-  .account-consultations {
-    overflow-y: auto;
+.orbit {
+  position: absolute;
+  display: block;
+  border: 1px solid rgb(240 237 230 / 72%);
+  border-radius: 50%;
+}
+
+.orbit--hero-one {
+  right: -2vw;
+  top: 23%;
+  width: 54vw;
+  height: 36vw;
+  transform: rotate(-29deg);
+}
+
+.orbit--hero-two {
+  right: 3vw;
+  top: 22%;
+  width: 49vw;
+  height: 31vw;
+  opacity: 0.65;
+  transform: rotate(-41deg);
+}
+
+.orbit--corner {
+  left: -18vw;
+  bottom: -29vw;
+  width: 48vw;
+  height: 48vw;
+}
+
+.star {
+  position: absolute;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.star--one {
+  left: 44%;
+  top: 29%;
+  width: 16px;
+  height: 16px;
+}
+.star--two {
+  left: 38%;
+  top: 39%;
+}
+.star--three {
+  right: 9%;
+  top: 14%;
+}
+.star--four {
+  left: 34%;
+  bottom: 24%;
+}
+.star--five {
+  right: 12%;
+  bottom: 27%;
+}
+
+@media (max-width: 900px) {
+  .consultations-page {
+    height: 100svh;
+    overflow: hidden;
   }
 
-  .account-consultations__shell {
+  .consultations-layout {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: clamp(76px, 10vh, 92px) 0 20px;
+  }
+
+  .page-heading {
+    display: block;
+    margin: 0;
+    padding: 0 8vw;
+  }
+
+  .page-heading::before,
+  .page-heading p {
+    display: none;
+  }
+
+  .page-heading h1 {
+    position: static;
+    font-size: clamp(2.2rem, 8vw, 3.25rem);
+    letter-spacing: -0.025em;
+    white-space: normal;
+  }
+
+  .date-timeline {
+    display: block;
+    height: clamp(130px, 19vh, 170px);
     min-height: 0;
+    margin: clamp(36px, 6vh, 54px) 8vw 0;
+    padding: 0;
+  }
+
+  .date-timeline::before,
+  .date-node__connector,
+  .date-node__end {
+    display: none;
+  }
+
+  .date-node {
+    position: absolute;
+    min-height: auto;
+  }
+
+  .date-node:nth-child(2) {
+    left: 0;
+    top: 0;
+  }
+  .date-node:nth-child(3) {
+    left: 20%;
+    top: clamp(48px, 7vh, 62px);
+  }
+  .date-node:nth-child(4) {
+    left: 43%;
+    top: clamp(96px, 14vh, 124px);
+  }
+
+  .date-node__anchor {
+    width: 10px;
+    height: 10px;
+    margin: 0;
+  }
+
+  .date-node__label {
+    margin-left: 20px;
+    font-size: clamp(0.82rem, 3.3vw, 1.1rem);
+  }
+
+  .details-panel {
+    position: relative;
+    width: calc(100% - 14vw);
+    height: clamp(390px, 56vh, 510px);
+    min-height: 0;
+    margin: clamp(20px, 3vh, 30px) auto 0;
+    padding: clamp(24px, 4vh, 36px) clamp(30px, 8vw, 60px) 30px;
+    border-radius: clamp(44px, 10vw, 64px);
+  }
+
+  .details-panel__date {
+    margin-top: clamp(24px, 4vh, 38px);
+  }
+
+  .details-panel__date time {
+    font-size: clamp(1.75rem, 7vw, 2.6rem);
+  }
+
+  .consultation-details {
+    gap: clamp(12px, 2vh, 20px);
+    margin-top: clamp(30px, 5vh, 48px);
+  }
+
+  .consultation-details dt,
+  .consultation-details dd {
+    font-size: clamp(0.84rem, 3.5vw, 1.05rem);
+  }
+
+  .orbit--hero-one {
+    left: -42%;
+    right: auto;
+    top: 36%;
+    width: 155vw;
+    height: 86vw;
+    transform: rotate(24deg);
+  }
+
+  .orbit--hero-two {
+    left: -37%;
+    right: auto;
+    top: 37%;
+    width: 143vw;
+    height: 74vw;
+    transform: rotate(17deg);
+  }
+
+  .orbit--corner {
+    left: auto;
+    right: -72vw;
+    bottom: -36vw;
+    width: 106vw;
+    height: 106vw;
+  }
+
+  .star--one {
+    left: 92%;
+    top: 43%;
+  }
+  .star--two {
+    left: 28%;
+    top: 91%;
+  }
+  .star--three {
+    right: 7%;
+    top: 30%;
+  }
+  .star--four {
+    left: 12%;
+    bottom: 4%;
+    width: 7px;
+    height: 7px;
+  }
+  .star--five {
+    right: 24%;
+    bottom: 6%;
   }
 }
 
-@media (max-width: 760px) {
-  .account-consultations__shell {
-    width: min(100% - 28px, 1180px);
-    padding-top: 104px;
-    padding-bottom: 42px;
+@media (max-width: 420px) {
+  .consultations-layout {
+    padding-top: 72px;
   }
 
-  :deep(.consultations-constellation) {
-    animation-name: consultations-fade-in-mobile;
+  .date-timeline {
+    margin-top: 34px;
   }
 
-  :deep(.account-consultations__constellation--left.consultations-constellation) {
-    animation-name: consultations-fade-in-mobile;
-  }
-
-  .account-consultations__list {
-    grid-template-columns: 1fr;
-  }
-
-  .consultation-card {
-    height: 360px;
+  .details-panel {
+    width: calc(100% - 32px);
+    margin-top: 18px;
   }
 }
 
-@keyframes consultations-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes consultations-fade-in {
-  from {
-    opacity: 0;
+@media (max-width: 900px) and (max-height: 720px) {
+  .consultations-layout {
+    padding-top: 66px;
   }
 
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes consultations-fade-in-muted {
-  from {
-    opacity: 0;
+  .page-heading h1 {
+    font-size: 2rem;
   }
 
-  to {
-    opacity: 0.4;
-  }
-}
-
-@keyframes consultations-fade-in-mobile {
-  from {
-    opacity: 0;
+  .date-timeline {
+    height: 116px;
+    margin-top: 22px;
   }
 
-  to {
-    opacity: 0.3;
-  }
-}
-
-@keyframes consultations-scale-in {
-  from {
-    transform: scale(0.82);
+  .details-panel {
+    height: 385px;
+    margin-top: 12px;
+    padding-top: 20px;
   }
 
-  to {
-    transform: scale(1);
+  .details-panel__date {
+    margin-top: 18px;
+  }
+
+  .consultation-details {
+    gap: 10px;
+    margin-top: 24px;
   }
 }
 </style>

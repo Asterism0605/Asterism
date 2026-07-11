@@ -16,6 +16,7 @@ const footerlessRouteNames = new Set([
   'picture-detail',
   'style-dna',
   'style-dna-result',
+  'account-consultations',
   'auth-callback'
 ]);
 const showHeader = computed(() => !headerlessRouteNames.has(String(route.name)));
