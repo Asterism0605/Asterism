@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import AccountConsultations from '@/pages/AccountConsultations.vue';
+import { i18n } from '@/i18n';
 
 describe('AccountConsultations', () => {
   function mountPage() {
@@ -91,5 +92,28 @@ describe('AccountConsultations', () => {
     expect(wrapper.get('.date-node--active').text()).toBe('2026 10 01 AM');
     expect(wrapper.get('.details-panel').text()).toContain('Architecture');
     expect(wrapper.get('.details-panel').text()).toContain('Spatial Mood');
+  });
+
+  it('uses the consultation form translations in both detail views', async () => {
+    i18n.global.locale.value = 'zh';
+
+    try {
+      const wrapper = mountPage();
+      const detailLabels = wrapper.findAll('.consultation-details dt').map((label) => label.text());
+
+      expect(detailLabels).toEqual(['諮詢方式', '設計領域', '設計重點', '備註']);
+      expect(wrapper.get('.consultation-details').text()).toContain('線上');
+      expect(wrapper.get('.consultation-details').text()).toContain('平面設計');
+      expect(wrapper.get('.consultation-details').text()).toContain('視覺概念');
+
+      await wrapper.get('.view-all').trigger('click');
+
+      const listLabels = wrapper
+        .findAll('.all-consultations__meta dt')
+        .map((label) => label.text());
+      expect(listLabels.slice(0, 3)).toEqual(['諮詢方式', '設計領域', '設計重點']);
+    } finally {
+      i18n.global.locale.value = 'en';
+    }
   });
 });

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
 import type { AccountConsultation } from '@/types/account-consultation';
 import ConsultationList from './ConsultationList.vue';
@@ -13,6 +14,36 @@ defineProps<{
 const emit = defineEmits<{
   toggleView: [];
 }>();
+
+const { t } = useI18n();
+
+const valueKeys: Record<string, string> = {
+  Online: 'consult.online',
+  'In-Person': 'consult.inPerson',
+  'Graphic Design': 'consult.fieldGraphic',
+  'Interior Design': 'consult.fieldInterior',
+  Architecture: 'consult.fieldArchitecture',
+  'Styling Design': 'consult.fieldStyling',
+  'Visual Concept': 'consult.focusVisual',
+  'Material Palette': 'consult.focusMaterial',
+  'Spatial Mood': 'consult.focusSpatial',
+  'Color Direction': 'consult.focusColor',
+  'Furniture Selection': 'consult.focusFurniture',
+  'I would like help defining the visual direction for a new brand identity.':
+    'accountConsultations.sampleNotes.brand',
+  'I need advice on natural finishes and a calm material palette for my home.':
+    'accountConsultations.sampleNotes.homeMaterials',
+  'I want to create a warm and quiet atmosphere for a small studio renovation.':
+    'accountConsultations.sampleNotes.studio',
+  'I would like to refine the color direction for an upcoming editorial shoot.':
+    'accountConsultations.sampleNotes.editorial',
+  'I need help selecting furniture that works with the scale of my living room.':
+    'accountConsultations.sampleNotes.livingRoom'
+};
+
+function displayValue(value: string): string {
+  return valueKeys[value] ? t(valueKeys[value]) : value;
+}
 
 const dateScramble = ref<InstanceType<typeof ScrambleText> | null>(null);
 
@@ -32,11 +63,15 @@ defineExpose({ playDateAnimation });
     <button
       class="view-all"
       type="button"
-      :aria-label="showAll ? 'Back to selected consultation' : 'View all consultations'"
+      :aria-label="
+        showAll
+          ? t('accountConsultations.backToSelectedAria')
+          : t('accountConsultations.viewAllAria')
+      "
       :aria-expanded="showAll"
       @click="emit('toggleView')"
     >
-      {{ showAll ? 'Back' : 'View all' }}
+      {{ showAll ? t('accountConsultations.back') : t('accountConsultations.viewAll') }}
       <span aria-hidden="true">{{ showAll ? '↙' : '↗' }}</span>
     </button>
 
@@ -56,20 +91,20 @@ defineExpose({ playDateAnimation });
 
       <dl class="consultation-details">
         <div>
-          <dt>Consultation Method</dt>
-          <dd>{{ reservation.method }}</dd>
+          <dt>{{ t('consult.method') }}</dt>
+          <dd>{{ displayValue(reservation.method) }}</dd>
         </div>
         <div>
-          <dt>Design Field</dt>
-          <dd>{{ reservation.designField }}</dd>
+          <dt>{{ t('consult.designField') }}</dt>
+          <dd>{{ displayValue(reservation.designField) }}</dd>
         </div>
         <div>
-          <dt>Design Focus</dt>
-          <dd>{{ reservation.designFocus }}</dd>
+          <dt>{{ t('consult.designFocus') }}</dt>
+          <dd>{{ displayValue(reservation.designFocus) }}</dd>
         </div>
         <div>
-          <dt>Notes</dt>
-          <dd>{{ reservation.notes }}</dd>
+          <dt>{{ t('consult.notes') }}</dt>
+          <dd>{{ displayValue(reservation.notes) }}</dd>
         </div>
       </dl>
     </template>

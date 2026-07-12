@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
 import type { AccountConsultation } from '@/types/account-consultation';
 
@@ -6,15 +7,35 @@ defineProps<{
   reservations: AccountConsultation[];
 }>();
 
+const { t } = useI18n();
+
+const valueKeys: Record<string, string> = {
+  Online: 'consult.online',
+  'In-Person': 'consult.inPerson',
+  'Graphic Design': 'consult.fieldGraphic',
+  'Interior Design': 'consult.fieldInterior',
+  Architecture: 'consult.fieldArchitecture',
+  'Styling Design': 'consult.fieldStyling',
+  'Visual Concept': 'consult.focusVisual',
+  'Material Palette': 'consult.focusMaterial',
+  'Spatial Mood': 'consult.focusSpatial',
+  'Color Direction': 'consult.focusColor',
+  'Furniture Selection': 'consult.focusFurniture'
+};
+
+function displayValue(value: string): string {
+  return valueKeys[value] ? t(valueKeys[value]) : value;
+}
+
 function displayDate(date: string): string {
   return date.replaceAll('-', ' ');
 }
 </script>
 
 <template>
-  <section class="all-consultations" aria-label="All consultations">
+  <section class="all-consultations" :aria-label="t('accountConsultations.allConsultations')">
     <p class="all-consultations__count">
-      <span>You have</span>
+      <span>{{ t('accountConsultations.youHave') }}</span>
       <ScrambleText
         class="consultation-count"
         :text="reservations.length"
@@ -22,10 +43,12 @@ function displayDate(date: string): string {
         :duration="1.8"
         :delay="0.2"
       />
-      <span class="consultation-upcoming">upcoming</span>
+      <span class="consultation-upcoming" :data-mobile-label="t('accountConsultations.new')">{{
+        t('accountConsultations.upcoming')
+      }}</span>
       <ScrambleText
         class="consultation-label"
-        text="consultations"
+        :text="t('accountConsultations.consultations')"
         chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         :duration="1.8"
         :delay="0.2"
@@ -45,16 +68,16 @@ function displayDate(date: string): string {
       </header>
       <dl class="all-consultations__meta">
         <div>
-          <dt>Method</dt>
-          <dd>{{ reservation.method }}</dd>
+          <dt>{{ t('consult.method') }}</dt>
+          <dd>{{ displayValue(reservation.method) }}</dd>
         </div>
         <div>
-          <dt>Design Field</dt>
-          <dd>{{ reservation.designField }}</dd>
+          <dt>{{ t('consult.designField') }}</dt>
+          <dd>{{ displayValue(reservation.designField) }}</dd>
         </div>
         <div>
-          <dt>Design Focus</dt>
-          <dd>{{ reservation.designFocus }}</dd>
+          <dt>{{ t('consult.designFocus') }}</dt>
+          <dd>{{ displayValue(reservation.designFocus) }}</dd>
         </div>
       </dl>
     </article>
@@ -167,7 +190,7 @@ function displayDate(date: string): string {
 
   .consultation-upcoming::after {
     font-size: 14px;
-    content: 'new';
+    content: attr(data-mobile-label);
   }
 
   .all-consultations__count {

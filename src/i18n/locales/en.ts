@@ -52,43 +52,24 @@ export default {
     logout: 'Log out'
   },
   accountConsultations: {
-    eyebrow: 'Account',
-    title: 'My Consultations',
-    subtitle: 'Review your consultation bookings and assigned consultant details.',
-    loading: 'Loading your consultations...',
-    emptyTitle: 'No consultations yet',
     emptyDescription: 'Start to build up your first consultation.',
     bookConsultation: 'Book consultation',
-    errorTitle: 'Unable to load consultations',
-    errorDescription: 'Please try again in a moment.',
-    retry: 'Try again',
-    date: 'Date',
-    timeSlot: 'Time slot',
-    method: 'Method',
-    status: 'Status',
-    consultant: 'Consultant',
-    unassignedConsultant: 'Consultant not assigned yet',
-    details: 'Details',
-    collapse: 'Collapse details',
-    expand: 'View details',
-    designField: 'Design field',
-    designFocus: 'Design focus',
-    notes: 'Notes',
-    noExtraDetails: 'No additional details for this consultation.',
-    methods: {
-      online: 'Online',
-      in_person: 'In-person'
-    },
-    timeSlots: {
-      am: 'AM',
-      pm: 'PM'
-    },
-    bookingStatuses: {
-      pending_payment: 'Pending payment',
-      confirmed: 'Confirmed',
-      payment_failed: 'Payment failed',
-      canceled: 'Canceled',
-      completed: 'Completed'
+    youHave: 'You have',
+    upcoming: 'upcoming',
+    new: 'new',
+    consultations: 'consultations',
+    allConsultations: 'All consultations',
+    upcomingDates: 'Upcoming consultation dates',
+    viewAll: 'View all',
+    back: 'Back',
+    viewAllAria: 'View all consultations',
+    backToSelectedAria: 'Back to selected consultation',
+    sampleNotes: {
+      brand: 'I would like help defining the visual direction for a new brand identity.',
+      homeMaterials: 'I need advice on natural finishes and a calm material palette for my home.',
+      studio: 'I want to create a warm and quiet atmosphere for a small studio renovation.',
+      editorial: 'I would like to refine the color direction for an upcoming editorial shoot.',
+      livingRoom: 'I need help selecting furniture that works with the scale of my living room.'
     }
   },
   consult: {

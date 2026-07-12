@@ -51,43 +51,24 @@ export default {
     logout: '登出'
   },
   accountConsultations: {
-    eyebrow: '帳戶',
-    title: '我的預約',
-    subtitle: '查看你的顧問預約與分配顧問資訊。',
-    loading: '正在載入你的預約...',
-    emptyTitle: '目前沒有預約',
     emptyDescription: '開始建立你的第一次諮詢',
     bookConsultation: '前往預約',
-    errorTitle: '無法載入預約',
-    errorDescription: '請稍後再試一次。',
-    retry: '再試一次',
-    date: '日期',
-    timeSlot: '時段',
-    method: '方式',
-    status: '狀態',
-    consultant: '顧問',
-    unassignedConsultant: '尚未分配顧問',
-    details: '基本詳情',
-    collapse: '收合詳情',
-    expand: '查看詳情',
-    designField: '設計領域',
-    designFocus: '設計重點',
-    notes: '備註',
-    noExtraDetails: '這筆預約目前沒有其他詳情。',
-    methods: {
-      online: '線上',
-      in_person: '實體'
-    },
-    timeSlots: {
-      am: 'AM',
-      pm: 'PM'
-    },
-    bookingStatuses: {
-      pending_payment: '待付款',
-      confirmed: '已確認',
-      payment_failed: '付款失敗',
-      canceled: '已取消',
-      completed: '已完成'
+    youHave: '你有',
+    upcoming: '場即將到來的',
+    new: '場新',
+    consultations: '諮詢',
+    allConsultations: '所有諮詢預約',
+    upcomingDates: '即將到來的諮詢日期',
+    viewAll: '查看全部',
+    back: '返回',
+    viewAllAria: '查看所有諮詢預約',
+    backToSelectedAria: '返回所選諮詢預約',
+    sampleNotes: {
+      brand: '我想為新的品牌識別確立視覺方向。',
+      homeMaterials: '我需要關於天然飾面及居家沉靜材質配置的建議。',
+      studio: '我想為小型工作室翻修營造溫暖、安靜的氛圍。',
+      editorial: '我想調整即將進行的編輯拍攝色彩方向。',
+      livingRoom: '我需要協助挑選符合客廳空間尺度的家具。'
     }
   },
   consult: {

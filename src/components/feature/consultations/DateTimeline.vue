@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
 import type { AccountConsultation } from '@/types/account-consultation';
 
@@ -12,6 +13,8 @@ const emit = defineEmits<{
   select: [reservationId: string];
 }>();
 
+const { t } = useI18n();
+
 function displayDate(date: string): string {
   return date.replaceAll('-', ' ');
 }
@@ -21,7 +24,7 @@ function displayDate(date: string): string {
   <header class="page-heading">
     <span class="page-heading__line" aria-hidden="true"></span>
     <p>
-      You have
+      {{ t('accountConsultations.youHave') }}
       {{ ' ' }}
       <ScrambleText
         class="consultation-count"
@@ -30,11 +33,11 @@ function displayDate(date: string): string {
         :duration="1.8"
         :delay="0.2"
       />
-      {{ ' ' }} upcoming
+      {{ ' ' }} {{ t('accountConsultations.upcoming') }}
       {{ ' ' }}
       <ScrambleText
         class="consultation-label"
-        text="consultations"
+        :text="t('accountConsultations.consultations')"
         chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         :duration="1.8"
         :delay="0.2"
@@ -42,7 +45,7 @@ function displayDate(date: string): string {
     </p>
   </header>
 
-  <nav class="date-timeline" aria-label="Upcoming consultation dates">
+  <nav class="date-timeline" :aria-label="t('accountConsultations.upcomingDates')">
     <div class="date-timeline__viewport">
       <div class="date-timeline__list">
         <button
