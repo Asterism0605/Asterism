@@ -68,13 +68,18 @@ const reservations = (
 ).sort((a, b) => a.consultationDate.localeCompare(b.consultationDate));
 
 const selectedId = ref(reservations[0].id);
-const visibleReservations = computed(() => reservations.slice(0, 3));
+const showAllConsultations = ref(false);
 const selectedReservation = computed(
   () => reservations.find((reservation) => reservation.id === selectedId.value) ?? reservations[0]
 );
 
 function displayDate(date: string): string {
   return date.replaceAll('-', ' ');
+}
+
+function selectReservation(reservationId: string): void {
+  selectedId.value = reservationId;
+  showAllConsultations.value = false;
 }
 </script>
 
@@ -113,54 +118,106 @@ function displayDate(date: string): string {
     </header>
 
     <nav class="date-timeline" aria-label="Upcoming consultation dates">
-      <button
-        v-for="reservation in visibleReservations"
-        :key="reservation.id"
-        type="button"
-        class="date-node"
-        :class="{ 'date-node--active': reservation.id === selectedId }"
-        :aria-current="reservation.id === selectedId ? 'date' : undefined"
-        @click="selectedId = reservation.id"
-      >
-        <span class="date-node__anchor" aria-hidden="true"></span>
-        <span class="date-node__connector" aria-hidden="true"></span>
-        <span class="date-node__end" aria-hidden="true"></span>
-        <span class="date-node__label">
-          {{ displayDate(reservation.consultationDate) }} {{ reservation.timeSlot.toUpperCase() }}
-        </span>
-      </button>
+      <div class="date-timeline__viewport">
+        <div class="date-timeline__list">
+          <button
+            v-for="reservation in reservations"
+            :key="reservation.id"
+            type="button"
+            class="date-node consultation-hover-glow"
+            :class="{
+              'date-node--active': !showAllConsultations && reservation.id === selectedId
+            }"
+            :aria-current="
+              !showAllConsultations && reservation.id === selectedId ? 'date' : undefined
+            "
+            @click="selectReservation(reservation.id)"
+          >
+            <span class="date-node__anchor" aria-hidden="true"></span>
+            <span class="date-node__connector" aria-hidden="true"></span>
+            <span class="date-node__end" aria-hidden="true"></span>
+            <span class="date-node__label">
+              {{ displayDate(reservation.consultationDate) }}
+              {{ reservation.timeSlot.toUpperCase() }}
+            </span>
+          </button>
+        </div>
+      </div>
     </nav>
 
     <article class="details-panel glass-panel" aria-live="polite">
-      <button class="view-all" type="button" aria-label="View all consultations">
-        View all <span aria-hidden="true">↗</span>
+      <button
+        class="view-all consultation-hover-glow"
+        type="button"
+        :aria-label="
+          showAllConsultations ? 'Back to selected consultation' : 'View all consultations'
+        "
+        :aria-expanded="showAllConsultations"
+        @click="showAllConsultations = !showAllConsultations"
+      >
+        {{ showAllConsultations ? 'Back' : 'View all' }}
+        <span aria-hidden="true">{{ showAllConsultations ? '↙' : '↗' }}</span>
       </button>
 
-      <div class="details-panel__date">
-        <time :datetime="selectedReservation.consultationDate">
-          {{ displayDate(selectedReservation.consultationDate) }}
-        </time>
-        <span>{{ selectedReservation.timeSlot.toUpperCase() }}</span>
-      </div>
+      <template v-if="!showAllConsultations">
+        <div class="details-panel__date">
+          <time :datetime="selectedReservation.consultationDate">
+            {{ displayDate(selectedReservation.consultationDate) }}
+          </time>
+          <span>{{ selectedReservation.timeSlot.toUpperCase() }}</span>
+        </div>
 
-      <dl class="consultation-details">
-        <div>
-          <dt>Consultation Method</dt>
-          <dd>{{ selectedReservation.method }}</dd>
-        </div>
-        <div>
-          <dt>Design Field</dt>
-          <dd>{{ selectedReservation.designField }}</dd>
-        </div>
-        <div>
-          <dt>Design Focus</dt>
-          <dd>{{ selectedReservation.designFocus }}</dd>
-        </div>
-        <div>
-          <dt>Notes</dt>
-          <dd>{{ selectedReservation.notes }}</dd>
-        </div>
-      </dl>
+        <dl class="consultation-details">
+          <div>
+            <dt>Consultation Method</dt>
+            <dd>{{ selectedReservation.method }}</dd>
+          </div>
+          <div>
+            <dt>Design Field</dt>
+            <dd>{{ selectedReservation.designField }}</dd>
+          </div>
+          <div>
+            <dt>Design Focus</dt>
+            <dd>{{ selectedReservation.designFocus }}</dd>
+          </div>
+          <div>
+            <dt>Notes</dt>
+            <dd>{{ selectedReservation.notes }}</dd>
+          </div>
+        </dl>
+      </template>
+
+      <section v-else class="all-consultations" aria-label="All consultations">
+        <p class="all-consultations__count">
+          You have {{ reservations.length }} upcoming consultations
+        </p>
+        <article
+          v-for="reservation in reservations"
+          :key="reservation.id"
+          class="all-consultations__item"
+        >
+          <header class="all-consultations__header">
+            <time :datetime="reservation.consultationDate">
+              {{ displayDate(reservation.consultationDate) }}
+            </time>
+            <span>{{ reservation.timeSlot.toUpperCase() }}</span>
+          </header>
+          <dl class="all-consultations__meta">
+            <div>
+              <dt>Method</dt>
+              <dd>{{ reservation.method }}</dd>
+            </div>
+            <div>
+              <dt>Design Field</dt>
+              <dd>{{ reservation.designField }}</dd>
+            </div>
+            <div>
+              <dt>Design Focus</dt>
+              <dd>{{ reservation.designFocus }}</dd>
+            </div>
+          </dl>
+        </article>
+      </section>
     </article>
   </main>
 </template>
@@ -247,13 +304,38 @@ function displayDate(date: string): string {
   height: 100%;
 }
 
-.date-node {
+.date-timeline__viewport {
   position: absolute;
-  left: 0;
+  left: -16px;
+  top: 30%;
+  width: 446px;
+  height: 264px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-left: 16px;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.date-timeline__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.date-timeline__list {
+  display: grid;
+  width: 100%;
+}
+
+.consultation-hover-glow:is(:hover, :focus-visible) {
+  filter: drop-shadow(0 0 7px rgb(240 237 230 / 34%));
+}
+
+.date-node {
+  position: relative;
   display: flex;
   align-items: center;
   width: 420px;
-  height: 44px;
+  height: 88px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -263,19 +345,8 @@ function displayDate(date: string): string {
   opacity: 0.5;
   transition:
     color 180ms ease,
+    filter 180ms ease,
     opacity 180ms ease;
-}
-
-.date-node:nth-of-type(1) {
-  top: 35%;
-}
-
-.date-node:nth-of-type(2) {
-  top: 45%;
-}
-
-.date-node:nth-of-type(3) {
-  top: 55%;
 }
 
 .date-node__anchor {
@@ -365,6 +436,7 @@ function displayDate(date: string): string {
   letter-spacing: 0.02em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: filter 180ms ease;
 }
 
 .view-all span {
@@ -413,6 +485,88 @@ function displayDate(date: string): string {
 
 .consultation-details dd {
   color: rgb(240 237 230 / 66%);
+  font-weight: 300;
+}
+
+.all-consultations {
+  max-height: 400px;
+  margin-top: 22px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 8px;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.all-consultations::-webkit-scrollbar {
+  display: none;
+}
+
+.all-consultations__count {
+  display: none;
+}
+
+.all-consultations__item {
+  padding: 18px 0;
+  border-bottom: 1px solid rgb(240 237 230 / 14%);
+}
+
+.all-consultations__item:first-child {
+  padding-top: 4px;
+}
+
+.all-consultations__item:last-child {
+  padding-bottom: 4px;
+  border-bottom: 0;
+}
+
+.all-consultations__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: rgb(240 237 230 / 86%);
+}
+
+.all-consultations__header time {
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+.all-consultations__header span {
+  color: rgb(240 237 230 / 58%);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+.all-consultations__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 14px 0 0;
+}
+
+.all-consultations__meta div:last-child {
+  grid-column: 1 / -1;
+}
+
+.all-consultations__meta dt,
+.all-consultations__meta dd {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.all-consultations__meta dt {
+  color: rgb(240 237 230 / 42%);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.all-consultations__meta dd {
+  margin-top: 3px;
+  color: rgb(240 237 230 / 72%);
+  font-size: 13px;
   font-weight: 300;
 }
 
@@ -514,10 +668,29 @@ function displayDate(date: string): string {
   }
 
   .date-timeline {
-    left: 12.5%;
+    left: 8%;
     top: 12.5%;
-    width: 80%;
+    width: 82%;
     height: 210px;
+  }
+
+  .date-timeline__viewport {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-left: 0;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+  }
+
+  .date-timeline__list {
+    grid-auto-flow: column;
+    grid-auto-columns: 33.333%;
+    width: 100%;
+    height: 100%;
   }
 
   .date-node__connector,
@@ -526,29 +699,36 @@ function displayDate(date: string): string {
   }
 
   .date-node {
-    width: 310px;
+    width: 100%;
+    min-width: 0;
     height: 40px;
   }
 
-  .date-node:nth-of-type(1) {
-    left: 0;
+  .date-node:nth-of-type(3n + 1) {
+    left: 8px;
     top: 0;
   }
 
-  .date-node:nth-of-type(2) {
+  .date-node:nth-of-type(3n + 2) {
     left: 24%;
     top: 36px;
   }
 
-  .date-node:nth-of-type(3) {
+  .date-node:nth-of-type(3n) {
     left: 52%;
     top: 72px;
   }
 
   .date-node__anchor {
-    width: 6px;
-    height: 6px;
+    display: block;
+    flex: 0 0 4px;
+    width: 4px;
+    height: 4px;
     margin-left: 0;
+  }
+
+  .date-node--active .date-node__anchor {
+    transform: scale(1.25);
   }
 
   .date-node__label {
@@ -568,7 +748,19 @@ function displayDate(date: string): string {
     transform: none;
   }
 
-  .orbit--one, .orbit--two {
+  .all-consultations__count {
+    display: block;
+    margin: 0 0 18px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.035em;
+  }
+
+  .orbit--one,
+  .orbit--two,
+  .star--three,
+  .star--five {
     display: none;
   }
 
@@ -580,15 +772,10 @@ function displayDate(date: string): string {
     left: 20%;
     top: 97%;
   }
-  .star--three {
-    display: none;
-  }
+
   .star--four {
     left: 7%;
     bottom: 5%;
-  }
-  .star--five {
-    display: none;
   }
 }
 
@@ -603,11 +790,11 @@ function displayDate(date: string): string {
     top: 84px;
   }
 
-  .date-node:nth-of-type(2) {
+  .date-node:nth-of-type(3n + 2) {
     top: 48px;
   }
 
-  .date-node:nth-of-type(3) {
+  .date-node:nth-of-type(3n) {
     top: 96px;
   }
 
@@ -631,6 +818,10 @@ function displayDate(date: string): string {
 
   .consultation-details div:last-child {
     margin-top: 3px;
+  }
+
+  .all-consultations {
+    max-height: 280px;
   }
 }
 </style>
