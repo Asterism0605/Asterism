@@ -19,7 +19,7 @@ describe('AccountConsultations', () => {
       '2027 01 08 AM'
     ]);
     expect(wrapper.find('.date-timeline__viewport').exists()).toBe(true);
-    expect(wrapper.text()).toContain('You have 5 upcoming consultations');
+    expect(wrapper.text().replace(/\s+/g, ' ')).toContain('You have 5 upcoming consultations');
   });
 
   it('keeps the first reservation selected when the date viewport scrolls', async () => {
@@ -65,9 +65,7 @@ describe('AccountConsultations', () => {
     expect(wrapper.get('.view-all').text()).toContain('Back');
     expect(wrapper.findAll('.all-consultations__item')).toHaveLength(5);
     expect(wrapper.get('.all-consultations').text()).toContain('2027 01 08');
-    expect(wrapper.get('.all-consultations__count').text()).toBe(
-      'You have 5 upcoming consultations'
-    );
+    expect(wrapper.get('.all-consultations__count').text()).toBe('You have5upcomingconsultations');
     expect(wrapper.get('.all-consultations').text()).toContain('Furniture Selection');
     expect(wrapper.get('.all-consultations').text()).not.toContain('Notes');
     expect(wrapper.get('.all-consultations').text()).not.toContain(

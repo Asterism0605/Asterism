@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
+import ScrambleText from '@/components/effects/ScrambleText.vue';
 
 type Reservation = {
   id: string;
@@ -69,6 +70,7 @@ const reservations = (
 
 const selectedId = ref(reservations[0].id);
 const showAllConsultations = ref(false);
+const detailDateScramble = ref<InstanceType<typeof ScrambleText> | null>(null);
 const selectedReservation = computed(
   () => reservations.find((reservation) => reservation.id === selectedId.value) ?? reservations[0]
 );
@@ -77,9 +79,11 @@ function displayDate(date: string): string {
   return date.replaceAll('-', ' ');
 }
 
-function selectReservation(reservationId: string): void {
+async function selectReservation(reservationId: string): Promise<void> {
   selectedId.value = reservationId;
   showAllConsultations.value = false;
+  await nextTick();
+  detailDateScramble.value?.play();
 }
 </script>
 
@@ -114,7 +118,27 @@ function selectReservation(reservationId: string): void {
 
     <header class="page-heading">
       <span class="page-heading__line" aria-hidden="true"></span>
-      <p>You have {{ reservations.length }} upcoming consultations</p>
+      <p>
+        You have
+        {{ ' ' }}
+        <ScrambleText
+          class="consultation-count"
+          :text="reservations.length"
+          chars="0123456789"
+          :duration="1.8"
+          :delay="0.2"
+        />
+        {{ ' ' }}
+        <span class="consultation-upcoming">upcoming</span>
+        {{ ' ' }}
+        <ScrambleText
+          class="consultation-label"
+          text="consultations"
+          chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+          :duration="1.8"
+          :delay="0.2"
+        />
+      </p>
     </header>
 
     <nav class="date-timeline" aria-label="Upcoming consultation dates">
@@ -162,7 +186,13 @@ function selectReservation(reservationId: string): void {
       <template v-if="!showAllConsultations">
         <div class="details-panel__date">
           <time :datetime="selectedReservation.consultationDate">
-            {{ displayDate(selectedReservation.consultationDate) }}
+            <ScrambleText
+              ref="detailDateScramble"
+              :text="displayDate(selectedReservation.consultationDate)"
+              chars="0123456789 "
+              :duration="1.2"
+              :autoplay="false"
+            />
           </time>
           <span>{{ selectedReservation.timeSlot.toUpperCase() }}</span>
         </div>
@@ -189,7 +219,22 @@ function selectReservation(reservationId: string): void {
 
       <section v-else class="all-consultations" aria-label="All consultations">
         <p class="all-consultations__count">
-          You have {{ reservations.length }} upcoming consultations
+          <span>You have</span>
+          <ScrambleText
+            class="consultation-count"
+            :text="reservations.length"
+            chars="0123456789"
+            :duration="1.8"
+            :delay="0.2"
+          />
+          <span class="consultation-upcoming">upcoming</span>
+          <ScrambleText
+            class="consultation-label"
+            text="consultations"
+            chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+            :duration="1.8"
+            :delay="0.2"
+          />
         </p>
         <article
           v-for="reservation in reservations"
@@ -233,6 +278,21 @@ function selectReservation(reservationId: string): void {
   font-family: var(--font-family-title);
 }
 
+.consultation-count {
+  display: inline-block;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.consultation-label {
+  display: inline-block;
+  width: 6.85em;
+  overflow: hidden;
+  font-weight: 500;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+
 /* ---------- 桌機：標題提示 ---------- */
 .page-heading {
   position: absolute;
@@ -268,6 +328,7 @@ function selectReservation(reservationId: string): void {
   width: 100%;
   height: 100%;
   pointer-events: none;
+  animation: consultation-orbit-float 6.4s ease-in-out infinite;
 }
 
 .timeline-orbit__desktop {
@@ -456,7 +517,7 @@ function selectReservation(reservationId: string): void {
   letter-spacing: 0.025em;
 }
 
-.details-panel__date span {
+.details-panel__date > span {
   margin-top: 3px;
   font-size: 20px;
 }
@@ -580,6 +641,7 @@ function selectReservation(reservationId: string): void {
   border: 0.8px solid rgb(240 237 230 / 80%);
   border-radius: 50%;
   transform: translateY(-48%) rotate(-33deg);
+  animation: consultation-orbit-float 6.4s ease-in-out infinite;
 }
 
 .orbit--two {
@@ -592,6 +654,7 @@ function selectReservation(reservationId: string): void {
   border: 1px solid rgb(240 237 230 / 24%);
   border-radius: 50%;
   transform: translateY(-50%) rotate(-8deg);
+  animation: consultation-orbit-float 7.2s ease-in-out -1.8s infinite;
 }
 
 .star {
@@ -601,6 +664,8 @@ function selectReservation(reservationId: string): void {
   height: 10px;
   border-radius: 50%;
   background: rgb(240 237 230 / 92%);
+  pointer-events: none;
+  animation: consultation-star-float 4.4s ease-in-out infinite;
 }
 
 .star--one {
@@ -613,26 +678,59 @@ function selectReservation(reservationId: string): void {
 .star--two {
   left: 38%;
   top: 39%;
+  animation-delay: -1.4s;
 }
 .star--three {
   right: 9%;
   top: 18%;
   width: 8px;
   height: 8px;
+  animation-delay: -2.1s;
 }
 .star--four {
   left: 25%;
   bottom: 10%;
   width: 6px;
   height: 6px;
+  animation-delay: -0.7s;
 }
 .star--five {
   right: 8%;
   bottom: 20%;
+  animation-delay: -1.8s;
+}
+
+@keyframes consultation-orbit-float {
+  0%,
+  100% {
+    translate: 0 -12px;
+  }
+  50% {
+    translate: 0 8px;
+  }
+}
+
+@keyframes consultation-star-float {
+  0%,
+  100% {
+    translate: 0 -7px;
+  }
+  50% {
+    translate: 0 9px;
+  }
 }
 
 /* ---------- 手機 ---------- */
 @media (max-width: 768px) {
+  .consultation-upcoming {
+    font-size: 0;
+  }
+
+  .consultation-upcoming::after {
+    font-size: 14px;
+    content: 'new';
+  }
+
   .page-heading,
   .timeline-orbit,
   .timeline-orbit__desktop,
@@ -651,6 +749,7 @@ function selectReservation(reservationId: string): void {
     overflow: visible;
     transform: translateY(-55px);
     pointer-events: none;
+    animation: consultation-orbit-float 6.4s ease-in-out infinite;
   }
 
   .mobile-orbits__one {
@@ -669,7 +768,7 @@ function selectReservation(reservationId: string): void {
 
   .date-timeline {
     left: 8%;
-    top: 12.5%;
+    top: 12%;
     width: 82%;
     height: 210px;
   }
@@ -749,12 +848,20 @@ function selectReservation(reservationId: string): void {
   }
 
   .all-consultations__count {
-    display: block;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.3em;
     margin: 0 0 18px;
+    padding: 10px 0;
     color: #ffffff;
     font-size: 14px;
     font-weight: 300;
     letter-spacing: 0.035em;
+  }
+
+  .all-consultations__count .consultation-count {
+    margin-right: -0.18em;
   }
 
   .orbit--one,
@@ -776,52 +883,6 @@ function selectReservation(reservationId: string): void {
   .star--four {
     left: 7%;
     bottom: 5%;
-  }
-}
-
-@media (max-width: 420px) {
-  .date-timeline {
-    top: 12%;
-  }
-}
-
-@media (max-width: 768px) and (max-height: 720px) {
-  .date-timeline {
-    top: 84px;
-  }
-
-  .date-node:nth-of-type(3n + 2) {
-    top: 48px;
-  }
-
-  .date-node:nth-of-type(3n) {
-    top: 96px;
-  }
-
-  .details-panel {
-    top: 36.5%;
-    bottom: auto;
-    padding-right: 30px;
-    padding-left: 30px;
-    padding-top: 20px;
-    padding-bottom: 22px;
-  }
-
-  .details-panel__date {
-    margin-top: 10px;
-  }
-
-  .consultation-details {
-    gap: 8px;
-    margin-top: 14px;
-  }
-
-  .consultation-details div:last-child {
-    margin-top: 3px;
-  }
-
-  .all-consultations {
-    max-height: 280px;
   }
 }
 </style>
