@@ -92,16 +92,20 @@ function displayDate(date: string): string {
         d="M 0 728 C 100 755 175 790 230 835 C 330 915 400 1010 435 1080"
       />
       <path class="timeline-orbit__desktop-arc-two" d="M 0 835 C 150 838 300 900 470 1080" />
-      <path class="timeline-orbit__mobile" d="M 1920 720 C 1780 870 1640 1010 1500 1080" />
+    </svg>
+
+    <svg class="mobile-orbits" viewBox="0 0 435 947" preserveAspectRatio="none" aria-hidden="true">
+      <circle class="mobile-orbits__one" cx="77" cy="723" r="387" />
+      <circle class="mobile-orbits__two" cx="165" cy="707" r="333" />
     </svg>
 
     <i class="orbit--one" aria-hidden="true"></i>
     <i class="orbit--two" aria-hidden="true"></i>
-    <i class="star--one" aria-hidden="true"></i>
-    <i class="star--two" aria-hidden="true"></i>
-    <i class="star--three" aria-hidden="true"></i>
-    <i class="star--four" aria-hidden="true"></i>
-    <i class="star--five" aria-hidden="true"></i>
+    <i class="star star--one" aria-hidden="true"></i>
+    <i class="star star--two" aria-hidden="true"></i>
+    <i class="star star--three" aria-hidden="true"></i>
+    <i class="star star--four" aria-hidden="true"></i>
+    <i class="star star--five" aria-hidden="true"></i>
 
     <header class="page-heading">
       <span class="page-heading__line" aria-hidden="true"></span>
@@ -167,8 +171,8 @@ function displayDate(date: string): string {
   width: 100%;
   height: 100svh;
   overflow: hidden;
-  background: #0d0d0f;
-  color: rgb(240 237 230 / 92%);
+  background: var(--color-void);
+  color: var(--color-text-primary);
   font-family: var(--font-family-title);
 }
 
@@ -176,7 +180,7 @@ function displayDate(date: string): string {
 .page-heading {
   position: absolute;
   left: 12%;
-  top: 15%;
+  top: 16%;
   z-index: 4;
   display: flex;
   align-items: center;
@@ -188,12 +192,14 @@ function displayDate(date: string): string {
   height: 32px;
   clip-path: polygon(0 100%, 38% 0, 100% 0, 100% 4%, 39% 4%, 1% 100%);
   background: rgb(240 237 230 / 75%);
+  transform: translateY(24px);
 }
 
 .page-heading p {
+  position: relative;
+  top: 10px;
   margin: 0 0 0 20px;
-  color: rgb(240 237 230 / 82%);
-  font-size: 23px;
+  font-size: 20px;
   font-weight: 300;
   letter-spacing: 0.015em;
 }
@@ -228,7 +234,7 @@ function displayDate(date: string): string {
   vector-effect: non-scaling-stroke;
 }
 
-.timeline-orbit__mobile {
+.mobile-orbits {
   display: none;
 }
 
@@ -254,18 +260,22 @@ function displayDate(date: string): string {
   color: rgb(240 237 230 / 74%);
   font: inherit;
   cursor: pointer;
+  opacity: 0.5;
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
 }
 
 .date-node:nth-of-type(1) {
-  top: 30%;
+  top: 35%;
 }
 
 .date-node:nth-of-type(2) {
-  top: 40%;
+  top: 45%;
 }
 
 .date-node:nth-of-type(3) {
-  top: 50%;
+  top: 55%;
 }
 
 .date-node__anchor {
@@ -274,13 +284,18 @@ function displayDate(date: string): string {
   margin-left: -5px;
   border-radius: 50%;
   background: rgb(240 237 230 / 92%);
-  transition: transform 180ms ease;
+  transition:
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .date-node__connector {
   width: 88px;
   height: 1px;
   background: rgb(240 237 230 / 76%);
+  transition:
+    background-color 180ms ease,
+    width 220ms ease;
 }
 
 .date-node__end {
@@ -298,25 +313,41 @@ function displayDate(date: string): string {
   white-space: nowrap;
 }
 
-.date-node:is(:hover, :focus-visible),
+.date-node:not(.date-node--active):is(:hover, :focus-visible) {
+  color: rgb(240 237 230 / 84%);
+  opacity: 0.76;
+}
+
+.date-node:not(.date-node--active):is(:hover, :focus-visible) .date-node__anchor {
+  transform: scale(1.08);
+}
+
 .date-node--active {
-  color: rgb(240 237 230 / 92%);
+  color: var(--color-text-primary);
+  opacity: 1;
 }
 
 .date-node--active .date-node__anchor {
-  transform: scale(1.18);
+  box-shadow:
+    0 0 0 1px rgb(240 237 230 / 55%),
+    0 0 10px rgb(240 237 230 / 18%);
+  transform: scale(1.15);
+}
+
+.date-node--active .date-node__connector {
+  background: rgb(240 237 230 / 90%);
 }
 
 /* ---------- 桌機：預約面板 ---------- */
 .details-panel {
   position: absolute;
-  right: 10%;
+  right: 15%;
   top: calc(50% + 32px);
   z-index: 5;
   width: 440px;
   height: 500px;
   padding: 30px 46px 36px;
-  border-radius: 58px;
+  border-radius: 36px;
   background-color: rgb(22 22 25 / 38%);
   transform: translateY(-50%);
 }
@@ -387,113 +418,106 @@ function displayDate(date: string): string {
 
 .orbit--one {
   position: absolute;
-  right: 8px;
+  right: 80px;
   top: calc(50% + 32px);
   display: block;
   width: 720px;
   height: 490px;
-  border: 1px solid rgb(240 237 230 / 72%);
+  border: 0.8px solid rgb(240 237 230 / 80%);
   border-radius: 50%;
   transform: translateY(-48%) rotate(-33deg);
 }
 
 .orbit--two {
   position: absolute;
-  right: 14px;
+  right: 77px;
   top: calc(50% + 32px);
   display: block;
   width: 720px;
   height: 435px;
-  border: 1px solid rgb(240 237 230 / 48%);
+  border: 1px solid rgb(240 237 230 / 24%);
   border-radius: 50%;
   transform: translateY(-50%) rotate(-8deg);
 }
 
-.star--one {
+.star {
   position: absolute;
-  left: 44%;
-  top: 29%;
   display: block;
-  width: 16px;
-  height: 16px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: rgb(240 237 230 / 92%);
-  pointer-events: none;
+}
+
+.star--one {
+  left: 50%;
+  top: 29%;
+  width: 6px;
+  height: 6px;
 }
 
 .star--two {
-  position: absolute;
   left: 38%;
   top: 39%;
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgb(240 237 230 / 92%);
-  pointer-events: none;
 }
 .star--three {
-  position: absolute;
   right: 9%;
-  top: 14%;
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgb(240 237 230 / 92%);
-  pointer-events: none;
+  top: 18%;
+  width: 8px;
+  height: 8px;
 }
 .star--four {
-  position: absolute;
-  left: 34%;
-  bottom: 24%;
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgb(240 237 230 / 92%);
-  pointer-events: none;
+  left: 25%;
+  bottom: 10%;
+  width: 6px;
+  height: 6px;
 }
 .star--five {
-  position: absolute;
-  right: 12%;
-  bottom: 27%;
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgb(240 237 230 / 92%);
-  pointer-events: none;
+  right: 8%;
+  bottom: 20%;
 }
 
 /* ---------- 手機 ---------- */
-@media (max-width: 900px) {
-  .timeline-orbit__desktop {
-    display: none;
-  }
-
+@media (max-width: 768px) {
+  .page-heading,
+  .timeline-orbit,
+  .timeline-orbit__desktop,
   .timeline-orbit__desktop-arc-one,
   .timeline-orbit__desktop-arc-two {
     display: none;
   }
 
-  .timeline-orbit__mobile {
+  .mobile-orbits {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
     display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    transform: translateY(-55px);
+    pointer-events: none;
+  }
+
+  .mobile-orbits__one {
     fill: none;
-    stroke: rgb(240 237 230 / 70%);
+    stroke: rgb(240 237 230 / 80%);
     stroke-width: 1;
     vector-effect: non-scaling-stroke;
   }
 
-  .page-heading {
-    display: none;
+  .mobile-orbits__two {
+    fill: none;
+    stroke: rgb(240 237 230 / 26%);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
   }
 
   .date-timeline {
-    left: 8%;
-    top: 100px;
-    width: 84%;
-    height: 190px;
+    left: 12.5%;
+    top: 12.5%;
+    width: 80%;
+    height: 210px;
   }
 
   .date-node__connector,
@@ -502,8 +526,8 @@ function displayDate(date: string): string {
   }
 
   .date-node {
-    width: 300px;
-    height: 28px;
+    width: 310px;
+    height: 40px;
   }
 
   .date-node:nth-of-type(1) {
@@ -512,113 +536,101 @@ function displayDate(date: string): string {
   }
 
   .date-node:nth-of-type(2) {
-    left: 20%;
-    top: 58px;
+    left: 24%;
+    top: 36px;
   }
 
   .date-node:nth-of-type(3) {
-    left: 43%;
-    top: 116px;
+    left: 52%;
+    top: 72px;
   }
 
   .date-node__anchor {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     margin-left: 0;
   }
 
   .date-node__label {
-    margin-left: 20px;
-    font-size: 15px;
+    margin-left: 12px;
+    font-size: 14px;
   }
 
   .details-panel {
-    left: 7%;
+    left: 8%;
     right: auto;
-    top: auto;
-    bottom: 24px;
-    width: 86%;
-    height: 385px;
-    padding: 24px 38px 28px;
-    border-radius: 52px;
+    top: 32%;
+    bottom: auto;
+    width: 82%;
+    height: auto;
+    min-height: 0;
+    padding: 32px 9vw 38px;
     transform: none;
   }
 
-  .details-panel__date {
-    margin-top: 20px;
-  }
-
-  .details-panel__date time {
-    font-size: 30px;
-  }
-
-  .details-panel__date span {
-    font-size: 17px;
-  }
-
-  .consultation-details {
-    gap: 10px;
-    margin-top: 24px;
-  }
-
-  .consultation-details dt,
-  .consultation-details dd {
-    font-size: 13px;
-  }
-
-  .orbit--one {
-    left: -260px;
-    right: auto;
-    top: 46%;
-    width: 720px;
-    height: 400px;
-    transform: translateY(-50%) rotate(24deg);
-  }
-
-  .orbit--two {
-    left: -230px;
-    right: auto;
-    top: 47%;
-    width: 660px;
-    height: 340px;
-    transform: translateY(-50%) rotate(17deg);
+  .orbit--one, .orbit--two {
+    display: none;
   }
 
   .star--one {
-    left: 92%;
-    top: 43%;
+    left: 95%;
+    top: 40%;
   }
   .star--two {
-    left: 28%;
-    top: 91%;
+    left: 20%;
+    top: 97%;
   }
   .star--three {
-    right: 7%;
-    top: 30%;
+    display: none;
   }
   .star--four {
-    left: 12%;
-    bottom: 4%;
-    width: 7px;
-    height: 7px;
+    left: 7%;
+    bottom: 5%;
   }
   .star--five {
-    right: 24%;
-    bottom: 6%;
+    display: none;
   }
 }
 
 @media (max-width: 420px) {
   .date-timeline {
-    top: 88px;
+    top: 12%;
+  }
+}
+
+@media (max-width: 768px) and (max-height: 720px) {
+  .date-timeline {
+    top: 84px;
+  }
+
+  .date-node:nth-of-type(2) {
+    top: 48px;
+  }
+
+  .date-node:nth-of-type(3) {
+    top: 96px;
   }
 
   .details-panel {
-    left: 16px;
-    width: calc(100% - 32px);
-    height: 370px;
-    padding: 20px 30px 24px;
-    border-radius: 46px;
+    top: 36.5%;
+    bottom: auto;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 20px;
+    padding-bottom: 22px;
+  }
+
+  .details-panel__date {
+    margin-top: 10px;
+  }
+
+  .consultation-details {
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .consultation-details div:last-child {
+    margin-top: 3px;
   }
 }
 </style>
