@@ -40,7 +40,8 @@ export default {
     saveContactSupport: 'Something went wrong. Please contact support.',
     saveFailed: 'Failed to save. Please try again.',
     folderLimit: 'You have reached the maximum of 10 folders.',
-    folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
+    folderCleanupFailed:
+      'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
     folderCreatedAndSaved: 'Folder created and image saved.'
   },
   userMenu: {
@@ -56,7 +57,7 @@ export default {
     subtitle: 'Review your consultation bookings and assigned consultant details.',
     loading: 'Loading your consultations...',
     emptyTitle: 'No consultations yet',
-    emptyDescription: 'Book a consultation when you are ready to translate your Style DNA.',
+    emptyDescription: 'Start to build up your first consultation.',
     bookConsultation: 'Book consultation',
     errorTitle: 'Unable to load consultations',
     errorDescription: 'Please try again in a moment.',
@@ -139,7 +140,8 @@ export default {
     checkoutError409: 'This time slot is no longer available. Please choose another time.',
     checkoutError429: 'Too many attempts. Please try again later.',
     checkoutErrorGeneric: 'Something went wrong. Please try again later.',
-    checkoutErrorSlotUnavailable: 'This time slot is no longer available. Please choose another time.',
+    checkoutErrorSlotUnavailable:
+      'This time slot is no longer available. Please choose another time.',
     checkoutErrorProfileEmailRequired: 'Please add an email address before booking.',
     checkoutErrorProfileNotFound: 'Please sign in to continue booking.',
     checkoutErrorSourceImageNotFound: 'We could not find the selected source image.',

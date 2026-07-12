@@ -56,7 +56,7 @@ export default {
     subtitle: '查看你的顧問預約與分配顧問資訊。',
     loading: '正在載入你的預約...',
     emptyTitle: '目前沒有預約',
-    emptyDescription: '準備好轉譯你的 Style DNA 時，可以預約顧問諮詢。',
+    emptyDescription: '開始建立你的第一次諮詢',
     bookConsultation: '前往預約',
     errorTitle: '無法載入預約',
     errorDescription: '請稍後再試一次。',
