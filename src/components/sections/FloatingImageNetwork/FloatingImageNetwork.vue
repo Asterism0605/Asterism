@@ -11,6 +11,7 @@ import {
   buildFloatingImageLayout,
   getConstellationSize,
   getFallbackCard,
+  reflowFloatingImageLayout,
   resolveContainerSize,
   resolveLayoutPreset
 } from './layout';
@@ -50,6 +51,15 @@ function scheduleRecompute() {
   recomputeTimer = setTimeout(recomputeLayout, 120);
 }
 
+function scheduleAspectReflow() {
+  if (typeof window === 'undefined') {
+    reflowLayout();
+    return;
+  }
+  clearTimeout(recomputeTimer);
+  recomputeTimer = setTimeout(reflowLayout, 120);
+}
+
 function markReady() {
   if (isReady.value) return;
 
@@ -71,6 +81,8 @@ function onImageLoad(src: string, event: Event) {
 
       if (!isReady.value) {
         scheduleRecompute();
+      } else {
+        scheduleAspectReflow();
       }
     }
   }
@@ -130,6 +142,23 @@ function recomputeLayout() {
   const aspects = visibleImages.value.map((image) => naturalAspects.get(image.src));
   positions.value = buildFloatingImageLayout(
     visibleImages.value.length,
+    width,
+    height,
+    resolveLayoutPreset(layoutKey.value),
+    viewportHeight,
+    aspects
+  );
+}
+
+function reflowLayout() {
+  const container = containerRef.value;
+  if (!container) return;
+
+  const { width, height } = resolveContainerSize(container, props.height);
+  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : height;
+  const aspects = visibleImages.value.map((image) => naturalAspects.get(image.src));
+  positions.value = reflowFloatingImageLayout(
+    positions.value,
     width,
     height,
     resolveLayoutPreset(layoutKey.value),
