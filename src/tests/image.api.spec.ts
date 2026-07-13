@@ -18,6 +18,8 @@ const row = {
   medium: 'Painting',
   sub_medium: 'Oil',
   color_palette: ['#fff'],
+  attribution: 'Photo by Jane Doe / Unsplash',
+  source_url: 'https://unsplash.com/photos/abc123',
   needs_review: { styleGroup: false, medium: false, subMedium: false }
 };
 const pending = {
@@ -45,7 +47,9 @@ describe('image.api fetchImagesApi', () => {
       style: ['a'],
       medium: 'Painting',
       subMedium: 'Oil',
-      colorPalette: ['#fff']
+      colorPalette: ['#fff'],
+      attribution: 'Photo by Jane Doe / Unsplash',
+      sourceUrl: 'https://unsplash.com/photos/abc123'
     });
   });
 

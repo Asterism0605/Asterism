@@ -3,7 +3,8 @@ import type {
   ConsultationApiResponse,
   ConsultationBookingDetail,
   ConsultationCheckoutRequest,
-  ConsultationCheckoutResult
+  ConsultationCheckoutResult,
+  ConsultationMonthAvailabilityResult
 } from '@/types/consultation';
 
 export async function createConsultationCheckoutSession(
@@ -54,6 +55,20 @@ export async function getConsultationBookingDetail(
       headers: { Authorization: `Bearer ${accessToken}` }
     }
   );
+
+  return response.data;
+}
+
+export async function getConsultationAvailability(
+  month: string,
+  accessToken: string
+): Promise<ConsultationApiResponse<ConsultationMonthAvailabilityResult>> {
+  const response = await httpClient.get<
+    ConsultationApiResponse<ConsultationMonthAvailabilityResult>
+  >('/api/v1/consultations/availability', {
+    params: { month },
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
 
   return response.data;
 }

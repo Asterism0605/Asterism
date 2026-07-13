@@ -478,6 +478,45 @@ export function buildFloatingImageLayout(
   }));
 }
 
+// 已顯示的卡片只在真實比例到達時重解幾何約束；不重跑含隨機數的初始 layout。
+export function reflowFloatingImageLayout(
+  positions: NodePosition[],
+  width: number,
+  height: number,
+  preset: LayoutPreset,
+  viewportHeight: number = height,
+  aspects?: (string | undefined)[]
+) {
+  const nodes = positions.map((position, index) => ({
+    ...position,
+    aspect: aspects?.[index] ?? position.aspect
+  }));
+
+  if (!preset.evenYDistribution) {
+    const avoidedNodes = applyAvoidAreas(
+      nodes,
+      width,
+      height,
+      preset.avoidAreas,
+      viewportHeight
+    );
+    return avoidedNodes.map((node) => preset.clampPosition(node, width, height));
+  }
+
+  const obstacles = getActiveAvoidRects(preset.avoidAreas, width, height, viewportHeight);
+  const pinnedIndices = new Set<number>();
+  if (preset.homeHeroAnchor && nodes[preset.homeHeroAnchor.index]) {
+    pinnedIndices.add(preset.homeHeroAnchor.index);
+  }
+  const resolved = resolveOverlaps(nodes, obstacles, width, height, pinnedIndices);
+
+  return resolved.map((node) => ({
+    ...node,
+    x: Math.max(node.width / 2, Math.min(width - node.width / 2, node.x)),
+    y: Math.max(getNodeHeight(node) / 2, Math.min(height - getNodeHeight(node) / 2, node.y))
+  }));
+}
+
 export function getFallbackCard(layout: 'auto' | 'home') {
   const preset = resolveLayoutPreset(layout);
 

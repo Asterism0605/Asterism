@@ -11,6 +11,7 @@ vi.mock('@/api/httpClient', () => ({
 
 import {
   createConsultationCheckoutSession,
+  getConsultationAvailability,
   getConsultationBookingDetail
 } from '@/api/consultation.api';
 import type { ConsultationCheckoutRequest } from '@/types/consultation';
@@ -185,10 +186,38 @@ describe('consultation.api', () => {
     };
     get.mockResolvedValue({ data: response });
 
-    await expect(
-      getConsultationBookingDetail('booking-id', 'access-token')
-    ).resolves.toEqual(response);
+    await expect(getConsultationBookingDetail('booking-id', 'access-token')).resolves.toEqual(
+      response
+    );
     expect(get).toHaveBeenCalledWith('/api/v1/consultations/booking-id', {
+      headers: { Authorization: 'Bearer access-token' }
+    });
+  });
+
+  it('gets consultation availability for a month with auth', async () => {
+    const response = {
+      success: true as const,
+      data: {
+        month: '2026-07',
+        startDate: '2026-07-01',
+        endDate: '2026-07-31',
+        days: [
+          {
+            date: '2026-07-10',
+            slots: [
+              { timeSlot: 'am' as const, available: true },
+              { timeSlot: 'pm' as const, available: false }
+            ]
+          }
+        ]
+      },
+      error: null
+    };
+    get.mockResolvedValue({ data: response });
+
+    await expect(getConsultationAvailability('2026-07', 'access-token')).resolves.toEqual(response);
+    expect(get).toHaveBeenCalledWith('/api/v1/consultations/availability', {
+      params: { month: '2026-07' },
       headers: { Authorization: 'Bearer access-token' }
     });
   });

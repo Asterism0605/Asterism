@@ -35,7 +35,8 @@ function toSpreadNode(image: StyleImage): ImageSpreadNode {
     medium: image.medium,
     subMedium: image.subMedium,
     colorPalette: image.colorPalette,
-    attribution: image.attribution
+    attribution: image.attribution,
+    sourceUrl: image.sourceUrl
   };
 }
 
@@ -55,6 +56,27 @@ export function resolvePhotographerInfo(attribution?: string): PhotographerInfo 
 
   const match = trimmed.match(/^Photo by (.+?) \/ .+$/);
   return { name: match?.[1] ?? trimmed };
+}
+
+export interface SourceLinkInfo {
+  url: string;
+  label: string;
+}
+
+// 詳情頁「SOURCE URL」連結：只信任 http/https，擋掉 javascript:/data: 等危險協議，
+// 避免圖片資料（外部 API 回填）夾帶惡意 URL 被當成 <a href> 原樣輸出。
+// label 只取網域（例如 unsplash.com），不顯示一長串完整路徑。
+// sourceUrl 缺漏、格式不合法、或協議不是 http/https 時一律回傳 undefined，呼叫端直接不顯示連結。
+export function getSourceLinkInfo(sourceUrl?: string): SourceLinkInfo | undefined {
+  if (!sourceUrl) return undefined;
+
+  try {
+    const parsed = new URL(sourceUrl);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return undefined;
+    return { url: parsed.href, label: parsed.hostname };
+  } catch {
+    return undefined;
+  }
 }
 
 function countSharedStyles(baseImage: StyleImage, candidate: StyleImage): number {
