@@ -45,9 +45,9 @@ function createTestRouter() {
   });
 }
 
-async function mountMoodboard() {
+async function mountMoodboard(initialPath = '/moodboard') {
   const router = createTestRouter();
-  await router.push('/moodboard');
+  await router.push(initialPath);
   await router.isReady();
 
   const wrapper = mount(MoodboardOrbit, {
@@ -562,6 +562,24 @@ describe('MoodboardOrbit', () => {
       });
       return store;
     }
+
+    it('restores the folder detail view when mounting directly at a slugged moodboard URL', async () => {
+      patchSingleImageFolder();
+      const { wrapper } = await mountMoodboard('/moodboard/studio');
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid="moodboard-detail-photo"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="moodboard-folder-0"]').isVisible()).toBe(false);
+    });
+
+    it('falls back to the folder list when mounting at a slug that matches no folder', async () => {
+      patchSingleImageFolder();
+      const { wrapper } = await mountMoodboard('/moodboard/no-such-folder');
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid="moodboard-detail-photo"]').exists()).toBe(false);
+      expect(wrapper.find('[data-testid="moodboard-folder-0"]').isVisible()).toBe(true);
+    });
 
     it('navigates to the picture detail page when clicking a desktop detail photo', async () => {
       patchSingleImageFolder();
