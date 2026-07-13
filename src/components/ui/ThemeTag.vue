@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { styleTagZh } from '@/data/styleLabels';
+import { useStyleTagLabel } from '@/composables/useStyleTagLabel';
 
 const props = withDefaults(
   defineProps<{
@@ -13,12 +12,12 @@ const props = withDefaults(
   }
 );
 
-const { locale } = useI18n();
+const { displayLabel } = useStyleTagLabel();
 
 const localizedTags = computed(() =>
   props.tags.map((tag) => ({
     source: tag,
-    label: locale.value === 'zh' ? styleTagZh(tag) : tag
+    label: displayLabel(tag)
   }))
 );
 </script>
