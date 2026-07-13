@@ -102,3 +102,21 @@ export interface ConsultationBookingDetail {
   payment: ConsultationPayment;
   consultant?: ConsultationSummary | null;
 }
+
+/** A list item returned by GET /api/v1/consultations/me. */
+export interface MyConsultationBooking {
+  id: string;
+  status: ConsultationBookingStatus;
+  method: ConsultationBookingMethod;
+  consultationDate: string;
+  timeSlot: ConsultationTimeSlot;
+  designField?: string;
+  designFocus?: string;
+  notes?: string;
+  createdAt: string;
+}
+
+export interface MyConsultationListResult {
+  items: MyConsultationBooking[];
+  nextCursor?: string;
+}
