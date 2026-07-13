@@ -1,11 +1,21 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { createPinia, setActivePinia } from 'pinia';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AccountConsultations from '@/pages/AccountConsultations.vue';
 import { i18n } from '@/i18n';
 
 describe('AccountConsultations', () => {
+  beforeEach(() => {
+    vi.stubEnv('VITE_USE_REAL_CONSULTATION_LIST', 'false');
+  });
+
   function mountPage() {
-    return mount(AccountConsultations);
+    const pinia = createPinia();
+    setActivePinia(pinia);
+
+    return mount(AccountConsultations, {
+      global: { plugins: [pinia] }
+    });
   }
 
   it('renders all upcoming reservations from nearest to furthest in the date viewport', () => {

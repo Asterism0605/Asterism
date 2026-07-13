@@ -64,6 +64,9 @@ export default {
     back: '返回',
     viewAllAria: '查看所有諮詢預約',
     backToSelectedAria: '返回所選諮詢預約',
+    loading: '正在載入你的預約…',
+    loadError: '無法載入你的預約。',
+    retry: '再試一次',
     sampleNotes: {
       brand: '我想為新的品牌識別確立視覺方向。',
       homeMaterials: '我需要關於天然飾面及居家沉靜材質配置的建議。',

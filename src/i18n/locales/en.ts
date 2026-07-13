@@ -64,6 +64,9 @@ export default {
     back: 'Back',
     viewAllAria: 'View all consultations',
     backToSelectedAria: 'Back to selected consultation',
+    loading: 'Loading your consultations…',
+    loadError: "We couldn't load your consultations.",
+    retry: 'Try again',
     sampleNotes: {
       brand: 'I would like help defining the visual direction for a new brand identity.',
       homeMaterials: 'I need advice on natural finishes and a calm material palette for my home.',

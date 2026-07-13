@@ -41,7 +41,9 @@ const valueKeys: Record<string, string> = {
     'accountConsultations.sampleNotes.livingRoom'
 };
 
-function displayValue(value: string): string {
+function displayValue(value?: string): string {
+  if (!value) return '—';
+
   return valueKeys[value] ? t(valueKeys[value]) : value;
 }
 

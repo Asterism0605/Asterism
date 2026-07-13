@@ -6,5 +6,5 @@ export interface AccountConsultation {
   method: string;
   designField: string;
   designFocus: string;
-  notes: string;
+  notes?: string;
 }
