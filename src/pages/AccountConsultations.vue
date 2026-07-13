@@ -13,69 +13,8 @@ import type { MyConsultationBooking } from '@/types/consultation';
 
 const router = useRouter();
 const authStore = useAuthStore();
-const useRealConsultationList = ref(
-  import.meta.env.VITE_USE_REAL_CONSULTATION_LIST === 'true'
-);
-
-const mockReservations = (
-  [
-    {
-      id: 'reservation-01',
-      status: 'confirmed',
-      consultationDate: '2026-07-28',
-      timeSlot: 'am',
-      method: 'Online',
-      designField: 'Graphic Design',
-      designFocus: 'Visual Concept',
-      notes: 'I would like help defining the visual direction for a new brand identity.'
-    },
-    {
-      id: 'reservation-02',
-      status: 'confirmed',
-      consultationDate: '2026-08-10',
-      timeSlot: 'pm',
-      method: 'In-Person',
-      designField: 'Interior Design',
-      designFocus: 'Material Palette',
-      notes: 'I need advice on natural finishes and a calm material palette for my home.'
-    },
-    {
-      id: 'reservation-03',
-      status: 'confirmed',
-      consultationDate: '2026-10-01',
-      timeSlot: 'am',
-      method: 'Online',
-      designField: 'Architecture',
-      designFocus: 'Spatial Mood',
-      notes: 'I want to create a warm and quiet atmosphere for a small studio renovation.'
-    },
-    {
-      id: 'reservation-04',
-      status: 'confirmed',
-      consultationDate: '2026-11-16',
-      timeSlot: 'pm',
-      method: 'Online',
-      designField: 'Styling Design',
-      designFocus: 'Color Direction',
-      notes: 'I would like to refine the color direction for an upcoming editorial shoot.'
-    },
-    {
-      id: 'reservation-05',
-      status: 'confirmed',
-      consultationDate: '2027-01-08',
-      timeSlot: 'am',
-      method: 'In-Person',
-      designField: 'Interior Design',
-      designFocus: 'Furniture Selection',
-      notes: 'I need help selecting furniture that works with the scale of my living room.'
-    }
-  ] satisfies AccountConsultation[]
-).sort((a, b) => a.consultationDate.localeCompare(b.consultationDate));
-
-const reservations = ref<AccountConsultation[]>(
-  useRealConsultationList.value ? [] : mockReservations
-);
-const isLoading = ref(useRealConsultationList.value);
+const reservations = ref<AccountConsultation[]>([]);
+const isLoading = ref(true);
 const loadError = ref(false);
 const selectedId = ref(reservations.value[0]?.id ?? '');
 const showAllConsultations = ref(false);
@@ -101,8 +40,6 @@ function toAccountConsultation(booking: MyConsultationBooking): AccountConsultat
 }
 
 async function loadReservations(): Promise<void> {
-  if (!useRealConsultationList.value) return;
-
   const accessToken = authStore.session?.accessToken;
   reservations.value = [];
   selectedId.value = '';

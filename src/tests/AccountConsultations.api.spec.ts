@@ -9,7 +9,6 @@ const { getMyConsultationBookings } = vi.hoisted(() => ({
 }));
 
 vi.mock('@/api/consultation.api', () => ({ getMyConsultationBookings }));
-vi.stubEnv('VITE_USE_REAL_CONSULTATION_LIST', 'true');
 
 const { default: AccountConsultations } = await import('@/pages/AccountConsultations.vue');
 
@@ -26,10 +25,7 @@ const memberSession: AuthSession = {
 };
 
 describe('AccountConsultations API mode', () => {
-  beforeEach(() => {
-    vi.stubEnv('VITE_USE_REAL_CONSULTATION_LIST', 'true');
-    vi.clearAllMocks();
-  });
+  beforeEach(() => vi.clearAllMocks());
 
   function mountPage(authenticated = true) {
     const pinia = createPinia();
