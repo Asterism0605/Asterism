@@ -6,10 +6,14 @@
 //   useOrbitDrag.ts   — 拖拉旋轉軌道 composable（手機/桌機共用）
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import type { CSSProperties } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
+import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConfirm.vue';
+import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
+import { showToast } from '@/composables/useToast';
 import {
   NAV_H,
   INNER_K,
@@ -36,6 +40,7 @@ import type {
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
+import { deleteFolder } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -51,6 +56,7 @@ const DIMMED_OPACITY = 0.4;
 
 const router = useRouter();
 const route = useRoute();
+const { t } = useI18n();
 const moodboardStore = useMoodboardStore();
 const authStore = useAuthStore();
 
@@ -87,6 +93,10 @@ const deskStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
 const mDetailPhotos = ref<MoodboardMobilePhoto[]>([]);
 const mHomePhotosRandom = ref<MoodboardMobilePhoto[]>([]);
+const deleteHoverIdx = ref(-1);
+const deleteTarget = ref<{ id: string; name: string } | null>(null);
+const isDeleteModalOpen = ref(false);
+const isDeletingFolder = ref(false);
 
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
@@ -233,6 +243,45 @@ function hoverFolder(index: number) {
 
 function leaveFolder() {
   hoverIdx.value = -1;
+}
+
+// deleteHoverIdx 獨立於 hoverFolder：空資料夾（0 張圖片）也要能 hover 顯示刪除 icon
+function onFolderMouseEnter(index: number) {
+  deleteHoverIdx.value = index;
+  hoverFolder(index);
+}
+
+function onFolderMouseLeave() {
+  deleteHoverIdx.value = -1;
+  leaveFolder();
+}
+
+function requestDeleteFolder(index: number) {
+  const folder = moodboardStore.folders[index];
+  if (!folder) return;
+
+  deleteTarget.value = { id: folder.id, name: folder.name };
+  isDeleteModalOpen.value = true;
+}
+
+async function confirmDeleteFolder() {
+  const profileId = authStore.user?.id;
+  if (!deleteTarget.value || isDeletingFolder.value || !profileId) return;
+
+  isDeletingFolder.value = true;
+  try {
+    await deleteFolder(deleteTarget.value.id, profileId);
+    moodboardStore.removeFolder(deleteTarget.value.id);
+    isDeleteModalOpen.value = false;
+    deleteTarget.value = null;
+    hoverIdx.value = -1;
+    deleteHoverIdx.value = -1;
+    mHover.value = -1;
+  } catch {
+    showToast({ type: 'error', message: t('toast.deleteFolderFailed') });
+  } finally {
+    isDeletingFolder.value = false;
+  }
 }
 
 function toPhotos(images: SavedImage[], mobile = false) {
@@ -574,6 +623,17 @@ onBeforeUnmount(() => {
                 opacity: f.dimmed ? DIMMED_OPACITY : 1
               }"
             />
+            <DeleteIconButton
+              v-if="f.hasFolder"
+              :data-testid="`folder-delete-mobile-${f.i}`"
+              :style="{
+                position: 'absolute',
+                top: '-6px',
+                right: '-6px',
+                zIndex: 40
+              }"
+              @delete="requestDeleteFolder(f.i)"
+            />
           </div>
 
           <!-- folder name appears only while a folder is hovered/pressed -->
@@ -811,8 +871,8 @@ onBeforeUnmount(() => {
               zIndex: fv.active ? 30 : 2,
               cursor: fv.hasFolder ? (dragging ? 'grabbing' : 'grab') : 'default'
             }"
-            @mouseenter="hoverFolder(fv.i)"
-            @mouseleave="leaveFolder"
+            @mouseenter="onFolderMouseEnter(fv.i)"
+            @mouseleave="onFolderMouseLeave"
             @click="onFolderClick(fv.i)"
           >
             <img
@@ -825,6 +885,20 @@ onBeforeUnmount(() => {
                 pointerEvents: 'none',
                 filter: fv.dimmed ? 'grayscale(1)' : 'none'
               }"
+            />
+            <DeleteIconButton
+              v-if="fv.hasFolder"
+              :data-testid="`folder-delete-${fv.i}`"
+              :style="{
+                position: 'absolute',
+                top: '-6px',
+                right: '-6px',
+                opacity: deleteHoverIdx === fv.i ? 1 : 0,
+                pointerEvents: deleteHoverIdx === fv.i ? 'auto' : 'none',
+                transition: 'opacity .2s ease',
+                zIndex: 40
+              }"
+              @delete="requestDeleteFolder(fv.i)"
             />
           </div>
         </div>
@@ -1013,6 +1087,13 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </template>
+
+    <DeleteFolderConfirm
+      v-model="isDeleteModalOpen"
+      :is-deleting="isDeletingFolder"
+      :folder-name="deleteTarget?.name ?? ''"
+      @confirm="confirmDeleteFolder"
+    />
   </div>
 </template>
 

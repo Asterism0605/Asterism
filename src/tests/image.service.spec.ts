@@ -4,6 +4,7 @@ import {
   getImageById,
   getMediumGroupImages,
   getRelatedImages,
+  getSourceLinkInfo,
   getSubMediumGroupImages,
   resolvePhotographerInfo
 } from '@/services/image.service';
@@ -57,6 +58,33 @@ describe('image.service', () => {
         name: 'Unexpected format',
         avatarUrl: undefined
       });
+    });
+  });
+
+  describe('getSourceLinkInfo', () => {
+    it('http/https 網址回傳驗證過的 url 與只取網域的 label', () => {
+      expect(getSourceLinkInfo('https://unsplash.com/photos/abc123')).toEqual({
+        url: 'https://unsplash.com/photos/abc123',
+        label: 'unsplash.com'
+      });
+      expect(getSourceLinkInfo('https://www.pexels.com/photo/xxxx-1234567/')).toEqual({
+        url: 'https://www.pexels.com/photo/xxxx-1234567/',
+        label: 'www.pexels.com'
+      });
+    });
+
+    it('沒有 sourceUrl（本地/Asterism 自製圖）回傳 undefined', () => {
+      expect(getSourceLinkInfo(undefined)).toBeUndefined();
+    });
+
+    it('不是合法網址時回傳 undefined，不丟例外', () => {
+      expect(getSourceLinkInfo('not a url')).toBeUndefined();
+    });
+
+    it('危險協議（javascript:/data:/mailto:）一律回傳 undefined，不讓 href 拿去用', () => {
+      expect(getSourceLinkInfo('javascript:alert(1)')).toBeUndefined();
+      expect(getSourceLinkInfo('data:text/html,<script>alert(1)</script>')).toBeUndefined();
+      expect(getSourceLinkInfo('mailto:test@example.com')).toBeUndefined();
     });
   });
 

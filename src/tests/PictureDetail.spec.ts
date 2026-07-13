@@ -128,6 +128,12 @@ describe('PictureDetail', () => {
     expect(avatarImgs[0].attributes('src')).toBe('/sitelogo.png');
   });
 
+  it('本地圖（沒有 sourceUrl）不顯示 SOURCE URL 連結', async () => {
+    const { wrapper } = await mountPictureDetail();
+
+    expect(wrapper.find('a[target="_blank"]').exists()).toBe(false);
+  });
+
   it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
     let resolve!: (image: SavedImage) => void
     vi.mocked(addItem).mockImplementationOnce(

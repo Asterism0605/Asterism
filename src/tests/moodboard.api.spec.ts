@@ -6,8 +6,11 @@ const select = vi.fn(() => ({ eq }));
 const single = vi.fn();
 const insertSelect = vi.fn(() => ({ single }));
 const insert = vi.fn(() => ({ select: insertSelect }));
-const deleteEq = vi.fn();
-const del = vi.fn(() => ({ eq: deleteEq }));
+const deleteMaybeSingle = vi.fn();
+const deleteSelect = vi.fn(() => ({ maybeSingle: deleteMaybeSingle }));
+const deleteEqProfile = vi.fn(() => ({ select: deleteSelect }));
+const deleteEqId = vi.fn(() => ({ eq: deleteEqProfile }));
+const del = vi.fn(() => ({ eq: deleteEqId }));
 const from = vi.fn(() => ({ select, insert, delete: del }));
 
 vi.mock('@/api/supabaseClient', () => ({
@@ -85,20 +88,30 @@ describe('moodboard.api', () => {
     await expect(fetchMoodboardFolders('user-1')).rejects.toBe(error);
   });
 
-  it('deletes a folder by id and relies on the DB cascade for its items', async () => {
-    deleteEq.mockResolvedValue({ error: null });
+  it('deletes a folder by id and profile, relying on the DB cascade for its items', async () => {
+    deleteMaybeSingle.mockResolvedValue({ data: { id: 'folder-1' }, error: null });
 
-    await deleteMoodboardFolder('folder-1');
+    await deleteMoodboardFolder('folder-1', 'user-1');
 
     expect(from).toHaveBeenCalledWith('moodboard_folders');
     expect(del).toHaveBeenCalled();
-    expect(deleteEq).toHaveBeenCalledWith('id', 'folder-1');
+    expect(deleteEqId).toHaveBeenCalledWith('id', 'folder-1');
+    expect(deleteEqProfile).toHaveBeenCalledWith('profile_id', 'user-1');
+    expect(deleteSelect).toHaveBeenCalledWith('id');
   });
 
   it('propagates folder delete errors', async () => {
     const error = { message: 'permission denied' };
-    deleteEq.mockResolvedValue({ error });
+    deleteMaybeSingle.mockResolvedValue({ data: null, error });
 
-    await expect(deleteMoodboardFolder('folder-1')).rejects.toBe(error);
+    await expect(deleteMoodboardFolder('folder-1', 'user-1')).rejects.toBe(error);
+  });
+
+  it('throws when no row was actually deleted (already deleted, wrong owner, or stale id)', async () => {
+    deleteMaybeSingle.mockResolvedValue({ data: null, error: null });
+
+    await expect(deleteMoodboardFolder('folder-1', 'user-1')).rejects.toThrow(
+      'Moodboard folder was not deleted.'
+    );
   });
 });

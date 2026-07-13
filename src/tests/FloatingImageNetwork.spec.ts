@@ -2,8 +2,10 @@ import { mount } from '@vue/test-utils';
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import { applyAvoidAreas } from '@/components/sections/FloatingImageNetwork/avoidance';
+import * as floatingImageLayout from '@/components/sections/FloatingImageNetwork/layout';
 import {
   buildFloatingImageLayout,
+  reflowFloatingImageLayout,
   resolveLayoutPreset
 } from '@/components/sections/FloatingImageNetwork/layout';
 
@@ -35,6 +37,22 @@ function setContainerSize(width: number, height: number) {
 function getNodeHeight(width: number, aspect: string) {
   const [aspectWidth, aspectHeight] = aspect.split('/').map(Number);
   return width / (aspectWidth / aspectHeight);
+}
+
+function getNodeRect(node: { x: number; y: number; width: number; aspect: string }) {
+  const height = getNodeHeight(node.width, node.aspect);
+
+  return {
+    ...node,
+    left: node.x - node.width / 2,
+    right: node.x + node.width / 2,
+    top: node.y - height / 2,
+    bottom: node.y + height / 2
+  };
+}
+
+function overlaps(a: ReturnType<typeof getNodeRect>, b: ReturnType<typeof getNodeRect>) {
+  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
 }
 
 function overlapsTitleArea(node: { x: number; y: number; width: number; aspect: string }) {
@@ -188,6 +206,75 @@ describe('FloatingImageNetwork', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('reflows lazy image positions after fallback ready without re-shuffling cards', async () => {
+    vi.useFakeTimers();
+    Object.defineProperty(window, 'innerHeight', { configurable: true, value: 900 });
+    const reflow = vi.spyOn(floatingImageLayout, 'reflowFloatingImageLayout');
+    let seed = 0;
+    const random = vi.spyOn(Math, 'random').mockImplementation(() => {
+      seed += 0.137;
+      return seed % 1;
+    });
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, {
+        attachTo: document.body,
+        props: { images: mockImages.slice(0, 2), layout: 'home' }
+      });
+      await wrapper.vm.$nextTick();
+
+      const imgs = wrapper.findAll('img');
+      expect(imgs[0].attributes('loading')).toBe('eager');
+      expect(imgs[0].attributes('fetchpriority')).toBe('high');
+      expect(imgs[1].attributes('loading')).toBe('lazy');
+      expect(imgs[1].attributes('fetchpriority')).toBe('auto');
+      expect(imgs[1].attributes('decoding')).toBe('async');
+
+      vi.advanceTimersByTime(1000);
+      await wrapper.vm.$nextTick();
+
+      const randomCallsAfterReady = random.mock.calls.length;
+
+      const lazyImage = imgs[1];
+      const el = lazyImage.element as HTMLImageElement;
+      Object.defineProperty(el, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(el, 'naturalHeight', { value: 1000, configurable: true });
+      await lazyImage.trigger('load');
+      vi.advanceTimersByTime(120);
+      await wrapper.vm.$nextTick();
+
+      expect(random.mock.calls.length).toBe(randomCallsAfterReady);
+      expect(reflow).toHaveBeenCalledOnce();
+
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('reflows existing positions for a changed aspect without generating random coordinates', () => {
+    const random = vi.spyOn(Math, 'random');
+    const positions = [
+      { x: 1000, y: 300, width: 240, aspect: '3/4' },
+      { x: 600, y: 620, width: 240, aspect: '16/10' }
+    ];
+    const randomCallsBeforeReflow = random.mock.calls.length;
+
+    const reflowed = reflowFloatingImageLayout(
+      positions,
+      1200,
+      900,
+      resolveLayoutPreset('home'),
+      900,
+      [undefined, '4/5']
+    );
+
+    expect(random.mock.calls.length).toBe(randomCallsBeforeReflow);
+    expect(reflowed).not.toEqual(positions);
+    expect(overlaps(getNodeRect(reflowed[0]), getNodeRect(reflowed[1]))).toBe(false);
+    expect(reflowed.some(overlapsTitleArea)).toBe(false);
   });
 
   it('renders all home layout images without a hardcoded cap', () => {

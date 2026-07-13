@@ -7,6 +7,7 @@ import {
   getImageById,
   getMediumEntryImage,
   getRelatedImages,
+  getSourceLinkInfo,
   getStyleGroupRootImage,
   resolvePhotographerInfo
 } from '@/services/image.service';
@@ -25,6 +26,7 @@ const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
 
 const photographerInfo = computed(() => resolvePhotographerInfo(currentImage.value?.attribution));
+const sourceLinkInfo = computed(() => getSourceLinkInfo(currentImage.value?.sourceUrl));
 
 const relatedImages = ref<ImageSpreadNode[]>([]);
 watch(
@@ -214,8 +216,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
     <div class="w-full overflow-y-auto md:w-2/5 md:overflow-hidden">
       <ImageMetaPanel
         v-if="currentImage"
-        source-url="https://unsplash.com/"
-        source-label="Source URL.com"
+        :source-url="sourceLinkInfo?.url"
+        :source-label="sourceLinkInfo?.label"
         :color-palette="currentImage.colorPalette"
         :style-tags="currentImage.style"
         :similar-images="similarImages"
