@@ -62,8 +62,8 @@ describe('AccountConsultations API mode', () => {
             method: 'online',
             consultationDate: '2026-08-10',
             timeSlot: 'am',
-            designField: 'Interior Design',
-            designFocus: 'Living room planning',
+            designField: 'styling',
+            designFocus: 'material',
             createdAt: '2026-07-13T00:00:00.000Z'
           }
         ]
@@ -72,7 +72,8 @@ describe('AccountConsultations API mode', () => {
     });
     await flushPromises();
 
-    expect(wrapper.get('.details-panel').text()).toContain('Interior Design');
+    expect(wrapper.get('.details-panel').text()).toContain('Styling Design');
+    expect(wrapper.get('.details-panel').text()).toContain('Material Palette');
     expect(wrapper.get('.consultation-details').text()).toContain('—');
   });
 
