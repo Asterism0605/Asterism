@@ -107,7 +107,7 @@ export function useSaveToMoodboard() {
       } catch (e) {
         const message = mapSaveImageError(e, t);
         try {
-          await deleteFolder(folder.id);
+          await deleteFolder(folder.id, profileId);
           moodboardStore.removeFolder(folder.id);
           showToast({ type: 'error', message });
         } catch {

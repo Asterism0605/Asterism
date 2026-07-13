@@ -265,11 +265,12 @@ function requestDeleteFolder(index: number) {
 }
 
 async function confirmDeleteFolder() {
-  if (!deleteTarget.value || isDeletingFolder.value) return;
+  const profileId = authStore.user?.id;
+  if (!deleteTarget.value || isDeletingFolder.value || !profileId) return;
 
   isDeletingFolder.value = true;
   try {
-    await deleteFolder(deleteTarget.value.id);
+    await deleteFolder(deleteTarget.value.id, profileId);
     moodboardStore.removeFolder(deleteTarget.value.id);
     isDeleteModalOpen.value = false;
     deleteTarget.value = null;

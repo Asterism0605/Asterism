@@ -94,8 +94,8 @@ export async function createFolder(
   };
 }
 
-export async function deleteFolder(folderId: string): Promise<void> {
-  await deleteMoodboardFolder(folderId);
+export async function deleteFolder(folderId: string, profileId: string): Promise<void> {
+  await deleteMoodboardFolder(folderId, profileId);
 }
 
 export async function addItem(folderId: string, imageId: string): Promise<SavedImage> {

@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import { useMoodboardStore } from '@/stores/moodboard.store';
+import { useAuthStore } from '@/stores/auth.store';
 
 const { disposeSphere, initSphere, updateSphereImages } = vi.hoisted(() => ({
   disposeSphere: vi.fn(),
@@ -389,9 +390,19 @@ describe('MoodboardOrbit', () => {
     });
 
     function patchFolders() {
+      useAuthStore().$patch({
+        user: {
+          id: 'user-1',
+          email: 'user@example.com',
+          displayName: 'User',
+          isAdmin: false,
+          createdAt: '2026-07-01T00:00:00.000Z'
+        }
+      });
       const store = useMoodboardStore();
       store.$patch({
         status: 'success',
+        loadedProfileId: 'user-1',
         folders: [
           {
             id: 'folder-1',
@@ -452,7 +463,7 @@ describe('MoodboardOrbit', () => {
       await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
       await flushPromises();
 
-      expect(deleteFolderMock).toHaveBeenCalledWith('folder-1');
+      expect(deleteFolderMock).toHaveBeenCalledWith('folder-1', 'user-1');
       expect(store.folders.some((folder) => folder.id === 'folder-1')).toBe(false);
       expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(false);
     });
@@ -492,7 +503,7 @@ describe('MoodboardOrbit', () => {
       await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
       await flushPromises();
 
-      expect(deleteFolderMock).toHaveBeenCalledWith('folder-1');
+      expect(deleteFolderMock).toHaveBeenCalledWith('folder-1', 'user-1');
       expect(store.folders.some((folder) => folder.id === 'folder-1')).toBe(false);
     });
 
