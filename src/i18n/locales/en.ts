@@ -153,6 +153,8 @@ export default {
     bookAgain: 'Book again',
     errDate: 'Date is required.',
     errTimeSlot: 'Time slot is required.',
+    errDesignField: 'Design field is required.',
+    errDesignFocus: 'Design focus is required.',
     errName: 'Name is required.',
     errEmail: 'A valid email is required.',
     errPhoneRequired: 'Contact phone is required.',

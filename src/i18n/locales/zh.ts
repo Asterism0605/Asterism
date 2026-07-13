@@ -149,6 +149,8 @@ export default {
     bookAgain: '重新預約',
     errDate: '請選擇日期。',
     errTimeSlot: '請選擇時段。',
+    errDesignField: '請選擇設計領域。',
+    errDesignFocus: '請選擇設計重點。',
     errName: '請輸入姓名。',
     errEmail: '請輸入有效的電子郵件。',
     errPhoneRequired: '請輸入聯絡電話。',
