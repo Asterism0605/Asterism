@@ -4,6 +4,9 @@ const mocks = vi.hoisted(() => ({
   canvasTextureCreated: vi.fn(),
   loadTexture: vi.fn(),
   materialDisposed: vi.fn(),
+  raycasterIntersections: vi.fn(
+    (): Array<{ object: { userData: { isPlaceholder: boolean } } }> => []
+  ),
   rendererCreated: vi.fn(),
   textureDisposed: vi.fn()
 }));
@@ -63,6 +66,18 @@ vi.mock('three', () => {
     z = 0;
   }
 
+  class Vector2 {
+    x = 0;
+    y = 0;
+  }
+
+  class Raycaster {
+    setFromCamera() {}
+    intersectObjects() {
+      return mocks.raycasterIntersections();
+    }
+  }
+
   class CanvasTexture {
     _aspect = 0;
     constructor() {
@@ -76,11 +91,13 @@ vi.mock('three', () => {
     Group,
     LinearFilter: 'LinearFilter',
     PerspectiveCamera,
+    Raycaster,
     Scene,
     Sprite,
     SpriteMaterial,
     SRGBColorSpace: 'SRGBColorSpace',
     TextureLoader,
+    Vector2,
     Vector3,
     WebGLRenderer
   };
@@ -97,6 +114,7 @@ describe('moodboard sphere textures', () => {
     mocks.canvasTextureCreated.mockReset();
     mocks.loadTexture.mockReset();
     mocks.materialDisposed.mockReset();
+    mocks.raycasterIntersections.mockReset().mockReturnValue([]);
     mocks.rendererCreated.mockReset();
     mocks.textureDisposed.mockReset();
     mocks.loadTexture.mockImplementation(
@@ -179,5 +197,142 @@ describe('moodboard sphere textures', () => {
     expect(mocks.rendererCreated).toHaveBeenCalledOnce();
     expect(mocks.loadTexture).toHaveBeenCalledTimes(2);
     expect(mocks.materialDisposed).toHaveBeenCalledOnce();
+  });
+});
+
+describe('moodboard sphere image click', () => {
+  beforeEach(() => {
+    mocks.canvasTextureCreated.mockReset();
+    mocks.loadTexture.mockReset();
+    mocks.materialDisposed.mockReset();
+    mocks.raycasterIntersections.mockReset().mockReturnValue([]);
+    mocks.rendererCreated.mockReset();
+    mocks.textureDisposed.mockReset();
+    mocks.loadTexture.mockImplementation(
+      (
+        _src: string,
+        onLoad: (texture: {
+          image: { naturalWidth: number; naturalHeight: number };
+          dispose: () => void;
+        }) => void
+      ) => {
+        onLoad({
+          image: { naturalWidth: 3, naturalHeight: 4 },
+          dispose() {}
+        });
+      }
+    );
+    vi.stubGlobal('requestAnimationFrame', vi.fn(() => 1));
+    vi.stubGlobal('cancelAnimationFrame', vi.fn());
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
+      createLinearGradient: () => ({ addColorStop() {} }),
+      fillRect() {},
+      strokeRect() {}
+    } as unknown as CanvasRenderingContext2D);
+  });
+
+  function createCanvas() {
+    const canvas = document.createElement('canvas');
+    vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({
+      left: 0,
+      top: 0,
+      right: 100,
+      bottom: 100,
+      width: 100,
+      height: 100,
+      x: 0,
+      y: 0,
+      toJSON() {}
+    } as DOMRect);
+    return canvas;
+  }
+
+  it('calls onImageClick when the click ray hits a real image sprite', () => {
+    mocks.raycasterIntersections.mockReturnValue([{ object: { userData: { isPlaceholder: false } } }]);
+    const onImageClick = vi.fn();
+    const canvas = createCanvas();
+
+    initSphere(
+      canvas,
+      () => 1,
+      () => true,
+      [{ id: 'saved-1', src: '/saved-1.webp', isPlaceholder: false }],
+      onImageClick
+    );
+
+    canvas.dispatchEvent(new MouseEvent('click', { clientX: 50, clientY: 50 }));
+
+    expect(onImageClick).toHaveBeenCalledOnce();
+  });
+
+  it('does not call onImageClick when the ray only hits a placeholder sprite', () => {
+    mocks.raycasterIntersections.mockReturnValue([{ object: { userData: { isPlaceholder: true } } }]);
+    const onImageClick = vi.fn();
+    const canvas = createCanvas();
+
+    initSphere(
+      canvas,
+      () => 1,
+      () => true,
+      [{ id: 'placeholder-1', src: '/images/image1.png', isPlaceholder: true }],
+      onImageClick
+    );
+
+    canvas.dispatchEvent(new MouseEvent('click', { clientX: 50, clientY: 50 }));
+
+    expect(onImageClick).not.toHaveBeenCalled();
+  });
+
+  it('does not call onImageClick when the ray misses every sprite', () => {
+    const onImageClick = vi.fn();
+    const canvas = createCanvas();
+
+    initSphere(
+      canvas,
+      () => 1,
+      () => true,
+      [{ id: 'saved-1', src: '/saved-1.webp', isPlaceholder: false }],
+      onImageClick
+    );
+
+    canvas.dispatchEvent(new MouseEvent('click', { clientX: 50, clientY: 50 }));
+
+    expect(onImageClick).not.toHaveBeenCalled();
+  });
+
+  it('does not call onImageClick while a folder is open', () => {
+    mocks.raycasterIntersections.mockReturnValue([{ object: { userData: { isPlaceholder: false } } }]);
+    const onImageClick = vi.fn();
+    const canvas = createCanvas();
+
+    initSphere(
+      canvas,
+      () => 1,
+      () => false,
+      [{ id: 'saved-1', src: '/saved-1.webp', isPlaceholder: false }],
+      onImageClick
+    );
+
+    canvas.dispatchEvent(new MouseEvent('click', { clientX: 50, clientY: 50 }));
+
+    expect(onImageClick).not.toHaveBeenCalled();
+  });
+
+  it('stops listening for clicks after dispose', () => {
+    mocks.raycasterIntersections.mockReturnValue([{ object: { userData: { isPlaceholder: false } } }]);
+    const onImageClick = vi.fn();
+    const canvas = createCanvas();
+
+    const sphere = initSphere(
+      canvas,
+      () => 1,
+      () => true,
+      [{ id: 'saved-1', src: '/saved-1.webp', isPlaceholder: false }],
+      onImageClick
+    );
+    sphere.dispose();
+    canvas.dispatchEvent(new MouseEvent('click', { clientX: 50, clientY: 50 }));
+
+    expect(onImageClick).not.toHaveBeenCalled();
   });
 });

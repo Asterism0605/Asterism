@@ -107,6 +107,12 @@ function handleBack() {
     return;
   }
 
+  const moodboardSlug = firstQueryValue(route.query.moodboardSlug);
+  if (moodboardSlug) {
+    router.push(`/moodboard/${moodboardSlug}`);
+    return;
+  }
+
   const spreadPathContext = getSpreadPathContext();
 
   if (spreadPathContext) {
