@@ -4,7 +4,10 @@ import { CircleX } from '@lucide/vue';
 
 defineProps<{
   style?: CSSProperties;
-  onDelete: () => void;
+}>();
+
+const emit = defineEmits<{
+  delete: [];
 }>();
 </script>
 
@@ -14,7 +17,7 @@ defineProps<{
     class="delete-icon-button"
     :style="style"
     :aria-label="$t('moodboard.deleteFolderAria')"
-    @click.stop="onDelete"
+    @click.stop="emit('delete')"
   >
     <CircleX :size="18" aria-hidden="true" />
   </button>

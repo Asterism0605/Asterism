@@ -632,7 +632,7 @@ onBeforeUnmount(() => {
                 right: '-6px',
                 zIndex: 40
               }"
-              :on-delete="() => requestDeleteFolder(f.i)"
+              @delete="requestDeleteFolder(f.i)"
             />
           </div>
 
@@ -898,7 +898,7 @@ onBeforeUnmount(() => {
                 transition: 'opacity .2s ease',
                 zIndex: 40
               }"
-              :on-delete="() => requestDeleteFolder(fv.i)"
+              @delete="requestDeleteFolder(fv.i)"
             />
           </div>
         </div>
