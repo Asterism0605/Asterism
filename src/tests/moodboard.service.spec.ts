@@ -182,9 +182,9 @@ describe('moodboard.service', () => {
   it('deletes a folder through the Data API', async () => {
     deleteMoodboardFolder.mockResolvedValue(undefined);
 
-    await deleteFolder('folder-1');
+    await deleteFolder('folder-1', 'user-1');
 
-    expect(deleteMoodboardFolder).toHaveBeenCalledWith('folder-1');
+    expect(deleteMoodboardFolder).toHaveBeenCalledWith('folder-1', 'user-1');
   });
 
   it('checks saved state from the passed store snapshot', () => {

@@ -41,7 +41,8 @@ export default {
     saveFailed: 'Failed to save. Please try again.',
     folderLimit: 'You have reached the maximum of 10 folders.',
     folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
-    folderCreatedAndSaved: 'Folder created and image saved.'
+    folderCreatedAndSaved: 'Folder created and image saved.',
+    deleteFolderFailed: 'Failed to delete the folder. Please try again.'
   },
   userMenu: {
     signedInAs: 'Signed in as',
@@ -191,7 +192,11 @@ export default {
     createFolderTitle: 'SAVE TO NEW FOLDER',
     folderNamePlaceholder: 'Folder name',
     send: 'SEND',
-    goToMoodboard: 'Go to Moodboard'
+    goToMoodboard: 'Go to Moodboard',
+    deleteFolderTitle: 'Delete {name} and All Images',
+    deleteConfirm: 'Delete',
+    deleteCancel: 'Close',
+    deleteFolderAria: 'Delete folder'
   },
   home: {
     guestHint: 'Sign up or log in to keep exploring',

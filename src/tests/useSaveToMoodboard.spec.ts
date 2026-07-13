@@ -169,7 +169,7 @@ describe('useSaveToMoodboard', () => {
     const result = await createNewFolder('新資料夾', 'img-1');
 
     expect(result).toBe(false);
-    expect(deleteFolderMock).toHaveBeenCalledWith('folder-1');
+    expect(deleteFolderMock).toHaveBeenCalledWith('folder-1', 'user-1');
     expect(store.folders).toEqual([]);
     expect(showToast).toHaveBeenCalledWith({
       type: 'error',
