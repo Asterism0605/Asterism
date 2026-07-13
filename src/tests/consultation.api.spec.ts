@@ -12,8 +12,7 @@ vi.mock('@/api/httpClient', () => ({
 import {
   createConsultationCheckoutSession,
   getConsultationAvailability,
-  getConsultationBookingDetail,
-  getMyConsultationBookings
+  getConsultationBookingDetail
 } from '@/api/consultation.api';
 import type { ConsultationCheckoutRequest } from '@/types/consultation';
 
@@ -193,38 +192,6 @@ describe('consultation.api', () => {
     expect(get).toHaveBeenCalledWith('/api/v1/consultations/booking-id', {
       headers: { Authorization: 'Bearer access-token' }
     });
-  });
-
-  it('returns mock booking list while the real list API is not enabled', async () => {
-    const response = await getMyConsultationBookings('access-token');
-
-    expect(response.success).toBe(true);
-    expect(response.data).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          booking: expect.objectContaining({
-            id: 'mock-consultation-1',
-            status: 'confirmed',
-            method: 'online'
-          }),
-          consultant: expect.objectContaining({
-            displayName: 'Mira Chen'
-          })
-        }),
-        expect.objectContaining({
-          booking: expect.objectContaining({
-            id: 'mock-consultation-2',
-            status: 'completed',
-            method: 'in_person'
-          }),
-          consultant: expect.objectContaining({
-            id: 'mock-consultant-1',
-            displayName: 'Mira Chen'
-          })
-        })
-      ])
-    );
-    expect(get).not.toHaveBeenCalledWith('/api/v1/consultations', expect.anything());
   });
 
   it('gets consultation availability for a month with auth', async () => {
