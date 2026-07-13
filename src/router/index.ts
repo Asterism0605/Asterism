@@ -12,6 +12,7 @@ import ResetPassword from '@/pages/ResetPassword.vue';
 import StyleDna from '@/pages/StyleDna.vue';
 import StyleDnaResult from '@/pages/StyleDnaResult.vue';
 import StyleConsultant from '@/pages/StyleConsultant.vue';
+import AccountConsultations from '@/pages/AccountConsultations.vue';
 import Privacy from '@/pages/Privacy.vue';
 import Terms from '@/pages/Terms.vue';
 import AuthCallback from '@/pages/AuthCallback.vue';
@@ -97,6 +98,12 @@ const router = createRouter({
       path: '/consultant',
       name: 'consultant',
       component: StyleConsultant
+    },
+    {
+      path: '/account/consultations',
+      name: 'account-consultations',
+      component: AccountConsultations,
+      meta: { requiresAuth: true }
     },
     {
       path: '/privacy',

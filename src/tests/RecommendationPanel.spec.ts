@@ -197,6 +197,8 @@ describe('RecommendationPanel', () => {
     await wrapper.get('form').trigger('submit');
     expect(wrapper.emitted('submit')).toBeUndefined();
     expect(wrapper.text()).toContain('Date is required.');
+    expect(wrapper.text()).toContain('Design field is required.');
+    expect(wrapper.text()).toContain('Design focus is required.');
     expect(wrapper.text()).toContain('Contact phone is required.');
     expect(wrapper.text()).toContain('Please confirm the consultation deposit before continuing.');
 
@@ -235,6 +237,8 @@ describe('RecommendationPanel', () => {
 
     await pickFirstAvailableDate(wrapper);
     await pickDropdownOption(wrapper, 0, 'AM');
+    await pickDropdownOption(wrapper, 1, 'Interior Design');
+    await pickDropdownOption(wrapper, 2, 'Spatial Mood');
     await inputs[0].setValue('Ruwen Hsieh');
     await inputs[1].setValue('a@');
     await inputs[2].setValue('+886 912 345 678');
@@ -257,6 +261,8 @@ describe('RecommendationPanel', () => {
 
     await pickFirstAvailableDate(wrapper);
     await pickDropdownOption(wrapper, 0, 'AM');
+    await pickDropdownOption(wrapper, 1, 'Interior Design');
+    await pickDropdownOption(wrapper, 2, 'Spatial Mood');
     await inputs[0].setValue('Ruwen Hsieh');
     await inputs[1].setValue('ruwen@example.com');
     await inputs[2].setValue('abc!!!');
@@ -294,7 +300,7 @@ describe('RecommendationPanel', () => {
     expect((inputs[1].element as HTMLInputElement).value).toBe('custom@example.com');
   });
 
-  it('allows design field and focus to be omitted', async () => {
+  it('requires design field and focus', async () => {
     const wrapper = mountPanel();
     const inputs = wrapper.findAll('input.overlay-input');
 
@@ -307,11 +313,15 @@ describe('RecommendationPanel', () => {
 
     await wrapper.get('form').trigger('submit');
 
+    expect(wrapper.emitted('submit')).toBeUndefined();
+    expect(wrapper.text()).toContain('Design field is required.');
+    expect(wrapper.text()).toContain('Design focus is required.');
+
+    await pickDropdownOption(wrapper, 1, 'Interior Design');
+    await pickDropdownOption(wrapper, 2, 'Spatial Mood');
+    await wrapper.get('form').trigger('submit');
+
     expect(wrapper.emitted('submit')).toHaveLength(1);
-    expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({
-      designField: '',
-      designFocus: ''
-    });
   });
 
   it('renders date choices in a monthly date picker', async () => {
@@ -417,6 +427,8 @@ describe('RecommendationPanel', () => {
     await flushPromises();
     await pickFirstAvailableDate(wrapper);
     await pickDropdownOption(wrapper, 0, 'AM');
+    await pickDropdownOption(wrapper, 1, 'Interior Design');
+    await pickDropdownOption(wrapper, 2, 'Spatial Mood');
     await inputs[0].setValue('Ruwen Hsieh');
     await inputs[1].setValue('ruwen@example.com');
     await inputs[2].setValue('+886 912 345 678');

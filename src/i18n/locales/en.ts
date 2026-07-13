@@ -48,7 +48,29 @@ export default {
     signedInAs: 'Signed in as',
     moodboard: 'Moodboard',
     styleDna: 'Style DNA',
+    myConsultations: 'Consultation',
     logout: 'Log out'
+  },
+  accountConsultations: {
+    emptyDescription: 'Start to build up your first consultation.',
+    bookConsultation: 'Book consultation',
+    youHave: 'You have',
+    upcoming: 'upcoming',
+    new: 'new',
+    consultations: 'consultations',
+    allConsultations: 'All consultations',
+    upcomingDates: 'Upcoming consultation dates',
+    viewAll: 'View all',
+    back: 'Back',
+    viewAllAria: 'View all consultations',
+    backToSelectedAria: 'Back to selected consultation',
+    sampleNotes: {
+      brand: 'I would like help defining the visual direction for a new brand identity.',
+      homeMaterials: 'I need advice on natural finishes and a calm material palette for my home.',
+      studio: 'I want to create a warm and quiet atmosphere for a small studio renovation.',
+      editorial: 'I would like to refine the color direction for an upcoming editorial shoot.',
+      livingRoom: 'I need help selecting furniture that works with the scale of my living room.'
+    }
   },
   consult: {
     eyebrow: 'Style DNA translation',
@@ -99,7 +121,8 @@ export default {
     checkoutError409: 'This time slot is no longer available. Please choose another time.',
     checkoutError429: 'Too many attempts. Please try again later.',
     checkoutErrorGeneric: 'Something went wrong. Please try again later.',
-    checkoutErrorSlotUnavailable: 'This time slot is no longer available. Please choose another time.',
+    checkoutErrorSlotUnavailable:
+      'This time slot is no longer available. Please choose another time.',
     checkoutErrorProfileEmailRequired: 'Please add an email address before booking.',
     checkoutErrorProfileNotFound: 'Please sign in to continue booking.',
     checkoutErrorSourceImageNotFound: 'We could not find the selected source image.',
@@ -130,6 +153,8 @@ export default {
     bookAgain: 'Book again',
     errDate: 'Date is required.',
     errTimeSlot: 'Time slot is required.',
+    errDesignField: 'Design field is required.',
+    errDesignFocus: 'Design focus is required.',
     errName: 'Name is required.',
     errEmail: 'A valid email is required.',
     errPhoneRequired: 'Contact phone is required.',

@@ -48,7 +48,29 @@ export default {
     signedInAs: '目前登入身分',
     moodboard: '情緒板',
     styleDna: 'Style DNA',
+    myConsultations: '我的預約',
     logout: '登出'
+  },
+  accountConsultations: {
+    emptyDescription: '開始建立你的第一次諮詢',
+    bookConsultation: '前往預約',
+    youHave: '你有',
+    upcoming: '場即將到來的',
+    new: '場新',
+    consultations: '諮詢',
+    allConsultations: '所有諮詢預約',
+    upcomingDates: '即將到來的諮詢日期',
+    viewAll: '查看全部',
+    back: '返回',
+    viewAllAria: '查看所有諮詢預約',
+    backToSelectedAria: '返回所選諮詢預約',
+    sampleNotes: {
+      brand: '我想為新的品牌識別確立視覺方向。',
+      homeMaterials: '我需要關於天然飾面及居家沉靜材質配置的建議。',
+      studio: '我想為小型工作室翻修營造溫暖、安靜的氛圍。',
+      editorial: '我想調整即將進行的編輯拍攝色彩方向。',
+      livingRoom: '我需要協助挑選符合客廳空間尺度的家具。'
+    }
   },
   consult: {
     eyebrow: 'Style DNA 轉譯',
@@ -128,6 +150,8 @@ export default {
     bookAgain: '重新預約',
     errDate: '請選擇日期。',
     errTimeSlot: '請選擇時段。',
+    errDesignField: '請選擇設計領域。',
+    errDesignFocus: '請選擇設計重點。',
     errName: '請輸入姓名。',
     errEmail: '請輸入有效的電子郵件。',
     errPhoneRequired: '請輸入聯絡電話。',

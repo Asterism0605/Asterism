@@ -36,13 +36,17 @@ describe('UserMenu', () => {
     expect(wrapper.find('[aria-haspopup="true"]').attributes('aria-expanded')).toBe('true');
     expect(wrapper.text()).toContain('Signed in as');
     expect(wrapper.text()).toContain('Moodboard');
+    expect(wrapper.text()).toContain('Consultation');
     expect(wrapper.text()).toContain('Log out');
 
     await findButtonByText(wrapper, 'Moodboard')?.trigger('click');
     await wrapper.find('[aria-haspopup="true"]').trigger('click');
+    await findButtonByText(wrapper, 'Consultation')?.trigger('click');
+    await wrapper.find('[aria-haspopup="true"]').trigger('click');
     await findButtonByText(wrapper, 'Log out')?.trigger('click');
 
     expect(wrapper.emitted('moodboard')).toHaveLength(1);
+    expect(wrapper.emitted('consultations')).toHaveLength(1);
     expect(wrapper.emitted('logout')).toHaveLength(1);
   });
 

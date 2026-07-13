@@ -90,6 +90,7 @@ describe('AppHeader', () => {
 
     expect(wrapper.text()).toContain('Signed in as');
     expect(wrapper.text()).toContain('Moodboard');
+    expect(wrapper.text()).toContain('Consultation');
     expect(wrapper.text()).toContain('Log out');
 
     const logoutButton = wrapper.findAll('button').find((button) => button.text() === 'Log out');
@@ -146,5 +147,15 @@ describe('AppHeader Style DNA 導向', () => {
     wrapper.findComponent(UserMenu).vm.$emit('styleDna');
 
     expect(push).toHaveBeenCalledWith('/style-dna/result');
+  });
+
+  it('我的預約 → 導向 /account/consultations', async () => {
+    const { wrapper } = createMountedHeader();
+    await authenticateAndOpenMenu(wrapper);
+
+    const push = vi.spyOn(router, 'push');
+    wrapper.findComponent(UserMenu).vm.$emit('consultations');
+
+    expect(push).toHaveBeenCalledWith({ name: 'account-consultations' });
   });
 });
