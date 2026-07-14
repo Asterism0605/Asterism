@@ -216,7 +216,9 @@ export default {
     deleteFolderTitle: '刪除{name}與已收藏圖片',
     deleteConfirm: '刪除',
     deleteCancel: '關閉',
-    deleteFolderAria: '刪除資料夾'
+    deleteFolderAria: '刪除資料夾',
+    openFolderAria: '開啟資料夾',
+    openImageDetailAria: '查看圖片詳情'
   },
   home: {
     guestHint: '註冊或登入，繼續探索',

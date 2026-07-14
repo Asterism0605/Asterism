@@ -779,11 +779,13 @@ onBeforeUnmount(() => {
               class="moodboard-photo-link"
               data-testid="moodboard-mobile-photo"
               :disabled="hasFolders ? !sphereFolder || p.placeholder : !p.imageId"
+              :aria-label="hasFolders ? $t('moodboard.openFolderAria') : $t('moodboard.openImageDetailAria')"
               @click="hasFolders ? onSphereClick() : p.imageId && goToImage(p.imageId)"
             >
               <img
                 :src="p.src"
                 draggable="false"
+                alt=""
                 class="w-full h-full block select-none"
                 style="object-fit: cover; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55)"
                 @error="onImgError"
@@ -982,11 +984,13 @@ onBeforeUnmount(() => {
               class="moodboard-photo-link"
               data-testid="moodboard-detail-photo"
               :disabled="!n.imageId"
+              :aria-label="$t('moodboard.openImageDetailAria')"
               @click="n.imageId && goToImage(n.imageId)"
             >
               <img
                 :src="n.src"
                 draggable="false"
+                alt=""
                 class="moodboard-photo-img w-full h-full block select-none"
                 style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
                 @error="onImgError"
