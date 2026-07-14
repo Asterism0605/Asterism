@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { getMyConsultationBookings } from '@/api/consultation.api';
 import ConsultationsEmptyState from '@/components/feature/consultations/ConsultationsEmptyState.vue';
 import DateTimeline from '@/components/feature/consultations/DateTimeline.vue';
 import DetailPanel from '@/components/feature/consultations/DetailPanel.vue';
 import EmptyStateBackground from '@/components/feature/consultations/EmptyStateBackground.vue';
 import OrbitBackground from '@/components/feature/consultations/OrbitBackground.vue';
 import Button from '@/components/ui/Button.vue';
+import { getUpcomingAccountConsultations } from '@/services/account-consultation.service';
 import { useAuthStore } from '@/stores/auth.store';
 import type { AccountConsultation } from '@/types/account-consultation';
-import type { MyConsultationBooking } from '@/types/consultation';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -26,20 +25,6 @@ const selectedReservation = computed<AccountConsultation>(
     reservations.value[0]!
 );
 
-function toAccountConsultation(booking: MyConsultationBooking): AccountConsultation {
-  return {
-    id: booking.id,
-    // `scope=upcoming` only returns confirmed bookings.
-    status: 'confirmed',
-    consultationDate: booking.consultationDate,
-    timeSlot: booking.timeSlot,
-    method: booking.method === 'online' ? 'Online' : 'In-Person',
-    designField: booking.designField ?? '—',
-    designFocus: booking.designFocus ?? '—',
-    notes: booking.notes
-  };
-}
-
 async function loadReservations(): Promise<void> {
   const accessToken = authStore.session?.accessToken;
   reservations.value = [];
@@ -54,13 +39,7 @@ async function loadReservations(): Promise<void> {
   isLoading.value = true;
 
   try {
-    const response = await getMyConsultationBookings(accessToken);
-
-    if (!response.success) throw new Error(response.error.message);
-
-    reservations.value = response.data.items
-      .map(toAccountConsultation)
-      .sort((a, b) => a.consultationDate.localeCompare(b.consultationDate));
+    reservations.value = await getUpcomingAccountConsultations(accessToken);
     selectedId.value = reservations.value[0]?.id ?? '';
   } catch {
     loadError.value = true;

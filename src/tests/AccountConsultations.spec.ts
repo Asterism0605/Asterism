@@ -6,11 +6,11 @@ import { i18n } from '@/i18n';
 import { useAuthStore } from '@/stores/auth.store';
 import type { AuthSession } from '@/types/auth';
 
-const { getMyConsultationBookings } = vi.hoisted(() => ({
-  getMyConsultationBookings: vi.fn()
+const { getUpcomingAccountConsultations } = vi.hoisted(() => ({
+  getUpcomingAccountConsultations: vi.fn()
 }));
 
-vi.mock('@/api/consultation.api', () => ({ getMyConsultationBookings }));
+vi.mock('@/services/account-consultation.service', () => ({ getUpcomingAccountConsultations }));
 
 const memberSession: AuthSession = {
   accessToken: 'access-token',
@@ -44,11 +44,14 @@ const items = [
 
 describe('AccountConsultations', () => {
   beforeEach(() => {
-    getMyConsultationBookings.mockResolvedValue({
-      success: true,
-      data: { items },
-      error: null
-    });
+    getUpcomingAccountConsultations.mockResolvedValue(
+      items.map((booking) => ({
+        ...booking,
+        method: booking.method === 'online' ? 'Online' : 'In-Person',
+        designField: booking.designField ?? '—',
+        designFocus: booking.designFocus ?? '—'
+      }))
+    );
   });
 
   async function mountPage() {
