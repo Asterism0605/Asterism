@@ -15,7 +15,11 @@ import {
   getConsultationBookingDetail,
   getMyConsultationBookings
 } from '@/api/consultation.api';
-import type { ConsultationCheckoutRequest } from '@/types/consultation';
+import type {
+  ConsultationApiResponse,
+  ConsultationCheckoutRequest,
+  MyConsultationListResult
+} from '@/types/consultation';
 
 describe('consultation.api', () => {
   beforeEach(() => vi.clearAllMocks());
@@ -224,7 +228,7 @@ describe('consultation.api', () => {
   });
 
   it('gets the current user consultation list with auth', async () => {
-    const response = {
+    const response: ConsultationApiResponse<MyConsultationListResult> = {
       success: true as const,
       data: {
         items: [
@@ -234,8 +238,13 @@ describe('consultation.api', () => {
           method: 'online' as const,
           consultationDate: '2026-08-10',
           timeSlot: 'am' as const,
-          designField: 'Interior Design',
+            designField: 'Interior Design',
             designFocus: 'Living room planning',
+            consultant: {
+              displayName: 'Asterism Consultant',
+              title: 'Design Consultant',
+              avatarUrl: 'https://example.com/consultant.jpg'
+            },
             createdAt: '2026-07-10T00:00:00.000Z'
           }
         ]

@@ -7,6 +7,7 @@ import DateTimeline from '@/components/feature/consultations/DateTimeline.vue';
 import DetailPanel from '@/components/feature/consultations/DetailPanel.vue';
 import EmptyStateBackground from '@/components/feature/consultations/EmptyStateBackground.vue';
 import OrbitBackground from '@/components/feature/consultations/OrbitBackground.vue';
+import Button from '@/components/ui/Button.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import type { AccountConsultation } from '@/types/account-consultation';
 import type { MyConsultationBooking } from '@/types/consultation';
@@ -95,7 +96,9 @@ onMounted(() => {
 
     <section v-else-if="loadError" class="consultations-page__status" role="alert">
       <p>{{ $t('accountConsultations.loadError') }}</p>
-      <button type="button" @click="loadReservations">{{ $t('accountConsultations.retry') }}</button>
+      <Button type="button" variant="primary" @click="loadReservations">
+        {{ $t('accountConsultations.retry') }}
+      </Button>
     </section>
 
     <ConsultationsEmptyState
@@ -150,11 +153,4 @@ onMounted(() => {
   margin: 0;
 }
 
-.consultations-page__status button {
-  border: 1px solid #f0ede6a8;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-  padding: 10px 18px;
-}
 </style>
