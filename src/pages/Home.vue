@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Lock, MoveDownLeft } from '@lucide/vue';
 import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import HomeStarLinks from '@/components/sections/HomeStarLinks';
+import HomeImageClickGuide from '@/components/feature/guide/HomeImageClickGuide.vue';
+import { useHomeImageGuide } from '@/components/feature/guide/useHomeImageGuide';
 import { getHomeInspirationImages } from '@/services/image.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
@@ -19,6 +21,10 @@ const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
 const showGuestHint = ref(false);
 const inspirationImages = ref<HomeInspirationImage[]>([]);
+const guideTargetIndex = ref<number | null>(null);
+const { isVisible: isImageGuideVisible, completeGuide, findTargetIndex, startGuide } =
+  useHomeImageGuide();
+let guideFrameId: number | null = null;
 
 const HOME_DENSITY_PER_100VH = 3;
 const homePreferredStyles = computed(() =>
@@ -102,6 +108,10 @@ function openImageSpread(index: number) {
     return;
   }
 
+  if (isImageGuideVisible.value && index === guideTargetIndex.value) {
+    completeGuide();
+  }
+
   void router.push({
     name: 'image-spread',
     params: { imageId: image.id }
@@ -114,6 +124,24 @@ async function loadInspirationImages() {
   });
 }
 
+async function startImageClickGuide(): Promise<void> {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  await nextTick();
+  if (guideFrameId !== null) {
+    window.cancelAnimationFrame(guideFrameId);
+  }
+
+  guideFrameId = window.requestAnimationFrame(() => {
+    guideFrameId = null;
+    const targetIndex = findTargetIndex();
+    startGuide();
+    guideTargetIndex.value = isImageGuideVisible.value ? targetIndex : null;
+  });
+}
+
 onMounted(() => {
   handleScrollLimit();
   window.addEventListener('scroll', handleScrollLimit, { passive: true });
@@ -122,6 +150,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScrollLimit);
+  if (guideFrameId !== null) {
+    window.cancelAnimationFrame(guideFrameId);
+  }
 });
 
 watch(homePreferredStyles, () => {
@@ -149,7 +180,9 @@ watch(homePreferredStyles, () => {
           :height="containerHeight"
           layout="home"
           show-constellations
+          :guide-target-index="guideTargetIndex ?? undefined"
           @click="openImageSpread"
+          @ready="startImageClickGuide"
         />
       </div>
 
@@ -160,7 +193,12 @@ watch(homePreferredStyles, () => {
           Asterism
         </h1>
 
-        <div class="meteor-arrows mt-4 flex translate-x-[10vw]" aria-hidden="true">
+        <div
+          v-if="!isImageGuideVisible"
+          class="meteor-arrows mt-4 flex translate-x-[10vw]"
+          data-testid="home-meteor-arrows"
+          aria-hidden="true"
+        >
           <MoveDownLeft class="meteor-arrow meteor-arrow--primary" />
           <MoveDownLeft class="meteor-arrow meteor-arrow--secondary meteor-arrow--delay-1" />
           <MoveDownLeft class="meteor-arrow meteor-arrow--tertiary meteor-arrow--delay-2" />
@@ -169,6 +207,12 @@ watch(homePreferredStyles, () => {
     </section>
 
     <HomeStarLinks />
+
+    <HomeImageClickGuide
+      v-if="isImageGuideVisible && guideTargetIndex !== null"
+      :target-index="guideTargetIndex"
+      @dismiss="completeGuide"
+    />
 
     <Transition name="guest-hint">
       <p

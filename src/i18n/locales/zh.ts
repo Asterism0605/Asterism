@@ -220,6 +220,9 @@ export default {
   },
   home: {
     guestHint: '註冊或登入，繼續探索',
+    guide: {
+      imageClick: '點選圖片查看詳情'
+    },
     limitTitle: '你今天的靈感瀏覽已達上限。',
     limitDesc: '建立免費帳號，即可無限瀏覽、把喜歡的作品收藏到情緒板，並定義你的美學 DNA。',
     createAccount: '建立免費帳號',
