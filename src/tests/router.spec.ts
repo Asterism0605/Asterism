@@ -26,15 +26,20 @@ describe('router', () => {
         { name: 'style-dna', path: '/style-dna' },
         { name: 'style-dna-result', path: '/style-dna/result' },
         { name: 'consultant', path: '/consultant' },
+        { name: 'account-consultations', path: '/account/consultations' },
         { name: 'not-found', path: '/:pathMatch(.*)*' }
       ])
     )
   })
 
-  it('protects the moodboard route with the existing auth guard', () => {
+  it('protects account routes with the existing auth guard', () => {
     const moodboardRoute = router.getRoutes().find((route) => route.name === 'moodboard')
+    const consultationsRoute = router
+      .getRoutes()
+      .find((route) => route.name === 'account-consultations')
 
     expect(moodboardRoute?.meta.requiresAuth).toBe(true)
+    expect(consultationsRoute?.meta.requiresAuth).toBe(true)
   })
 
   it('keeps one image detail path and falls back only when the image id is missing', async () => {

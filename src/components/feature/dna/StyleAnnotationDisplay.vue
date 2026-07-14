@@ -60,7 +60,7 @@
               :class="annotationContentClasses[annotation.position]"
             >
               <p class="whitespace-pre-line font-light leading-tight">
-                {{ formatStyleLabel(annotation.label) }}
+                {{ formatStyleLabel(displayLabel(annotation.label)) }}
               </p>
               <p class="mt-1 text-text-secondary">
                 {{ annotation.value }}
@@ -88,7 +88,7 @@
             <p
               class="w-full max-w-[calc(74vw-2rem)] whitespace-pre-line break-words text-center text-[13px] font-extralight leading-snug text-text-secondary lg:max-w-full lg:text-lg"
             >
-              {{ formatStyleLabel(style.label) }}
+              {{ formatStyleLabel(displayLabel(style.label)) }}
             </p>
           </div>
           <p
@@ -104,6 +104,7 @@
 </template>
 
 <script setup lang="ts">
+import { useStyleTagLabel } from '@/composables/useStyleTagLabel';
 import type { StyleDnaAnnotation, StyleDnaScore } from '@/utils/computeStyleDnaResult';
 
 defineProps<{
@@ -112,6 +113,8 @@ defineProps<{
   styles: StyleDnaScore[];
   annotations: StyleDnaAnnotation[];
 }>();
+
+const { displayLabel } = useStyleTagLabel();
 
 const annotationPositionClasses: Record<StyleDnaAnnotation['position'], string> = {
   left: 'left-[-12vw] top-[28%] sm:left-[6vw] lg:left-[16%] lg:top-[42%] lg:-translate-x-1/2',

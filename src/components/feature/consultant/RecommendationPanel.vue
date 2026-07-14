@@ -117,8 +117,8 @@ const fieldErrors = computed(() => {
   return {
     date: form.date ? '' : t('consult.errDate'),
     timeSlot: form.timeSlot ? '' : t('consult.errTimeSlot'),
-    designField: '',
-    designFocus: '',
+    designField: form.designField ? '' : t('consult.errDesignField'),
+    designFocus: form.designFocus ? '' : t('consult.errDesignFocus'),
     name: form.name.trim() ? '' : t('consult.errName'),
     email: emailPattern.test(form.email.trim()) ? '' : t('consult.errEmail'),
     contactPhone: !contactPhone

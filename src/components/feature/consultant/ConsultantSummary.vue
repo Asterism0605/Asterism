@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useStyleTagLabel } from '@/composables/useStyleTagLabel';
 
 type ConsultantSummaryStatus = 'missing-result' | 'ready';
 
@@ -33,6 +34,8 @@ const effectiveStatus = computed<ConsultantSummaryStatus>(() => {
 });
 
 const canShowProfile = computed(() => effectiveStatus.value === 'ready' && props.profile !== null);
+
+const { displayLabel } = useStyleTagLabel();
 </script>
 
 <template>
@@ -53,7 +56,7 @@ const canShowProfile = computed(() => effectiveStatus.value === 'ready' && props
         <dd>
           <ol class="consultant-summary__dna-list">
             <li v-for="style in profile.styleDna" :key="style.label">
-              <span>{{ style.label }}</span>
+              <span>{{ displayLabel(style.label) }}</span>
               <span>{{ style.percentage }}%</span>
             </li>
           </ol>
