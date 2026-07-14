@@ -115,7 +115,7 @@ defineExpose({ playDateAnimation });
         </div>
         <div>
           <dt>{{ t('consult.notes') }}</dt>
-          <dd>{{ displayValue(reservation.notes) }}</dd>
+          <dd class="consultation-details__notes">{{ displayValue(reservation.notes) }}</dd>
         </div>
       </dl>
     </template>
@@ -129,7 +129,8 @@ defineExpose({ playDateAnimation });
   position: absolute;
   right: 15%;
   top: calc(50% + 32px);
-  z-index: 5;
+  z-index: 10;
+  isolation: isolate;
   width: 440px;
   height: 500px;
   padding: 30px 46px 36px;
@@ -183,7 +184,7 @@ defineExpose({ playDateAnimation });
 .consultation-details {
   display: grid;
   gap: 17px;
-  margin: 40px 0 0;
+  margin: 30px 0 0;
 }
 
 .consultation-details div {
@@ -205,6 +206,17 @@ defineExpose({ playDateAnimation });
 .consultation-details dd {
   color: #f0ede6a8;
   font-weight: 300;
+}
+
+.consultation-details__notes {
+  max-height: calc(1.42em * 3);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+  width: calc(100% + 40px);
+  margin-right: -40px;
+  padding-right: 8px;
+  white-space: pre-wrap;
 }
 
 @media (max-width: 768px) {
