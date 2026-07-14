@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<ProfileProps>(), {
   subtitle: '',
   avatarUrl: '',
   showFollow: false,
-  followLabel: '+ Follow',
+  followLabel: undefined,
   avatarSize: 'md'
 });
 
@@ -64,7 +64,7 @@ const profileSizeClass = computed(() => ({
         type="button"
         class="px-4 sm:px-5 py-1.5 sm:py-2 w-full cursor-pointer rounded-full border border-text-primary/80 px-5 text-sm font-medium text-text-primary transition-all duration-200 hover:bg-text-primary hover:text-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-text-primary sm:ml-auto sm:w-auto sm:px-4 sm:text-body"
       >
-        {{ followLabel }}
+        {{ followLabel ?? $t('common.follow') }}
       </button>
     </div>
   </article>
