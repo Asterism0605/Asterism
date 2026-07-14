@@ -139,3 +139,21 @@ export async function addMoodboardItem(
 
   return data as Omit<MoodboardItemRow, 'images'>;
 }
+
+export async function deleteMoodboardItem(itemId: string, folderId: string): Promise<void> {
+  const { data, error } = await getSupabase()
+    .from('moodboard_items')
+    .delete()
+    .eq('id', itemId)
+    .eq('folder_id', folderId)
+    .select('id')
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error('Moodboard item was not deleted.');
+  }
+}

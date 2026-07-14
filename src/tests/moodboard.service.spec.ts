@@ -1,18 +1,25 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { MoodboardFolder } from '@/types/moodboard';
 
-const { addMoodboardItem, createMoodboardFolder, deleteMoodboardFolder, fetchMoodboardFolders } =
-  vi.hoisted(() => ({
-    addMoodboardItem: vi.fn(),
-    createMoodboardFolder: vi.fn(),
-    deleteMoodboardFolder: vi.fn(),
-    fetchMoodboardFolders: vi.fn()
-  }));
+const {
+  addMoodboardItem,
+  createMoodboardFolder,
+  deleteMoodboardFolder,
+  deleteMoodboardItem,
+  fetchMoodboardFolders
+} = vi.hoisted(() => ({
+  addMoodboardItem: vi.fn(),
+  createMoodboardFolder: vi.fn(),
+  deleteMoodboardFolder: vi.fn(),
+  deleteMoodboardItem: vi.fn(),
+  fetchMoodboardFolders: vi.fn()
+}));
 
 vi.mock('@/api/moodboard.api', () => ({
   addMoodboardItem,
   createMoodboardFolder,
   deleteMoodboardFolder,
+  deleteMoodboardItem,
   fetchMoodboardFolders
 }));
 
@@ -30,6 +37,7 @@ import {
   addItem,
   createFolder,
   deleteFolder,
+  deleteItem,
   getMoodboardViewModel,
   isImageSaved
 } from '@/services/moodboard.service';
@@ -185,6 +193,14 @@ describe('moodboard.service', () => {
     await deleteFolder('folder-1', 'user-1');
 
     expect(deleteMoodboardFolder).toHaveBeenCalledWith('folder-1', 'user-1');
+  });
+
+  it('deletes an item through the Data API', async () => {
+    deleteMoodboardItem.mockResolvedValue(undefined);
+
+    await deleteItem('folder-1', 'item-1');
+
+    expect(deleteMoodboardItem).toHaveBeenCalledWith('item-1', 'folder-1');
   });
 
   it('checks saved state from the passed store snapshot', () => {

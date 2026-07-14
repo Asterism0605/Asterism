@@ -10,6 +10,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
 import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConfirm.vue';
 import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
+import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
@@ -40,7 +41,7 @@ import type {
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
-import { deleteFolder } from '@/services/moodboard.service';
+import { deleteFolder, deleteItem } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -97,6 +98,10 @@ const deleteHoverIdx = ref(-1);
 const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
+const deleteImageHoverIdx = ref<string | null>(null);
+const deleteImageTarget = ref<{ folderId: string; itemId: string } | null>(null);
+const isDeleteImageModalOpen = ref(false);
+const isDeletingImage = ref(false);
 
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
@@ -284,11 +289,41 @@ async function confirmDeleteFolder() {
   }
 }
 
+function requestDeleteImage(itemId: string) {
+  const folder = moodboardStore.folders[selectedFolder.value];
+  if (!folder || !folder.images.some((image) => image.itemId === itemId)) return;
+
+  deleteImageTarget.value = { folderId: folder.id, itemId };
+  isDeleteImageModalOpen.value = true;
+}
+
+async function confirmDeleteImage() {
+  const profileId = authStore.user?.id;
+  if (!deleteImageTarget.value || isDeletingImage.value || !profileId) return;
+
+  const { folderId, itemId } = deleteImageTarget.value;
+  isDeletingImage.value = true;
+  try {
+    await deleteItem(folderId, itemId);
+    moodboardStore.removeImage(folderId, itemId);
+    scatter.value = scatter.value.filter((n) => n.itemId !== itemId);
+    mDetailPhotos.value = mDetailPhotos.value.filter((p) => p.itemId !== itemId);
+    isDeleteImageModalOpen.value = false;
+    deleteImageTarget.value = null;
+    deleteImageHoverIdx.value = null;
+  } catch {
+    showToast({ type: 'error', message: t('toast.deleteImageFailed') });
+  } finally {
+    isDeletingImage.value = false;
+  }
+}
+
 function toPhotos(images: SavedImage[], mobile = false) {
   const sizes = mobile ? mDetailBase : photos;
 
   return images.map((image, index) => ({
     src: image.src,
+    itemId: image.itemId,
     w: sizes[index % sizes.length].w,
     h: sizes[index % sizes.length].h
   }));
@@ -325,6 +360,7 @@ function buildDetail() {
   });
   scatter.value = nodes.map((d) => ({
     id: d.id,
+    itemId: d.itemId,
     src: d.src,
     w: d.w,
     h: d.h,
@@ -355,6 +391,7 @@ function buildMobileDetail() {
   });
   mDetailPhotos.value = nodes.map((d) => ({
     id: d.id,
+    itemId: d.itemId,
     src: d.src,
     w: d.w,
     h: d.h,
@@ -626,10 +663,12 @@ onBeforeUnmount(() => {
             <DeleteIconButton
               v-if="f.hasFolder"
               :data-testid="`folder-delete-mobile-${f.i}`"
+              :size="28"
+              :icon-size="20"
               :style="{
                 position: 'absolute',
-                top: '-6px',
-                right: '-6px',
+                top: '-10px',
+                right: '-15px',
                 zIndex: 40
               }"
               @delete="requestDeleteFolder(f.i)"
@@ -719,7 +758,10 @@ onBeforeUnmount(() => {
         >
           <div
             class="image-card w-full h-full"
-            :class="{ 'photo-placeholder': p.placeholder, 'photo-faded': !p.placeholder && p.faded }"
+            :class="{
+              'photo-placeholder': p.placeholder,
+              'photo-faded': !p.placeholder && p.faded
+            }"
             :style="{ animationDelay: p.delay + 's' }"
           >
             <img
@@ -743,6 +785,13 @@ onBeforeUnmount(() => {
                   #26272b;
               "
             ></div>
+            <DeleteIconButton
+              v-if="p.itemId"
+              :data-testid="`image-delete-mobile-${p.itemId}`"
+              :aria-label="$t('moodboard.deleteImageAria')"
+              :style="{ position: 'absolute', top: '-12px', right: '-12px', zIndex: 40 }"
+              @delete="requestDeleteImage(p.itemId)"
+            />
           </div>
         </div>
 
@@ -889,10 +938,12 @@ onBeforeUnmount(() => {
             <DeleteIconButton
               v-if="fv.hasFolder"
               :data-testid="`folder-delete-${fv.i}`"
+              :size="28"
+              :icon-size="20"
               :style="{
                 position: 'absolute',
-                top: '-6px',
-                right: '-6px',
+                top: '-3px',
+                right: '-3px',
                 opacity: deleteHoverIdx === fv.i ? 1 : 0,
                 pointerEvents: deleteHoverIdx === fv.i ? 'auto' : 'none',
                 transition: 'opacity .2s ease',
@@ -908,6 +959,7 @@ onBeforeUnmount(() => {
           <div
             v-for="n in scatter"
             :key="n.id"
+            :data-testid="n.itemId ? `moodboard-image-${n.itemId}` : undefined"
             class="absolute image-card"
             :style="{
               left: n.x - n.w / 2 + 'px',
@@ -916,6 +968,8 @@ onBeforeUnmount(() => {
               height: n.h + 'px',
               animationDelay: n.delay + 's'
             }"
+            @mouseenter="n.itemId && (deleteImageHoverIdx = n.itemId)"
+            @mouseleave="deleteImageHoverIdx = null"
           >
             <img
               :src="n.src"
@@ -939,6 +993,21 @@ onBeforeUnmount(() => {
                   #2b2c30;
               "
             ></div>
+            <DeleteIconButton
+              v-if="n.itemId"
+              :data-testid="`image-delete-${n.itemId}`"
+              :aria-label="$t('moodboard.deleteImageAria')"
+              :style="{
+                position: 'absolute',
+                top: '-12px',
+                right: '-12px',
+                zIndex: 40,
+                opacity: deleteImageHoverIdx === n.itemId ? 1 : 0,
+                pointerEvents: deleteImageHoverIdx === n.itemId ? 'auto' : 'none',
+                transition: 'opacity .2s ease'
+              }"
+              @delete="requestDeleteImage(n.itemId)"
+            />
           </div>
 
           <!-- back link (sits just above the docked tab, against the visible bottom) -->
@@ -1093,6 +1162,11 @@ onBeforeUnmount(() => {
       :is-deleting="isDeletingFolder"
       :folder-name="deleteTarget?.name ?? ''"
       @confirm="confirmDeleteFolder"
+    />
+    <DeleteImageConfirm
+      v-model="isDeleteImageModalOpen"
+      :is-deleting="isDeletingImage"
+      @confirm="confirmDeleteImage"
     />
   </div>
 </template>

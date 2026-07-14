@@ -188,6 +188,70 @@ describe('moodboard store', () => {
     expect(getMoodboardViewModel).toHaveBeenCalledTimes(1);
   });
 
+  it('removes only the matching item from its own folder', async () => {
+    getMoodboardViewModel.mockResolvedValue({
+      folders: [folder],
+      allItems: folder.images,
+      totalFolderCount: 1,
+      totalSavedItemCount: 1
+    });
+    const store = useMoodboardStore();
+    await store.fetchMoodboard('user-1');
+
+    store.removeImage('folder-1', 'item-1');
+
+    expect(store.folders[0].images).toEqual([]);
+  });
+
+  it('removing an image from one folder never affects the same image saved in a different folder', async () => {
+    const sharedImageId = 'shared-image';
+    const folderA: MoodboardFolder = {
+      id: 'folder-a',
+      name: 'A',
+      createdAt: '2026-07-05T00:00:00.000Z',
+      images: [
+        {
+          itemId: 'item-a',
+          id: sharedImageId,
+          src: '/shared.webp',
+          title: 'Shared',
+          styleGroup: null,
+          style: [],
+          createdAt: '2026-07-05T00:00:00.000Z'
+        }
+      ]
+    };
+    const folderB: MoodboardFolder = {
+      id: 'folder-b',
+      name: 'B',
+      createdAt: '2026-07-04T00:00:00.000Z',
+      images: [
+        {
+          itemId: 'item-b',
+          id: sharedImageId,
+          src: '/shared.webp',
+          title: 'Shared',
+          styleGroup: null,
+          style: [],
+          createdAt: '2026-07-04T00:00:00.000Z'
+        }
+      ]
+    };
+    getMoodboardViewModel.mockResolvedValue({
+      folders: [folderA, folderB],
+      allItems: [...folderA.images, ...folderB.images],
+      totalFolderCount: 2,
+      totalSavedItemCount: 2
+    });
+    const store = useMoodboardStore();
+    await store.fetchMoodboard('user-1');
+
+    store.removeImage('folder-a', 'item-a');
+
+    expect(store.folders.find((f) => f.id === 'folder-a')?.images).toEqual([]);
+    expect(store.folders.find((f) => f.id === 'folder-b')?.images).toEqual(folderB.images);
+  });
+
   it('clears user-owned state on logout or account change', async () => {
     getMoodboardViewModel.mockResolvedValue({
       folders: [folder],

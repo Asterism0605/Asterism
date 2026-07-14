@@ -12,8 +12,9 @@ const { disposeSphere, initSphere, updateSphereImages } = vi.hoisted(() => ({
   updateSphereImages: vi.fn()
 }));
 
-const { deleteFolderMock, getMoodboardViewModelMock } = vi.hoisted(() => ({
+const { deleteFolderMock, deleteItemMock, getMoodboardViewModelMock } = vi.hoisted(() => ({
   deleteFolderMock: vi.fn(),
+  deleteItemMock: vi.fn(),
   getMoodboardViewModelMock: vi.fn()
 }));
 
@@ -27,6 +28,7 @@ vi.mock('@/components/feature/moodboard/sphere', () => ({
 
 vi.mock('@/services/moodboard.service', () => ({
   deleteFolder: deleteFolderMock,
+  deleteItem: deleteItemMock,
   getMoodboardViewModel: getMoodboardViewModelMock
 }));
 
@@ -68,6 +70,7 @@ describe('MoodboardOrbit', () => {
     initSphere.mockReset();
     updateSphereImages.mockReset();
     deleteFolderMock.mockReset();
+    deleteItemMock.mockReset();
     getMoodboardViewModelMock.mockReset();
     showToastMock.mockReset();
     initSphere.mockReturnValue({
@@ -522,6 +525,200 @@ describe('MoodboardOrbit', () => {
         type: 'error',
         message: 'Failed to delete the folder. Please try again.'
       });
+    });
+  });
+
+  describe('delete image flow', () => {
+    const savedImage = (id: string) => ({
+      itemId: `item-${id}`,
+      id,
+      src: `/style-image/${id}.webp`,
+      title: id,
+      styleGroup: 'minimal',
+      style: [],
+      createdAt: '2026-07-05T00:00:00.000Z'
+    });
+
+    function patchFolders() {
+      useAuthStore().$patch({
+        user: {
+          id: 'user-1',
+          email: 'user@example.com',
+          displayName: 'User',
+          isAdmin: false,
+          createdAt: '2026-07-01T00:00:00.000Z'
+        }
+      });
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        loadedProfileId: 'user-1',
+        folders: [
+          {
+            id: 'folder-1',
+            name: 'Studio',
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [savedImage('saved-1'), savedImage('saved-2')]
+          }
+        ]
+      });
+      return store;
+    }
+
+    async function openFolder(wrapper: Awaited<ReturnType<typeof mountMoodboard>>['wrapper']) {
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('click');
+      await flushPromises();
+    }
+
+    it('desktop only shows the image delete icon while hovering that photo', async () => {
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+      const itemId = store.folders[0].images[0].itemId;
+
+      expect(wrapper.get(`[data-testid="image-delete-${itemId}"]`).attributes('style')).toContain(
+        'opacity: 0'
+      );
+
+      await wrapper.get(`[data-testid="moodboard-image-${itemId}"]`).trigger('mouseenter');
+      expect(wrapper.get(`[data-testid="image-delete-${itemId}"]`).attributes('style')).toContain(
+        'opacity: 1'
+      );
+
+      await wrapper.get(`[data-testid="moodboard-image-${itemId}"]`).trigger('mouseleave');
+      expect(wrapper.get(`[data-testid="image-delete-${itemId}"]`).attributes('style')).toContain(
+        'opacity: 0'
+      );
+    });
+
+    it('clicking the image delete icon opens the confirm modal without navigating away from the folder', async () => {
+      const store = patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+      await openFolder(wrapper);
+      const itemId = store.folders[0].images[0].itemId;
+
+      await wrapper.get(`[data-testid="moodboard-image-${itemId}"]`).trigger('mouseenter');
+      await wrapper.get(`[data-testid="image-delete-${itemId}"]`).trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard/studio');
+      expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(true);
+    });
+
+    it('successful delete removes only that image, leaving the rest of the folder untouched', async () => {
+      deleteItemMock.mockResolvedValue(undefined);
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+      const [first, second] = store.folders[0].images;
+
+      await wrapper.get(`[data-testid="moodboard-image-${first.itemId}"]`).trigger('mouseenter');
+      await wrapper.get(`[data-testid="image-delete-${first.itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(deleteItemMock).toHaveBeenCalledWith('folder-1', first.itemId);
+      expect(store.folders[0].images.some((image) => image.itemId === first.itemId)).toBe(false);
+      expect(store.folders[0].images.some((image) => image.itemId === second.itemId)).toBe(true);
+      expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(false);
+      expect(wrapper.find(`[data-testid="moodboard-image-${first.itemId}"]`).exists()).toBe(false);
+    });
+
+    it('keeps the modal open and the image intact on a failed delete, showing an error toast, and allows retry', async () => {
+      deleteItemMock.mockRejectedValueOnce(new Error('boom'));
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+      const itemId = store.folders[0].images[0].itemId;
+
+      await wrapper.get(`[data-testid="moodboard-image-${itemId}"]`).trigger('mouseenter');
+      await wrapper.get(`[data-testid="image-delete-${itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(true);
+      expect(store.folders[0].images.some((image) => image.itemId === itemId)).toBe(true);
+      expect(showToastMock).toHaveBeenCalledWith({
+        type: 'error',
+        message: 'Failed to delete the image. Please try again.'
+      });
+
+      deleteItemMock.mockResolvedValueOnce(undefined);
+      await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(store.folders[0].images.some((image) => image.itemId === itemId)).toBe(false);
+      expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(false);
+    });
+
+    it('mobile always shows the image delete icon and can delete without hovering first', async () => {
+      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      deleteItemMock.mockResolvedValue(undefined);
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await wrapper.get('[data-testid="moodboard-folder-mobile-0"]').trigger('click');
+      await flushPromises();
+      const itemId = store.folders[0].images[0].itemId;
+
+      await wrapper.get(`[data-testid="image-delete-mobile-${itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(deleteItemMock).toHaveBeenCalledWith('folder-1', itemId);
+      expect(store.folders[0].images.some((image) => image.itemId === itemId)).toBe(false);
+    });
+
+    it('removing an image from one folder never affects the same image saved in a different folder', async () => {
+      deleteItemMock.mockResolvedValue(undefined);
+      useAuthStore().$patch({
+        user: {
+          id: 'user-1',
+          email: 'user@example.com',
+          displayName: 'User',
+          isAdmin: false,
+          createdAt: '2026-07-01T00:00:00.000Z'
+        }
+      });
+      const sharedImage = (itemId: string) => ({
+        itemId,
+        id: 'shared-image',
+        src: '/style-image/shared-image.webp',
+        title: 'shared-image',
+        styleGroup: 'minimal',
+        style: [],
+        createdAt: '2026-07-05T00:00:00.000Z'
+      });
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        loadedProfileId: 'user-1',
+        folders: [
+          {
+            id: 'folder-1',
+            name: 'Studio',
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [sharedImage('item-a')]
+          },
+          {
+            id: 'folder-3',
+            name: 'Archive',
+            createdAt: '2026-07-05T00:00:00.000Z',
+            images: [sharedImage('item-b')]
+          }
+        ]
+      });
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+
+      await wrapper.get('[data-testid="moodboard-image-item-a"]').trigger('mouseenter');
+      await wrapper.get('[data-testid="image-delete-item-a"]').trigger('click');
+      await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(deleteItemMock).toHaveBeenCalledTimes(1);
+      expect(deleteItemMock).toHaveBeenCalledWith('folder-1', 'item-a');
+      expect(store.folders.find((f) => f.id === 'folder-1')?.images).toEqual([]);
+      expect(store.folders.find((f) => f.id === 'folder-3')?.images).toEqual([sharedImage('item-b')]);
     });
   });
 });

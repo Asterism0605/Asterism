@@ -24,6 +24,7 @@ export function packPhotos(
 
   const nodes = list.map((p, i) => ({
     id: (opt.idPrefix ?? 'p') + i + '-' + ((Math.random() * 1e6) | 0),
+    itemId: p.itemId,
     src: p.src,
     w0: p.w, // original size (the layout shrinks from this to fit)
     h0: p.h,

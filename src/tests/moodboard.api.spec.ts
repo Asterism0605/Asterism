@@ -21,6 +21,7 @@ import {
   addMoodboardItem,
   createMoodboardFolder,
   deleteMoodboardFolder,
+  deleteMoodboardItem,
   fetchMoodboardFolders
 } from '@/api/moodboard.api';
 
@@ -112,6 +113,33 @@ describe('moodboard.api', () => {
 
     await expect(deleteMoodboardFolder('folder-1', 'user-1')).rejects.toThrow(
       'Moodboard folder was not deleted.'
+    );
+  });
+
+  it('deletes an item by id and folder, scoping the delete to that folder', async () => {
+    deleteMaybeSingle.mockResolvedValue({ data: { id: 'item-1' }, error: null });
+
+    await deleteMoodboardItem('item-1', 'folder-1');
+
+    expect(from).toHaveBeenCalledWith('moodboard_items');
+    expect(del).toHaveBeenCalled();
+    expect(deleteEqId).toHaveBeenCalledWith('id', 'item-1');
+    expect(deleteEqProfile).toHaveBeenCalledWith('folder_id', 'folder-1');
+    expect(deleteSelect).toHaveBeenCalledWith('id');
+  });
+
+  it('propagates item delete errors', async () => {
+    const error = { message: 'permission denied' };
+    deleteMaybeSingle.mockResolvedValue({ data: null, error });
+
+    await expect(deleteMoodboardItem('item-1', 'folder-1')).rejects.toBe(error);
+  });
+
+  it('throws when no item row was actually deleted (wrong folder, already deleted, or stale id)', async () => {
+    deleteMaybeSingle.mockResolvedValue({ data: null, error: null });
+
+    await expect(deleteMoodboardItem('item-1', 'folder-1')).rejects.toThrow(
+      'Moodboard item was not deleted.'
     );
   });
 });
