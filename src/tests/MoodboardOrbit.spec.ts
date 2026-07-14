@@ -76,7 +76,11 @@ describe('MoodboardOrbit', () => {
       updateImages: updateSphereImages,
       dispose: disposeSphere
     });
-    Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true, writable: true });
+    Object.defineProperty(window, 'innerWidth', {
+      value: 1024,
+      configurable: true,
+      writable: true
+    });
   });
 
   afterEach(() => {
@@ -339,7 +343,11 @@ describe('MoodboardOrbit', () => {
 
   describe('mobile home orbit placeholder photos', () => {
     it('applies the photo-placeholder class only to placeholder photos, not real ones', async () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
       const store = useMoodboardStore();
       store.$patch({
         status: 'success',
@@ -373,9 +381,9 @@ describe('MoodboardOrbit', () => {
 
       expect(placeholderCards.length).toBeGreaterThan(0);
       expect(realCards.length).toBeGreaterThan(0);
-      expect(realCards.some((card) => card.find('img').attributes('src') === '/style-image/saved-1.webp')).toBe(
-        true
-      );
+      expect(
+        realCards.some((card) => card.find('img').attributes('src') === '/style-image/saved-1.webp')
+      ).toBe(true);
     });
   });
 
@@ -495,7 +503,11 @@ describe('MoodboardOrbit', () => {
     });
 
     it('mobile shows the delete icon persistently and can delete without hovering first', async () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
       deleteFolderMock.mockResolvedValue(undefined);
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
@@ -509,7 +521,11 @@ describe('MoodboardOrbit', () => {
     });
 
     it('mobile shows an error toast and keeps the folder on a failed delete', async () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
       deleteFolderMock.mockRejectedValueOnce(new Error('boom'));
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
@@ -527,7 +543,7 @@ describe('MoodboardOrbit', () => {
   });
 
   describe('detail photo navigation', () => {
-    function patchSingleImageFolder() {
+    function patchSingleImageFolder(folderName = 'Studio') {
       useAuthStore().$patch({
         user: {
           id: 'user-1',
@@ -544,7 +560,7 @@ describe('MoodboardOrbit', () => {
         folders: [
           {
             id: 'folder-1',
-            name: 'Studio',
+            name: folderName,
             createdAt: '2026-07-06T00:00:00.000Z',
             images: [
               {
@@ -581,6 +597,15 @@ describe('MoodboardOrbit', () => {
       expect(wrapper.find('[data-testid="moodboard-folder-0"]').isVisible()).toBe(true);
     });
 
+    it('restores the folder detail view when the folder name needs URL encoding', async () => {
+      patchSingleImageFolder('Black & White');
+      const { wrapper } = await mountMoodboard('/moodboard/black-%26-white');
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid="moodboard-detail-photo"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="moodboard-folder-0"]').isVisible()).toBe(false);
+    });
+
     it('navigates to the picture detail page when clicking a desktop detail photo', async () => {
       patchSingleImageFolder();
       const { wrapper, router } = await mountMoodboard();
@@ -599,7 +624,11 @@ describe('MoodboardOrbit', () => {
     });
 
     it('navigates to the picture detail page when clicking a mobile detail photo', async () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
       patchSingleImageFolder();
       const { wrapper, router } = await mountMoodboard();
 
@@ -615,7 +644,11 @@ describe('MoodboardOrbit', () => {
     });
 
     it('only enables the one real photo among the mobile home preview placeholders', async () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
       patchSingleImageFolder();
       const { wrapper } = await mountMoodboard();
 
@@ -666,8 +699,6 @@ describe('MoodboardOrbit', () => {
       return store;
     }
 
-    // 實際的射線判定（點到真實圖片才算命中）在 sphere.ts 內部，這裡的 initSphere 是 mock，
-    // 所以改成直接抓 initSphere 被呼叫時傳入的第 5 個參數（onImageClick callback）來模擬「命中」。
     function getSphereImageClickHandler(): (() => void) | undefined {
       return initSphere.mock.calls.at(-1)?.[4];
     }
@@ -713,7 +744,11 @@ describe('MoodboardOrbit', () => {
     });
 
     it('opens the folder shown in the mobile home preview when clicking its one real photo', async () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
       patchSingleImageFolder();
       const { wrapper, router } = await mountMoodboard();
 

@@ -433,7 +433,9 @@ function slugFor(i: number) {
 }
 
 function findFolderIndexBySlug(slug: string): number {
-  return moodboardStore.folders.findIndex((_, index) => slugFor(index) === slug);
+  return moodboardStore.folders.findIndex(
+    (_, index) => decodeURIComponent(slugFor(index)) === slug
+  );
 }
 
 function navigate(slug: string, i: number) {
@@ -566,8 +568,6 @@ onMounted(async () => {
     await moodboardStore.fetchMoodboard(profileId);
   }
 
-  // 直接帶 slug 進站（例如從圖片詳情頁按返回），重建 MoodboardOrbit 時要還原成該資料夾的詳情畫面，
-  // 不能只看 hasFolders 預設值，否則會落回資料夾列表（見 #「Back 按鈕沒有回到散落圖片畫面」）。
   const initialSlug = typeof route.params.slug === 'string' ? route.params.slug : undefined;
   if (initialSlug) {
     const index = findFolderIndexBySlug(initialSlug);
@@ -768,7 +768,10 @@ onBeforeUnmount(() => {
         >
           <div
             class="image-card w-full h-full"
-            :class="{ 'photo-placeholder': p.placeholder, 'photo-faded': !p.placeholder && p.faded }"
+            :class="{
+              'photo-placeholder': p.placeholder,
+              'photo-faded': !p.placeholder && p.faded
+            }"
             :style="{ animationDelay: p.delay + 's' }"
           >
             <button
