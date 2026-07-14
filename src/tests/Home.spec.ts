@@ -23,6 +23,28 @@ const floatingImageNetworkStub = {
   template: '<button data-test="floating-image-network" @click="$emit(\'click\', 0)" />'
 };
 
+const guideFloatingImageNetworkStub = {
+  props: ['images', 'height', 'guideTargetIndex'],
+  emits: ['click', 'ready'],
+  template: `
+    <div>
+      <button
+        v-for="(_, index) in images"
+        :key="index"
+        data-test="guide-image-card"
+        :data-guide-image-index="index"
+        :data-guide-target="guideTargetIndex === index ? 'true' : undefined"
+        @click="$emit('click', index)"
+      />
+    </div>
+  `
+};
+
+const homeImageClickGuideStub = {
+  props: ['targetIndex'],
+  template: '<div v-if="targetIndex !== null" data-test="home-image-click-guide" />'
+};
+
 function mockViewport(initialScrollY = 0, innerHeight = 1000) {
   let currentScrollY = initialScrollY;
 
@@ -261,6 +283,57 @@ describe('Home', () => {
     await flushPromises();
     await wrapper.find('[data-test="floating-image-network"]').trigger('click');
 
+    expect(push).toHaveBeenCalledWith({
+      name: 'image-spread',
+      params: { imageId: expect.any(String) }
+    });
+  });
+
+  it('guides the configured image and completes the guide before routing from it', async () => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(
+      new DOMRect(100, 100, 200, 300)
+    );
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+      callback(0);
+      return 1;
+    });
+    const router = createTestRouter();
+    const push = vi.spyOn(router, 'push');
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: guideFloatingImageNetworkStub,
+          HomeImageClickGuide: homeImageClickGuideStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await flushPromises();
+    await wrapper.vm.$nextTick();
+
+    const floatingNetwork = wrapper.findComponent(guideFloatingImageNetworkStub);
+    expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
+    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="home-meteor-arrows"]').exists()).toBe(true);
+
+    floatingNetwork.vm.$emit('ready');
+    await flushPromises();
+    await wrapper.vm.$nextTick();
+
+    expect(floatingNetwork.props('guideTargetIndex')).toBe(5);
+    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="home-meteor-arrows"]').exists()).toBe(false);
+
+    await wrapper.findAll('[data-test="guide-image-card"]')[5].trigger('click');
+
+    expect(localStorage.getItem('asterism:guide:home-image-click')).toBe('completed');
     expect(push).toHaveBeenCalledWith({
       name: 'image-spread',
       params: { imageId: expect.any(String) }
