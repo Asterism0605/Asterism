@@ -21,10 +21,12 @@ const props = defineProps<{
   height?: string;
   layout?: 'auto' | 'home';
   showConstellations?: boolean;
+  guideTargetIndex?: number;
 }>();
 
 const emit = defineEmits<{
   click: [index: number];
+  ready: [];
 }>();
 
 const containerRef = ref<HTMLElement | null>(null);
@@ -42,6 +44,15 @@ let loadedCount = 0;
 let recomputeTimer: ReturnType<typeof setTimeout> | undefined;
 let readyTimer: ReturnType<typeof setTimeout> | undefined;
 
+function markReady(): void {
+  if (isReady.value) {
+    return;
+  }
+
+  isReady.value = true;
+  emit('ready');
+}
+
 function scheduleRecompute() {
   if (typeof window === 'undefined') {
     recomputeLayout();
@@ -58,16 +69,6 @@ function scheduleAspectReflow() {
   }
   clearTimeout(recomputeTimer);
   recomputeTimer = setTimeout(reflowLayout, 120);
-}
-
-function markReady() {
-  if (isReady.value) return;
-
-  clearTimeout(recomputeTimer);
-  clearTimeout(readyTimer);
-
-  recomputeLayout();
-  isReady.value = true;
 }
 
 function onImageLoad(src: string, event: Event) {
@@ -90,6 +91,11 @@ function onImageLoad(src: string, event: Event) {
   loadedCount += 1;
 
   if (loadedCount >= visibleImages.value.length) {
+    // 全部載入完：用真實比例做最後一次排版，然後一次淡入。
+    // 同時清掉 1 秒後備計時器，否則它會在卡片已顯示後再重算一次隨機排版，造成二次跳動。
+    clearTimeout(recomputeTimer);
+    clearTimeout(readyTimer);
+    recomputeLayout();
     markReady();
   }
 }
@@ -98,11 +104,16 @@ function startLoadCycle() {
   isReady.value = false;
   loadedCount = 0;
   recomputeLayout();
+  if (visibleImages.value.length === 0) {
+    return;
+  }
+
   if (typeof window !== 'undefined') {
     // 後備：lazy 圖片可能尚未進入 viewport 而不觸發 load，
     // 因此最多等待一段時間後仍要顯示第一版穩定 layout。
     clearTimeout(readyTimer);
     readyTimer = setTimeout(() => {
+      recomputeLayout();
       markReady();
     }, 1000);
   }
@@ -130,6 +141,16 @@ function activateCard(index: number) {
 function deactivateCard(index: number) {
   if (hoveredIndex.value === index) {
     hoveredIndex.value = null;
+  }
+}
+
+function isCardClickable(index: number): boolean {
+  return props.guideTargetIndex === undefined || props.guideTargetIndex === index;
+}
+
+function handleCardClick(index: number): void {
+  if (isCardClickable(index)) {
+    emit('click', index);
   }
 }
 
@@ -206,15 +227,23 @@ onBeforeUnmount(() => {
       v-for="(image, i) in visibleImages"
       :key="`${i}-${image.src}`"
       data-testid="image-card"
-      class="group image-card absolute cursor-pointer"
-      :class="{ 'image-card--home': isHomeLayout }"
+      :data-guide-image-index="i"
+      :data-guide-target="props.guideTargetIndex === i ? 'true' : undefined"
+      :aria-disabled="isCardClickable(i) ? undefined : 'true'"
+      class="group image-card absolute"
+      :class="{
+        'image-card--home': isHomeLayout,
+        'image-card--guide-target': props.guideTargetIndex === i,
+        'cursor-pointer': isCardClickable(i),
+        'cursor-not-allowed': !isCardClickable(i)
+      }"
       :style="getCardStyle(positions[i], i)"
-      tabindex="0"
+      :tabindex="isCardClickable(i) ? 0 : -1"
       @mouseenter="activateCard(i)"
       @mouseleave="deactivateCard(i)"
       @focusin="activateCard(i)"
       @focusout="deactivateCard(i)"
-      @click="emit('click', i)"
+      @click="handleCardClick(i)"
     >
       <ConstellationBackground
         v-if="showConstellations"
@@ -284,6 +313,31 @@ onBeforeUnmount(() => {
   transition: border-color 0.6s ease;
 }
 
+.image-card--guide-target .image-card__frame {
+  border-color: rgb(240 237 230 / 0.78);
+  box-shadow:
+    0 0 0 2px rgb(168 137 58 / 0.54),
+    0 0 28px rgb(168 137 58 / 0.8),
+    0 0 60px rgb(240 237 230 / 0.25);
+  animation: guideGlow 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes guideGlow {
+  from {
+    box-shadow:
+      0 0 0 2px rgb(168 137 58 / 0.42),
+      0 0 18px rgb(168 137 58 / 0.56),
+      0 0 36px rgb(240 237 230 / 0.16);
+  }
+
+  to {
+    box-shadow:
+      0 0 0 2px rgb(240 237 230 / 0.72),
+      0 0 36px rgb(168 137 58 / 0.92),
+      0 0 76px rgb(240 237 230 / 0.32);
+  }
+}
+
 .image-card:hover .image-card__float {
   scale: 1.05;
 }
@@ -305,6 +359,10 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .image-card__float {
     animation-duration: 1ms;
+  }
+
+  .image-card--guide-target .image-card__frame {
+    animation: none;
   }
 }
 </style>

@@ -98,6 +98,19 @@ describe('FloatingImageNetwork', () => {
     expect(wrapper.findAll('img').length).toBe(3);
   });
 
+  it('emits ready after every image has loaded', async () => {
+    const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } });
+
+    for (const image of wrapper.findAll('img')) {
+      const element = image.element as HTMLImageElement;
+      Object.defineProperty(element, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 600, configurable: true });
+      await image.trigger('load');
+    }
+
+    expect(wrapper.emitted('ready')).toHaveLength(1);
+  });
+
   it('sets correct src and alt on each img', () => {
     const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } });
     const imgs = wrapper.findAll('img');
@@ -123,6 +136,36 @@ describe('FloatingImageNetwork', () => {
 
     await wrapper.findAll('[data-testid="image-card"]')[1].trigger('click');
     expect(wrapper.emitted('click')![1]).toEqual([1]);
+  });
+
+  it('marks only the requested image card as the guide target', () => {
+    const wrapper = mount(FloatingImageNetwork, {
+      props: { images: mockImages, guideTargetIndex: 1 }
+    });
+
+    const cards = wrapper.findAll('[data-testid="image-card"]');
+
+    expect(cards[0].attributes('data-guide-image-index')).toBe('0');
+    expect(cards[1].attributes('data-guide-image-index')).toBe('1');
+    expect(cards[1].attributes('data-guide-target')).toBe('true');
+    expect(cards[1].classes()).toContain('image-card--guide-target');
+    expect(cards[0].attributes('data-guide-target')).toBeUndefined();
+    expect(cards[2].classes()).not.toContain('image-card--guide-target');
+  });
+
+  it('allows only the guide target to emit a click while the guide is active', async () => {
+    const wrapper = mount(FloatingImageNetwork, {
+      props: { images: mockImages, guideTargetIndex: 1 }
+    });
+
+    const cards = wrapper.findAll('[data-testid="image-card"]');
+    await cards[0].trigger('click');
+    await cards[1].trigger('click');
+    await cards[2].trigger('click');
+
+    expect(wrapper.emitted('click')).toEqual([[1]]);
+    expect(cards[0].attributes('aria-disabled')).toBe('true');
+    expect(cards[1].attributes('aria-disabled')).toBeUndefined();
   });
 
   it('renders ambient dots behind the image cards', () => {
