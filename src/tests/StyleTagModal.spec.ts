@@ -52,4 +52,47 @@ describe('StyleTagModal', () => {
 
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
   })
+
+  it('traps Tab focus inside the panel instead of letting it escape to the page behind', () => {
+    const i18n = createI18n({
+      legacy: false,
+      locale: 'en',
+      messages: { en, zh }
+    })
+
+    const wrapper = mount(StyleTagModal, {
+      props: {
+        modelValue: true,
+        tagLabel: 'Art Deco'
+      },
+      global: {
+        plugins: [i18n],
+        stubs: { Teleport: true }
+      },
+      attachTo: document.body
+    })
+
+    const closeButton = wrapper.get('.tag-modal-close').element as HTMLElement
+    closeButton.focus()
+    expect(document.activeElement).toBe(closeButton)
+
+    const tabEvent = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+    window.dispatchEvent(tabEvent)
+
+    expect(tabEvent.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(closeButton)
+
+    const shiftTabEvent = new KeyboardEvent('keydown', {
+      key: 'Tab',
+      shiftKey: true,
+      bubbles: true,
+      cancelable: true
+    })
+    window.dispatchEvent(shiftTabEvent)
+
+    expect(shiftTabEvent.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(closeButton)
+
+    wrapper.unmount()
+  })
 })
