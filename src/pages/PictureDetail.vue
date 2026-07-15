@@ -109,7 +109,7 @@ function handleBack() {
 
   const moodboardSlug = firstQueryValue(route.query.moodboardSlug);
   if (moodboardSlug) {
-    router.push(`/moodboard/${moodboardSlug}`);
+    router.push({ name: 'moodboard', params: { slug: moodboardSlug } });
     return;
   }
 
