@@ -4,6 +4,7 @@ export interface MoodboardPhoto {
   h: number;
   faded?: boolean;
   placeholder?: boolean;
+  imageId?: string;
 }
 
 export interface MoodboardHomePhoto extends MoodboardPhoto {

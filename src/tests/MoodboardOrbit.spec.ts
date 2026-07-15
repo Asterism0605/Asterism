@@ -39,14 +39,15 @@ function createTestRouter() {
     history: createMemoryHistory(),
     routes: [
       { path: '/', name: 'home', component: { template: '<div />' } },
-      { path: '/moodboard/:slug?', name: 'moodboard', component: MoodboardOrbit }
+      { path: '/moodboard/:slug?', name: 'moodboard', component: MoodboardOrbit },
+      { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } }
     ]
   });
 }
 
-async function mountMoodboard() {
+async function mountMoodboard(initialPath = '/moodboard') {
   const router = createTestRouter();
-  await router.push('/moodboard');
+  await router.push(initialPath);
   await router.isReady();
 
   const wrapper = mount(MoodboardOrbit, {
@@ -75,7 +76,11 @@ describe('MoodboardOrbit', () => {
       updateImages: updateSphereImages,
       dispose: disposeSphere
     });
-    Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true, writable: true });
+    Object.defineProperty(window, 'innerWidth', {
+      value: 1024,
+      configurable: true,
+      writable: true
+    });
   });
 
   afterEach(() => {
@@ -338,7 +343,11 @@ describe('MoodboardOrbit', () => {
 
   describe('mobile home orbit placeholder photos', () => {
     it('applies the photo-placeholder class only to placeholder photos, not real ones', async () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
       const store = useMoodboardStore();
       store.$patch({
         status: 'success',
@@ -372,9 +381,9 @@ describe('MoodboardOrbit', () => {
 
       expect(placeholderCards.length).toBeGreaterThan(0);
       expect(realCards.length).toBeGreaterThan(0);
-      expect(realCards.some((card) => card.find('img').attributes('src') === '/style-image/saved-1.webp')).toBe(
-        true
-      );
+      expect(
+        realCards.some((card) => card.find('img').attributes('src') === '/style-image/saved-1.webp')
+      ).toBe(true);
     });
   });
 
@@ -494,7 +503,11 @@ describe('MoodboardOrbit', () => {
     });
 
     it('mobile shows the delete icon persistently and can delete without hovering first', async () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
       deleteFolderMock.mockResolvedValue(undefined);
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
@@ -508,7 +521,11 @@ describe('MoodboardOrbit', () => {
     });
 
     it('mobile shows an error toast and keeps the folder on a failed delete', async () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
       deleteFolderMock.mockRejectedValueOnce(new Error('boom'));
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
@@ -522,6 +539,229 @@ describe('MoodboardOrbit', () => {
         type: 'error',
         message: 'Failed to delete the folder. Please try again.'
       });
+    });
+  });
+
+  describe('detail photo navigation', () => {
+    function patchSingleImageFolder(folderName = 'Studio') {
+      useAuthStore().$patch({
+        user: {
+          id: 'user-1',
+          email: 'user@example.com',
+          displayName: 'User',
+          isAdmin: false,
+          createdAt: '2026-07-01T00:00:00.000Z'
+        }
+      });
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        loadedProfileId: 'user-1',
+        folders: [
+          {
+            id: 'folder-1',
+            name: folderName,
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [
+              {
+                itemId: 'item-1',
+                id: 'image-1',
+                src: '/style-image/image-1.webp',
+                title: 'Image One',
+                styleGroup: 'minimal',
+                style: [],
+                createdAt: '2026-07-06T00:00:00.000Z'
+              }
+            ]
+          }
+        ]
+      });
+      return store;
+    }
+
+    it('restores the folder detail view when mounting directly at a slugged moodboard URL', async () => {
+      patchSingleImageFolder();
+      const { wrapper } = await mountMoodboard('/moodboard/studio');
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid="moodboard-detail-photo"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="moodboard-folder-0"]').isVisible()).toBe(false);
+    });
+
+    it('falls back to the folder list when mounting at a slug that matches no folder', async () => {
+      patchSingleImageFolder();
+      const { wrapper } = await mountMoodboard('/moodboard/no-such-folder');
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid="moodboard-detail-photo"]').exists()).toBe(false);
+      expect(wrapper.find('[data-testid="moodboard-folder-0"]').isVisible()).toBe(true);
+    });
+
+    it('restores the folder detail view when the folder name needs URL encoding', async () => {
+      patchSingleImageFolder('Black & White');
+      const { wrapper } = await mountMoodboard('/moodboard/black-%26-white');
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid="moodboard-detail-photo"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="moodboard-folder-0"]').isVisible()).toBe(false);
+    });
+
+    it('navigates to the picture detail page when clicking a desktop detail photo', async () => {
+      patchSingleImageFolder();
+      const { wrapper, router } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('click');
+      await flushPromises();
+
+      const photoButton = wrapper.get('[data-testid="moodboard-detail-photo"]');
+      expect(photoButton.attributes('disabled')).toBeUndefined();
+
+      await photoButton.trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/images/image-1');
+      expect(router.currentRoute.value.query.moodboardSlug).toBe('studio');
+    });
+
+    it('navigates to the picture detail page when clicking a mobile detail photo', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchSingleImageFolder();
+      const { wrapper, router } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="moodboard-folder-mobile-0"]').trigger('click');
+      await flushPromises();
+
+      const photoButton = wrapper.get('[data-testid="moodboard-mobile-photo"]');
+      await photoButton.trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/images/image-1');
+      expect(router.currentRoute.value.query.moodboardSlug).toBe('studio');
+    });
+
+    it('only enables the one real photo among the mobile home preview placeholders', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchSingleImageFolder();
+      const { wrapper } = await mountMoodboard();
+
+      const photoButtons = wrapper.findAll('[data-testid="moodboard-mobile-photo"]');
+      const enabledButtons = photoButtons.filter(
+        (button) => button.attributes('disabled') === undefined
+      );
+
+      expect(photoButtons.length).toBeGreaterThan(1);
+      expect(enabledButtons).toHaveLength(1);
+    });
+  });
+
+  describe('sphere click navigation', () => {
+    function patchSingleImageFolder() {
+      useAuthStore().$patch({
+        user: {
+          id: 'user-1',
+          email: 'user@example.com',
+          displayName: 'User',
+          isAdmin: false,
+          createdAt: '2026-07-01T00:00:00.000Z'
+        }
+      });
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        loadedProfileId: 'user-1',
+        folders: [
+          {
+            id: 'folder-1',
+            name: 'Studio',
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [
+              {
+                itemId: 'item-1',
+                id: 'image-1',
+                src: '/style-image/image-1.webp',
+                title: 'Image One',
+                styleGroup: 'minimal',
+                style: [],
+                createdAt: '2026-07-06T00:00:00.000Z'
+              }
+            ]
+          }
+        ]
+      });
+      return store;
+    }
+
+    function getSphereImageClickHandler(): (() => void) | undefined {
+      return initSphere.mock.calls.at(-1)?.[4];
+    }
+
+    it('opens the folder shown on the sphere when the image-click callback fires', async () => {
+      patchSingleImageFolder();
+      const { router } = await mountMoodboard();
+      await flushPromises();
+
+      const handleImageClick = getSphereImageClickHandler();
+      expect(handleImageClick).toBeTypeOf('function');
+
+      handleImageClick?.();
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard/studio');
+    });
+
+    it('does nothing when no folder has any saved images', async () => {
+      useAuthStore().$patch({
+        user: {
+          id: 'user-1',
+          email: 'user@example.com',
+          displayName: 'User',
+          isAdmin: false,
+          createdAt: '2026-07-01T00:00:00.000Z'
+        }
+      });
+      useMoodboardStore().$patch({
+        status: 'success',
+        loadedProfileId: 'user-1',
+        folders: [
+          { id: 'folder-1', name: 'Studio', createdAt: '2026-07-06T00:00:00.000Z', images: [] }
+        ]
+      });
+      const { router } = await mountMoodboard();
+      await flushPromises();
+
+      getSphereImageClickHandler()?.();
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard');
+    });
+
+    it('opens the folder shown in the mobile home preview when clicking its one real photo', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchSingleImageFolder();
+      const { wrapper, router } = await mountMoodboard();
+
+      const photoButtons = wrapper.findAll('[data-testid="moodboard-mobile-photo"]');
+      const realPhotoButton = photoButtons.find(
+        (button) => button.attributes('disabled') === undefined
+      );
+      expect(realPhotoButton).toBeDefined();
+
+      await realPhotoButton!.trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard/studio');
     });
   });
 });

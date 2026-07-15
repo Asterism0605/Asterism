@@ -17,4 +17,16 @@ describe('packPhotos', () => {
     expect(nodes[3].faded).toBe(true);
     expect(nodes[3].placeholder).toBe(false);
   });
+
+  it('preserves imageId so the rendered node can link back to the source image', () => {
+    const nodes = packPhotos(
+      [
+        { src: '/a.webp', w: 80, h: 80, imageId: 'image-a' },
+        { src: '/b.webp', w: 80, h: 80 }
+      ],
+      { cx: 200, cy: 200, rx: 180, ry: 180 }
+    );
+
+    expect(nodes.map((n) => n.imageId)).toEqual(['image-a', undefined]);
+  });
 });

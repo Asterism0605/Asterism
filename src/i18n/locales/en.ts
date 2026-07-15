@@ -246,7 +246,9 @@ export default {
     deleteFolderTitle: 'Delete {name} and All Images',
     deleteConfirm: 'Delete',
     deleteCancel: 'Close',
-    deleteFolderAria: 'Delete folder'
+    deleteFolderAria: 'Delete folder',
+    openFolderAria: 'Open folder',
+    openImageDetailAria: 'View image detail'
   },
   home: {
     guestHint: 'Sign up or log in to keep exploring',

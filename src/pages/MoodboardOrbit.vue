@@ -152,7 +152,8 @@ const sphereStyle = computed<CSSProperties>(() => {
     top: Math.round(top) + 'px',
     width: size + 'px',
     height: size + 'px',
-    pointerEvents: 'none'
+    pointerEvents: 'auto',
+    cursor: 'pointer'
   };
 });
 
@@ -290,8 +291,20 @@ function toPhotos(images: SavedImage[], mobile = false) {
   return images.map((image, index) => ({
     src: image.src,
     w: sizes[index % sizes.length].w,
-    h: sizes[index % sizes.length].h
+    h: sizes[index % sizes.length].h,
+    imageId: image.id
   }));
+}
+
+function goToImage(imageId: string) {
+  const slug = route.params.slug;
+  const moodboardSlug = typeof slug === 'string' ? slug : undefined;
+
+  router.push({
+    name: 'picture-detail',
+    params: { imageId },
+    query: moodboardSlug ? { moodboardSlug } : undefined
+  });
 }
 
 function onImgError(e: Event) {
@@ -330,7 +343,8 @@ function buildDetail() {
     h: d.h,
     delay: d.delay,
     x: d.x,
-    y: d.y
+    y: d.y,
+    imageId: d.imageId
   }));
 }
 
@@ -361,7 +375,8 @@ function buildMobileDetail() {
     faded: d.faded,
     delay: d.delay,
     cx: d.x,
-    cy: d.y
+    cy: d.y,
+    imageId: d.imageId
   }));
 }
 
@@ -417,6 +432,12 @@ function slugFor(i: number) {
   return encodeURIComponent(name.trim().replace(/\s+/g, '-').toLowerCase());
 }
 
+function findFolderIndexBySlug(slug: string): number {
+  return moodboardStore.folders.findIndex(
+    (_, index) => decodeURIComponent(slugFor(index)) === slug
+  );
+}
+
 function navigate(slug: string, i: number) {
   const path = props.basePath + (slug ? '/' + slug : '');
   router.push(path);
@@ -446,6 +467,18 @@ watch(
 function onFolderClick(i: number) {
   if (consumeDidDrag()) return;
   openFolder(i);
+}
+
+function onSphereClick() {
+  if (consumeDidDrag()) return;
+
+  const folder = sphereFolder.value;
+  if (!folder) return;
+
+  const index = moodboardStore.folders.findIndex((candidate) => candidate.id === folder.id);
+  if (index === -1) return;
+
+  openFolder(index);
 }
 
 function hoverMobileFolderAt(i: number) {
@@ -517,7 +550,8 @@ function initializeSphere() {
     sphereCanvas.value,
     () => scale.value,
     () => hasFolders.value,
-    orbitImages.value
+    orbitImages.value,
+    onSphereClick
   );
 }
 
@@ -533,7 +567,22 @@ onMounted(async () => {
   ) {
     await moodboardStore.fetchMoodboard(profileId);
   }
-  if (isMobile.value) buildMobileHome();
+
+  const initialSlug = typeof route.params.slug === 'string' ? route.params.slug : undefined;
+  if (initialSlug) {
+    const index = findFolderIndexBySlug(initialSlug);
+    if (index !== -1) {
+      selectedFolder.value = index;
+      hasFolders.value = false;
+    }
+  }
+
+  if (isMobile.value) {
+    if (hasFolders.value) buildMobileHome();
+    else buildMobileDetail();
+  } else if (!hasFolders.value) {
+    buildDetail();
+  }
   nextTick(initializeSphere);
   orbitRaf = requestAnimationFrame(orbitLoop);
 });
@@ -719,30 +768,43 @@ onBeforeUnmount(() => {
         >
           <div
             class="image-card w-full h-full"
-            :class="{ 'photo-placeholder': p.placeholder, 'photo-faded': !p.placeholder && p.faded }"
+            :class="{
+              'photo-placeholder': p.placeholder,
+              'photo-faded': !p.placeholder && p.faded
+            }"
             :style="{ animationDelay: p.delay + 's' }"
           >
-            <img
-              :src="p.src"
-              draggable="false"
-              class="w-full h-full block select-none"
-              style="object-fit: cover; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55)"
-              @error="onImgError"
-            />
-            <div
-              class="w-full h-full"
-              style="
-                display: none;
-                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
-                background:
-                  repeating-linear-gradient(
-                    45deg,
-                    rgba(255, 255, 255, 0.05) 0 9px,
-                    rgba(255, 255, 255, 0.09) 9px 18px
-                  ),
-                  #26272b;
-              "
-            ></div>
+            <button
+              type="button"
+              class="moodboard-photo-link"
+              data-testid="moodboard-mobile-photo"
+              :disabled="hasFolders ? !sphereFolder || p.placeholder : !p.imageId"
+              :aria-label="hasFolders ? $t('moodboard.openFolderAria') : $t('moodboard.openImageDetailAria')"
+              @click="hasFolders ? onSphereClick() : p.imageId && goToImage(p.imageId)"
+            >
+              <img
+                :src="p.src"
+                draggable="false"
+                alt=""
+                class="w-full h-full block select-none"
+                style="object-fit: cover; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55)"
+                @error="onImgError"
+              />
+              <div
+                class="w-full h-full"
+                style="
+                  display: none;
+                  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+                  background:
+                    repeating-linear-gradient(
+                      45deg,
+                      rgba(255, 255, 255, 0.05) 0 9px,
+                      rgba(255, 255, 255, 0.09) 9px 18px
+                    ),
+                    #26272b;
+                "
+              ></div>
+            </button>
           </div>
         </div>
 
@@ -917,28 +979,38 @@ onBeforeUnmount(() => {
               animationDelay: n.delay + 's'
             }"
           >
-            <img
-              :src="n.src"
-              draggable="false"
-              class="w-full h-full block select-none"
-              style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
-              @error="onImgError"
-            />
-            <div
-              class="w-full h-full"
-              style="
-                display: none;
-                border: 2px solid rgba(244, 244, 240, 0.9);
-                box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
-                background:
-                  repeating-linear-gradient(
-                    45deg,
-                    rgba(255, 255, 255, 0.05) 0 10px,
-                    rgba(255, 255, 255, 0.09) 10px 20px
-                  ),
-                  #2b2c30;
-              "
-            ></div>
+            <button
+              type="button"
+              class="moodboard-photo-link"
+              data-testid="moodboard-detail-photo"
+              :disabled="!n.imageId"
+              :aria-label="$t('moodboard.openImageDetailAria')"
+              @click="n.imageId && goToImage(n.imageId)"
+            >
+              <img
+                :src="n.src"
+                draggable="false"
+                alt=""
+                class="moodboard-photo-img w-full h-full block select-none"
+                style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
+                @error="onImgError"
+              />
+              <div
+                class="moodboard-photo-img w-full h-full"
+                style="
+                  display: none;
+                  border: 2px solid rgba(244, 244, 240, 0.9);
+                  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+                  background:
+                    repeating-linear-gradient(
+                      45deg,
+                      rgba(255, 255, 255, 0.05) 0 10px,
+                      rgba(255, 255, 255, 0.09) 10px 20px
+                    ),
+                    #2b2c30;
+                "
+              ></div>
+            </button>
           </div>
 
           <!-- back link (sits just above the docked tab, against the visible bottom) -->
@@ -1129,5 +1201,24 @@ onBeforeUnmount(() => {
 }
 .photo-faded {
   opacity: 0.5;
+}
+.moodboard-photo-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.moodboard-photo-link:disabled {
+  cursor: default;
+  pointer-events: none;
+}
+.moodboard-photo-img {
+  transition: transform 0.2s ease;
+}
+.moodboard-photo-link:hover .moodboard-photo-img {
+  transform: scale(1.12);
 }
 </style>
