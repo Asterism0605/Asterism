@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Lock, MoveDownLeft } from '@lucide/vue';
+import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import HomeStarLinks from '@/components/sections/HomeStarLinks';
 import HomeImageClickGuide from '@/components/feature/guide/HomeImageClickGuide.vue';
-import { useHomeImageGuide } from '@/components/feature/guide/useHomeImageGuide';
+import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
+import { useHomeTourFlow } from '@/components/feature/guide/useHomeTourFlow';
 import { getHomeInspirationImages } from '@/services/image.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
@@ -17,19 +19,25 @@ const scrollLimitVh = 150;
 const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
+const { isAuthenticated } = storeToRefs(authStore);
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
 const showGuestHint = ref(false);
 const inspirationImages = ref<HomeInspirationImage[]>([]);
-const guideTargetIndex = ref<number | null>(null);
-const { isVisible: isImageGuideVisible, completeGuide, findTargetIndex, startGuide } =
-  useHomeImageGuide();
-let guideFrameId: number | null = null;
 
 const HOME_DENSITY_PER_100VH = 3;
 const homePreferredStyles = computed(() =>
   styleDnaStore.hasCompletedQuiz ? styleDnaStore.preferredStyles : []
 );
+const {
+  isHomeTourVisible,
+  isImageGuideVisible,
+  guideTargetIndex,
+  completeGuide,
+  handleHomeTourStart,
+  handleHomeTourExplore,
+  handleImageNetworkReady
+} = useHomeTourFlow(isAuthenticated);
 const containerHeight = computed(
   () => `${(inspirationImages.value.length / HOME_DENSITY_PER_100VH) * 100}vh`
 );
@@ -124,24 +132,6 @@ async function loadInspirationImages() {
   });
 }
 
-async function startImageClickGuide(): Promise<void> {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  await nextTick();
-  if (guideFrameId !== null) {
-    window.cancelAnimationFrame(guideFrameId);
-  }
-
-  guideFrameId = window.requestAnimationFrame(() => {
-    guideFrameId = null;
-    const targetIndex = findTargetIndex();
-    startGuide();
-    guideTargetIndex.value = isImageGuideVisible.value ? targetIndex : null;
-  });
-}
-
 onMounted(() => {
   handleScrollLimit();
   window.addEventListener('scroll', handleScrollLimit, { passive: true });
@@ -150,9 +140,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScrollLimit);
-  if (guideFrameId !== null) {
-    window.cancelAnimationFrame(guideFrameId);
-  }
 });
 
 watch(homePreferredStyles, () => {
@@ -182,7 +169,7 @@ watch(homePreferredStyles, () => {
           show-constellations
           :guide-target-index="guideTargetIndex ?? undefined"
           @click="openImageSpread"
-          @ready="startImageClickGuide"
+          @ready="handleImageNetworkReady"
         />
       </div>
 
@@ -207,6 +194,15 @@ watch(homePreferredStyles, () => {
     </section>
 
     <HomeStarLinks />
+
+    <HomeTourIntro
+      v-if="isHomeTourVisible"
+      :description="$t('home.tour.description')"
+      :start-label="$t('home.tour.startTour')"
+      :explore-label="$t('home.tour.exploreOnMyOwn')"
+      @start="handleHomeTourStart"
+      @explore="handleHomeTourExplore"
+    />
 
     <HomeImageClickGuide
       v-if="isImageGuideVisible && guideTargetIndex !== null"
