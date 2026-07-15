@@ -66,7 +66,8 @@ async function mountPictureDetail(
       { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
       { path: '/consultant', name: 'consultant', component: { template: '<div />' } },
       { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
-      { path: '/login', name: 'login', component: { template: '<div />' } }
+      { path: '/login', name: 'login', component: { template: '<div />' } },
+      { path: '/moodboard/:slug?', name: 'moodboard', component: { template: '<div />' } }
     ]
   })
   const pinia = createPinia()
@@ -324,6 +325,16 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.name).toBe('image-spread')
     expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-001')
     expect(router.currentRoute.value.query.rootId).toBe('ftdp-main-001')
+  })
+
+  it('帶著 moodboardSlug query 時，返回按鈕導回該 moodboard 資料夾', async () => {
+    const { router, wrapper } = await mountPictureDetail('y2k-main-001?moodboardSlug=studio')
+
+    await wrapper.find('button').trigger('click')
+    await flushPromises()
+
+    expect(router.currentRoute.value.name).toBe('moodboard')
+    expect(router.currentRoute.value.params.slug).toBe('studio')
   })
 
   it('在詳情頁切換圖片時將 spread path context 改指向下一張圖片', async () => {

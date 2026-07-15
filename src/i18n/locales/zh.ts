@@ -23,13 +23,38 @@ export default {
     signingIn: '正在為你登入…',
     signInFailed: '登入失敗',
     signInFailedDesc: '我們無法完成登入，請再試一次。',
-    backToLogin: '返回登入'
+    backToLogin: '返回登入',
+    verificationEmailSent: '驗證信已寄出',
+    verificationEmailTitle: '請查看你的電子郵件',
+    verificationEmailLead: '我們已將驗證連結寄至',
+    verificationEmailDetail: '開啟連結以啟用帳號並完成註冊。',
+    verificationEmailHint: '沒有收到嗎？請查看垃圾郵件匣，或在下方重新寄送。',
+    resendIn: '{countdown} 秒後可重新寄送',
+    resendEmail: '重新寄送驗證信',
+    forgotPasswordTitle: '忘記密碼',
+    forgotPasswordDesc: '輸入你的電子郵件，我們會寄送重設連結。',
+    sendResetLink: '寄送重設連結',
+    resetEmailTitle: '請查看你的電子郵件',
+    resetEmailLead: '我們已將密碼重設連結寄至',
+    resetEmailDetail: '開啟連結以設定新密碼。',
+    resetEmailResent: '已重新寄送密碼重設信。',
+    resetEmailResendFailed: '目前無法重新寄送，請稍後再試。',
+    resetLinkInvalid: '重設連結無效',
+    resetLinkExpiredTitle: '連結已失效',
+    resetLinkExpiredDesc: '此重設連結無效或已過期，請重新申請。',
+    requestNewLink: '申請新的連結',
+    resetPasswordTitle: '設定新密碼',
+    resetPasswordDesc: '請為你的帳號設定新密碼。',
+    newPassword: '新密碼',
+    saving: '儲存中…',
+    updatePassword: '更新密碼'
   },
   common: {
     language: '語言',
     closeDialog: '關閉',
-    themeTags: '主題標籤',
-    colorPalette: '色彩配置'
+    themeTags: '風格標籤',
+    colorPalette: '色彩配置',
+    follow: '＋ 追蹤'
   },
   legalLinks: {
     ariaLabel: '法律連結',
@@ -64,6 +89,9 @@ export default {
     back: '返回',
     viewAllAria: '查看所有諮詢預約',
     backToSelectedAria: '返回所選諮詢預約',
+    loading: '正在載入你的預約…',
+    loadError: '無法載入你的預約。',
+    retry: '再試一次',
     sampleNotes: {
       brand: '我想為新的品牌識別確立視覺方向。',
       homeMaterials: '我需要關於天然飾面及居家沉靜材質配置的建議。',
@@ -78,7 +106,7 @@ export default {
     intro1: '你的美學座標已完成定位。',
     intro2: '我們為你配對了一位顧問，協助把你的 Style DNA 轉化為實際的設計方向。',
     matchedConsultant: '配對顧問',
-    needDna: '配對顧問前，需要先有 Style DNA 結果。',
+    needDna: '配對顧問前，需要先有 Style DNA 測驗結果。',
     retakeQuiz: '重新測驗',
     skip: '略過',
     method: '諮詢方式',
@@ -185,11 +213,11 @@ export default {
   },
   image: {
     back: '返回',
-    info: '資訊',
+    info: '圖片詳情',
     photoShared: '照片分享',
     photoOn: '於 {date}',
-    photoBy: '攝影',
-    consultStylist: '諮詢造型師',
+    photoBy: '',
+    consultStylist: '諮詢風格顧問',
     addToMoodboard: '加入情緒板',
     saveToFolder: '儲存到資料夾',
     similar: '相似',
@@ -216,10 +244,12 @@ export default {
     deleteFolderTitle: '刪除{name}與已收藏圖片',
     deleteConfirm: '刪除',
     deleteCancel: '關閉',
-    deleteFolderAria: '刪除資料夾'
+    deleteFolderAria: '刪除資料夾',
+    openFolderAria: '開啟資料夾',
+    openImageDetailAria: '查看圖片詳情'
   },
   home: {
-    guestHint: '註冊或登入，繼續探索',
+    guestHint: '登入或註冊以繼續探索靈感',
     guide: {
       imageClick: '點選圖片查看詳情'
     },
@@ -227,5 +257,20 @@ export default {
     limitDesc: '建立免費帳號，即可無限瀏覽、把喜歡的作品收藏到情緒板，並定義你的美學 DNA。',
     createAccount: '建立免費帳號',
     login: '登入'
+  },
+  playground: {
+    eyebrow: '元件展示區',
+    title: 'Asterism 浮層與星座特效',
+    description: '滑過圖片卡片以顯示星座背景，再開啟對話框，查看情境中的玻璃質感圖層。',
+    openLimitModal: '開啟額度對話框',
+    previewOverlay: '預覽浮層',
+    ghostButton: '透明按鈕',
+    activeSelection: '目前選取項目',
+    activeDescription: '目前的卡片會同步顯示於個人檔案預覽，並以相鄰內容呈現色盤與標籤範例。',
+    photographerRole: '攝影師／物件研究',
+    itemOneTitle: '鍍鉻暗調椅',
+    itemOneCategory: '物件',
+    itemTwoTitle: '暗影編輯設計',
+    itemTwoCategory: '風格'
   }
 };

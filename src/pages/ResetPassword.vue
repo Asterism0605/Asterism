@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import Button from '@/components/ui/Button.vue';
@@ -9,6 +10,7 @@ import { useAuthStore } from '@/stores/auth.store';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const password = ref('');
 const { isSubmitting, errorMessage, submit } = useAsyncSubmit();
@@ -18,7 +20,7 @@ function handleSubmit() {
     await authStore.updatePassword(password.value);
     // 更新完成、recovery 憑據已清；replace 避免上一頁又回到 reset 表單。
     router.replace('/');
-  }, 'Something went wrong. Please try again.');
+  }, t('auth.genericError'));
 }
 </script>
 
@@ -80,15 +82,15 @@ function handleSubmit() {
         class="overlay-panel overlay-form glass-panel"
         style="max-width: 640px; padding: 72px 64px 68px"
         role="main"
-        aria-label="Reset link invalid"
+        :aria-label="$t('auth.resetLinkInvalid')"
       >
-        <h2 class="overlay-title">Link expired</h2>
+        <h2 class="overlay-title">{{ $t('auth.resetLinkExpiredTitle') }}</h2>
         <p class="overlay-subtitle">
-          This reset link is invalid or has expired. Please request a new one.
+          {{ $t('auth.resetLinkExpiredDesc') }}
         </p>
         <div class="overlay-actions">
           <RouterLink :to="{ name: 'forgot-password' }" class="overlay-link">
-            Request new link
+            {{ $t('auth.requestNewLink') }}
           </RouterLink>
         </div>
       </section>
@@ -98,17 +100,17 @@ function handleSubmit() {
         class="overlay-panel overlay-form glass-panel"
         style="max-width: 640px; padding: 72px 64px 68px"
         role="main"
-        aria-label="Reset password"
+        :aria-label="$t('auth.resetPasswordTitle')"
       >
-        <h2 class="overlay-title">Set new password</h2>
-        <p class="overlay-subtitle">Choose a new password for your account.</p>
+        <h2 class="overlay-title">{{ $t('auth.resetPasswordTitle') }}</h2>
+        <p class="overlay-subtitle">{{ $t('auth.resetPasswordDesc') }}</p>
 
         <form class="overlay-form-body" @submit.prevent="handleSubmit">
           <div class="overlay-fields">
             <FormInput
               v-model="password"
               type="password"
-              placeholder="NEW PASSWORD"
+              :placeholder="$t('auth.newPassword')"
               autocomplete="new-password"
             />
           </div>
@@ -125,7 +127,7 @@ function handleSubmit() {
                 data-testid="auth-submit"
                 :disabled="isSubmitting"
               >
-                {{ isSubmitting ? 'SAVING…' : 'UPDATE PASSWORD' }}
+                {{ isSubmitting ? $t('auth.saving') : $t('auth.updatePassword') }}
               </Button>
             </span>
           </div>

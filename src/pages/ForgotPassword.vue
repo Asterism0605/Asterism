@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import VerificationSentOverlay from '@/components/overlay/VerificationSentOverlay.vue';
 import Button from '@/components/ui/Button.vue';
@@ -10,6 +11,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import { getErrorMessage } from '@/utils/api-error';
 
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const email = ref('');
 const { isSubmitting, errorMessage, submit } = useAsyncSubmit();
@@ -26,7 +28,7 @@ function handleSubmit() {
     sentToEmail.value = email.value;
     // 第一封已寄出＝已佔用 60s rate-limit 窗，先起跑 cooldown。
     startCooldown();
-  }, 'Something went wrong. Please try again.');
+  }, t('auth.genericError'));
 }
 
 // 重寄走獨立訊息欄（resendMessage，成功也要顯示）＋ cooldown 擋重點，
@@ -35,10 +37,10 @@ async function handleResend() {
   resendMessage.value = '';
   try {
     await authStore.requestPasswordReset(sentToEmail.value);
-    resendMessage.value = 'Reset email resent.';
+    resendMessage.value = t('auth.resetEmailResent');
     startCooldown();
   } catch (error) {
-    resendMessage.value = getErrorMessage(error, "Couldn't resend right now. Please try again.");
+    resendMessage.value = getErrorMessage(error, t('auth.resetEmailResendFailed'));
   }
 }
 </script>
@@ -100,9 +102,9 @@ async function handleResend() {
         :email="sentToEmail"
         :resend-message="resendMessage"
         :countdown="resendCountdown"
-        title="Check your email"
-        lead-text="We sent a password reset link to"
-        detail-text="Open it to choose a new password."
+        :title="$t('auth.resetEmailTitle')"
+        :lead-text="$t('auth.resetEmailLead')"
+        :detail-text="$t('auth.resetEmailDetail')"
         @resend="handleResend"
       />
       <section
@@ -110,14 +112,14 @@ async function handleResend() {
         class="overlay-panel overlay-form glass-panel"
         style="max-width: 640px; padding: 72px 64px 68px"
         role="main"
-        aria-label="Forgot password"
+        :aria-label="$t('auth.forgotPasswordTitle')"
       >
-        <h2 class="overlay-title">Forgot password</h2>
-        <p class="overlay-subtitle">Enter your email and we'll send you a reset link.</p>
+        <h2 class="overlay-title">{{ $t('auth.forgotPasswordTitle') }}</h2>
+        <p class="overlay-subtitle">{{ $t('auth.forgotPasswordDesc') }}</p>
 
         <form class="overlay-form-body" @submit.prevent="handleSubmit">
           <div class="overlay-fields">
-            <FormInput v-model="email" type="email" placeholder="EMAIL" autocomplete="email" />
+            <FormInput v-model="email" type="email" :placeholder="$t('auth.email')" autocomplete="email" />
           </div>
 
           <p v-if="errorMessage" class="overlay-error" data-testid="auth-error" role="alert">
@@ -132,10 +134,10 @@ async function handleResend() {
                 data-testid="auth-submit"
                 :disabled="isSubmitting"
               >
-                {{ isSubmitting ? 'SENDING…' : 'SEND RESET LINK' }}
+                {{ isSubmitting ? $t('auth.sending') : $t('auth.sendResetLink') }}
               </Button>
             </span>
-            <RouterLink :to="{ name: 'login' }" class="overlay-link">Back to login</RouterLink>
+            <RouterLink :to="{ name: 'login' }" class="overlay-link">{{ $t('auth.backToLogin') }}</RouterLink>
           </div>
         </form>
       </section>
