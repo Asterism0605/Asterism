@@ -6126,5 +6126,822 @@
       "#2A160D",
       "#312516"
     ]
+  },
+  {
+    "id": "ftdp-concept-001",
+    "url": "/style-image/ftdp-concept-001.webp",
+    "title": "霓虹東京未來城市",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#050912",
+      "#12365F",
+      "#D414A9"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-002",
+    "url": "/style-image/ftdp-concept-002.webp",
+    "title": "雨夜高樓霓虹街谷",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#07101A",
+      "#244C63",
+      "#C015A8"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-003",
+    "url": "/style-image/ftdp-concept-003.webp",
+    "title": "垂直都市藍光天井",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#050B12",
+      "#1C415B",
+      "#5D9FCB"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-004",
+    "url": "/style-image/ftdp-concept-004.webp",
+    "title": "紫藍雨巷數位街景",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Glitch Art",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#040713",
+      "#132E58",
+      "#B916C9"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-005",
+    "url": "/style-image/ftdp-concept-005.webp",
+    "title": "巨構塔樓科技中庭",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#060D12",
+      "#173D4E",
+      "#6BB4C6"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-006",
+    "url": "/style-image/ftdp-concept-006.webp",
+    "title": "高速資料流城市光軌",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#050715",
+      "#154DAA",
+      "#E21DB7"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-007",
+    "url": "/style-image/ftdp-concept-007.webp",
+    "title": "冷光高架未來都會",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+      "#070C12",
+      "#1A3C50",
+      "#7AB7CF"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-001",
+    "url": "/style-image/y2k-concept-001.webp",
+    "title": "銀色鉻感流線裝置",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+      "#E8F5FF",
+      "#94B9D8",
+      "#A1A7B9"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-002",
+    "url": "/style-image/y2k-concept-002.webp",
+    "title": "透明玻璃水岸未來城",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+      "#DDF7FF",
+      "#7CC9E7",
+      "#B6DDE4"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-003",
+    "url": "/style-image/y2k-concept-003.webp",
+    "title": "粉藍未來室內中庭",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+      "#F1D7F1",
+      "#A9D6F4",
+      "#D49BCB"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-004",
+    "url": "/style-image/y2k-concept-004.webp",
+    "title": "水晶透明科技庭園",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+      "#EAF9FF",
+      "#7BC5E9",
+      "#B5E7E4"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-005",
+    "url": "/style-image/y2k-concept-005.webp",
+    "title": "虹彩果凍玻璃材質",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "colorPalette": [
+      "#F5D5F1",
+      "#B9D6F9",
+      "#D3B3E6"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-006",
+    "url": "/style-image/y2k-concept-006.webp",
+    "title": "綠藍泡泡未來介面",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Bubblegum Futurism",
+      "Chrome Design"
+    ],
+    "colorPalette": [
+      "#DDFBFF",
+      "#82E7D4",
+      "#A6E968"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-007",
+    "url": "/style-image/y2k-concept-007.webp",
+    "title": "紫藍透明數位配件",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+      "#D9D7FF",
+      "#A5A7F3",
+      "#B987E9"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-001",
+    "url": "/style-image/doa-concept-001.webp",
+    "title": "黑金巴洛克階梯大廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+      "#080604",
+      "#3A2417",
+      "#B48A55"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-002",
+    "url": "/style-image/doa-concept-002.webp",
+    "title": "金白洛可可旋梯大廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+      "#F2E6D4",
+      "#C9A66D",
+      "#80684A"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-003",
+    "url": "/style-image/doa-concept-003.webp",
+    "title": "金飾弧形宮廷客廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+      "#EFE0C8",
+      "#B6915E",
+      "#274036"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-004",
+    "url": "/style-image/doa-concept-004.webp",
+    "title": "洛可可鏡廳梳妝室",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+      "#EBD5BE",
+      "#B88A61",
+      "#6C3F2D"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-005",
+    "url": "/style-image/doa-concept-005.webp",
+    "title": "金色穹頂巴洛克天井",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+      "#21130D",
+      "#8A5427",
+      "#E0B66F"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-006",
+    "url": "/style-image/doa-concept-006.webp",
+    "title": "粉金洛可可天花壁飾",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Romanticism",
+      "Maximalism"
+    ],
+    "colorPalette": [
+      "#EAD7C8",
+      "#C9A074",
+      "#DAB0A0"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-007",
+    "url": "/style-image/doa-concept-007.webp",
+    "title": "粉金洛可可浮雕天頂",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Romanticism",
+      "Maximalism"
+    ],
+    "colorPalette": [
+      "#E9D2C1",
+      "#C49460",
+      "#F0B8A7"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-001",
+    "url": "/style-image/msm-concept-001.webp",
+    "title": "光影極簡挑高入口",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Scandinavian"
+    ],
+    "colorPalette": [
+      "#E7E2D8",
+      "#B9B2A5",
+      "#4C493F"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-002",
+    "url": "/style-image/msm-concept-002.webp",
+    "title": "木石材質極簡細節",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+      "#D8D1C4",
+      "#B9AD9B",
+      "#5B554C"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-003",
+    "url": "/style-image/msm-concept-003.webp",
+    "title": "柔光石材極簡階梯",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+      "#E8E0D3",
+      "#C6BCA8",
+      "#817768"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-004",
+    "url": "/style-image/msm-concept-004.webp",
+    "title": "曲面石台極簡花器",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Scandinavian"
+    ],
+    "colorPalette": [
+      "#E6E1D7",
+      "#C7BDAF",
+      "#6C665E"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-005",
+    "url": "/style-image/msm-concept-005.webp",
+    "title": "靜謐光井極簡室內",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Scandinavian"
+    ],
+    "colorPalette": [
+      "#EDE8DE",
+      "#C8C0B4",
+      "#6E675E"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-006",
+    "url": "/style-image/msm-concept-006.webp",
+    "title": "木格柵極簡工作角落",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Swiss Design"
+    ],
+    "colorPalette": [
+      "#ECE6DB",
+      "#B8A994",
+      "#4F4940"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-007",
+    "url": "/style-image/msm-concept-007.webp",
+    "title": "灰階極簡玻璃牆面",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design",
+      "Quiet Luxury"
+    ],
+    "colorPalette": [
+      "#E4E2DC",
+      "#A5A49E",
+      "#474842"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-001",
+    "url": "/style-image/eoh-concept-001.webp",
+    "title": "日光有機曲線庭院",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": ["Wabi-Sabi", "Japandi", "Biophilic Design", "Organic Modern"],
+    "colorPalette": ["#CFC1A8", "#8E7050", "#566043"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-002",
+    "url": "/style-image/eoh-concept-002.webp",
+    "title": "原土肌理靜物光影",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": ["Wabi-Sabi", "Organic Modern", "Japandi"],
+    "colorPalette": ["#C7B09A", "#815F43", "#51483D"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-003",
+    "url": "/style-image/eoh-concept-003.webp",
+    "title": "侘寂陶器自然角落",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": ["Wabi-Sabi", "Japandi", "Organic Modern"],
+    "colorPalette": ["#D3C5AC", "#87715A", "#4C453C"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-004",
+    "url": "/style-image/eoh-concept-004.webp",
+    "title": "綠意木構水岸空間",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": ["Biophilic Design", "Japandi", "Organic Modern", "Wabi-Sabi"],
+    "colorPalette": ["#B9B089", "#665844", "#49513A"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-005",
+    "url": "/style-image/eoh-concept-005.webp",
+    "title": "曲面石材靜謐浴室",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": ["Japandi", "Organic Modern", "Wabi-Sabi", "Biophilic Design"],
+    "colorPalette": ["#D9CCB4", "#9B8265", "#605346"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-006",
+    "url": "/style-image/eoh-concept-006.webp",
+    "title": "晨光石膏圓弧角落",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": ["Wabi-Sabi", "Organic Modern", "Japandi"],
+    "colorPalette": ["#D6C6AE", "#A58C70", "#574F42"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-007",
+    "url": "/style-image/eoh-concept-007.webp",
+    "title": "石灰牆侘寂壁龕",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": ["Wabi-Sabi", "Minimalism", "Organic Modern", "Japandi"],
+    "colorPalette": ["#918C82", "#5C5A54", "#242424"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-001",
+    "url": "/style-image/rpl-concept-001.webp",
+    "title": "花園午後復古餐桌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": ["Cottagecore", "Vintage Floral", "Romanticism", "Grandmillennial"],
+    "colorPalette": ["#D9D1B5", "#82906A", "#A7785A"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-002",
+    "url": "/style-image/rpl-concept-002.webp",
+    "title": "粉花復古茶室",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": ["Vintage Floral", "Grandmillennial", "Cottagecore", "Romanticism"],
+    "colorPalette": ["#D9C6B4", "#B98182", "#6E6A58"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-003",
+    "url": "/style-image/rpl-concept-003.webp",
+    "title": "褪色花牆柔光一隅",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": ["Vintage Floral", "Romanticism", "Cottagecore"],
+    "colorPalette": ["#D5CEBC", "#9C8A9A", "#B87969"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-004",
+    "url": "/style-image/rpl-concept-004.webp",
+    "title": "玫瑰花影復古梳妝室",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": ["Romanticism", "Vintage Floral", "Grandmillennial", "Cottagecore"],
+    "colorPalette": ["#C8B29C", "#A66F62", "#6B5543"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-005",
+    "url": "/style-image/rpl-concept-005.webp",
+    "title": "藤蔓花窗閱讀角",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": ["Cottagecore", "Vintage Floral", "Romanticism", "Grandmillennial"],
+    "colorPalette": ["#C7B58C", "#798158", "#996B52"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-006",
+    "url": "/style-image/rpl-concept-006.webp",
+    "title": "花卉信箋復古書桌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": ["Vintage Floral", "Grandmillennial", "Cottagecore", "Romanticism"],
+    "colorPalette": ["#D4C4A5", "#A7756A", "#6E8062"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-007",
+    "url": "/style-image/rpl-concept-007.webp",
+    "title": "燭光花園寫作桌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": ["Cottagecore", "Vintage Floral", "Romanticism", "Grandmillennial"],
+    "colorPalette": ["#BCA779", "#7A6A42", "#A56B59"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-001",
+    "url": "/style-image/eag-concept-001.webp",
+    "title": "紅黑混凝土反設計空間",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": ["Brutalism", "Anti-Design", "Deconstructivism", "Avant-Garde"],
+    "colorPalette": ["#222426", "#797775", "#9D241D"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-002",
+    "url": "/style-image/eag-concept-002.webp",
+    "title": "幾何混凝土前衛構築",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": ["Brutalism", "Deconstructivism", "Avant-Garde", "Anti-Design"],
+    "colorPalette": ["#242426", "#7C7A74", "#C1C0BB"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-003",
+    "url": "/style-image/eag-concept-003.webp",
+    "title": "紅黑實驗幾何海報",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": ["Experimental Typography", "Anti-Design", "Avant-Garde", "Deconstructivism"],
+    "colorPalette": ["#171717", "#E5E0D5", "#D4432B"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-006",
+    "url": "/style-image/syc-concept-006.webp",
+    "title": "塗鴉水泥滑板場",
+    "styleGroup": "Street & Youth Culture",
+    "style": ["Graffiti", "Skate Culture", "Urban Contemporary"],
+    "colorPalette": ["#292827", "#8E8371", "#AF3F27"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-007",
+    "url": "/style-image/eag-concept-007.webp",
+    "title": "巨構混凝土光影走廊",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": ["Brutalism", "Deconstructivism", "Avant-Garde"],
+    "colorPalette": ["#202123", "#777672", "#C9C5BA"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-005",
+    "url": "/style-image/eag-concept-005.webp",
+    "title": "黑紅解構字體拼貼",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": ["Experimental Typography", "Deconstructivism", "Anti-Design", "Avant-Garde"],
+    "colorPalette": ["#1D1D1D", "#D7D2C8", "#A32A23"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-006",
+    "url": "/style-image/eag-concept-006.webp",
+    "title": "藍黑實驗字體構成",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": ["Experimental Typography", "Anti-Design", "Avant-Garde", "Deconstructivism"],
+    "colorPalette": ["#191A1A", "#DFDDD5", "#2B4F9B"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-001",
+    "url": "/style-image/retro-concept-001.webp",
+    "title": "胡桃木中世紀客廳",
+    "styleGroup": "Retro & Nostalgia",
+    "style": ["Mid-Century Modern", "Vintage", "Retro"],
+    "colorPalette": ["#6A4A31", "#D6B878", "#345144"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-002",
+    "url": "/style-image/retro-concept-002.webp",
+    "title": "幾何織毯復古細節",
+    "styleGroup": "Retro & Nostalgia",
+    "style": ["Mid-Century Modern", "Retro", "Vintage"],
+    "colorPalette": ["#D2A56C", "#A94C31", "#1F4C4A"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-003",
+    "url": "/style-image/retro-concept-003.webp",
+    "title": "綠色轉盤電話桌",
+    "styleGroup": "Retro & Nostalgia",
+    "style": ["Vintage", "Retro", "Mid-Century Modern"],
+    "colorPalette": ["#285B4D", "#D4AA50", "#B77A42"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-004",
+    "url": "/style-image/retro-concept-004.webp",
+    "title": "暖木格柵休憩角落",
+    "styleGroup": "Retro & Nostalgia",
+    "style": ["Mid-Century Modern", "Vintage", "Retro"],
+    "colorPalette": ["#6F472D", "#C1975E", "#4C5E47"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-005",
+    "url": "/style-image/retro-concept-005.webp",
+    "title": "復古色塊餐椅細節",
+    "styleGroup": "Retro & Nostalgia",
+    "style": ["Mid-Century Modern", "Retro", "Vintage"],
+    "colorPalette": ["#B55332", "#39706D", "#D4C6A8"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-006",
+    "url": "/style-image/retro-concept-006.webp",
+    "title": "木質色塊收納櫃",
+    "styleGroup": "Retro & Nostalgia",
+    "style": ["Mid-Century Modern", "Retro", "Vintage"],
+    "colorPalette": ["#724B31", "#286464", "#D4B595"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-007",
+    "url": "/style-image/retro-concept-007.webp",
+    "title": "焦糖色中世紀客廳",
+    "styleGroup": "Retro & Nostalgia",
+    "style": ["Mid-Century Modern", "Vintage", "Retro"],
+    "colorPalette": ["#75452C", "#B57936", "#40573F"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-008",
+    "url": "/style-image/retro-concept-008.webp",
+    "title": "午後中世紀客廳",
+    "styleGroup": "Retro & Nostalgia",
+    "style": ["Mid-Century Modern", "Vintage", "Retro"],
+    "colorPalette": ["#C6A16C", "#784832", "#6F7950"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-007",
+    "url": "/style-image/syc-concept-007.webp",
+    "title": "雨後城市滑板廣場",
+    "styleGroup": "Street & Youth Culture",
+    "style": ["Graffiti", "Skate Culture", "Urban Contemporary", "Streetwear"],
+    "colorPalette": ["#242527", "#A82820", "#77808B"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-001",
+    "url": "/style-image/syc-concept-001.webp",
+    "title": "貼紙塗鴉水泥階梯",
+    "styleGroup": "Street & Youth Culture",
+    "style": ["Graffiti", "Urban Contemporary", "Skate Culture"],
+    "colorPalette": ["#5E5C58", "#272727", "#C34D2C"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-002",
+    "url": "/style-image/syc-concept-002.webp",
+    "title": "暗色機能街頭穿搭",
+    "styleGroup": "Street & Youth Culture",
+    "style": ["Streetwear", "Hypebeast", "Urban Contemporary"],
+    "colorPalette": ["#242729", "#5F655E", "#0E1011"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-003",
+    "url": "/style-image/syc-concept-003.webp",
+    "title": "螢光單車街頭裝備",
+    "styleGroup": "Street & Youth Culture",
+    "style": ["Streetwear", "Hypebeast", "Urban Contemporary", "Skate Culture"],
+    "colorPalette": ["#1E2224", "#9BCF2B", "#455A75"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-004",
+    "url": "/style-image/syc-concept-004.webp",
+    "title": "滑板場塗鴉牆面",
+    "styleGroup": "Street & Youth Culture",
+    "style": ["Skate Culture", "Graffiti", "Urban Contemporary"],
+    "colorPalette": ["#242322", "#88827A", "#5B7999"],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-005",
+    "url": "/style-image/syc-concept-005.webp",
+    "title": "地下街頭塗鴉中庭",
+    "styleGroup": "Street & Youth Culture",
+    "style": ["Graffiti", "Urban Contemporary", "Streetwear", "Skate Culture"],
+    "colorPalette": ["#252728", "#B73E25", "#817564"],
+    "attribution": "Asterism"
   }
 ]
