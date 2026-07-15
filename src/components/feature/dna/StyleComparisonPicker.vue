@@ -52,9 +52,11 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
       <span class="instruction-line"></span>
       <span class="instruction-dot"></span>
       <span>{{ $t('dna.pickerHint') }}</span>
-      <span class="instruction-progress">
-        {{ $t('dna.pickerProgress', { current: questionIndex + 1, total: totalQuestions }) }}
-      </span>
+      <div class="instruction-progress" data-testid="instruction-progress">
+        <span class="instruction-progress__current">{{ questionIndex + 1 }}</span>
+        <span class="instruction-progress__slash" aria-hidden="true"></span>
+        <span class="instruction-progress__total">{{ totalQuestions }}</span>
+      </div>
     </div>
 
     <span class="sr-only" role="status" aria-live="polite">
@@ -191,8 +193,35 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .instruction-progress {
+  position: relative;
   margin-left: auto;
+  width: 64px;
+  height: 44px;
+  font-size: 22px;
   font-variant-numeric: tabular-nums;
+}
+
+.instruction-progress__current {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.instruction-progress__total {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.instruction-progress__slash {
+  position: absolute;
+  left: 18px;
+  top: 20px;
+  width: 30px;
+  height: 1px;
+  background: rgb(240 237 230 / 78%);
+  transform: rotate(-38deg);
+  transform-origin: left center;
 }
 
 .choice {

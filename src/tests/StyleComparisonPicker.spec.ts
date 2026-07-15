@@ -33,12 +33,14 @@ describe('StyleComparisonPicker progress indicator', () => {
 
     const instruction = wrapper.get('.instruction')
     expect(instruction.text()).toContain('Click one image to continue')
-    expect(instruction.text()).toContain('1 / 12')
+    expect(wrapper.get('.instruction-progress__current').text()).toBe('1')
+    expect(wrapper.get('.instruction-progress__total').text()).toBe('12')
   })
 
   it('increments the displayed progress as questionIndex advances', () => {
     const wrapper = mountPicker(4, 12)
 
-    expect(wrapper.get('.instruction-progress').text()).toBe('5 / 12')
+    expect(wrapper.get('.instruction-progress__current').text()).toBe('5')
+    expect(wrapper.get('.instruction-progress__total').text()).toBe('12')
   })
 })
