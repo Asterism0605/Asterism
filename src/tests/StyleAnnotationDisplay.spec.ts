@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import StyleAnnotationDisplay from '@/components/feature/dna/StyleAnnotationDisplay.vue'
+import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue'
 import type { StyleDnaAnnotation, StyleDnaScore } from '@/utils/computeStyleDnaResult'
 
 const styles: StyleDnaScore[] = [
@@ -93,5 +94,40 @@ describe('StyleAnnotationDisplay', () => {
     })
 
     expect(wrapper.text()).toContain('Soft\nTech')
+  })
+
+  it('opens the tag modal with the clicked annotation label', async () => {
+    const wrapper = mount(StyleAnnotationDisplay, {
+      props: {
+        primaryStyle: 'Minimalism',
+        heroImage: '/images/minimalism.png',
+        styles,
+        annotations,
+      },
+    })
+
+    const firstAnnotationButton = wrapper.findAll('[data-testid="style-annotation"] button').at(0)
+    await firstAnnotationButton?.trigger('click')
+
+    const modal = wrapper.getComponent(StyleTagModal)
+    expect(modal.props('modelValue')).toBe(true)
+    expect(modal.props('tagLabel')).toBe(annotations[0].label)
+  })
+
+  it('opens the tag modal from the desktop three-column grid', async () => {
+    const wrapper = mount(StyleAnnotationDisplay, {
+      props: {
+        primaryStyle: 'Minimalism',
+        heroImage: '/images/minimalism.png',
+        styles,
+        annotations,
+      },
+    })
+
+    const gridButtons = wrapper.findAll('.style-score-grid button')
+    await gridButtons[0].trigger('click')
+
+    const modal = wrapper.getComponent(StyleTagModal)
+    expect(modal.props('tagLabel')).toBe(styles[0].label)
   })
 })
