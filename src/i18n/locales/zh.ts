@@ -198,6 +198,7 @@ export default {
     loadingLine1: '正在生成',
     loadingLine2: '你的 Style DNA',
     pickerHint: '點選一張圖片繼續',
+    pickerProgress: '{current} / {total}',
     quiz: '測驗',
     quizProgress: '測驗進度',
     complete: 'Style DNA 完成',

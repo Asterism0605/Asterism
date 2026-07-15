@@ -7,6 +7,7 @@ const props = defineProps<{
   rightOption: StyleDnaOption
   selectedId: string | null
   questionIndex: number
+  totalQuestions: number
   suppressHover?: boolean
 }>()
 
@@ -51,6 +52,9 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
       <span class="instruction-line"></span>
       <span class="instruction-dot"></span>
       <span>{{ $t('dna.pickerHint') }}</span>
+      <span class="instruction-progress">
+        {{ $t('dna.pickerProgress', { current: questionIndex + 1, total: totalQuestions }) }}
+      </span>
     </div>
 
     <span class="ambient-dot ambient-dot--one" aria-hidden="true"></span>
@@ -180,6 +184,11 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
   margin-left: -33px;
   border-radius: 50%;
   background: var(--color-text-primary);
+}
+
+.instruction-progress {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
 }
 
 .choice {

@@ -202,6 +202,7 @@ export default {
     loadingLine1: 'Forming',
     loadingLine2: 'Your Style DNA',
     pickerHint: 'Click one image to continue',
+    pickerProgress: '{current} / {total}',
     quiz: 'Quiz',
     quizProgress: 'Quiz progress',
     complete: 'Style DNA Complete',
