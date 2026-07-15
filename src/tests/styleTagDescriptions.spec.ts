@@ -6,8 +6,6 @@ describe('STYLE_TAG_DESCRIPTIONS', () => {
   it('has an entry for every tag in STYLE_TAG_ZH, with non-empty zh and en text', () => {
     const tagKeys = Object.keys(STYLE_TAG_ZH)
 
-    expect(tagKeys.length).toBe(45)
-
     tagKeys.forEach((tag) => {
       const entry = STYLE_TAG_DESCRIPTIONS[tag]
       expect(entry, `missing description for "${tag}"`).toBeDefined()

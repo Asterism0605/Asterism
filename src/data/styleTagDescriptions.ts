@@ -1,4 +1,4 @@
-// 41 個風格標籤（對照 src/data/styleLabels.ts 的 STYLE_TAG_ZH）各自的一句話描述，
+// 45 個風格標籤（對照 src/data/styleLabels.ts 的 STYLE_TAG_ZH）各自的一句話描述，
 // 給 Style DNA 結果頁的標籤說明彈窗用。key 必須與 STYLE_TAG_ZH 完全一致。
 
 export interface StyleTagDescription {
