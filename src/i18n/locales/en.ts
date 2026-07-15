@@ -23,13 +23,38 @@ export default {
     signingIn: 'Signing you in…',
     signInFailed: 'Sign-in failed',
     signInFailedDesc: "We couldn't complete your sign-in. Please try again.",
-    backToLogin: 'Back to login'
+    backToLogin: 'Back to login',
+    verificationEmailSent: 'Verification email sent',
+    verificationEmailTitle: 'Check your email',
+    verificationEmailLead: 'We sent a verification link to',
+    verificationEmailDetail: 'Open it to activate your account and finish signing up.',
+    verificationEmailHint: "Didn't get it? Check your spam folder, or resend below.",
+    resendIn: 'RESEND IN {countdown}S',
+    resendEmail: 'RESEND EMAIL',
+    forgotPasswordTitle: 'Forgot password',
+    forgotPasswordDesc: "Enter your email and we'll send you a reset link.",
+    sendResetLink: 'SEND RESET LINK',
+    resetEmailTitle: 'Check your email',
+    resetEmailLead: 'We sent a password reset link to',
+    resetEmailDetail: 'Open it to choose a new password.',
+    resetEmailResent: 'Reset email resent.',
+    resetEmailResendFailed: "Couldn't resend right now. Please try again.",
+    resetLinkInvalid: 'Reset link invalid',
+    resetLinkExpiredTitle: 'Link expired',
+    resetLinkExpiredDesc: 'This reset link is invalid or has expired. Please request a new one.',
+    requestNewLink: 'Request new link',
+    resetPasswordTitle: 'Set new password',
+    resetPasswordDesc: 'Choose a new password for your account.',
+    newPassword: 'NEW PASSWORD',
+    saving: 'SAVING…',
+    updatePassword: 'UPDATE PASSWORD'
   },
   common: {
     language: 'Language',
     closeDialog: 'Close dialog',
     themeTags: 'Theme Tags',
-    colorPalette: 'Color Palette'
+    colorPalette: 'Color Palette',
+    follow: '+ Follow'
   },
   legalLinks: {
     ariaLabel: 'Legal links',
@@ -65,6 +90,9 @@ export default {
     back: 'Back',
     viewAllAria: 'View all consultations',
     backToSelectedAria: 'Back to selected consultation',
+    loading: 'Loading your consultations…',
+    loadError: "We couldn't load your consultations.",
+    retry: 'Try again',
     sampleNotes: {
       brand: 'I would like help defining the visual direction for a new brand identity.',
       homeMaterials: 'I need advice on natural finishes and a calm material palette for my home.',
@@ -224,7 +252,9 @@ export default {
     deleteCancel: 'Close',
     deleteFolderAria: 'Delete folder',
     deleteImageTitle: 'Delete Image from Folder',
-    deleteImageAria: 'Delete image'
+    deleteImageAria: 'Delete image',
+    openFolderAria: 'Open folder',
+    openImageDetailAria: 'View image detail'
   },
   home: {
     guestHint: 'Sign up or log in to keep exploring',
@@ -233,5 +263,20 @@ export default {
       'Create a free account to unlock endless scrolling, save your favorite pieces to boards, and define your aesthetic DNA.',
     createAccount: 'Create Free Account',
     login: 'Log In'
+  },
+  playground: {
+    eyebrow: 'Component Playground',
+    title: 'Asterism overlay and constellation effects',
+    description: 'Hover the image tiles to reveal the constellation background, then open the modal to check the glass dialog layer in context.',
+    openLimitModal: 'Open Limit Modal',
+    previewOverlay: 'Preview Overlay',
+    ghostButton: 'Ghost Button',
+    activeSelection: 'Active selection',
+    activeDescription: 'The active card feeds the shared profile preview and keeps the palette and tag examples mounted with realistic neighboring content.',
+    photographerRole: 'Photographer / Object studies',
+    itemOneTitle: 'Chrome noir chair',
+    itemOneCategory: 'Object',
+    itemTwoTitle: 'Shadow editorial',
+    itemTwoCategory: 'Style'
   }
 };

@@ -1,75 +1,68 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ConsultationsEmptyState from '@/components/feature/consultations/ConsultationsEmptyState.vue';
 import DateTimeline from '@/components/feature/consultations/DateTimeline.vue';
 import DetailPanel from '@/components/feature/consultations/DetailPanel.vue';
 import EmptyStateBackground from '@/components/feature/consultations/EmptyStateBackground.vue';
 import OrbitBackground from '@/components/feature/consultations/OrbitBackground.vue';
+import Button from '@/components/ui/Button.vue';
+import { getUpcomingAccountConsultations } from '@/services/account-consultation.service';
+import { useAuthStore } from '@/stores/auth.store';
 import type { AccountConsultation } from '@/types/account-consultation';
+import type { ApiError } from '@/types/api';
+
+type LoadError = Pick<ApiError, 'code' | 'message' | 'status' | 'details'>;
 
 const router = useRouter();
-const reservations = (
-  [
-    {
-      id: 'reservation-01',
-      status: 'confirmed',
-      consultationDate: '2026-07-28',
-      timeSlot: 'am',
-      method: 'Online',
-      designField: 'Graphic Design',
-      designFocus: 'Visual Concept',
-      notes: 'I would like help defining the visual direction for a new brand identity.'
-    },
-    {
-      id: 'reservation-02',
-      status: 'confirmed',
-      consultationDate: '2026-08-10',
-      timeSlot: 'pm',
-      method: 'In-Person',
-      designField: 'Interior Design',
-      designFocus: 'Material Palette',
-      notes: 'I need advice on natural finishes and a calm material palette for my home.'
-    },
-    {
-      id: 'reservation-03',
-      status: 'confirmed',
-      consultationDate: '2026-10-01',
-      timeSlot: 'am',
-      method: 'Online',
-      designField: 'Architecture',
-      designFocus: 'Spatial Mood',
-      notes: 'I want to create a warm and quiet atmosphere for a small studio renovation.'
-    },
-    {
-      id: 'reservation-04',
-      status: 'confirmed',
-      consultationDate: '2026-11-16',
-      timeSlot: 'pm',
-      method: 'Online',
-      designField: 'Styling Design',
-      designFocus: 'Color Direction',
-      notes: 'I would like to refine the color direction for an upcoming editorial shoot.'
-    },
-    {
-      id: 'reservation-05',
-      status: 'confirmed',
-      consultationDate: '2027-01-08',
-      timeSlot: 'am',
-      method: 'In-Person',
-      designField: 'Interior Design',
-      designFocus: 'Furniture Selection',
-      notes: 'I need help selecting furniture that works with the scale of my living room.'
-    }
-  ] satisfies AccountConsultation[]
-).sort((a, b) => a.consultationDate.localeCompare(b.consultationDate));
-
-const selectedId = ref(reservations[0]?.id ?? '');
+const authStore = useAuthStore();
+const reservations = ref<AccountConsultation[]>([]);
+const isLoading = ref(true);
+const isRequesting = ref(false);
+const loadError = ref<LoadError | null>(null);
+const selectedId = ref(reservations.value[0]?.id ?? '');
 const showAllConsultations = ref(false);
 const detailsPanel = ref<InstanceType<typeof DetailPanel> | null>(null);
 const selectedReservation = computed<AccountConsultation>(
-  () => reservations.find((reservation) => reservation.id === selectedId.value) ?? reservations[0]!
+  () =>
+    reservations.value.find((reservation) => reservation.id === selectedId.value) ??
+    reservations.value[0]!
 );
+
+async function loadReservations(): Promise<void> {
+  if (isRequesting.value) return;
+
+  const accessToken = authStore.session?.accessToken;
+  reservations.value = [];
+  selectedId.value = '';
+  loadError.value = null;
+
+  if (!authStore.isAuthenticated || !accessToken) {
+    isLoading.value = false;
+    return;
+  }
+
+  isLoading.value = true;
+  isRequesting.value = true;
+
+  try {
+    reservations.value = await getUpcomingAccountConsultations(accessToken);
+    selectedId.value = reservations.value[0]?.id ?? '';
+  } catch (error) {
+    const apiError = error as LoadError;
+
+    if (apiError.status === 401) {
+      await authStore.logout();
+      await router.replace({ name: 'login', query: { next: router.currentRoute.value.fullPath } });
+      return;
+    }
+
+    loadError.value = apiError;
+  } finally {
+    isRequesting.value = false;
+    isLoading.value = false;
+  }
+}
 
 async function selectReservation(reservationId: string): Promise<void> {
   selectedId.value = reservationId;
@@ -81,14 +74,32 @@ async function selectReservation(reservationId: string): Promise<void> {
 function startConsultation(): void {
   void router.push({ name: 'consultant' });
 }
+
+onMounted(() => {
+  void loadReservations();
+});
 </script>
 
 <template>
   <main class="consultations-page">
-    <EmptyStateBackground v-if="reservations.length === 0" />
+    <EmptyStateBackground v-if="isLoading || loadError || reservations.length === 0" />
     <OrbitBackground v-else />
 
-    <ConsultationsEmptyState v-if="reservations.length === 0" @action="startConsultation" />
+    <section v-if="isLoading" class="consultations-page__status" role="status">
+      {{ $t('accountConsultations.loading') }}
+    </section>
+
+    <section v-else-if="loadError" class="consultations-page__status" role="alert">
+      <p>{{ $t('accountConsultations.loadError') }}</p>
+      <Button type="button" variant="primary" @click="loadReservations">
+        {{ $t('accountConsultations.retry') }}
+      </Button>
+    </section>
+
+    <ConsultationsEmptyState
+      v-else-if="reservations.length === 0"
+      @action="startConsultation"
+    />
 
     <template v-else>
       <DateTimeline
@@ -119,4 +130,22 @@ function startConsultation(): void {
   color: var(--color-text-primary);
   font-family: var(--font-family-title);
 }
+
+.consultations-page__status {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  color: #f0ede6b8;
+  text-align: center;
+}
+
+.consultations-page__status p {
+  margin: 0;
+}
+
 </style>

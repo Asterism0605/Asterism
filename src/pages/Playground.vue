@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { Lock, Sparkles } from '@lucide/vue';
 import Button from '@/components/ui/Button.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
@@ -12,29 +13,30 @@ import PageContainer from '@/layouts/PageContainer.vue';
 
 const isLimitModalOpen = ref(false);
 const hoveredItemId = ref<number | null>(null);
+const { t } = useI18n();
 
-const inspirationItems = [
+const inspirationItems = computed(() => [
   {
     id: 1,
-    title: 'Chrome noir chair',
-    category: 'Object',
+    title: t('playground.itemOneTitle'),
+    category: t('playground.itemOneCategory'),
     image: new URL('@/assets/hero.png', import.meta.url).href,
     position: 'lg:translate-y-8'
   },
   {
     id: 2,
-    title: 'Shadow editorial',
-    category: 'Style',
+    title: t('playground.itemTwoTitle'),
+    category: t('playground.itemTwoCategory'),
     image: new URL('@/assets/background.jpg', import.meta.url).href,
     position: 'lg:-translate-y-4'
   }
-];
+]);
 
-const themeTags = ['Editorial', 'Industrial', 'Chrome', 'Noir', 'Objects'];
+const themeTags = ['Avant-Garde', 'Modernism', 'Art Deco', 'Graffiti'];
 const paletteColors = ['#060608', '#17171D', '#C45C3A', '#A8893A', '#F0EDE6'];
 
 const activeItem = computed(
-  () => inspirationItems.find((item) => item.id === hoveredItemId.value) ?? inspirationItems[0]
+  () => inspirationItems.value.find((item) => item.id === hoveredItemId.value) ?? inspirationItems.value[0]
 );
 
 function openLimitModal() {
@@ -53,21 +55,20 @@ function openLimitModal() {
     <PageContainer>
       <section class="relative z-10 grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
         <div class="max-w-xl">
-          <p class="text-mono uppercase tracking-[0.28em] text-gold-dim">Component Playground</p>
+          <p class="text-mono uppercase tracking-[0.28em] text-gold-dim">{{ $t('playground.eyebrow') }}</p>
           <h1 class="mt-5 text-h1 font-normal leading-tight">
-            Asterism overlay and constellation effects
+            {{ $t('playground.title') }}
           </h1>
           <p class="mt-5 max-w-lg text-sm leading-normal text-text-secondary sm:text-base">
-            Hover the image tiles to reveal the constellation background, then open the modal to
-            check the glass dialog layer in context.
+            {{ $t('playground.description') }}
           </p>
 
           <div class="mt-8 flex flex-wrap gap-3">
-            <Button type="button" @click="openLimitModal">Open Limit Modal</Button>
+            <Button type="button" @click="openLimitModal">{{ $t('playground.openLimitModal') }}</Button>
             <Button type="button" variant="secondary" @click="openLimitModal">
-              Preview Overlay
+              {{ $t('playground.previewOverlay') }}
             </Button>
-            <Button type="button" variant="ghost">Ghost Button</Button>
+            <Button type="button" variant="ghost">{{ $t('playground.ghostButton') }}</Button>
           </div>
         </div>
 
@@ -120,7 +121,7 @@ function openLimitModal() {
         <div class="flex flex-col gap-6 text-sm">
           <ProfileCard
             name="Zhenya Rukhlov"
-            subtitle="Photographer / Object studies"
+            :subtitle="$t('playground.photographerRole')"
             :avatar-url="activeItem.image"
             show-follow
           />
@@ -141,12 +142,11 @@ function openLimitModal() {
             <div>
               <div class="flex items-center gap-3 text-gold-dim">
                 <Sparkles class="size-4" aria-hidden="true" />
-                <p class="text-mono uppercase tracking-[0.24em]">Active selection</p>
+                <p class="text-mono uppercase tracking-[0.24em]">{{ $t('playground.activeSelection') }}</p>
               </div>
               <h2 class="mt-4 text-h2 font-normal">{{ activeItem.title }}</h2>
               <p class="mt-3 text-sm leading-normal text-text-secondary">
-                The active card feeds the shared profile preview and keeps the palette and tag
-                examples mounted with realistic neighboring content.
+                {{ $t('playground.activeDescription') }}
               </p>
             </div>
 
@@ -165,16 +165,15 @@ function openLimitModal() {
         </div>
       </template>
 
-      <template #title>Your daily inspiration limit has been reached.</template>
+      <template #title>{{ $t('home.limitTitle') }}</template>
 
       <template #description>
-        Create a free account to unlock endless scrolling, save your favorite pieces to boards, and
-        define your aesthetic DNA.
+        {{ $t('home.limitDesc') }}
       </template>
 
       <template #actions>
-        <Button type="button" variant="primary">Create Free Account</Button>
-        <Button type="button" variant="secondary">Log In</Button>
+        <Button type="button" variant="primary">{{ $t('home.createAccount') }}</Button>
+        <Button type="button" variant="secondary">{{ $t('home.login') }}</Button>
       </template>
     </ModalOverlay>
   </main>

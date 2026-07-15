@@ -11,9 +11,9 @@ withDefaults(
     detailText?: string;
   }>(),
   {
-    title: 'Check your email',
-    leadText: 'We sent a verification link to',
-    detailText: 'Open it to activate your account and finish signing up.'
+    title: undefined,
+    leadText: undefined,
+    detailText: undefined
   }
 );
 
@@ -25,18 +25,18 @@ defineEmits<{ resend: [] }>();
     class="overlay-panel overlay-panel--wide glass-panel"
     data-testid="verification-sent"
     role="main"
-    aria-label="Verification email sent"
+    :aria-label="$t('auth.verificationEmailSent')"
   >
-    <h2 class="overlay-title">{{ title }}</h2>
+    <h2 class="overlay-title">{{ title ?? $t('auth.verificationEmailTitle') }}</h2>
     <p class="overlay-description">
-      {{ leadText }} <strong>{{ email }}</strong>.
+      {{ leadText ?? $t('auth.verificationEmailLead') }} <strong>{{ email }}</strong>.
       <span class="verification-sent__detail">
-        {{ detailText }}
+        {{ detailText ?? $t('auth.verificationEmailDetail') }}
       </span>
     </p>
 
     <p class="overlay-description verification-sent__hint">
-      Didn't get it? Check your spam folder, or resend below.
+      {{ $t('auth.verificationEmailHint') }}
     </p>
 
     <div class="overlay-actions overlay-actions--stackable">
@@ -48,10 +48,10 @@ defineEmits<{ resend: [] }>();
           :disabled="countdown > 0"
           @click="$emit('resend')"
         >
-          {{ countdown > 0 ? `RESEND IN ${countdown}S` : 'RESEND EMAIL' }}
+          {{ countdown > 0 ? $t('auth.resendIn', { countdown }) : $t('auth.resendEmail') }}
         </Button>
       </span>
-      <RouterLink :to="{ name: 'login' }" class="overlay-link">Back to login</RouterLink>
+      <RouterLink :to="{ name: 'login' }" class="overlay-link">{{ $t('auth.backToLogin') }}</RouterLink>
     </div>
 
     <p

@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
 import type { AccountConsultation } from '@/types/account-consultation';
+import { formatConsultationDisplayValue } from '@/utils/consultation-display';
 import ConsultationList from './ConsultationList.vue';
 
 defineProps<{
@@ -17,32 +18,8 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const valueKeys: Record<string, string> = {
-  Online: 'consult.online',
-  'In-Person': 'consult.inPerson',
-  'Graphic Design': 'consult.fieldGraphic',
-  'Interior Design': 'consult.fieldInterior',
-  Architecture: 'consult.fieldArchitecture',
-  'Styling Design': 'consult.fieldStyling',
-  'Visual Concept': 'consult.focusVisual',
-  'Material Palette': 'consult.focusMaterial',
-  'Spatial Mood': 'consult.focusSpatial',
-  'Color Direction': 'consult.focusColor',
-  'Furniture Selection': 'consult.focusFurniture',
-  'I would like help defining the visual direction for a new brand identity.':
-    'accountConsultations.sampleNotes.brand',
-  'I need advice on natural finishes and a calm material palette for my home.':
-    'accountConsultations.sampleNotes.homeMaterials',
-  'I want to create a warm and quiet atmosphere for a small studio renovation.':
-    'accountConsultations.sampleNotes.studio',
-  'I would like to refine the color direction for an upcoming editorial shoot.':
-    'accountConsultations.sampleNotes.editorial',
-  'I need help selecting furniture that works with the scale of my living room.':
-    'accountConsultations.sampleNotes.livingRoom'
-};
-
-function displayValue(value: string): string {
-  return valueKeys[value] ? t(valueKeys[value]) : value;
+function displayValue(value?: string): string {
+  return formatConsultationDisplayValue(value, t);
 }
 
 const dateScramble = ref<InstanceType<typeof ScrambleText> | null>(null);
@@ -104,7 +81,7 @@ defineExpose({ playDateAnimation });
         </div>
         <div>
           <dt>{{ t('consult.notes') }}</dt>
-          <dd>{{ displayValue(reservation.notes) }}</dd>
+          <dd class="consultation-details__notes">{{ displayValue(reservation.notes) }}</dd>
         </div>
       </dl>
     </template>
@@ -118,7 +95,8 @@ defineExpose({ playDateAnimation });
   position: absolute;
   right: 15%;
   top: calc(50% + 32px);
-  z-index: 5;
+  z-index: 10;
+  isolation: isolate;
   width: 440px;
   height: 500px;
   padding: 30px 46px 36px;
@@ -172,7 +150,7 @@ defineExpose({ playDateAnimation });
 .consultation-details {
   display: grid;
   gap: 17px;
-  margin: 40px 0 0;
+  margin: 30px 0 0;
 }
 
 .consultation-details div {
@@ -194,6 +172,17 @@ defineExpose({ playDateAnimation });
 .consultation-details dd {
   color: #f0ede6a8;
   font-weight: 300;
+}
+
+.consultation-details__notes {
+  max-height: calc(1.42em * 3);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+  width: calc(100% + 40px);
+  margin-right: -40px;
+  padding-right: 8px;
+  white-space: pre-wrap;
 }
 
 @media (max-width: 768px) {
