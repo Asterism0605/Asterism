@@ -57,6 +57,10 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
       </span>
     </div>
 
+    <span class="sr-only" role="status" aria-live="polite">
+      {{ $t('dna.quizProgress') }}: {{ $t('dna.pickerProgress', { current: questionIndex + 1, total: totalQuestions }) }}
+    </span>
+
     <span class="ambient-dot ambient-dot--one" aria-hidden="true"></span>
     <span class="ambient-dot ambient-dot--two" aria-hidden="true"></span>
     <span class="corner-orbit" aria-hidden="true"></span>
