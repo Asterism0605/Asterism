@@ -92,7 +92,7 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- 手機版（≤980px）：沿用桌機的對角斜線分數樣式（current 左上 / total 右下），改放右下角。 -->
-    <div class="quiz-progress-mobile" aria-label="Quiz progress">
+    <div class="quiz-progress-mobile" :aria-label="$t('dna.quizProgress')">
       <span class="qpm-current">{{ progressCurrent }}</span>
       <span class="qpm-slash" aria-hidden="true"></span>
       <span class="qpm-total">{{ questions.length }}</span>

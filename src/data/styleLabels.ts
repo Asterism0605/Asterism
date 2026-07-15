@@ -68,6 +68,8 @@ export const STYLE_GROUP_ZH: Record<string, string> = {
 export const STYLE_TAG_ZH: Record<string, string> = {
   // Future Tech & Digital Psychedelia
   'Cyberpunk': '賽博龐克',
+  'Digital Psychedelia': '數位迷幻',
+  'Future Tech': '未來科技',
   'Futurism': '未來主義',
   'Glitch Art': '故障藝術',
   'Neo-Tokyo': '新東京風格',
@@ -83,7 +85,9 @@ export const STYLE_TAG_ZH: Record<string, string> = {
   // Decorative & Opulent Art
   'Art Deco': '裝飾藝術',
   'Baroque': '巴洛克',
+  'Gilded Ornament': '鍍金裝飾',
   'Maximalism': '極繁主義',
+  'Opulent Classicism': '華麗古典主義',
   'Rococo': '洛可可',
 
   // Minimal & Structured Modern
@@ -126,6 +130,14 @@ export const STYLE_TAG_ZH: Record<string, string> = {
   'Urban Contemporary': '都會當代'
 };
 
+// 外部資料來源的同義 tag 正規化後，沿用既有翻譯，避免重複維護翻譯內容。
+export const STYLE_TAG_ALIAS: Record<string, string> = {
+  'Neo Tokyo': 'Neo-Tokyo',
+  'Glitch Aesthetic': 'Glitch Art',
+  'Organic Modernism': 'Organic Modern',
+  'Scandinavian Modernism': 'Scandinavian'
+};
+
 // 審核工具 correct 下拉用的靜態 taxonomy（DB 存英文）。
 export const MEDIUMS = ['Outfit', 'Graphic Design', 'Interior Design', 'Architecture'];
 
@@ -149,5 +161,9 @@ export function subMediumZh(value?: string | null): string {
 }
 
 export function styleTagZh(value?: string | null): string {
-  return value ? (STYLE_TAG_ZH[value] ?? value) : '';
+  if (!value) return '';
+
+  const normalizedValue = STYLE_TAG_ALIAS[value] ?? value;
+
+  return STYLE_TAG_ZH[normalizedValue] ?? value;
 }
