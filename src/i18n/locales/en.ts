@@ -210,7 +210,8 @@ export default {
     startExploring: 'Start Exploring',
     retakeQuiz: 'Retake Quiz',
     sampleResultNotice: 'We do not have quiz result yet, so this is a sample Style DNA result.',
-    viewTagDetails: 'View {tag} description'
+    viewTagDetails: 'View {tag} description',
+    close: 'Close'
   },
   image: {
     back: 'Back',

@@ -48,7 +48,7 @@ describe('StyleTagModal', () => {
   it('emits update:modelValue false when closed', async () => {
     const wrapper = mountModal('Art Deco', 'en')
 
-    await wrapper.get('.overlay-close').trigger('click')
+    await wrapper.get('.tag-modal-close').trigger('click')
 
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
   })

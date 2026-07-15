@@ -206,7 +206,8 @@ export default {
     startExploring: '開始探索',
     retakeQuiz: '重新測驗',
     sampleResultNotice: '目前還沒有測驗結果，這是範例 Style DNA 結果。',
-    viewTagDetails: '查看 {tag} 說明'
+    viewTagDetails: '查看 {tag} 說明',
+    close: '關閉'
   },
   image: {
     back: '返回',
