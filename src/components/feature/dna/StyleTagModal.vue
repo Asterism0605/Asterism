@@ -21,7 +21,9 @@ const description = computed(() => {
   return STYLE_TAG_DESCRIPTIONS[props.tagLabel] ?? null;
 });
 
-const isOpen = computed(() => props.modelValue && props.tagLabel !== null && description.value !== null);
+const isOpen = computed(
+  () => props.modelValue && props.tagLabel !== null && description.value !== null
+);
 
 const descriptionText = computed(() =>
   description.value ? (locale.value === 'zh' ? description.value.zh : description.value.en) : ''
@@ -136,8 +138,10 @@ onBeforeUnmount(() => {
           <p id="tag-modal-label" class="tag-modal-label">
             {{ tagLabel ? displayLabel(tagLabel) : '' }}
           </p>
-          <span class="tag-modal-label-line" aria-hidden="true" />
-          <span class="tag-modal-label-dot" aria-hidden="true" />
+          <div class="tag-modal-label-connector" aria-hidden="true">
+            <span class="tag-modal-label-line" />
+            <span class="tag-modal-label-tail" />
+          </div>
 
           <button class="tag-modal-close" type="button" @click="closeModal">
             {{ t('dna.close') }}
@@ -157,12 +161,12 @@ onBeforeUnmount(() => {
 .tag-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
-  background: rgba(0, 0, 0, 0.72);
+  background: #000;
 }
 
 .tag-modal-ellipse {
@@ -176,8 +180,8 @@ onBeforeUnmount(() => {
 
 .tag-modal-label {
   position: absolute;
-  left: 4%;
-  top: 20%;
+  left: -10%;
+  top: 10%;
   margin: 0;
   transform: translateY(-100%);
   color: rgba(240, 237, 230, 0.92);
@@ -187,31 +191,49 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
-.tag-modal-label-line {
+.tag-modal-label-connector {
   position: absolute;
-  left: 4%;
-  top: 20%;
-  width: 160px;
-  height: 1px;
-  margin-top: 8px;
+  left: -10%;
+  top: 0%;
+  display: flex;
+  align-items: flex-start;
+  width: 200px;
+}
+
+.tag-modal-label-line {
+  height: 2px;
+  flex: 1;
   background: rgba(240, 237, 230, 0.8);
 }
 
-.tag-modal-label-dot {
+.tag-modal-label-tail {
+  position: relative;
+  display: block;
+  width: 36px;
+  height: 1px;
+  margin-top: 1px;
+  margin-left: -1px;
+  background: rgba(240, 237, 230, 0.8);
+  transform: rotate(42deg);
+  transform-origin: left center;
+}
+
+.tag-modal-label-tail::after {
+  content: '';
   position: absolute;
-  left: calc(4% + 160px);
-  top: calc(20% + 8px);
-  width: 10px;
-  height: 10px;
-  transform: translate(-50%, -50%);
+  right: -46px;
+  top: -4px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: rgba(240, 237, 230, 0.92);
+  background: white;
+  transform: rotate(-42deg);
 }
 
 .tag-modal-close {
   position: absolute;
-  top: 16%;
-  right: 10%;
+  top: 20%;
+  right: 20%;
   display: block;
   padding: 0;
   border: 0;
@@ -235,13 +257,15 @@ onBeforeUnmount(() => {
 
 .tag-modal-description {
   position: absolute;
-  left: 8%;
-  bottom: 20%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   max-width: 55%;
   margin: 0;
   color: rgba(240, 237, 230, 0.7);
   font-size: 16px;
   line-height: 1.6;
+  text-align: center;
 }
 
 @media (max-width: 640px) {
@@ -254,12 +278,8 @@ onBeforeUnmount(() => {
     font-size: 16px;
   }
 
-  .tag-modal-label-line {
+  .tag-modal-label-connector {
     width: 96px;
-  }
-
-  .tag-modal-label-dot {
-    left: calc(4% + 96px);
   }
 
   .tag-modal-description {

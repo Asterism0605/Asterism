@@ -106,7 +106,9 @@ describe('StyleAnnotationDisplay', () => {
       },
     })
 
-    const firstAnnotationButton = wrapper.findAll('[data-testid="style-annotation"] button').at(0)
+    const firstAnnotationButton = wrapper
+      .findAll('[data-testid="style-annotation"] [role="button"]')
+      .at(0)
     await firstAnnotationButton?.trigger('click')
 
     const modal = wrapper.getComponent(StyleTagModal)
@@ -124,7 +126,7 @@ describe('StyleAnnotationDisplay', () => {
       },
     })
 
-    const gridButtons = wrapper.findAll('.style-score-grid button')
+    const gridButtons = wrapper.findAll('.style-score-grid [role="button"]')
     await gridButtons[0].trigger('click')
 
     const modal = wrapper.getComponent(StyleTagModal)

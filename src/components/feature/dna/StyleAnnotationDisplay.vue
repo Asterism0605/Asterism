@@ -59,16 +59,19 @@
               class="style-annotation__content mt-3"
               :class="annotationContentClasses[annotation.position]"
             >
-              <button
-                type="button"
-                class="style-annotation__tag-button pointer-events-auto block border-0 bg-transparent p-0 text-left"
-                :aria-label="t('dna.viewTagDetails', { tag: displayLabel(annotation.label) })"
-                @click="openTagModal(annotation.label)"
-              >
-                <p class="whitespace-pre-line font-light leading-tight">
+              <p class="whitespace-pre-line font-light leading-tight">
+                <span
+                  class="pointer-events-auto cursor-pointer outline-none"
+                  :aria-label="t('dna.viewTagDetails', { tag: displayLabel(annotation.label) })"
+                  role="button"
+                  tabindex="0"
+                  @click="openTagModal(annotation.label)"
+                  @keydown.enter="openTagModal(annotation.label)"
+                  @keydown.space.prevent="openTagModal(annotation.label)"
+                >
                   {{ formatStyleLabel(displayLabel(annotation.label)) }}
-                </p>
-              </button>
+                </span>
+              </p>
               <p class="mt-1 text-text-secondary">
                 {{ annotation.value }}
               </p>
@@ -91,18 +94,21 @@
           :key="style.label"
           class="flex min-h-[7.8rem] min-w-0 flex-col items-center justify-between text-center"
         >
-          <button
-            type="button"
-            class="flex h-[3.25rem] w-full items-center justify-center border-0 bg-transparent p-0"
+          <div
+            class="flex h-[3.25rem] w-full items-center justify-center outline-none"
             :aria-label="t('dna.viewTagDetails', { tag: displayLabel(style.label) })"
+            role="button"
+            tabindex="0"
             @click="openTagModal(style.label)"
+            @keydown.enter="openTagModal(style.label)"
+            @keydown.space.prevent="openTagModal(style.label)"
           >
             <p
               class="w-full max-w-[calc(74vw-2rem)] whitespace-pre-line break-words text-center text-[13px] font-extralight leading-snug text-text-secondary lg:max-w-full lg:text-lg"
             >
               {{ formatStyleLabel(displayLabel(style.label)) }}
             </p>
-          </button>
+          </div>
           <p
             class="relative block w-[4.4rem] text-center text-5xl font-extralight leading-none text-text-primary lg:w-[5.4rem] lg:text-6xl"
           >
