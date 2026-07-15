@@ -27,6 +27,18 @@ function setStorageItem(key: string, value: string): void {
   }
 }
 
+function removeStorageItem(key: string): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    // Guide persistence is optional; the current session can still restart it.
+  }
+}
+
 function isVisibleCandidate(element: HTMLElement): boolean {
   const rect = element.getBoundingClientRect();
   return (
@@ -44,6 +56,11 @@ export function useHomeImageGuide() {
 
   function startGuide(): void {
     isVisible.value = getStorageItem(GUIDE_STORAGE_KEY) !== GUIDE_COMPLETED_VALUE;
+  }
+
+  function restartGuide(): void {
+    removeStorageItem(GUIDE_STORAGE_KEY);
+    startGuide();
   }
 
   function completeGuide(): void {
@@ -70,6 +87,7 @@ export function useHomeImageGuide() {
   return {
     isVisible,
     startGuide,
+    restartGuide,
     completeGuide,
     findTargetIndex
   };

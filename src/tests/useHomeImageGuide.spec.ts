@@ -50,6 +50,16 @@ describe('useHomeImageGuide', () => {
     expect(guide.isVisible.value).toBe(false);
   });
 
+  it('restarts a previously completed guide', () => {
+    localStorage.setItem('asterism:guide:home-image-click', 'completed');
+    const guide = useHomeImageGuide();
+
+    guide.restartGuide();
+
+    expect(guide.isVisible.value).toBe(true);
+    expect(localStorage.getItem('asterism:guide:home-image-click')).toBeNull();
+  });
+
   it('prefers the configured target and falls back to the first visible card', () => {
     const fallback = appendGuideCandidate(
       1,
