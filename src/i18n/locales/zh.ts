@@ -250,6 +250,11 @@ export default {
   },
   home: {
     guestHint: '登入或註冊以繼續探索靈感',
+    tour: {
+      description: '透過視覺探索整理你的靈感，並將它轉化為可實際運用的風格方向。',
+      startTour: '開始導覽',
+      exploreOnMyOwn: '自由探索'
+    },
     guide: {
       imageClick: '點選圖片查看詳情'
     },
