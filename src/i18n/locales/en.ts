@@ -196,8 +196,7 @@ export default {
   dna: {
     discoverTitle1: 'Discover',
     discoverTitle2: 'Your Style DNA',
-    introDesc:
-      'Asterism personalizes your visual feed by cataloging your stylistic preferences. Embark on a 4-stage blind selection process to extract your architectural and sensory style values.',
+    introDesc: 'A quick visual quiz that learns your design taste.',
     participate: 'PARTICIPATE',
     skip: 'SKIP',
     loadingLine1: 'Forming',

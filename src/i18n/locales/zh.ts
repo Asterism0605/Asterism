@@ -192,8 +192,7 @@ export default {
   dna: {
     discoverTitle1: '探索',
     discoverTitle2: '你的 Style DNA',
-    introDesc:
-      'Asterism 會記錄你的風格偏好，為你打造專屬的視覺探索。透過 4 個階段的盲選，萃取你在空間與感官上的風格取向。',
+    introDesc: '一個快速的視覺測驗，讀懂你的設計品味。',
     participate: '開始測驗',
     skip: '略過',
     loadingLine1: '正在生成',
