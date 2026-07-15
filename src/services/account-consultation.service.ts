@@ -5,8 +5,7 @@ import type { MyConsultationBooking } from '@/types/consultation';
 function toAccountConsultation(booking: MyConsultationBooking): AccountConsultation {
   return {
     id: booking.id,
-    // `scope=upcoming` only returns confirmed bookings.
-    status: 'confirmed',
+    status: booking.status,
     consultationDate: booking.consultationDate,
     timeSlot: booking.timeSlot,
     method: booking.method === 'online' ? 'Online' : 'In-Person',

@@ -106,4 +106,27 @@ describe('account-consultation.service', () => {
       message: 'Service unavailable'
     });
   });
+
+  it('preserves a non-confirmed booking status returned by the API', async () => {
+    getMyConsultationBookings.mockResolvedValueOnce({
+      success: true,
+      data: {
+        items: [
+          {
+            id: 'pending-booking',
+            status: 'pending_payment',
+            consultationDate: '2026-08-10',
+            timeSlot: 'am',
+            method: 'online',
+            createdAt: '2026-07-01T00:00:00.000Z'
+          }
+        ]
+      },
+      error: null
+    });
+
+    await expect(getUpcomingAccountConsultations('access-token')).resolves.toMatchObject([
+      { id: 'pending-booking', status: 'pending_payment' }
+    ]);
+  });
 });

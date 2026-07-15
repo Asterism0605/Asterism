@@ -119,6 +119,33 @@ describe('AccountConsultations API mode', () => {
     expect(wrapper.find('.consultations-empty-state').exists()).toBe(true);
   });
 
+  it('does not start parallel requests when retry is clicked repeatedly', async () => {
+    let resolveRetry!: (value: unknown) => void;
+    getMyConsultationBookings
+      .mockRejectedValueOnce(new Error('network'))
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveRetry = resolve;
+        })
+      );
+
+    const { wrapper } = mountPage();
+    await flushPromises();
+
+    const retryButton = wrapper.get('[role="alert"] button');
+    await retryButton.trigger('click');
+    await retryButton.trigger('click');
+
+    expect(getMyConsultationBookings).toHaveBeenCalledTimes(2);
+
+    resolveRetry({
+      success: true,
+      data: { items: [] },
+      error: null
+    });
+    await flushPromises();
+  });
+
   it('redirects to login when the API rejects with 401', async () => {
     getMyConsultationBookings.mockRejectedValueOnce({
       code: 'UNAUTHORIZED',

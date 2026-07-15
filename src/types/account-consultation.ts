@@ -1,6 +1,8 @@
+import type { ConsultationBookingStatus } from '@/types/consultation';
+
 export interface AccountConsultation {
   id: string;
-  status: 'confirmed';
+  status: ConsultationBookingStatus;
   consultationDate: string;
   timeSlot: 'am' | 'pm';
   method: string;

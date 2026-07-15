@@ -18,6 +18,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 const reservations = ref<AccountConsultation[]>([]);
 const isLoading = ref(true);
+const isRequesting = ref(false);
 const loadError = ref<LoadError | null>(null);
 const selectedId = ref(reservations.value[0]?.id ?? '');
 const showAllConsultations = ref(false);
@@ -29,6 +30,8 @@ const selectedReservation = computed<AccountConsultation>(
 );
 
 async function loadReservations(): Promise<void> {
+  if (isRequesting.value) return;
+
   const accessToken = authStore.session?.accessToken;
   reservations.value = [];
   selectedId.value = '';
@@ -40,6 +43,7 @@ async function loadReservations(): Promise<void> {
   }
 
   isLoading.value = true;
+  isRequesting.value = true;
 
   try {
     reservations.value = await getUpcomingAccountConsultations(accessToken);
@@ -55,6 +59,7 @@ async function loadReservations(): Promise<void> {
 
     loadError.value = apiError;
   } finally {
+    isRequesting.value = false;
     isLoading.value = false;
   }
 }
