@@ -61,7 +61,7 @@
             >
               <button
                 type="button"
-                class="style-annotation__tag-button block border-0 bg-transparent p-0 text-left"
+                class="style-annotation__tag-button pointer-events-auto block border-0 bg-transparent p-0 text-left"
                 :aria-label="t('dna.viewTagDetails', { tag: displayLabel(annotation.label) })"
                 @click="openTagModal(annotation.label)"
               >
