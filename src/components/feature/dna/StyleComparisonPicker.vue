@@ -195,9 +195,10 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 .instruction-progress {
   position: relative;
   margin-left: auto;
-  width: 64px;
-  height: 44px;
+  width: 100px;
+  height: 78px;
   font-size: 22px;
+  font-weight: 200;
   font-variant-numeric: tabular-nums;
 }
 
@@ -209,15 +210,15 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 
 .instruction-progress__total {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  left: 39px;
+  top: 43px;
 }
 
 .instruction-progress__slash {
   position: absolute;
-  left: 18px;
-  top: 20px;
-  width: 30px;
+  left: 1px;
+  top: 59px;
+  width: 64px;
   height: 1px;
   background: rgb(240 237 230 / 78%);
   transform: rotate(-38deg);
