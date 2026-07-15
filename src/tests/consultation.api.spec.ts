@@ -12,9 +12,14 @@ vi.mock('@/api/httpClient', () => ({
 import {
   createConsultationCheckoutSession,
   getConsultationAvailability,
-  getConsultationBookingDetail
+  getConsultationBookingDetail,
+  getMyConsultationBookings
 } from '@/api/consultation.api';
-import type { ConsultationCheckoutRequest } from '@/types/consultation';
+import type {
+  ConsultationApiResponse,
+  ConsultationCheckoutRequest,
+  MyConsultationListResult
+} from '@/types/consultation';
 
 describe('consultation.api', () => {
   beforeEach(() => vi.clearAllMocks());
@@ -218,6 +223,57 @@ describe('consultation.api', () => {
     await expect(getConsultationAvailability('2026-07', 'access-token')).resolves.toEqual(response);
     expect(get).toHaveBeenCalledWith('/api/v1/consultations/availability', {
       params: { month: '2026-07' },
+      headers: { Authorization: 'Bearer access-token' }
+    });
+  });
+
+  it('gets the current user consultation list with auth', async () => {
+    const response: ConsultationApiResponse<MyConsultationListResult> = {
+      success: true as const,
+      data: {
+        items: [
+          {
+            id: 'booking-id',
+            status: 'confirmed' as const,
+            method: 'online' as const,
+            consultationDate: '2026-08-10',
+            timeSlot: 'am' as const,
+            designField: 'Interior Design',
+            designFocus: 'Living room planning',
+            consultant: {
+              displayName: 'Asterism Consultant',
+              title: 'Design Consultant',
+              avatarUrl: 'https://example.com/consultant.jpg'
+            },
+            createdAt: '2026-07-10T00:00:00.000Z'
+          }
+        ]
+      },
+      error: null
+    };
+    get.mockResolvedValue({ data: response });
+
+    await expect(getMyConsultationBookings('access-token')).resolves.toEqual(response);
+    expect(get).toHaveBeenCalledWith('/api/v1/consultations/me', {
+      params: { scope: 'upcoming', cursor: undefined },
+      headers: { Authorization: 'Bearer access-token' }
+    });
+  });
+
+  it('gets the current user consultation list with a cursor', async () => {
+    const response: ConsultationApiResponse<MyConsultationListResult> = {
+      success: true as const,
+      data: {
+        items: [],
+        nextCursor: 'cursor-2'
+      },
+      error: null
+    };
+    get.mockResolvedValue({ data: response });
+
+    await expect(getMyConsultationBookings('access-token', 'cursor-1')).resolves.toEqual(response);
+    expect(get).toHaveBeenCalledWith('/api/v1/consultations/me', {
+      params: { scope: 'upcoming', cursor: 'cursor-1' },
       headers: { Authorization: 'Bearer access-token' }
     });
   });
