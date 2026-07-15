@@ -206,16 +206,17 @@ describe('image.service', () => {
     });
 
     it('does not return the center image when it is the only representative in its subMedium group', () => {
-      const images = getSubMediumGroupImages('ftdp-graphic-brand-001', {
-        visitedImageIds: ['ftdp-graphic-001'],
+      const images = getSubMediumGroupImages('ftdp-outfit-top-001', {
+        visitedImageIds: ['y2k-main-001'],
         rng: () => 0
       });
 
       expect(images.map((image) => image.subMedium).sort()).toEqual([
-        'Editorial Design',
-        'Poster Design'
+        'Accessory Focus',
+        'Bottom Focus',
+        'Dress Focus'
       ]);
-      expect(images.map((image) => image.id)).not.toContain('ftdp-graphic-brand-001');
+      expect(images.map((image) => image.id)).not.toContain('ftdp-outfit-top-001');
     });
 
     it('does not recommend eag-interior-chair-001 to itself', () => {
@@ -245,10 +246,10 @@ describe('image.service', () => {
 
     it('does not fill related images from another style group', () => {
       const relatedImages = getRelatedImages('y2k-main-001', {
-        limit: 50
+        limit: 100
       });
 
-      expect(relatedImages).toHaveLength(15);
+      expect(relatedImages).toHaveLength(55);
       expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
         true
       );
