@@ -13,7 +13,7 @@ describe('account-consultation.service', () => {
     vi.clearAllMocks();
   });
 
-  it('maps and sorts upcoming consultations by date, then AM before PM', async () => {
+  it('loads all cursor pages, maps bookings, and sorts by date then AM before PM', async () => {
     getMyConsultationBookings.mockResolvedValueOnce({
       success: true,
       data: {
@@ -24,8 +24,18 @@ describe('account-consultation.service', () => {
             consultationDate: '2026-08-10',
             timeSlot: 'pm',
             method: 'in_person',
+            designField: 'interior',
             createdAt: '2026-07-01T00:00:00.000Z'
-          },
+          }
+        ],
+        nextCursor: 'cursor-2'
+      },
+      error: null
+    });
+    getMyConsultationBookings.mockResolvedValueOnce({
+      success: true,
+      data: {
+        items: [
           {
             id: 'later-booking',
             status: 'confirmed',
@@ -67,8 +77,8 @@ describe('account-consultation.service', () => {
         consultationDate: '2026-08-10',
         timeSlot: 'pm',
         method: 'In-Person',
-        designField: '—',
-        designFocus: '—'
+        designField: 'interior',
+        designFocus: undefined
       },
       {
         id: 'later-booking',
@@ -76,11 +86,12 @@ describe('account-consultation.service', () => {
         consultationDate: '2026-08-11',
         timeSlot: 'am',
         method: 'Online',
-        designField: '—',
-        designFocus: '—'
+        designField: undefined,
+        designFocus: undefined
       }
     ]);
-    expect(getMyConsultationBookings).toHaveBeenCalledWith('access-token');
+    expect(getMyConsultationBookings).toHaveBeenNthCalledWith(1, 'access-token', undefined);
+    expect(getMyConsultationBookings).toHaveBeenNthCalledWith(2, 'access-token', 'cursor-2');
   });
 
   it('throws the API error when upcoming consultations cannot be loaded', async () => {
@@ -90,8 +101,9 @@ describe('account-consultation.service', () => {
       error: { code: 'UNAVAILABLE', message: 'Service unavailable' }
     });
 
-    await expect(getUpcomingAccountConsultations('access-token')).rejects.toThrow(
-      'Service unavailable'
-    );
+    await expect(getUpcomingAccountConsultations('access-token')).rejects.toMatchObject({
+      code: 'UNAVAILABLE',
+      message: 'Service unavailable'
+    });
   });
 });

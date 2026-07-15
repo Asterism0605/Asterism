@@ -10,8 +10,8 @@ function toAccountConsultation(booking: MyConsultationBooking): AccountConsultat
     consultationDate: booking.consultationDate,
     timeSlot: booking.timeSlot,
     method: booking.method === 'online' ? 'Online' : 'In-Person',
-    designField: booking.designField ?? '—',
-    designFocus: booking.designFocus ?? '—',
+    designField: booking.designField,
+    designFocus: booking.designFocus,
     notes: booking.notes
   };
 }
@@ -19,13 +19,21 @@ function toAccountConsultation(booking: MyConsultationBooking): AccountConsultat
 export async function getUpcomingAccountConsultations(
   accessToken: string
 ): Promise<AccountConsultation[]> {
-  const response = await getMyConsultationBookings(accessToken);
+  const consultations: AccountConsultation[] = [];
+  let cursor: string | undefined;
 
-  if (!response.success) {
-    throw new Error(response.error.message);
-  }
+  do {
+    const response = await getMyConsultationBookings(accessToken, cursor);
 
-  return response.data.items.map(toAccountConsultation).sort((a, b) => {
+    if (!response.success) {
+      throw response.error;
+    }
+
+    consultations.push(...response.data.items.map(toAccountConsultation));
+    cursor = response.data.nextCursor;
+  } while (cursor);
+
+  return consultations.sort((a, b) => {
     const dateDiff = a.consultationDate.localeCompare(b.consultationDate);
 
     if (dateDiff !== 0) {

@@ -4,11 +4,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuthStore } from '@/stores/auth.store';
 import type { AuthSession } from '@/types/auth';
 
-const { getMyConsultationBookings } = vi.hoisted(() => ({
-  getMyConsultationBookings: vi.fn()
+const { getMyConsultationBookings, routerReplace } = vi.hoisted(() => ({
+  getMyConsultationBookings: vi.fn(),
+  routerReplace: vi.fn()
 }));
 
 vi.mock('@/api/consultation.api', () => ({ getMyConsultationBookings }));
+vi.mock('vue-router', () => ({
+  useRouter: () => ({
+    currentRoute: { value: { fullPath: '/account/consultations' } },
+    push: vi.fn(),
+    replace: routerReplace
+  })
+}));
 
 const { default: AccountConsultations } = await import('@/pages/AccountConsultations.vue');
 
@@ -30,14 +38,17 @@ describe('AccountConsultations API mode', () => {
   function mountPage(authenticated = true) {
     const pinia = createPinia();
     setActivePinia(pinia);
+    const authStore = useAuthStore();
 
     if (authenticated) {
-      const authStore = useAuthStore();
       authStore.session = memberSession;
       authStore.user = memberSession.user;
     }
 
-    return mount(AccountConsultations, { global: { plugins: [pinia] } });
+    return {
+      authStore,
+      wrapper: mount(AccountConsultations, { global: { plugins: [pinia] } })
+    };
   }
 
   it('shows a loading state then renders the upcoming API bookings', async () => {
@@ -48,9 +59,9 @@ describe('AccountConsultations API mode', () => {
       })
     );
 
-    const wrapper = mountPage();
+    const { wrapper } = mountPage();
     expect(wrapper.get('[role="status"]').text()).toContain('Loading your consultations');
-    expect(getMyConsultationBookings).toHaveBeenCalledWith('access-token');
+    expect(getMyConsultationBookings).toHaveBeenCalledWith('access-token', undefined);
 
     resolveRequest({
       success: true,
@@ -84,7 +95,7 @@ describe('AccountConsultations API mode', () => {
       error: null
     });
 
-    const wrapper = mountPage();
+    const { wrapper } = mountPage();
     await flushPromises();
 
     expect(wrapper.find('.consultations-empty-state').exists()).toBe(true);
@@ -97,7 +108,7 @@ describe('AccountConsultations API mode', () => {
       error: null
     });
 
-    const wrapper = mountPage();
+    const { wrapper } = mountPage();
     await flushPromises();
     expect(wrapper.get('[role="alert"]').text()).toContain("couldn't load your consultations");
 
@@ -108,8 +119,27 @@ describe('AccountConsultations API mode', () => {
     expect(wrapper.find('.consultations-empty-state').exists()).toBe(true);
   });
 
-  it('does not request or render bookings without a valid session', async () => {
-    const wrapper = mountPage(false);
+  it('redirects to login when the API rejects with 401', async () => {
+    getMyConsultationBookings.mockRejectedValueOnce({
+      code: 'UNAUTHORIZED',
+      message: 'Unauthorized',
+      status: 401
+    });
+
+    const { authStore, wrapper } = mountPage();
+    const logout = vi.spyOn(authStore, 'logout').mockResolvedValue();
+    await flushPromises();
+
+    expect(logout).toHaveBeenCalledTimes(1);
+    expect(routerReplace).toHaveBeenCalledWith({
+      name: 'login',
+      query: { next: '/account/consultations' }
+    });
+    expect(wrapper.find('[role="alert"]').exists()).toBe(false);
+  });
+
+  it('does not request bookings when mounted without a session', async () => {
+    const { wrapper } = mountPage(false);
     await flushPromises();
 
     expect(getMyConsultationBookings).not.toHaveBeenCalled();

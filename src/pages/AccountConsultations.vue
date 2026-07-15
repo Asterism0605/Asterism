@@ -10,12 +10,15 @@ import Button from '@/components/ui/Button.vue';
 import { getUpcomingAccountConsultations } from '@/services/account-consultation.service';
 import { useAuthStore } from '@/stores/auth.store';
 import type { AccountConsultation } from '@/types/account-consultation';
+import type { ApiError } from '@/types/api';
+
+type LoadError = Pick<ApiError, 'code' | 'message' | 'status' | 'details'>;
 
 const router = useRouter();
 const authStore = useAuthStore();
 const reservations = ref<AccountConsultation[]>([]);
 const isLoading = ref(true);
-const loadError = ref(false);
+const loadError = ref<LoadError | null>(null);
 const selectedId = ref(reservations.value[0]?.id ?? '');
 const showAllConsultations = ref(false);
 const detailsPanel = ref<InstanceType<typeof DetailPanel> | null>(null);
@@ -29,7 +32,7 @@ async function loadReservations(): Promise<void> {
   const accessToken = authStore.session?.accessToken;
   reservations.value = [];
   selectedId.value = '';
-  loadError.value = false;
+  loadError.value = null;
 
   if (!authStore.isAuthenticated || !accessToken) {
     isLoading.value = false;
@@ -41,8 +44,16 @@ async function loadReservations(): Promise<void> {
   try {
     reservations.value = await getUpcomingAccountConsultations(accessToken);
     selectedId.value = reservations.value[0]?.id ?? '';
-  } catch {
-    loadError.value = true;
+  } catch (error) {
+    const apiError = error as LoadError;
+
+    if (apiError.status === 401) {
+      await authStore.logout();
+      await router.replace({ name: 'login', query: { next: router.currentRoute.value.fullPath } });
+      return;
+    }
+
+    loadError.value = apiError;
   } finally {
     isLoading.value = false;
   }

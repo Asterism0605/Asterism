@@ -47,9 +47,7 @@ describe('AccountConsultations', () => {
     getUpcomingAccountConsultations.mockResolvedValue(
       items.map((booking) => ({
         ...booking,
-        method: booking.method === 'online' ? 'Online' : 'In-Person',
-        designField: booking.designField ?? '—',
-        designFocus: booking.designFocus ?? '—'
+        method: booking.method === 'online' ? 'Online' : 'In-Person'
       }))
     );
   });

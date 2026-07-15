@@ -75,12 +75,13 @@ export async function getConsultationAvailability(
 }
 
 export async function getMyConsultationBookings(
-  accessToken: string
+  accessToken: string,
+  cursor?: string
 ): Promise<ConsultationApiResponse<MyConsultationListResult>> {
   const response = await httpClient.get<ConsultationApiResponse<MyConsultationListResult>>(
     '/api/v1/consultations/me',
     {
-      params: { scope: 'upcoming' },
+      params: { scope: 'upcoming', cursor },
       headers: { Authorization: `Bearer ${accessToken}` }
     }
   );

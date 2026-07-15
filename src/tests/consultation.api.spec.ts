@@ -235,9 +235,9 @@ describe('consultation.api', () => {
           {
             id: 'booking-id',
             status: 'confirmed' as const,
-          method: 'online' as const,
-          consultationDate: '2026-08-10',
-          timeSlot: 'am' as const,
+            method: 'online' as const,
+            consultationDate: '2026-08-10',
+            timeSlot: 'am' as const,
             designField: 'Interior Design',
             designFocus: 'Living room planning',
             consultant: {
@@ -255,7 +255,25 @@ describe('consultation.api', () => {
 
     await expect(getMyConsultationBookings('access-token')).resolves.toEqual(response);
     expect(get).toHaveBeenCalledWith('/api/v1/consultations/me', {
-      params: { scope: 'upcoming' },
+      params: { scope: 'upcoming', cursor: undefined },
+      headers: { Authorization: 'Bearer access-token' }
+    });
+  });
+
+  it('gets the current user consultation list with a cursor', async () => {
+    const response: ConsultationApiResponse<MyConsultationListResult> = {
+      success: true as const,
+      data: {
+        items: [],
+        nextCursor: 'cursor-2'
+      },
+      error: null
+    };
+    get.mockResolvedValue({ data: response });
+
+    await expect(getMyConsultationBookings('access-token', 'cursor-1')).resolves.toEqual(response);
+    expect(get).toHaveBeenCalledWith('/api/v1/consultations/me', {
+      params: { scope: 'upcoming', cursor: 'cursor-1' },
       headers: { Authorization: 'Bearer access-token' }
     });
   });

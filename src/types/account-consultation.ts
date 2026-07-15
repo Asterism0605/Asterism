@@ -4,7 +4,7 @@ export interface AccountConsultation {
   consultationDate: string;
   timeSlot: 'am' | 'pm';
   method: string;
-  designField: string;
-  designFocus: string;
+  designField?: string;
+  designFocus?: string;
   notes?: string;
 }
