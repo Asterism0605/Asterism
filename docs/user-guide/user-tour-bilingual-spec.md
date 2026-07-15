@@ -1,6 +1,6 @@
 ## 使用者導覽雙語文案規格
 
-> 對應主規格版本：v1.1
+> 對應主規格版本：v1.2
 
 > 語系原則：繁體中文使用自然、易懂的產品語氣；英文不逐字直譯，以簡潔的介面文案為主。品牌名稱、`Moodboard`、`Style DNA`、`Consultation` 保留產品既有命名。
 
@@ -8,7 +8,7 @@
 
 | 使用情境       | 繁體中文                           | English                                        |
 | -------------- | ---------------------------------- | ---------------------------------------------- |
-| 開始完整導覽   | 開始導覽                           | Start tour                                     |
+| 開始完整導覽   | 開始導覽                           | Start Tour                                     |
 | 不進入導覽     | 自由探索                           | Explore on my own                              |
 | 下一步         | 下一步                             | Next                                           |
 | 上一步         | 上一步                             | Back                                           |
@@ -23,26 +23,16 @@
 | 等待頁面載入   | 正在準備下一步…                    | Preparing the next step…                       |
 | 找不到導覽目標 | 目前無法顯示這個步驟，已為你略過。 | This step is unavailable and has been skipped. |
 
-### Welcome Modal
+### 首頁聚焦導覽
 
-**標題**
+**畫面文案**
 
-- 繁體中文：探索你的美學座標
-- English: Discover your aesthetic coordinates
+- 繁體中文：透過視覺探索整理你的靈感，並將它轉化為可實際運用的風格方向。
+- English: uses visual exploration to organize your inspiration and turn it into practical style directions.
 
-**說明**
+**文字按鈕**
 
-- 繁體中文：Asterism 透過圖片探索與 Moodboard，幫你整理靈感並延伸成可實際運用的風格方向。
-- English: Asterism uses visual exploration and Moodboards to organize your inspiration and turn it into practical style directions.
-
-**補充提示**
-
-- 繁體中文：約需 1 分鐘，你也可以隨時略過或重新開始。
-- English: This takes about one minute. You can skip or restart it at any time.
-
-**按鈕**
-
-- `開始導覽` / `Start tour`
+- `開始導覽` / `Start Tour`
 - `自由探索` / `Explore on my own`
 
 **Phase 1 行為**
@@ -50,17 +40,19 @@
 | 使用情境 | 繁體中文 | English |
 |---|---|---|
 | 未登入 | 維持現有首頁圖片導覽。 | Keep the existing homepage image guide. |
-| 已登入 | 顯示歡迎導覽，開始建立你的探索方向。 | Show the welcome tour to begin shaping your exploration. |
-| 點擊背景 | 不會關閉歡迎導覽。 | Clicking the backdrop does not close the welcome tour. |
-| 按下 Escape | 關閉目前歡迎導覽。 | Close the current welcome tour. |
-| 開始導覽／自由探索 | 關閉歡迎導覽，之後不再自動顯示。 | Close the welcome tour and do not show it automatically again. |
+| 已登入首次進入首頁 | 顯示首頁聚焦導覽；只保留 Asterism 大標題、產品定位文案、兩個文字按鈕與白色小箭頭，其餘內容套用半透明黑色模糊遮罩並禁止操作。 | Show the homepage focus tour with only the Asterism title, product positioning copy, two text buttons, and small white arrows visible; dim and block the rest of the page. |
+| 點擊背景 | 不會關閉首頁聚焦導覽。 | Clicking the backdrop does not close the homepage focus tour. |
+| 按下 Escape | 不會關閉首頁聚焦導覽。 | Pressing Escape does not close the homepage focus tour. |
+| `開始導覽` / `Start Tour` | 關閉聚焦狀態並接續首頁指定圖片導覽。 | Close the focus state and continue to the highlighted homepage image guide. |
+| `自由探索` / `Explore on my own` | 關閉聚焦狀態並恢復首頁自由操作，不啟動後續導覽。 | Close the focus state and return to free homepage exploration without starting the next guide. |
+| 顯示次數 | 首次登入後只顯示一次。 | Show once after the user's first sign-in. |
 
 ### Flow A：首次進站與首頁探索
 
 | Step | 文案類型       | 繁體中文                                                       | English                                                                                          |
 | ---- | -------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| A1   | 標題           | 歡迎來到 Asterism                                              | Welcome to Asterism                                                                              |
-| A1   | 說明           | 從圖片選擇與收藏開始，逐步整理出屬於你的美學偏好。             | Start with the images you choose and save, then gradually shape your personal aesthetic profile. |
+| A1   | 說明           | 透過視覺探索整理你的靈感，並將它轉化為可實際運用的風格方向。   | uses visual exploration to organize your inspiration and turn it into practical style directions. |
+| A1   | 按鈕           | 開始導覽／自由探索                                              | Start Tour / Explore on my own                                                                   |
 | A2   | 標題           | 探索你的靈感星圖                                               | Explore your inspiration map                                                                     |
 | A2   | 說明           | 首頁中的每張圖片都是一個探索起點，點開後可以查看更多風格關聯。 | Every image on the homepage is a starting point. Open one to discover related styles and ideas.  |
 | A3   | 標題           | 點擊圖片開始探索                                               | Select an image to begin                                                                         |
@@ -205,7 +197,7 @@
 ### 文案語氣與翻譯規則
 
 - 中文避免使用過度抽象的詞，例如只寫「探索星系」卻不解釋具體操作。
-- 英文按鈕優先使用動詞開頭，例如 `Start tour`、`Save to Moodboard`、`View booking status`。
+- 英文按鈕優先使用動詞開頭，例如 `Start Tour`、`Save to Moodboard`、`View booking status`。
 - `Style DNA` 不翻成「風格基因」，避免產品名稱在不同畫面來回變形。
 - `Moodboard` 可在首次出現時搭配中文說明，後續保留英文產品名稱。
 - `Consultation` 在選單可保留英文，但次要說明必須說清楚用途。
@@ -225,9 +217,10 @@
       "skipSection": "略過此段",
       "end": "結束導覽"
     },
-    "welcome": {
-      "title": "探索你的美學座標",
-      "description": "Asterism 透過圖片探索與 Moodboard，幫你整理靈感並延伸成可實際運用的風格方向。"
+    "tour": {
+      "description": "透過視覺探索整理你的靈感，並將它轉化為可實際運用的風格方向。",
+      "start": "開始導覽",
+      "exploreOnMyOwn": "自由探索"
     },
     "home": {
       "mapTitle": "探索你的靈感星圖",
@@ -245,16 +238,17 @@
 {
   "tour": {
     "common": {
-      "start": "Start tour",
+      "start": "Start Tour",
       "exploreFreely": "Explore on my own",
       "next": "Next",
       "back": "Back",
       "skipSection": "Skip this section",
       "end": "End tour"
     },
-    "welcome": {
-      "title": "Discover your aesthetic coordinates",
-      "description": "Asterism uses visual exploration and Moodboards to organize your inspiration and turn it into practical style directions."
+    "tour": {
+      "description": "uses visual exploration to organize your inspiration and turn it into practical style directions.",
+      "start": "Start Tour",
+      "exploreOnMyOwn": "Explore on my own"
     },
     "home": {
       "mapTitle": "Explore your inspiration map",
