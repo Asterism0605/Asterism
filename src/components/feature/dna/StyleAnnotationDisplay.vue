@@ -95,7 +95,7 @@
           class="flex min-h-[7.8rem] min-w-0 flex-col items-center justify-between text-center"
         >
           <div
-            class="flex h-[3.25rem] w-full items-center justify-center outline-none"
+            class="flex h-[3.25rem] w-full cursor-pointer items-center justify-center outline-none"
             :aria-label="t('dna.viewTagDetails', { tag: displayLabel(style.label) })"
             role="button"
             tabindex="0"
