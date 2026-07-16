@@ -8,6 +8,7 @@ import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { AuthSession } from '@/types/auth';
 import type { HomeInspirationImage } from '@/types/image';
 import rawStyleImages from '@/data/style-data.json';
+import { HOME_HERO_IMAGE_INDEX } from '@/components/sections/FloatingImageNetwork/config';
 import type { StyleImage } from '@/types/image';
 import type { StyleDnaAnswer } from '@/types/style-dna';
 
@@ -26,6 +27,7 @@ const floatingImageNetworkStub = {
 const guideFloatingImageNetworkStub = {
   props: ['images', 'height', 'guideTargetIndex'],
   emits: ['click', 'ready', 'imagesLoaded', 'guideTargetReady'],
+  setup: () => ({ HOME_HERO_IMAGE_INDEX }),
   template: `
     <div>
       <button
@@ -33,7 +35,7 @@ const guideFloatingImageNetworkStub = {
         :key="index"
         data-test="guide-image-card"
         :data-guide-image-index="index"
-        :data-guide-image-ready="index === 5 ? 'true' : undefined"
+        :data-guide-image-ready="index === HOME_HERO_IMAGE_INDEX ? 'true' : undefined"
         :data-guide-target="guideTargetIndex === index ? 'true' : undefined"
         @click="$emit('click', index)"
       />
@@ -339,11 +341,11 @@ describe('Home', () => {
     await flushPromises();
     await wrapper.vm.$nextTick();
 
-    expect(floatingNetwork.props('guideTargetIndex')).toBe(5);
+    expect(floatingNetwork.props('guideTargetIndex')).toBe(HOME_HERO_IMAGE_INDEX);
     expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="home-meteor-arrows"]').exists()).toBe(false);
 
-    await wrapper.findAll('[data-test="guide-image-card"]')[5].trigger('click');
+    await wrapper.findAll('[data-test="guide-image-card"]')[HOME_HERO_IMAGE_INDEX].trigger('click');
 
     expect(localStorage.getItem('asterism:guide:home-image-click')).toBe('completed');
     expect(push).toHaveBeenCalledWith({
@@ -442,7 +444,7 @@ describe('Home', () => {
     await flushPromises();
     await wrapper.find('[data-test="home-tour-start"]').trigger('click');
     await flushPromises();
-    wrapper.findAll('[data-test="guide-image-card"]')[5].element.removeAttribute(
+    wrapper.findAll('[data-test="guide-image-card"]')[HOME_HERO_IMAGE_INDEX].element.removeAttribute(
       'data-guide-image-ready'
     );
     guideFrameCallback?.(0);
@@ -451,7 +453,7 @@ describe('Home', () => {
     expect(localStorage.getItem('asterism:tour:welcome')).toBe('handled');
     expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
 
-    wrapper.findAll('[data-test="guide-image-card"]')[5].element.setAttribute(
+    wrapper.findAll('[data-test="guide-image-card"]')[HOME_HERO_IMAGE_INDEX].element.setAttribute(
       'data-guide-image-ready',
       'true'
     );
@@ -460,7 +462,7 @@ describe('Home', () => {
     guideFrameCallback?.(0);
     await wrapper.vm.$nextTick();
 
-    expect(floatingNetwork.props('guideTargetIndex')).toBe(5);
+    expect(floatingNetwork.props('guideTargetIndex')).toBe(HOME_HERO_IMAGE_INDEX);
     expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(true);
 
     wrapper.unmount();

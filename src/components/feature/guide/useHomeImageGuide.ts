@@ -79,11 +79,15 @@ export function useHomeImageGuide() {
     const preferred = candidates.find(
       (element) => Number(element.dataset.guideImageIndex) === GUIDE_TARGET_INDEX
     );
-    const target = preferred ?? candidates[0];
+    if (preferred && preferred.dataset.guideImageError !== 'true') {
+      return preferred.dataset.guideImageReady === 'true'
+        ? Number(preferred.dataset.guideImageIndex)
+        : null;
+    }
 
-    return target?.dataset.guideImageReady === 'true'
-      ? Number(target.dataset.guideImageIndex)
-      : null;
+    const fallback = candidates.find((element) => element.dataset.guideImageReady === 'true');
+
+    return fallback ? Number(fallback.dataset.guideImageIndex) : null;
   }
 
   return {

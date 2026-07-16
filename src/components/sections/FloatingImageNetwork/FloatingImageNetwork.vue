@@ -43,6 +43,7 @@ const naturalAspects = new Map<string, string>();
 // 避免使用者看到「假比例 → 真比例」跳動兩次的感覺。
 const isReady = ref(false);
 const loadedImageIndexes = ref<Set<number>>(new Set());
+const failedImageIndexes = ref<Set<number>>(new Set());
 let loadedCount = 0;
 let hasEmittedImagesLoaded = false;
 let recomputeTimer: ReturnType<typeof setTimeout> | undefined;
@@ -94,6 +95,9 @@ function onImageLoad(index: number, src: string, event: Event) {
 
   if (img.naturalWidth > 0 && img.naturalHeight > 0) {
     loadedImageIndexes.value = new Set(loadedImageIndexes.value).add(index);
+    const failedIndexes = new Set(failedImageIndexes.value);
+    failedIndexes.delete(index);
+    failedImageIndexes.value = failedIndexes;
     const aspect = `${img.naturalWidth}/${img.naturalHeight}`;
 
     if (naturalAspects.get(src) !== aspect) {
@@ -123,10 +127,22 @@ function onImageLoad(index: number, src: string, event: Event) {
   }
 }
 
+function onImageError(index: number): void {
+  const loadedIndexes = new Set(loadedImageIndexes.value);
+  loadedIndexes.delete(index);
+  loadedImageIndexes.value = loadedIndexes;
+  failedImageIndexes.value = new Set(failedImageIndexes.value).add(index);
+
+  if (isReady.value) {
+    emit('guideTargetReady');
+  }
+}
+
 function startLoadCycle() {
   clearLoadTimers();
   isReady.value = false;
   loadedImageIndexes.value = new Set();
+  failedImageIndexes.value = new Set();
   loadedCount = 0;
   hasEmittedImagesLoaded = false;
   recomputeLayout();
@@ -252,6 +268,7 @@ onBeforeUnmount(() => {
       data-testid="image-card"
       :data-guide-image-index="i"
       :data-guide-image-ready="loadedImageIndexes.has(i) ? 'true' : undefined"
+      :data-guide-image-error="failedImageIndexes.has(i) ? 'true' : undefined"
       :data-guide-target="props.guideTargetIndex === i ? 'true' : undefined"
       :aria-disabled="isCardClickable(i) ? undefined : 'true'"
       class="group image-card absolute"
@@ -293,6 +310,7 @@ onBeforeUnmount(() => {
             class="w-full"
             style="display: block; width: 100%; height: auto; border-radius: 4px"
             @load="onImageLoad(i, image.src, $event)"
+            @error="onImageError(i)"
           />
         </div>
       </div>

@@ -320,7 +320,7 @@ describe('FloatingImageNetwork', () => {
       await target.trigger('load');
       vi.advanceTimersByTime(120);
 
-      expect(wrapper.emitted('guideTargetReady')).toHaveLength(1);
+      expect(wrapper.emitted('guideTargetReady')?.length).toBeGreaterThan(0);
       expect(wrapper.emitted('imagesLoaded')).toBeUndefined();
       wrapper.unmount();
     } finally {

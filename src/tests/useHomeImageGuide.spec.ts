@@ -4,12 +4,21 @@ import {
   GUIDE_TARGET_INDEX
 } from '@/components/feature/guide/constants';
 import { useHomeImageGuide } from '@/components/feature/guide/useHomeImageGuide';
+import { LAYOUT_PRESETS } from '@/components/sections/FloatingImageNetwork/config';
 
-function appendGuideCandidate(index: number, rect: DOMRect, ready = true): HTMLElement {
+function appendGuideCandidate(
+  index: number,
+  rect: DOMRect,
+  ready = true,
+  failed = false
+): HTMLElement {
   const element = document.createElement('div');
   element.dataset.guideImageIndex = String(index);
   if (ready) {
     element.dataset.guideImageReady = 'true';
+  }
+  if (failed) {
+    element.dataset.guideImageError = 'true';
   }
   vi.spyOn(element, 'getBoundingClientRect').mockReturnValue(rect);
   document.body.append(element);
@@ -83,5 +92,16 @@ describe('useHomeImageGuide', () => {
     appendGuideCandidate(GUIDE_TARGET_INDEX, new DOMRect(50, 50, 100, 100), false);
 
     expect(useHomeImageGuide().findTargetIndex()).toBeNull();
+  });
+
+  it('uses the home hero anchor as the guide target', () => {
+    expect(GUIDE_TARGET_INDEX).toBe(LAYOUT_PRESETS.home.homeHeroAnchor?.index);
+  });
+
+  it('falls back when the visible preferred target fails to load', () => {
+    appendGuideCandidate(1, new DOMRect(20, 20, 100, 100));
+    appendGuideCandidate(GUIDE_TARGET_INDEX, new DOMRect(50, 50, 100, 100), false, true);
+
+    expect(useHomeImageGuide().findTargetIndex()).toBe(1);
   });
 });
