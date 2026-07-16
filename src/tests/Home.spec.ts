@@ -25,7 +25,7 @@ const floatingImageNetworkStub = {
 
 const guideFloatingImageNetworkStub = {
   props: ['images', 'height', 'guideTargetIndex'],
-  emits: ['click', 'ready', 'imagesLoaded'],
+  emits: ['click', 'ready', 'imagesLoaded', 'guideTargetReady'],
   template: `
     <div>
       <button
@@ -33,6 +33,7 @@ const guideFloatingImageNetworkStub = {
         :key="index"
         data-test="guide-image-card"
         :data-guide-image-index="index"
+        :data-guide-image-ready="index === 5 ? 'true' : undefined"
         :data-guide-target="guideTargetIndex === index ? 'true' : undefined"
         @click="$emit('click', index)"
       />
@@ -338,13 +339,6 @@ describe('Home', () => {
     await flushPromises();
     await wrapper.vm.$nextTick();
 
-    expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
-    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
-
-    floatingNetwork.vm.$emit('imagesLoaded');
-    await flushPromises();
-    await wrapper.vm.$nextTick();
-
     expect(floatingNetwork.props('guideTargetIndex')).toBe(5);
     expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="home-meteor-arrows"]').exists()).toBe(false);
@@ -356,6 +350,7 @@ describe('Home', () => {
       name: 'image-spread',
       params: { imageId: expect.any(String) }
     });
+    wrapper.unmount();
   });
 
   it('shows the authenticated homepage focus tour without starting the image guide', async () => {
@@ -401,8 +396,9 @@ describe('Home', () => {
   });
 
   it('starts the image guide from Start Tour and persists the choice', async () => {
+    let guideFrameCallback: FrameRequestCallback | undefined;
     vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
-      callback(0);
+      guideFrameCallback = callback;
       return 1;
     });
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(
@@ -442,13 +438,28 @@ describe('Home', () => {
 
     await flushPromises();
     const floatingNetwork = wrapper.findComponent(guideFloatingImageNetworkStub);
-    floatingNetwork.vm.$emit('imagesLoaded');
+    floatingNetwork.vm.$emit('ready');
     await flushPromises();
     await wrapper.find('[data-test="home-tour-start"]').trigger('click');
     await flushPromises();
+    wrapper.findAll('[data-test="guide-image-card"]')[5].element.removeAttribute(
+      'data-guide-image-ready'
+    );
+    guideFrameCallback?.(0);
     await wrapper.vm.$nextTick();
 
     expect(localStorage.getItem('asterism:tour:welcome')).toBe('handled');
+    expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
+
+    wrapper.findAll('[data-test="guide-image-card"]')[5].element.setAttribute(
+      'data-guide-image-ready',
+      'true'
+    );
+    floatingNetwork.vm.$emit('guideTargetReady');
+    await flushPromises();
+    guideFrameCallback?.(0);
+    await wrapper.vm.$nextTick();
+
     expect(floatingNetwork.props('guideTargetIndex')).toBe(5);
     expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(true);
 

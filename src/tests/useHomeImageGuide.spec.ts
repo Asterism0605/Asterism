@@ -5,9 +5,12 @@ import {
 } from '@/components/feature/guide/constants';
 import { useHomeImageGuide } from '@/components/feature/guide/useHomeImageGuide';
 
-function appendGuideCandidate(index: number, rect: DOMRect): HTMLElement {
+function appendGuideCandidate(index: number, rect: DOMRect, ready = true): HTMLElement {
   const element = document.createElement('div');
   element.dataset.guideImageIndex = String(index);
+  if (ready) {
+    element.dataset.guideImageReady = 'true';
+  }
   vi.spyOn(element, 'getBoundingClientRect').mockReturnValue(rect);
   document.body.append(element);
   return element;
@@ -73,5 +76,12 @@ describe('useHomeImageGuide', () => {
     fallback.remove();
     appendGuideCandidate(GUIDE_TARGET_INDEX, new DOMRect(50, 50, 100, 100));
     expect(guide.findTargetIndex()).toBe(GUIDE_TARGET_INDEX);
+  });
+
+  it('waits for a visible preferred target until its image is ready', () => {
+    appendGuideCandidate(1, new DOMRect(20, 20, 100, 100));
+    appendGuideCandidate(GUIDE_TARGET_INDEX, new DOMRect(50, 50, 100, 100), false);
+
+    expect(useHomeImageGuide().findTargetIndex()).toBeNull();
   });
 });

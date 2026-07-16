@@ -300,6 +300,34 @@ describe('FloatingImageNetwork', () => {
     }
   });
 
+  it('makes the guide target available when other images fail or remain pending', async () => {
+    vi.useFakeTimers();
+    const images = Array.from({ length: 6 }, (_, index) => ({
+      src: `/img${index}.jpg`,
+      alt: `image ${index}`
+    }));
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, { props: { images } });
+      await wrapper.vm.$nextTick();
+      vi.advanceTimersByTime(1000);
+
+      await wrapper.findAll('img')[1].trigger('error');
+      const target = wrapper.findAll('img')[5];
+      const element = target.element as HTMLImageElement;
+      Object.defineProperty(element, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 600, configurable: true });
+      await target.trigger('load');
+      vi.advanceTimersByTime(120);
+
+      expect(wrapper.emitted('guideTargetReady')).toHaveLength(1);
+      expect(wrapper.emitted('imagesLoaded')).toBeUndefined();
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('reflows lazy image positions after fallback ready without re-shuffling cards', async () => {
     vi.useFakeTimers();
     Object.defineProperty(window, 'innerHeight', { configurable: true, value: 900 });
