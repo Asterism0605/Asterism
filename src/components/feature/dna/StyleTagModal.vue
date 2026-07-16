@@ -160,7 +160,14 @@ onBeforeUnmount(() => {
 <style scoped>
 .tag-modal-backdrop {
   position: fixed;
-  inset: 0;
+  /* top 留給 AppHeader（實測高度 65px，含 py-4+圖示+邊框），不用 inset:0 蓋滿——
+     這樣 AppHeader（含語言切換）在 modal 開著時仍可操作，方便中英對照 review
+     （una-hsieh review 意見）；z-index 維持 100，蓋過頁面其餘內容不受影響，
+     不用把它降到 AppHeader 的 z-60 以下（降低會連頁面其他內容一起蓋不住）。 */
+  top: 65px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -268,28 +275,57 @@ onBeforeUnmount(() => {
   text-align: center;
 }
 
+/* 手機版改走 una-hsieh review 提供的設計參考（大圓弧只露出左上一角，label／說明文字
+   靠視窗定位，不再是桌機那種「小橢圓框 + 內容相對橢圓框定位」）。窄螢幕下橢圓框若维持
+   小尺寸、label 又用 left:-10% 掛在框外，會直接被裁到螢幕外（實測 iPhone 寬度 390px
+   會裁掉 label 前緣）；改成不掛外側、內容改用 vw/vh 直接相對視窗定位就不會再裁切。 */
 @media (max-width: 640px) {
-  .tag-modal-ellipse {
-    width: 92vw;
-    height: 78vw;
+  .tag-modal-backdrop {
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
   }
 
-  .tag-modal-label {
-    font-size: 16px;
+  .tag-modal-ellipse {
+    position: fixed;
+    left: -55vw;
+    top: 10vh;
+    width: 145vw;
+    height: 145vw;
+    border-radius: 50%;
   }
 
   .tag-modal-label-connector {
-    width: 96px;
+    position: fixed;
+    left: 4vw;
+    top: 33vh;
+    width: 24vw;
   }
 
-  .tag-modal-description {
-    max-width: 70%;
-    font-size: 14px;
+  .tag-modal-label {
+    position: fixed;
+    left: 30vw;
+    top: 33vh;
+    max-width: 62vw;
+    font-size: 20px;
+    white-space: normal;
+    transform: none;
   }
 
   .tag-modal-close {
-    top: 10%;
-    right: 8%;
+    position: fixed;
+    top: calc(65px + 1rem);
+    right: 6vw;
+  }
+
+  .tag-modal-description {
+    position: fixed;
+    left: 8vw;
+    top: 45vh;
+    max-width: 80vw;
+    font-size: 14px;
+    text-align: left;
+    transform: none;
   }
 }
 </style>

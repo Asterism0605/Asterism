@@ -29,14 +29,14 @@ describe('StyleTagModal', () => {
     const wrapper = mountModal('Art Deco', 'en')
 
     expect(wrapper.text()).toContain('Art Deco')
-    expect(wrapper.text()).toContain('Geometric symmetry meets luxe materials')
+    expect(wrapper.text()).toContain('Art Deco is a design style that combines modern geometry')
   })
 
   it('shows the Chinese tag name and description when locale is zh', () => {
     const wrapper = mountModal('Art Deco', 'zh')
 
     expect(wrapper.text()).toContain('裝飾藝術')
-    expect(wrapper.text()).toContain('幾何線條與奢華材質的對話')
+    expect(wrapper.text()).toContain('裝飾藝術是一種融合現代幾何與華麗裝飾')
   })
 
   it('renders nothing when tagLabel is null', () => {
