@@ -23,9 +23,11 @@ vi.mock('@/composables/useToast', () => ({
 
 vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
   default: {
-    emits: ['select'],
+    emits: ['select', 'back'],
     template:
-      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'stage-related-001\')" />'
+      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'stage-related-001\')">' +
+      '<div data-test="image-stage-back" @click.stop="$emit(\'back\')" />' +
+      '</div>'
   }
 }));
 
@@ -172,6 +174,17 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.query.next).toBe(
       '/consultant?sourceImageId=rpl-interior-lighting-001'
     );
+  });
+
+  it('點 stage 面板空白區（背景）觸發返回，跟右側返回鍵同一套邏輯', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-001');
+
+    await wrapper.find('[data-test="image-stage-back"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('rpl-interior-001');
+    expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
   });
 
   it('導向選取的 stage 圖片詳情頁', async () => {

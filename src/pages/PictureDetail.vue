@@ -118,6 +118,7 @@ async function handleSaveToFolder(folderId: string) {
       :main-image-url="currentImage.src"
       :small-images="smallImages"
       @select="handleSelectImage"
+      @back="handleBack"
     />
 
     <div class="w-full overflow-y-auto md:w-2/5 md:overflow-hidden">
