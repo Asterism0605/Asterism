@@ -3,14 +3,13 @@ import { HO } from './config'
 import type {
   MoodboardOrbitParams,
   MoodboardPackOptions,
-  MoodboardPhoto,
-  MoodboardPositionedPhoto
+  MoodboardPhoto
 } from '@/types/moodboard'
 
-export function packPhotos(
-  list: MoodboardPhoto[],
+export function packPhotos<T extends MoodboardPhoto>(
+  list: T[],
   opt: MoodboardPackOptions
-): MoodboardPositionedPhoto[] {
+): (T & { id: string; delay: string; x: number; y: number })[] {
   const { cx, cy, rx, ry } = opt;
   const gap = opt.gap ?? 12; // visible gutter between photos
   const xMin = opt.xMin ?? 0,
@@ -23,15 +22,12 @@ export function packPhotos(
   const fillRatio = opt.fillRatio ?? 0.4; // photos fill ~40% of the usable area → packable
 
   const nodes = list.map((p, i) => ({
+    ...p,
     id: (opt.idPrefix ?? 'p') + i + '-' + ((Math.random() * 1e6) | 0),
-    src: p.src,
     w0: p.w, // original size (the layout shrinks from this to fit)
     h0: p.h,
     w: p.w,
     h: p.h,
-    faded: p.faded,
-    placeholder: p.placeholder,
-    imageId: p.imageId,
     hw: p.w / 2 + gap / 2, // half-extent incl. gutter (used for overlap test)
     hh: p.h / 2 + gap / 2,
     br: Math.hypot(p.w, p.h) / 2, // bounding-circle radius (used for ellipse containment)

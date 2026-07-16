@@ -54,6 +54,7 @@ export interface LayoutPreset {
 }
 
 export const MAX_IMAGES = 6;
+export const HOME_HERO_IMAGE_INDEX = 0;
 
 export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
   auto: {
@@ -88,7 +89,7 @@ export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
     evenYDistribution: true,
     // 讓標題右側一定有一張完整圖片；x/y 是可隨機的比例範圍。
     homeHeroAnchor: {
-      index: 0,
+      index: HOME_HERO_IMAGE_INDEX,
       x: [0.7, 0.84],
       y: [0.34, 0.5]
     },

@@ -6,7 +6,7 @@ import AppHeader from './layouts/AppHeader.vue';
 import AppFooter from './layouts/AppFooter.vue';
 
 const route = useRoute();
-const headerlessRouteNames = new Set(['discover-dna', 'auth-callback']);
+const headerlessRouteNames = new Set(['auth-callback']);
 // 沉浸式 / 全畫布頁面不放流式 footer，避免破壞固定版面
 const footerlessRouteNames = new Set([
   'home',

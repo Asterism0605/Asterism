@@ -7,6 +7,7 @@ const props = defineProps<{
   rightOption: StyleDnaOption
   selectedId: string | null
   questionIndex: number
+  totalQuestions: number
   suppressHover?: boolean
 }>()
 
@@ -51,7 +52,16 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
       <span class="instruction-line"></span>
       <span class="instruction-dot"></span>
       <span>{{ $t('dna.pickerHint') }}</span>
+      <div class="instruction-progress" data-testid="instruction-progress">
+        <span class="instruction-progress__current">{{ questionIndex + 1 }}</span>
+        <span class="instruction-progress__slash" aria-hidden="true"></span>
+        <span class="instruction-progress__total">{{ totalQuestions }}</span>
+      </div>
     </div>
+
+    <span class="sr-only" role="status" aria-live="polite">
+      {{ $t('dna.quizProgress') }}: {{ $t('dna.pickerProgress', { current: questionIndex + 1, total: totalQuestions }) }}
+    </span>
 
     <span class="ambient-dot ambient-dot--one" aria-hidden="true"></span>
     <span class="ambient-dot ambient-dot--two" aria-hidden="true"></span>
@@ -180,6 +190,39 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
   margin-left: -33px;
   border-radius: 50%;
   background: var(--color-text-primary);
+}
+
+.instruction-progress {
+  position: relative;
+  margin-left: auto;
+  width: 100px;
+  height: 78px;
+  font-size: 22px;
+  font-weight: 200;
+  font-variant-numeric: tabular-nums;
+}
+
+.instruction-progress__current {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.instruction-progress__total {
+  position: absolute;
+  left: 39px;
+  top: 43px;
+}
+
+.instruction-progress__slash {
+  position: absolute;
+  left: 1px;
+  top: 59px;
+  width: 64px;
+  height: 1px;
+  background: rgb(240 237 230 / 78%);
+  transform: rotate(-38deg);
+  transform-origin: left center;
 }
 
 .choice {

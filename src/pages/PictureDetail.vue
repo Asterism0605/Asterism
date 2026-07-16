@@ -16,6 +16,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import { isImageSaved } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
+import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
@@ -63,6 +64,7 @@ const folders = computed(() =>
 );
 const showCreateFolder = ref(false);
 const saveMenuOpenRequest = ref(0);
+const activeStyleTag = ref<string | null>(null);
 
 watch(
   [imageId, canSave],
@@ -143,6 +145,10 @@ function handleBack() {
 function handleCreateFolder() {
   isCreateFolderSuccess.value = false;
   showCreateFolder.value = true;
+}
+
+function handleSelectStyleTag(tag: string) {
+  activeStyleTag.value = tag;
 }
 
 async function handleSubmitFolder(name: string) {
@@ -246,6 +252,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
+        @select-style-tag="handleSelectStyleTag"
         @save-to-folder="handleSaveToFolder"
         @select-image="handleSelectImage"
       />
@@ -256,5 +263,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
     :is-submitting="isCreatingFolder"
     :is-success="isCreateFolderSuccess"
     @submit="handleSubmitFolder"
+  />
+  <StyleTagModal
+    :model-value="activeStyleTag !== null"
+    :tag-label="activeStyleTag"
+    @update:model-value="activeStyleTag = null"
   />
 </template>

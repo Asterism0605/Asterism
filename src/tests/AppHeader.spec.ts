@@ -1,8 +1,10 @@
 import { flushPromises, mount } from '@vue/test-utils';
+import { defineComponent } from 'vue';
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import router from '@/router';
 import AppHeader from '@/layouts/AppHeader.vue';
+import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
@@ -102,6 +104,36 @@ describe('AppHeader', () => {
 
     expect(authStore.isAuthenticated).toBe(false);
     expect(wrapper.text()).toContain('Log in');
+  });
+
+  it('keeps the language menu interactive above the welcome tour', async () => {
+    Object.defineProperty(HTMLDialogElement.prototype, 'show', {
+      configurable: true,
+      value: vi.fn(function show(this: HTMLDialogElement) {
+        this.setAttribute('open', '');
+      })
+    });
+    const pinia = createPinia();
+    const Host = defineComponent({
+      components: { AppHeader, HomeTourIntro },
+      template: `
+        <AppHeader />
+        <HomeTourIntro
+          description="Tour description"
+          start-label="Start Tour"
+          explore-label="Explore on my own"
+        />
+      `
+    });
+    const wrapper = mount(Host, {
+      global: { plugins: [router, pinia] }
+    });
+
+    await wrapper.get('header button[aria-haspopup="menu"]').trigger('click');
+
+    expect(wrapper.get('header').classes()).toContain('z-[110]');
+    expect(wrapper.get('[data-testid="home-tour-intro"]').classes()).toContain('z-50');
+    expect(wrapper.get('header ul[role="menu"]').isVisible()).toBe(true);
   });
 });
 

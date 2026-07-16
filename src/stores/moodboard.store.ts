@@ -89,6 +89,14 @@ export const useMoodboardStore = defineStore('moodboard', () => {
     folders.value = folders.value.filter((folder) => folder.id !== folderId);
   }
 
+  function removeImage(folderId: string, itemId: string): void {
+    const folder = folders.value.find((candidate) => candidate.id === folderId);
+
+    if (!folder) return;
+
+    folder.images = folder.images.filter((image) => image.itemId !== itemId);
+  }
+
   function clear(): void {
     requestId += 1;
     inFlight = null;
@@ -111,6 +119,7 @@ export const useMoodboardStore = defineStore('moodboard', () => {
     addFolder,
     addImage,
     removeFolder,
+    removeImage,
     clear
   };
 });

@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { Languages, ChevronDown } from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
+import { useStyleTagModalStore } from '@/stores/styleTagModal.store';
 import Button from '@/components/ui/Button.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { getImageById } from '@/services/image.service';
@@ -39,11 +40,16 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
+const styleTagModalStore = useStyleTagModalStore();
 
 const isPictureDetail = computed(
   () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
 );
 const isHome = computed(() => route.name === 'home');
+// PictureDetail 平常把 AppHeader 縮到 60% 寬，讓頁面自己的「返回」列並排在右側 40%；
+// 但 StyleTagModal 開著時那塊區域會被 modal 蓋住（見 StyleTagModal 的 z-index 說明），
+// 縮寬就只剩右邊空一塊黑，不好看——modal 開著時 AppHeader 改滿版，蓋滿整排。
+const useNarrowWidth = computed(() => isPictureDetail.value && !styleTagModalStore.isOpen);
 
 const initials = computed(() =>
   (authStore.user?.displayName ?? '')
@@ -79,8 +85,11 @@ async function handleLogout() {
 <template>
   <header
     :class="[
-      'fixed top-0 z-60 flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl',
-      isPictureDetail ? 'max-md:hidden md:w-3/5' : 'w-full'
+      /* z-[110]：故意高於 StyleTagModal 的 z-index:100，modal 開著時 AppHeader（logo／
+         語言切換／個人選單，含下拉展開的選單本身）仍蓋在最上層可操作，方便中英對照
+         review（una-hsieh review 意見）。全站其餘覆蓋層都在 z-60 以下，不受影響。 */
+      'fixed top-0 z-[110] flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl',
+      useNarrowWidth ? 'max-md:hidden md:w-3/5' : 'w-full'
     ]"
   >
     <button

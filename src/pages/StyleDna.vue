@@ -80,16 +80,10 @@ onBeforeUnmount(() => {
       :right-option="currentQuestion.options[1]"
       :selected-id="selectedId"
       :question-index="currentQuestionIndex"
+      :total-questions="questions.length"
       :suppress-hover="isHoverSuppressed"
       @select="handleSelect"
     />
-
-    <div class="quiz-progress">
-      <span class="quiz-label" :aria-label="$t('dna.quizProgress')">{{ $t('dna.quiz') }}</span>
-      <span class="quiz-current">{{ Math.min(currentQuestionIndex + 1, questions.length) }}</span>
-      <span class="quiz-slash" aria-hidden="true"></span>
-      <span class="quiz-total">{{ questions.length }}</span>
-    </div>
 
     <!-- 手機版（≤980px）：沿用桌機的對角斜線分數樣式（current 左上 / total 右下），改放右下角。 -->
     <div class="quiz-progress-mobile" :aria-label="$t('dna.quizProgress')">
@@ -107,70 +101,6 @@ onBeforeUnmount(() => {
   height: 100vh;
   overflow: hidden;
   background: var(--color-deep);
-}
-
-.quiz-progress {
-  position: absolute;
-  left: 0;
-  bottom: 62px;
-  z-index: 5;
-  width: 17.4%;
-  height: 128px;
-  color: rgb(240 237 230 / 70%);
-  font-size: 20px;
-  font-weight: 200;
-  pointer-events: none;
-}
-
-.quiz-progress::before {
-  position: absolute;
-  left: 0;
-  top: 44px;
-  width: 100%;
-  height: 1px;
-  content: '';
-  background: rgb(240 237 230 / 78%);
-}
-
-.quiz-progress::after {
-  position: absolute;
-  left: 0;
-  top: 39px;
-  width: 10px;
-  height: 10px;
-  content: '';
-  border-radius: 50%;
-  background: var(--color-text-primary);
-}
-
-.quiz-label {
-  position: absolute;
-  right: 20px;
-  top: 6px;
-  font-size: 16px;
-}
-
-.quiz-current {
-  position: absolute;
-  left: 36px;
-  top: 95px;
-}
-
-.quiz-total {
-  position: absolute;
-  left: 75px;
-  top: 138px;
-}
-
-.quiz-slash {
-  position: absolute;
-  left: 37px;
-  top: 154px;
-  width: 64px;
-  height: 1px;
-  background: rgb(240 237 230 / 78%);
-  transform: rotate(-38deg);
-  transform-origin: left center;
 }
 
 .quiz-progress-mobile {

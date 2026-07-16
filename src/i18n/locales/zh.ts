@@ -67,7 +67,8 @@ export default {
     folderLimit: '你已達到資料夾數量上限（10 個）。',
     folderCleanupFailed: '圖片儲存失敗，且資料夾清除失敗，請至情緒板手動刪除此資料夾。',
     folderCreatedAndSaved: '資料夾已建立，圖片已儲存。',
-    deleteFolderFailed: '資料夾刪除失敗，請再試一次。'
+    deleteFolderFailed: '資料夾刪除失敗，請再試一次。',
+    deleteImageFailed: '圖片刪除失敗，請再試一次。'
   },
   userMenu: {
     signedInAs: '目前登入身分',
@@ -195,21 +196,22 @@ export default {
   dna: {
     discoverTitle1: '探索',
     discoverTitle2: '你的 Style DNA',
-    introDesc:
-      'Asterism 會記錄你的風格偏好，為你打造專屬的視覺探索。透過 4 個階段的盲選，萃取你在空間與感官上的風格取向。',
+    introDesc: '一個快速的視覺測驗，讀懂你的設計品味。',
     participate: '開始測驗',
     skip: '略過',
     loadingLine1: '正在生成',
     loadingLine2: '你的 Style DNA',
     pickerHint: '點選一張圖片繼續',
-    quiz: '測驗',
+    pickerProgress: '{current} / {total}',
     quizProgress: '測驗進度',
     complete: 'Style DNA 完成',
     resultYour: '你的',
     homepagePersonalized: '你的首頁已根據你的 Style DNA 個人化。',
     startExploring: '開始探索',
     retakeQuiz: '重新測驗',
-    sampleResultNotice: '目前還沒有測驗結果，這是範例 Style DNA 結果。'
+    sampleResultNotice: '目前還沒有測驗結果，這是範例 Style DNA 結果。',
+    viewTagDetails: '查看 {tag} 說明',
+    close: '關閉'
   },
   image: {
     back: '返回',
@@ -245,11 +247,21 @@ export default {
     deleteConfirm: '刪除',
     deleteCancel: '關閉',
     deleteFolderAria: '刪除資料夾',
+    deleteImageTitle: '從資料夾中刪除圖片',
+    deleteImageAria: '刪除圖片',
     openFolderAria: '開啟資料夾',
     openImageDetailAria: '查看圖片詳情'
   },
   home: {
     guestHint: '登入或註冊以繼續探索靈感',
+    tour: {
+      description: '透過視覺探索整理你的靈感，並將它轉化為可實際運用的風格方向。',
+      startTour: '開始導覽',
+      exploreOnMyOwn: '自由探索'
+    },
+    guide: {
+      imageClick: '點選圖片查看詳情'
+    },
     limitTitle: '你今天的靈感瀏覽已達上限。',
     limitDesc: '建立免費帳號，即可無限瀏覽、把喜歡的作品收藏到情緒板，並定義你的美學 DNA。',
     createAccount: '建立免費帳號',
