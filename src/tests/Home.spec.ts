@@ -8,6 +8,7 @@ import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { AuthSession } from '@/types/auth';
 import type { HomeInspirationImage } from '@/types/image';
 import rawStyleImages from '@/data/style-data.json';
+import { HOME_HERO_IMAGE_INDEX } from '@/components/sections/FloatingImageNetwork/config';
 import type { StyleImage } from '@/types/image';
 import type { StyleDnaAnswer } from '@/types/style-dna';
 
@@ -21,6 +22,41 @@ vi.mock('@/api/image.api', () => ({
 const floatingImageNetworkStub = {
   props: ['images', 'height'],
   template: '<button data-test="floating-image-network" @click="$emit(\'click\', 0)" />'
+};
+
+const guideFloatingImageNetworkStub = {
+  props: ['images', 'height', 'guideTargetIndex'],
+  emits: ['click', 'ready', 'imagesLoaded', 'guideTargetReady'],
+  setup: () => ({ HOME_HERO_IMAGE_INDEX }),
+  template: `
+    <div>
+      <button
+        v-for="(_, index) in images"
+        :key="index"
+        data-test="guide-image-card"
+        :data-guide-image-index="index"
+        :data-guide-image-ready="index === HOME_HERO_IMAGE_INDEX ? 'true' : undefined"
+        :data-guide-target="guideTargetIndex === index ? 'true' : undefined"
+        @click="$emit('click', index)"
+      />
+    </div>
+  `
+};
+
+const homeImageClickGuideStub = {
+  props: ['targetIndex'],
+  template: '<div v-if="targetIndex !== null" data-test="home-image-click-guide" />'
+};
+
+const homeTourIntroStub = {
+  props: ['description', 'startLabel', 'exploreLabel'],
+  emits: ['start', 'explore'],
+  template: `
+    <div data-test="home-tour-intro">
+      <button data-test="home-tour-start" @click="$emit('start')">{{ startLabel }}</button>
+      <button data-test="home-tour-explore" @click="$emit('explore')">{{ exploreLabel }}</button>
+    </div>
+  `
 };
 
 function mockViewport(initialScrollY = 0, innerHeight = 1000) {
@@ -267,6 +303,212 @@ describe('Home', () => {
     });
   });
 
+  it('guides the configured image and completes the guide before routing from it', async () => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(
+      new DOMRect(100, 100, 200, 300)
+    );
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+      callback(0);
+      return 1;
+    });
+    const router = createTestRouter();
+    const push = vi.spyOn(router, 'push');
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: guideFloatingImageNetworkStub,
+          HomeImageClickGuide: homeImageClickGuideStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await flushPromises();
+    await wrapper.vm.$nextTick();
+
+    const floatingNetwork = wrapper.findComponent(guideFloatingImageNetworkStub);
+    expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
+    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="home-meteor-arrows"]').exists()).toBe(true);
+
+    floatingNetwork.vm.$emit('ready');
+    await flushPromises();
+    await wrapper.vm.$nextTick();
+
+    expect(floatingNetwork.props('guideTargetIndex')).toBe(HOME_HERO_IMAGE_INDEX);
+    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="home-meteor-arrows"]').exists()).toBe(false);
+
+    await wrapper.findAll('[data-test="guide-image-card"]')[HOME_HERO_IMAGE_INDEX].trigger('click');
+
+    expect(localStorage.getItem('asterism:guide:home-image-click')).toBe('completed');
+    expect(push).toHaveBeenCalledWith({
+      name: 'image-spread',
+      params: { imageId: expect.any(String) }
+    });
+    wrapper.unmount();
+  });
+
+  it('shows the authenticated homepage focus tour without starting the image guide', async () => {
+    const router = createTestRouter();
+    const authStore = useAuthStore();
+    const session: AuthSession = {
+      accessToken: 'test-token',
+      expiresAt: '2099-01-01T00:00:00.000Z',
+      user: {
+        id: 'user-1',
+        email: 'user@example.com',
+        displayName: 'Ada Lovelace',
+        isAdmin: false,
+        createdAt: '2026-01-01T00:00:00.000Z'
+      }
+    };
+    authStore.session = session;
+    authStore.user = session.user;
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: guideFloatingImageNetworkStub,
+          HomeImageClickGuide: homeImageClickGuideStub,
+          HomeTourIntro: homeTourIntroStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await flushPromises();
+    const floatingNetwork = wrapper.findComponent(guideFloatingImageNetworkStub);
+    floatingNetwork.vm.$emit('imagesLoaded');
+    await flushPromises();
+
+    expect(wrapper.find('[data-test="home-tour-intro"]').exists()).toBe(true);
+    expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
+    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
+  });
+
+  it('starts the image guide from Start Tour and persists the choice', async () => {
+    let guideFrameCallback: FrameRequestCallback | undefined;
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+      guideFrameCallback = callback;
+      return 1;
+    });
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(
+      new DOMRect(100, 100, 200, 300)
+    );
+    const router = createTestRouter();
+    const authStore = useAuthStore();
+    const session: AuthSession = {
+      accessToken: 'test-token',
+      expiresAt: '2099-01-01T00:00:00.000Z',
+      user: {
+        id: 'user-1',
+        email: 'user@example.com',
+        displayName: 'Ada Lovelace',
+        isAdmin: false,
+        createdAt: '2026-01-01T00:00:00.000Z'
+      }
+    };
+    authStore.session = session;
+    authStore.user = session.user;
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: guideFloatingImageNetworkStub,
+          HomeImageClickGuide: homeImageClickGuideStub,
+          HomeTourIntro: homeTourIntroStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await flushPromises();
+    const floatingNetwork = wrapper.findComponent(guideFloatingImageNetworkStub);
+    floatingNetwork.vm.$emit('ready');
+    await flushPromises();
+    await wrapper.find('[data-test="home-tour-start"]').trigger('click');
+    await flushPromises();
+    wrapper.findAll('[data-test="guide-image-card"]')[HOME_HERO_IMAGE_INDEX].element.removeAttribute(
+      'data-guide-image-ready'
+    );
+    guideFrameCallback?.(0);
+    await wrapper.vm.$nextTick();
+
+    expect(localStorage.getItem('asterism:tour:welcome')).toBe('handled');
+    expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
+
+    wrapper.findAll('[data-test="guide-image-card"]')[HOME_HERO_IMAGE_INDEX].element.setAttribute(
+      'data-guide-image-ready',
+      'true'
+    );
+    floatingNetwork.vm.$emit('guideTargetReady');
+    await flushPromises();
+    guideFrameCallback?.(0);
+    await wrapper.vm.$nextTick();
+
+    expect(floatingNetwork.props('guideTargetIndex')).toBe(HOME_HERO_IMAGE_INDEX);
+    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(true);
+
+    wrapper.unmount();
+  });
+
+  it('returns to free exploration without starting the image guide', async () => {
+    const router = createTestRouter();
+    const authStore = useAuthStore();
+    const session: AuthSession = {
+      accessToken: 'test-token',
+      expiresAt: '2099-01-01T00:00:00.000Z',
+      user: {
+        id: 'user-1',
+        email: 'user@example.com',
+        displayName: 'Ada Lovelace',
+        isAdmin: false,
+        createdAt: '2026-01-01T00:00:00.000Z'
+      }
+    };
+    authStore.session = session;
+    authStore.user = session.user;
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: guideFloatingImageNetworkStub,
+          HomeImageClickGuide: homeImageClickGuideStub,
+          HomeTourIntro: homeTourIntroStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await flushPromises();
+    await wrapper.find('[data-test="home-tour-explore"]').trigger('click');
+    await wrapper.vm.$nextTick();
+
+    expect(localStorage.getItem('asterism:tour:welcome')).toBe('handled');
+    expect(wrapper.find('[data-test="home-tour-intro"]').exists()).toBe(false);
+    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
+  });
+
   it('passes diverse home inspiration entry points to the floating network', async () => {
     const router = createTestRouter();
     router.push('/');
@@ -507,6 +749,7 @@ describe('Home', () => {
         plugins: [router],
         stubs: {
           FloatingImageNetwork: floatingImageNetworkStub,
+          HomeTourIntro: homeTourIntroStub,
           Teleport: true,
           Transition: false
         }

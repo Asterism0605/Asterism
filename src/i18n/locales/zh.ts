@@ -250,6 +250,14 @@ export default {
   },
   home: {
     guestHint: '登入或註冊以繼續探索靈感',
+    tour: {
+      description: '透過視覺探索整理你的靈感，並將它轉化為可實際運用的風格方向。',
+      startTour: '開始導覽',
+      exploreOnMyOwn: '自由探索'
+    },
+    guide: {
+      imageClick: '點選圖片查看詳情'
+    },
     limitTitle: '你今天的靈感瀏覽已達上限。',
     limitDesc: '建立免費帳號，即可無限瀏覽、把喜歡的作品收藏到情緒板，並定義你的美學 DNA。',
     createAccount: '建立免費帳號',

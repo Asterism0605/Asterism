@@ -255,6 +255,14 @@ export default {
   },
   home: {
     guestHint: 'Sign up or log in to keep exploring',
+    tour: {
+      description: 'uses visual exploration to organize your inspiration and turn it into practical style directions.',
+      startTour: 'Start Tour',
+      exploreOnMyOwn: 'Explore on my own'
+    },
+    guide: {
+      imageClick: 'Click an image to explore'
+    },
     limitTitle: 'Your daily inspiration limit has been reached.',
     limitDesc:
       'Create a free account to unlock endless scrolling, save your favorite pieces to boards, and define your aesthetic DNA.',
