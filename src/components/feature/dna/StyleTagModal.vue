@@ -166,11 +166,6 @@ onBeforeUnmount(() => {
 <style scoped>
 .tag-modal-backdrop {
   position: fixed;
-  /* inset:0 蓋滿全螢幕（含 PictureDetail 頁面本身「← 返回」那類一般內容，
-     它們沒有特別拉高 z-index，理應被 modal 蓋住）。AppHeader 改在自己身上
-     拉高 z-index（見 AppHeader.vue 的 z-[110]）蓋過這裡的 z-index:100，
-     不在這裡開洞——開洞會連 PictureDetail 同一列的「← 返回」也一併露出來，
-     這正是 una-hsieh review 明確要求「header 只留 AppHeader 本身內容」的反例。 */
   inset: 0;
   z-index: 100;
   display: flex;
@@ -278,31 +273,19 @@ onBeforeUnmount(() => {
   line-height: 1.6;
   text-align: center;
 }
-
-/* 手機版改走 una-hsieh review 提供的設計參考（大圓弧只露出左上一角，label／說明文字
-   靠視窗定位，不再是桌機那種「小橢圓框 + 內容相對橢圓框定位」）。窄螢幕下橢圓框若维持
-   小尺寸、label 又用 left:-10% 掛在框外，會直接被裁到螢幕外（實測 iPhone 寬度 390px
-   會裁掉 label 前緣）；改成不掛外側、內容改用 vw/vh 直接相對視窗定位就不會再裁切。
-
-   跨機型對齊：iPhone 之間「高度」差很多（SE 667、XR/12/14Pro 844~896），但「寬度」
-   差不多（375~414）。橢圓框的 top 本來就用 calc(64vh - 87vw) 混合寬高算，跟著螢幕
-   寬度縮放；但 label/connector/close/description 原本用純 vh，只跟著高度縮放——
-   兩種算法在 SE 上調好看之後，換到 XR/12/14Pro 這種高度差很大的機型，兩邊縮放幅度
-   不同步，橢圓框跟著高度被推低很多、其餘元素卻沒跟著推那麼多，看起來就像「整組往上
-   偏了」。修法：全部改用同一種 calc(64vh - Xvw) 算法（X 用當時在 iPhone SE 量出來的
-   實際像素反推），全部錨定同一個基準（跟橢圓框中心同一條 64vh 基準線），才會不管換
-   到哪個機型都維持同一套相對位置，不會再跑掉。 */
-@media (max-width: 640px) {
+/* 斷點從 640px 拉到 900px：iPad mini(768)/Air(820)/Pro 11吋(834) portrait
+   寬度超過 640，原本會掉回「電腦版」CSS（label 用 left:-10% 掛在框外），
+   寬度不夠，label 側邊那條裝飾線一樣會被裁到畫面外——跟手機版最早修的那個
+   bug 是同一種（實測 834 寬度連線都還會裁到）。900 這個斷點在真正桌機
+   寬度(1280+)跟大尺寸 iPad Pro 12.9 吋(1024) 都不受影響——電腦版橢圓框本來
+   就用 min(85vw,820px) 封頂，寬度超過 ~964px 後畫面就跟寬度無關、恆定
+   不變，900 這個斷點還在安全範圍內，不會不小心把真桌機也吃進手機版設計。 */
+@media (max-width: 900px) {
   .tag-modal-backdrop {
     align-items: flex-start;
     justify-content: flex-start;
     padding: 0;
   }
-
-  /* 圓弧方向：用參考稿實際像素描點反推圓心/半徑（不是用眼睛量），取樣上下兩段
-     可見弧線＋label 白點共 3 個點解圓方程式，圓心在（約 78vw, 64vh）、半徑約 87vw
-     ——比先前那版（56vw/68vw）大上不少、圓心也更靠右，弧線才會貼著左緣一路
-     豎直下滑到接近畫面底部，不是一開口就整個鼓出去。 */
   .tag-modal-ellipse {
     position: fixed;
     left: -9vw;
@@ -315,16 +298,10 @@ onBeforeUnmount(() => {
   .tag-modal-label-connector {
     position: fixed;
     left: 16vw;
-    /* top 用跟橢圓框同一種 calc(64vh - Xvw) 算法（不是純 vh），理由見下方
-       「跨機型對齊」說明。 */
     top: calc(64vh - 44.47vw);
     width: 56vw;
     height: auto;
     align-items: flex-start;
-    /* row-reverse：讓對角線（.tag-modal-label-tail）排前面（視覺上在左上），
-       水平線（.tag-modal-label-line）排後面（視覺上在對角線右下）。
-       不改 template 的 DOM 順序（桌機版靠它排列，動了會連桌機一起翻過來），
-       只用 flex 方向翻轉「手機版」的視覺順序。 */
     flex-direction: row-reverse;
   }
 
@@ -338,9 +315,12 @@ onBeforeUnmount(() => {
     transform: none;
   }
 
+  /* 極端長寬比（如 Surface Duo 540x720，接近正方形）算出來的 top 會小到
+     讓 CLOSE 整個縮進 AppHeader（65px 高）底下、被蓋住。用 max() 保底，
+     不管 calc() 算出多小，CLOSE 永遠留在 header 下緣 + 1rem 的位置。 */
   .tag-modal-close {
     position: fixed;
-    top: calc(64vh - 78.26vw);
+    top: max(calc(64vh - 78.26vw), calc(65px + 1rem));
     right: 6vw;
   }
 
@@ -353,25 +333,23 @@ onBeforeUnmount(() => {
     text-align: left;
     transform: none;
   }
-
-  /* 手機版專屬：對角線的支點方向。桌機版是「橫線先、對角線後」，支點在對角線
-     自己的左端（transform-origin: left center）合理；但手機版用 row-reverse
-     把對角線排到前面（視覺上在橫線左邊），對角線的「右端」才是接住橫線的那一頭，
-     支點應該改成右邊，橫線那頭才會固定不動、只有另一端擺動——這是跟
-     StyleAnnotationDisplay.vue（太空人標籤，Vintage/Retro 那種靠右樣式）
-     抄來的同一招（origin-right + margin-right:-1px），不用再用誇張的
-     margin-top 硬凹角度。 */
+  /* width/left/top 改用 vw（原本是寫死的 px）：斜線長度、白點偏移量都要跟著
+     圓弧的半徑（87vw）一起縮放，不然固定像素在不同手機的半徑下佔比不同，
+     會有「差一點點」的殘留誤差（iPhone SE 調好、XR/14 Pro Max/Pixel 7/
+     Galaxy S20 Ultra 卻都差一點點，根因就是這裡)。數字是拿 iPhone SE
+     （寬 375）量出來的像素反推：46px→12.27vw、-38px→-10.13vw、
+     -7px→-1.87vw、18px→4.8vw。 */
   .tag-modal-label-tail {
     margin-right: -1px;
     transform-origin: right center;
-    width: 46px; /* 數字越大線越長，支點在右邊，變長只會讓左邊那頭往外延伸 */
+    width: 12.27vw;
   }
 
   .tag-modal-label-tail::after {
-    left: -38px;
-    top: -7px;
-    width: 18px;
-    height: 18px;
+    left: -10.13vw;
+    top: -1.87vw;
+    width: 4.8vw;
+    height: 4.8vw;
   }
 }
 </style>
