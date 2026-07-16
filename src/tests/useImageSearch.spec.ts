@@ -33,7 +33,7 @@ describe('useImageSearch', () => {
 
     expect(computeEmbedding).not.toHaveBeenCalled();
     expect(search.status.value).toBe('error');
-    expect(search.error.value).toBe('請上傳 JPG、PNG 或 WebP 格式的圖片。');
+    expect(search.error.value).toBe('Please upload a JPG, PNG, or WebP image.');
   });
 
   it('成功流程：算 embedding → 分類 styleGroup（帶入注入的錨點）→ 查詢 → 依門檻過濾', async () => {
@@ -76,6 +76,6 @@ describe('useImageSearch', () => {
     await search.search(makeFile());
 
     expect(search.status.value).toBe('error');
-    expect(search.error.value).toBe('搜尋失敗，請稍後再試。');
+    expect(search.error.value).toBe('Search failed. Please try again later.');
   });
 });

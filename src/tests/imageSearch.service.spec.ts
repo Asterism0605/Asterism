@@ -14,13 +14,13 @@ describe('validateImageFile', () => {
 
   it('拒絕非圖片格式', () => {
     expect(validateImageFile(makeFile('application/pdf', 1024))).toBe(
-      '請上傳 JPG、PNG 或 WebP 格式的圖片。'
+      'Please upload a JPG, PNG, or WebP image.'
     );
   });
 
   it('拒絕超過 10MB 的檔案', () => {
     expect(validateImageFile(makeFile('image/jpeg', 11 * 1024 * 1024))).toBe(
-      '圖片大小請勿超過 10MB。'
+      'Image must be under 10MB.'
     );
   });
 });

@@ -31,7 +31,7 @@ describe('useClassificationAnchors', () => {
     await composable.load();
 
     expect(composable.status.value).toBe('error');
-    expect(composable.error.value).toBe('風格資料載入失敗，請稍後再試。');
+    expect(composable.error.value).toBe('Failed to load style data. Please try again later.');
   });
 
   it('重複呼叫 load 在 loading/ready 狀態時不重跑', async () => {

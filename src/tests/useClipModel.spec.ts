@@ -35,7 +35,7 @@ describe('useClipModel', () => {
     await model.load();
 
     expect(model.status.value).toBe('error');
-    expect(model.error.value).toBe('模型下載失敗，請檢查網路連線後重試。');
+    expect(model.error.value).toBe('Model download failed. Please check your connection and try again.');
   });
 
   it('重複呼叫 load 在 loading/ready 狀態時不重跑', async () => {

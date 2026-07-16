@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import { i18n } from '@/i18n';
 import { computeImageEmbedding, loadClipModel } from '@/services/clipEmbedding.service';
 
 export type ClipModelStatus = 'idle' | 'loading' | 'ready' | 'error';
@@ -30,7 +31,7 @@ async function load() {
     localStorage.setItem(DOWNLOADED_BEFORE_KEY, '1');
   } catch {
     status.value = 'error';
-    error.value = '模型下載失敗，請檢查網路連線後重試。';
+    error.value = i18n.global.t('imageSearch.modelDownloadFailed');
   }
 }
 

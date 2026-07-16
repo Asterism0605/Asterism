@@ -44,18 +44,18 @@ onMounted(async () => {
     class="relative flex min-h-screen flex-col items-center justify-center gap-4 bg-void px-6 text-center text-text-primary"
   >
     <template v-if="!failed">
-      <p class="text-sm text-text-secondary">Signing you in…</p>
+      <p class="text-sm text-text-secondary">{{ $t('auth.signingIn') }}</p>
     </template>
     <template v-else>
-      <h1 class="text-h2">Sign-in failed</h1>
+      <h1 class="text-h2">{{ $t('auth.signInFailed') }}</h1>
       <p class="text-body max-w-md text-text-secondary">
-        We couldn't complete your sign-in. Please try again.
+        {{ $t('auth.signInFailedDesc') }}
       </p>
       <RouterLink
         :to="{ name: 'login' }"
         class="text-caption text-gold-dim underline transition hover:text-text-primary"
       >
-        Back to login
+        {{ $t('auth.backToLogin') }}
       </RouterLink>
     </template>
   </main>

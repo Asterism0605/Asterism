@@ -1,4 +1,5 @@
 import { ref, type Ref } from 'vue';
+import { i18n } from '@/i18n';
 import { classifyStyleGroup } from '@/services/styleGroupClassifier.service';
 import { meetsSimilarityThreshold, validateImageFile } from '@/services/imageSearch.service';
 import { searchImagesByEmbedding } from '@/api/imageSearch.api';
@@ -45,7 +46,7 @@ export function useImageSearch(
       status.value = 'success';
     } catch {
       status.value = 'error';
-      error.value = '搜尋失敗，請稍後再試。';
+      error.value = i18n.global.t('imageSearch.searchFailed');
     }
   }
 

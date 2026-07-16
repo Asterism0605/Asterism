@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import { i18n } from '@/i18n';
 import { fetchClassificationAnchors, type ClassificationAnchor } from '@/api/classificationAnchors.api';
 
 export type ClassificationAnchorsStatus = 'idle' | 'loading' | 'ready' | 'error';
@@ -20,7 +21,7 @@ async function load(dimension: string) {
     status.value = 'ready';
   } catch {
     status.value = 'error';
-    error.value = '風格資料載入失敗，請稍後再試。';
+    error.value = i18n.global.t('imageSearch.anchorsLoadFailed');
   }
 }
 

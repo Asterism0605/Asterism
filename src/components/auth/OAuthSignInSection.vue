@@ -4,7 +4,7 @@ import LineSignInButton from '@/components/auth/LineSignInButton.vue';
 </script>
 
 <template>
-  <div class="oauth-divider"><span>or</span></div>
+  <div class="oauth-divider"><span>{{ $t('auth.or') }}</span></div>
   <div class="oauth-buttons">
     <div><GoogleSignInButton /></div>
     <div><LineSignInButton /></div>
