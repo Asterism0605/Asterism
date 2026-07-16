@@ -33,8 +33,13 @@ export function useHomeTourFlow(isAuthenticated: Readonly<Ref<boolean>>) {
     guideFrameId = window.requestAnimationFrame(() => {
       guideFrameId = null;
       const targetIndex = findTargetIndex();
+      if (targetIndex === null) {
+        return;
+      }
+
       if (restart) {
         restartGuide();
+        pendingTourStart.value = false;
       } else {
         startGuide();
       }
@@ -44,13 +49,11 @@ export function useHomeTourFlow(isAuthenticated: Readonly<Ref<boolean>>) {
 
   function handleHomeTourStart(): void {
     welcomeTour.complete();
+    pendingTourStart.value = true;
 
     if (imageNetworkReady.value) {
       void startImageClickGuide(true);
-      return;
     }
-
-    pendingTourStart.value = true;
   }
 
   function handleHomeTourExplore(): void {
@@ -61,7 +64,6 @@ export function useHomeTourFlow(isAuthenticated: Readonly<Ref<boolean>>) {
     imageNetworkReady.value = true;
 
     if (pendingTourStart.value) {
-      pendingTourStart.value = false;
       void startImageClickGuide(true);
       return;
     }

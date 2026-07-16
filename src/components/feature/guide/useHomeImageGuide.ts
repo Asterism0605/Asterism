@@ -81,7 +81,9 @@ export function useHomeImageGuide() {
     );
     const target = preferred ?? candidates[0];
 
-    return target ? Number(target.dataset.guideImageIndex) : null;
+    return target?.dataset.guideImageReady === 'true'
+      ? Number(target.dataset.guideImageIndex)
+      : null;
   }
 
   return {

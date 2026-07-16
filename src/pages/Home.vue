@@ -169,7 +169,8 @@ watch(homePreferredStyles, () => {
           show-constellations
           :guide-target-index="guideTargetIndex ?? undefined"
           @click="openImageSpread"
-          @images-loaded="handleImageNetworkReady"
+          @ready="handleImageNetworkReady"
+          @guide-target-ready="handleImageNetworkReady"
         />
       </div>
 
