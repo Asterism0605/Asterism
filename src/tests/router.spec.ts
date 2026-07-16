@@ -21,6 +21,7 @@ describe('router', () => {
         { name: 'moodboard', path: '/moodboard/:slug?' },
         { name: 'playground', path: '/playground' },
         { name: 'image-spread', path: '/images/:imageId/spread' },
+        { name: 'image-search', path: '/search-by-image' },
         { name: 'picture-detail', path: '/images/:imageId' },
         { name: 'sign-up', path: '/sign-up' },
         { name: 'style-dna', path: '/style-dna' },

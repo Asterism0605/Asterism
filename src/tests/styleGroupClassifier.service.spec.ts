@@ -1,0 +1,20 @@
+import { describe, expect, it } from 'vitest';
+import { classifyStyleGroup } from '@/services/styleGroupClassifier.service';
+
+describe('classifyStyleGroup', () => {
+  const anchors = [
+    { styleGroup: 'A', embedding: [1, 0] },
+    { styleGroup: 'B', embedding: [0, 1] },
+    { styleGroup: 'C', embedding: [-1, 0] }
+  ];
+
+  it('回傳 cosine similarity 最高的 styleGroup', () => {
+    expect(classifyStyleGroup([0.9, 0.1], anchors)).toBe('A');
+    expect(classifyStyleGroup([0.1, 0.9], anchors)).toBe('B');
+    expect(classifyStyleGroup([-0.9, 0.1], anchors)).toBe('C');
+  });
+
+  it('沒有 anchors 時丟錯', () => {
+    expect(() => classifyStyleGroup([1, 0], [])).toThrow('No style group anchors available.');
+  });
+});
