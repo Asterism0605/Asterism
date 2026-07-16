@@ -251,6 +251,55 @@ describe('FloatingImageNetwork', () => {
     }
   });
 
+  it('cancels a pending recompute when fallback makes the layout ready', async () => {
+    vi.useFakeTimers();
+    const build = vi.spyOn(floatingImageLayout, 'buildFloatingImageLayout');
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } });
+      await wrapper.vm.$nextTick();
+      vi.advanceTimersByTime(950);
+
+      const firstImage = wrapper.find('img');
+      const element = firstImage.element as HTMLImageElement;
+      Object.defineProperty(element, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 600, configurable: true });
+      await firstImage.trigger('load');
+
+      vi.advanceTimersByTime(50);
+      const callsAfterReady = build.mock.calls.length;
+      vi.advanceTimersByTime(120);
+
+      expect(build).toHaveBeenCalledTimes(callsAfterReady);
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('emits ready on fallback but waits for every image before images-loaded', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } });
+      await wrapper.vm.$nextTick();
+
+      vi.advanceTimersByTime(1000);
+      expect(wrapper.emitted('ready')).toHaveLength(1);
+      expect(wrapper.emitted('imagesLoaded')).toBeUndefined();
+
+      for (const image of wrapper.findAll('img')) {
+        await image.trigger('load');
+      }
+
+      expect(wrapper.emitted('ready')).toHaveLength(1);
+      expect(wrapper.emitted('imagesLoaded')).toHaveLength(1);
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('reflows lazy image positions after fallback ready without re-shuffling cards', async () => {
     vi.useFakeTimers();
     Object.defineProperty(window, 'innerHeight', { configurable: true, value: 900 });

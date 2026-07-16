@@ -25,7 +25,7 @@ const floatingImageNetworkStub = {
 
 const guideFloatingImageNetworkStub = {
   props: ['images', 'height', 'guideTargetIndex'],
-  emits: ['click', 'ready'],
+  emits: ['click', 'ready', 'imagesLoaded'],
   template: `
     <div>
       <button
@@ -338,6 +338,13 @@ describe('Home', () => {
     await flushPromises();
     await wrapper.vm.$nextTick();
 
+    expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
+    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
+
+    floatingNetwork.vm.$emit('imagesLoaded');
+    await flushPromises();
+    await wrapper.vm.$nextTick();
+
     expect(floatingNetwork.props('guideTargetIndex')).toBe(5);
     expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="home-meteor-arrows"]').exists()).toBe(false);
@@ -385,7 +392,7 @@ describe('Home', () => {
 
     await flushPromises();
     const floatingNetwork = wrapper.findComponent(guideFloatingImageNetworkStub);
-    floatingNetwork.vm.$emit('ready');
+    floatingNetwork.vm.$emit('imagesLoaded');
     await flushPromises();
 
     expect(wrapper.find('[data-test="home-tour-intro"]').exists()).toBe(true);
@@ -435,7 +442,7 @@ describe('Home', () => {
 
     await flushPromises();
     const floatingNetwork = wrapper.findComponent(guideFloatingImageNetworkStub);
-    floatingNetwork.vm.$emit('ready');
+    floatingNetwork.vm.$emit('imagesLoaded');
     await flushPromises();
     await wrapper.find('[data-test="home-tour-start"]').trigger('click');
     await flushPromises();

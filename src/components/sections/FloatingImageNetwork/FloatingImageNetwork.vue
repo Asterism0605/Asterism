@@ -27,6 +27,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   click: [index: number];
   ready: [];
+  imagesLoaded: [];
 }>();
 
 const containerRef = ref<HTMLElement | null>(null);
@@ -41,14 +42,24 @@ const naturalAspects = new Map<string, string>();
 // 避免使用者看到「假比例 → 真比例」跳動兩次的感覺。
 const isReady = ref(false);
 let loadedCount = 0;
+let hasEmittedImagesLoaded = false;
 let recomputeTimer: ReturnType<typeof setTimeout> | undefined;
 let readyTimer: ReturnType<typeof setTimeout> | undefined;
 
-function markReady(): void {
+function clearLoadTimers(): void {
+  clearTimeout(recomputeTimer);
+  clearTimeout(readyTimer);
+  recomputeTimer = undefined;
+  readyTimer = undefined;
+}
+
+function finalizeReady(): void {
   if (isReady.value) {
     return;
   }
 
+  clearLoadTimers();
+  recomputeLayout();
   isReady.value = true;
   emit('ready');
 }
@@ -90,19 +101,20 @@ function onImageLoad(src: string, event: Event) {
 
   loadedCount += 1;
 
-  if (loadedCount >= visibleImages.value.length) {
+  if (loadedCount >= visibleImages.value.length && !hasEmittedImagesLoaded) {
+    hasEmittedImagesLoaded = true;
     // 全部載入完：用真實比例做最後一次排版，然後一次淡入。
     // 同時清掉 1 秒後備計時器，否則它會在卡片已顯示後再重算一次隨機排版，造成二次跳動。
-    clearTimeout(recomputeTimer);
-    clearTimeout(readyTimer);
-    recomputeLayout();
-    markReady();
+    finalizeReady();
+    emit('imagesLoaded');
   }
 }
 
 function startLoadCycle() {
+  clearLoadTimers();
   isReady.value = false;
   loadedCount = 0;
+  hasEmittedImagesLoaded = false;
   recomputeLayout();
   if (visibleImages.value.length === 0) {
     return;
@@ -111,10 +123,8 @@ function startLoadCycle() {
   if (typeof window !== 'undefined') {
     // 後備：lazy 圖片可能尚未進入 viewport 而不觸發 load，
     // 因此最多等待一段時間後仍要顯示第一版穩定 layout。
-    clearTimeout(readyTimer);
     readyTimer = setTimeout(() => {
-      recomputeLayout();
-      markReady();
+      finalizeReady();
     }, 1000);
   }
 }
@@ -196,8 +206,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  clearTimeout(recomputeTimer);
-  clearTimeout(readyTimer);
+  clearLoadTimers();
 });
 </script>
 
@@ -307,34 +316,36 @@ onBeforeUnmount(() => {
 }
 
 .image-card__frame {
+  position: relative;
   border: 1px solid rgba(240, 237, 230, 0.12);
   border-radius: 4px;
-  overflow: hidden;
   transition: border-color 0.6s ease;
 }
 
 .image-card--guide-target .image-card__frame {
   border-color: rgb(240 237 230 / 0.78);
+}
+
+.image-card--guide-target .image-card__frame::after {
+  position: absolute;
+  inset: -4px;
+  border: 2px solid rgb(168 137 58 / 0.54);
+  border-radius: inherit;
   box-shadow:
-    0 0 0 2px rgb(168 137 58 / 0.54),
-    0 0 28px rgb(168 137 58 / 0.8),
-    0 0 60px rgb(240 237 230 / 0.25);
+    0 0 28px rgb(168 137 58 / 0.72),
+    0 0 60px rgb(240 237 230 / 0.24);
+  content: '';
+  pointer-events: none;
+  opacity: 0.55;
+  transform: scale(0.98);
   animation: guideGlow 1.8s ease-in-out infinite alternate;
+  will-change: opacity, transform;
 }
 
 @keyframes guideGlow {
-  from {
-    box-shadow:
-      0 0 0 2px rgb(168 137 58 / 0.42),
-      0 0 18px rgb(168 137 58 / 0.56),
-      0 0 36px rgb(240 237 230 / 0.16);
-  }
-
   to {
-    box-shadow:
-      0 0 0 2px rgb(240 237 230 / 0.72),
-      0 0 36px rgb(168 137 58 / 0.92),
-      0 0 76px rgb(240 237 230 / 0.32);
+    opacity: 1;
+    transform: scale(1.025);
   }
 }
 
@@ -361,7 +372,7 @@ onBeforeUnmount(() => {
     animation-duration: 1ms;
   }
 
-  .image-card--guide-target .image-card__frame {
+  .image-card--guide-target .image-card__frame::after {
     animation: none;
   }
 }
