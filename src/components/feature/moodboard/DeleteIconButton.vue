@@ -1,25 +1,38 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
+import { computed } from 'vue';
 import { CircleX } from '@lucide/vue';
 
-defineProps<{
-  style?: CSSProperties;
-}>();
+const props = withDefaults(
+  defineProps<{
+    style?: CSSProperties;
+    ariaLabel?: string;
+    size?: number;
+    iconSize?: number;
+  }>(),
+  { ariaLabel: undefined, size: 20, iconSize: 16 }
+);
 
 const emit = defineEmits<{
   delete: [];
 }>();
+
+const buttonStyle = computed<CSSProperties>(() => ({
+  width: `${props.size}px`,
+  height: `${props.size}px`,
+  ...props.style
+}));
 </script>
 
 <template>
   <button
     type="button"
     class="delete-icon-button"
-    :style="style"
-    :aria-label="$t('moodboard.deleteFolderAria')"
+    :style="buttonStyle"
+    :aria-label="props.ariaLabel ?? $t('moodboard.deleteFolderAria')"
     @click.stop="emit('delete')"
   >
-    <CircleX :size="18" aria-hidden="true" />
+    <CircleX :size="iconSize" aria-hidden="true" />
   </button>
 </template>
 
@@ -27,8 +40,6 @@ const emit = defineEmits<{
 .delete-icon-button {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
   border-radius: 50%;
   border: none;
   background: rgba(9, 9, 11, 0.78);

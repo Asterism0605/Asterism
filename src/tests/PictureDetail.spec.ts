@@ -66,7 +66,8 @@ async function mountPictureDetail(
       { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
       { path: '/consultant', name: 'consultant', component: { template: '<div />' } },
       { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
-      { path: '/login', name: 'login', component: { template: '<div />' } }
+      { path: '/login', name: 'login', component: { template: '<div />' } },
+      { path: '/moodboard/:slug?', name: 'moodboard', component: { template: '<div />' } }
     ]
   })
   const pinia = createPinia()
@@ -256,6 +257,25 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-poster-001')
   })
 
+  it('點擊風格標籤開啟說明 modal（una-hsieh review：詳情頁標籤也須可點擊）', async () => {
+    // StyleTagModal 用 <Teleport to="body">，內容會搬到 document.body，
+    // 不在 wrapper 自己的渲染樹底下，故直接查 document（跟下面 CREATE FOLDER
+    // modal 那個既有測試查 document.querySelector 是同一招）。
+    const { wrapper } = await mountPictureDetail(undefined, true, { attachTo: document.body })
+
+    const tagBtn = wrapper.findAll('button').find((b) => b.text() === 'Y2K')
+    await tagBtn!.trigger('click')
+    await flushPromises()
+
+    const dialog = document.querySelector('[role="dialog"]')
+    expect(dialog).not.toBeNull()
+    expect(dialog!.textContent).toContain(
+      'Y2K is a visual style rooted in early-2000s technological optimism'
+    )
+
+    wrapper.unmount()
+  })
+
   it('導向選取的相似圖片詳情頁', async () => {
     const { router, wrapper } = await mountPictureDetail()
     const expectedImageId = getRelatedImages('y2k-main-001', { limit: 6 })[2].id
@@ -324,6 +344,16 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.name).toBe('image-spread')
     expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-001')
     expect(router.currentRoute.value.query.rootId).toBe('ftdp-main-001')
+  })
+
+  it('帶著 moodboardSlug query 時，返回按鈕導回該 moodboard 資料夾', async () => {
+    const { router, wrapper } = await mountPictureDetail('y2k-main-001?moodboardSlug=studio')
+
+    await wrapper.find('button').trigger('click')
+    await flushPromises()
+
+    expect(router.currentRoute.value.name).toBe('moodboard')
+    expect(router.currentRoute.value.params.slug).toBe('studio')
   })
 
   it('在詳情頁切換圖片時將 spread path context 改指向下一張圖片', async () => {

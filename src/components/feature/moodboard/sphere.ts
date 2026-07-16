@@ -15,7 +15,8 @@ export function initSphere(
   canvas: HTMLCanvasElement,
   getScale: () => number,
   getHasFolders: () => boolean,
-  images: MoodboardOrbitImage[]
+  images: MoodboardOrbitImage[],
+  onImageClick?: () => void
 ): SphereHandle {
   // sphereDPR as private closure (uses getScale() instead of scale.value)
   function sphereDPR() {
@@ -185,6 +186,29 @@ export function initSphere(
     })
   }
 
+  // click 落在真實圖片（非 placeholder）的 sprite 上才算命中，交給呼叫端決定要做什麼（目前：開資料夾）。
+  const raycaster = new THREE.Raycaster()
+  const pointerNdc = new THREE.Vector2()
+
+  function handleClick(event: MouseEvent) {
+    if (!onImageClick || !getHasFolders()) return
+
+    const rect = canvas.getBoundingClientRect()
+    if (rect.width === 0 || rect.height === 0) return
+
+    pointerNdc.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+    pointerNdc.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+    raycaster.setFromCamera(pointerNdc, camera)
+
+    const hitRealImage = raycaster
+      .intersectObjects(sprites)
+      .some((hit) => !hit.object.userData.isPlaceholder)
+
+    if (hitRealImage) onImageClick()
+  }
+
+  canvas.addEventListener('click', handleClick)
+
   // resize (from original resizeSphere lines 1108–1118, uses sphereDPR() closure)
   function resize() {
     const W2 = canvas.clientWidth,
@@ -200,6 +224,7 @@ export function initSphere(
     disposed = true
     loadVersion += 1
     cancelAnimationFrame(rafId)
+    canvas.removeEventListener('click', handleClick)
     disposeTextures(pendingTextures)
     pendingTextures = []
     clearSprites()

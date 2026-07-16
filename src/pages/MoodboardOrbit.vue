@@ -10,6 +10,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
 import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConfirm.vue';
 import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
+import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
@@ -34,12 +35,15 @@ import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/mood
 import type {
   MoodboardFolder,
   MoodboardMobilePhoto,
+  MoodboardMobileSavedPhoto,
   MoodboardPositionedPhoto,
+  MoodboardSavedPhoto,
   SavedImage
 } from '@/types/moodboard';
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
+import { useDeleteMoodboardImage } from '@/composables/useDeleteMoodboardImage';
 import { deleteFolder } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
@@ -91,12 +95,23 @@ const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96));
 const mStage = ref<HTMLElement | null>(null);
 const deskStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
-const mDetailPhotos = ref<MoodboardMobilePhoto[]>([]);
+const mDetailPhotos = ref<MoodboardMobileSavedPhoto[]>([]);
 const mHomePhotosRandom = ref<MoodboardMobilePhoto[]>([]);
 const deleteHoverIdx = ref(-1);
 const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
+const deleteImageHoverIdx = ref<string | null>(null);
+
+const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
+  useDeleteMoodboardImage({
+    getFolder: () => moodboardStore.folders[selectedFolder.value],
+    onDeleted: (itemId) => {
+      scatter.value = scatter.value.filter((n) => n.itemId !== itemId);
+      mDetailPhotos.value = mDetailPhotos.value.filter((p) => p.itemId !== itemId);
+      deleteImageHoverIdx.value = null;
+    }
+  });
 
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
@@ -152,7 +167,8 @@ const sphereStyle = computed<CSSProperties>(() => {
     top: Math.round(top) + 'px',
     width: size + 'px',
     height: size + 'px',
-    pointerEvents: 'none'
+    pointerEvents: 'auto',
+    cursor: 'pointer'
   };
 });
 
@@ -284,14 +300,27 @@ async function confirmDeleteFolder() {
   }
 }
 
-function toPhotos(images: SavedImage[], mobile = false) {
+function toPhotos(images: SavedImage[], mobile = false): MoodboardSavedPhoto[] {
   const sizes = mobile ? mDetailBase : photos;
 
   return images.map((image, index) => ({
     src: image.src,
+    itemId: image.itemId,
     w: sizes[index % sizes.length].w,
-    h: sizes[index % sizes.length].h
+    h: sizes[index % sizes.length].h,
+    imageId: image.id
   }));
+}
+
+function goToImage(imageId: string) {
+  const slug = route.params.slug;
+  const moodboardSlug = typeof slug === 'string' ? slug : undefined;
+
+  router.push({
+    name: 'picture-detail',
+    params: { imageId },
+    query: moodboardSlug ? { moodboardSlug } : undefined
+  });
 }
 
 function onImgError(e: Event) {
@@ -325,12 +354,14 @@ function buildDetail() {
   });
   scatter.value = nodes.map((d) => ({
     id: d.id,
+    itemId: d.itemId,
     src: d.src,
     w: d.w,
     h: d.h,
     delay: d.delay,
     x: d.x,
-    y: d.y
+    y: d.y,
+    imageId: d.imageId
   }));
 }
 
@@ -355,13 +386,15 @@ function buildMobileDetail() {
   });
   mDetailPhotos.value = nodes.map((d) => ({
     id: d.id,
+    itemId: d.itemId,
     src: d.src,
     w: d.w,
     h: d.h,
     faded: d.faded,
     delay: d.delay,
     cx: d.x,
-    cy: d.y
+    cy: d.y,
+    imageId: d.imageId
   }));
 }
 
@@ -417,6 +450,12 @@ function slugFor(i: number) {
   return encodeURIComponent(name.trim().replace(/\s+/g, '-').toLowerCase());
 }
 
+function findFolderIndexBySlug(slug: string): number {
+  return moodboardStore.folders.findIndex(
+    (_, index) => decodeURIComponent(slugFor(index)) === slug
+  );
+}
+
 function navigate(slug: string, i: number) {
   const path = props.basePath + (slug ? '/' + slug : '');
   router.push(path);
@@ -446,6 +485,18 @@ watch(
 function onFolderClick(i: number) {
   if (consumeDidDrag()) return;
   openFolder(i);
+}
+
+function onSphereClick() {
+  if (consumeDidDrag()) return;
+
+  const folder = sphereFolder.value;
+  if (!folder) return;
+
+  const index = moodboardStore.folders.findIndex((candidate) => candidate.id === folder.id);
+  if (index === -1) return;
+
+  openFolder(index);
 }
 
 function hoverMobileFolderAt(i: number) {
@@ -517,7 +568,8 @@ function initializeSphere() {
     sphereCanvas.value,
     () => scale.value,
     () => hasFolders.value,
-    orbitImages.value
+    orbitImages.value,
+    onSphereClick
   );
 }
 
@@ -533,7 +585,22 @@ onMounted(async () => {
   ) {
     await moodboardStore.fetchMoodboard(profileId);
   }
-  if (isMobile.value) buildMobileHome();
+
+  const initialSlug = typeof route.params.slug === 'string' ? route.params.slug : undefined;
+  if (initialSlug) {
+    const index = findFolderIndexBySlug(initialSlug);
+    if (index !== -1) {
+      selectedFolder.value = index;
+      hasFolders.value = false;
+    }
+  }
+
+  if (isMobile.value) {
+    if (hasFolders.value) buildMobileHome();
+    else buildMobileDetail();
+  } else if (!hasFolders.value) {
+    buildDetail();
+  }
   nextTick(initializeSphere);
   orbitRaf = requestAnimationFrame(orbitLoop);
 });
@@ -626,10 +693,12 @@ onBeforeUnmount(() => {
             <DeleteIconButton
               v-if="f.hasFolder"
               :data-testid="`folder-delete-mobile-${f.i}`"
+              :size="28"
+              :icon-size="20"
               :style="{
                 position: 'absolute',
-                top: '-6px',
-                right: '-6px',
+                top: '-10px',
+                right: '-15px',
                 zIndex: 40
               }"
               @delete="requestDeleteFolder(f.i)"
@@ -719,30 +788,50 @@ onBeforeUnmount(() => {
         >
           <div
             class="image-card w-full h-full"
-            :class="{ 'photo-placeholder': p.placeholder, 'photo-faded': !p.placeholder && p.faded }"
+            :class="{
+              'photo-placeholder': p.placeholder,
+              'photo-faded': !p.placeholder && p.faded
+            }"
             :style="{ animationDelay: p.delay + 's' }"
           >
-            <img
-              :src="p.src"
-              draggable="false"
-              class="w-full h-full block select-none"
-              style="object-fit: cover; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55)"
-              @error="onImgError"
+            <button
+              type="button"
+              class="moodboard-photo-link"
+              data-testid="moodboard-mobile-photo"
+              :disabled="hasFolders ? !sphereFolder || p.placeholder : !p.imageId"
+              :aria-label="hasFolders ? $t('moodboard.openFolderAria') : $t('moodboard.openImageDetailAria')"
+              @click="hasFolders ? onSphereClick() : p.imageId && goToImage(p.imageId)"
+            >
+              <img
+                :src="p.src"
+                draggable="false"
+                alt=""
+                class="w-full h-full block select-none"
+                style="object-fit: cover; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55)"
+                @error="onImgError"
+              />
+              <div
+                class="w-full h-full"
+                style="
+                  display: none;
+                  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+                  background:
+                    repeating-linear-gradient(
+                      45deg,
+                      rgba(255, 255, 255, 0.05) 0 9px,
+                      rgba(255, 255, 255, 0.09) 9px 18px
+                    ),
+                    #26272b;
+                "
+              ></div>
+            </button>
+            <DeleteIconButton
+              v-if="p.itemId"
+              :data-testid="`image-delete-mobile-${p.itemId}`"
+              :aria-label="$t('moodboard.deleteImageAria')"
+              :style="{ position: 'absolute', top: '-12px', right: '-12px', zIndex: 40 }"
+              @delete="requestDeleteImage(p.itemId)"
             />
-            <div
-              class="w-full h-full"
-              style="
-                display: none;
-                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
-                background:
-                  repeating-linear-gradient(
-                    45deg,
-                    rgba(255, 255, 255, 0.05) 0 9px,
-                    rgba(255, 255, 255, 0.09) 9px 18px
-                  ),
-                  #26272b;
-              "
-            ></div>
           </div>
         </div>
 
@@ -889,10 +978,12 @@ onBeforeUnmount(() => {
             <DeleteIconButton
               v-if="fv.hasFolder"
               :data-testid="`folder-delete-${fv.i}`"
+              :size="28"
+              :icon-size="20"
               :style="{
                 position: 'absolute',
-                top: '-6px',
-                right: '-6px',
+                top: '-3px',
+                right: '-3px',
                 opacity: deleteHoverIdx === fv.i ? 1 : 0,
                 pointerEvents: deleteHoverIdx === fv.i ? 'auto' : 'none',
                 transition: 'opacity .2s ease',
@@ -908,6 +999,7 @@ onBeforeUnmount(() => {
           <div
             v-for="n in scatter"
             :key="n.id"
+            :data-testid="n.itemId ? `moodboard-image-${n.itemId}` : undefined"
             class="absolute image-card"
             :style="{
               left: n.x - n.w / 2 + 'px',
@@ -916,29 +1008,56 @@ onBeforeUnmount(() => {
               height: n.h + 'px',
               animationDelay: n.delay + 's'
             }"
+            @mouseenter="n.itemId && (deleteImageHoverIdx = n.itemId)"
+            @mouseleave="deleteImageHoverIdx = null"
           >
-            <img
-              :src="n.src"
-              draggable="false"
-              class="w-full h-full block select-none"
-              style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
-              @error="onImgError"
+            <button
+              type="button"
+              class="moodboard-photo-link"
+              data-testid="moodboard-detail-photo"
+              :disabled="!n.imageId"
+              :aria-label="$t('moodboard.openImageDetailAria')"
+              @click="n.imageId && goToImage(n.imageId)"
+            >
+              <img
+                :src="n.src"
+                draggable="false"
+                alt=""
+                class="moodboard-photo-img w-full h-full block select-none"
+                style="object-fit: cover; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55)"
+                @error="onImgError"
+              />
+              <div
+                class="moodboard-photo-img w-full h-full"
+                style="
+                  display: none;
+                  border: 2px solid rgba(244, 244, 240, 0.9);
+                  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+                  background:
+                    repeating-linear-gradient(
+                      45deg,
+                      rgba(255, 255, 255, 0.05) 0 10px,
+                      rgba(255, 255, 255, 0.09) 10px 20px
+                    ),
+                    #2b2c30;
+                "
+              ></div>
+            </button>
+            <DeleteIconButton
+              v-if="n.itemId"
+              :data-testid="`image-delete-${n.itemId}`"
+              :aria-label="$t('moodboard.deleteImageAria')"
+              :style="{
+                position: 'absolute',
+                top: '-12px',
+                right: '-12px',
+                zIndex: 40,
+                opacity: deleteImageHoverIdx === n.itemId ? 1 : 0,
+                pointerEvents: deleteImageHoverIdx === n.itemId ? 'auto' : 'none',
+                transition: 'opacity .2s ease'
+              }"
+              @delete="requestDeleteImage(n.itemId)"
             />
-            <div
-              class="w-full h-full"
-              style="
-                display: none;
-                border: 2px solid rgba(244, 244, 240, 0.9);
-                box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
-                background:
-                  repeating-linear-gradient(
-                    45deg,
-                    rgba(255, 255, 255, 0.05) 0 10px,
-                    rgba(255, 255, 255, 0.09) 10px 20px
-                  ),
-                  #2b2c30;
-              "
-            ></div>
           </div>
 
           <!-- back link (sits just above the docked tab, against the visible bottom) -->
@@ -1094,6 +1213,11 @@ onBeforeUnmount(() => {
       :folder-name="deleteTarget?.name ?? ''"
       @confirm="confirmDeleteFolder"
     />
+    <DeleteImageConfirm
+      v-model="isDeleteImageModalOpen"
+      :is-deleting="isDeletingImage"
+      @confirm="confirmDeleteImage"
+    />
   </div>
 </template>
 
@@ -1129,5 +1253,24 @@ onBeforeUnmount(() => {
 }
 .photo-faded {
   opacity: 0.5;
+}
+.moodboard-photo-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.moodboard-photo-link:disabled {
+  cursor: default;
+  pointer-events: none;
+}
+.moodboard-photo-img {
+  transition: transform 0.2s ease;
+}
+.moodboard-photo-link:hover .moodboard-photo-img {
+  transform: scale(1.12);
 }
 </style>

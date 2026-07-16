@@ -10,14 +10,6 @@ function mountDeleteFolderConfirm(props: Record<string, unknown> = {}) {
   });
 }
 
-function getConfirmButton(wrapper: ReturnType<typeof mount>) {
-  return wrapper.get('[data-testid="delete-folder-confirm"]').element as HTMLButtonElement;
-}
-
-function getCancelButton(wrapper: ReturnType<typeof mount>) {
-  return wrapper.get('[data-testid="delete-folder-cancel"]').element as HTMLButtonElement;
-}
-
 describe('DeleteFolderConfirm', () => {
   afterEach(() => {
     document.body.innerHTML = '';
@@ -35,7 +27,14 @@ describe('DeleteFolderConfirm', () => {
     expect(wrapper.text()).toContain('Delete 1234567890... and All Images');
   });
 
-  it('點擊確認鈕 emit confirm', async () => {
+  it('把正確的 testid 傳給 DeleteConfirmModal', () => {
+    const wrapper = mountDeleteFolderConfirm();
+
+    expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="delete-folder-cancel"]').exists()).toBe(true);
+  });
+
+  it('點擊確認鈕會轉發 DeleteConfirmModal 的 confirm emit', async () => {
     const wrapper = mountDeleteFolderConfirm();
 
     await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
@@ -43,18 +42,11 @@ describe('DeleteFolderConfirm', () => {
     expect(wrapper.emitted('confirm')).toHaveLength(1);
   });
 
-  it('點擊關閉鈕 emit update:modelValue(false)', async () => {
+  it('點擊取消鈕會轉發 DeleteConfirmModal 的 update:modelValue emit', async () => {
     const wrapper = mountDeleteFolderConfirm();
 
     await wrapper.get('[data-testid="delete-folder-cancel"]').trigger('click');
 
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
-  });
-
-  it('isDeleting 為 true 時，確認與關閉按鈕皆 disabled', () => {
-    const wrapper = mountDeleteFolderConfirm({ isDeleting: true });
-
-    expect(getConfirmButton(wrapper).disabled).toBe(true);
-    expect(getCancelButton(wrapper).disabled).toBe(true);
   });
 });

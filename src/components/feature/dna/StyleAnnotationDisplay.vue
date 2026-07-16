@@ -60,7 +60,17 @@
               :class="annotationContentClasses[annotation.position]"
             >
               <p class="whitespace-pre-line font-light leading-tight">
-                {{ formatStyleLabel(displayLabel(annotation.label)) }}
+                <span
+                  class="pointer-events-auto cursor-pointer outline-none"
+                  :aria-label="t('dna.viewTagDetails', { tag: displayLabel(annotation.label) })"
+                  role="button"
+                  tabindex="0"
+                  @click="openTagModal(annotation.label)"
+                  @keydown.enter="openTagModal(annotation.label)"
+                  @keydown.space.prevent="openTagModal(annotation.label)"
+                >
+                  {{ formatStyleLabel(displayLabel(annotation.label)) }}
+                </span>
               </p>
               <p class="mt-1 text-text-secondary">
                 {{ annotation.value }}
@@ -78,13 +88,21 @@
         <slot name="mobile-panel" />
       </div>
 
-      <div class="hidden gap-5 lg:grid lg:w-[32rem] lg:grid-cols-3 lg:gap-0">
+      <div class="style-score-grid hidden gap-5 lg:grid lg:w-[32rem] lg:grid-cols-3 lg:gap-0">
         <div
           v-for="style in styles"
           :key="style.label"
           class="flex min-h-[7.8rem] min-w-0 flex-col items-center justify-between text-center"
         >
-          <div class="flex h-[3.25rem] w-full items-center justify-center">
+          <div
+            class="flex h-[3.25rem] w-full cursor-pointer items-center justify-center outline-none"
+            :aria-label="t('dna.viewTagDetails', { tag: displayLabel(style.label) })"
+            role="button"
+            tabindex="0"
+            @click="openTagModal(style.label)"
+            @keydown.enter="openTagModal(style.label)"
+            @keydown.space.prevent="openTagModal(style.label)"
+          >
             <p
               class="w-full max-w-[calc(74vw-2rem)] whitespace-pre-line break-words text-center text-[13px] font-extralight leading-snug text-text-secondary lg:max-w-full lg:text-lg"
             >
@@ -100,10 +118,19 @@
       </div>
 
     </div>
+
+    <StyleTagModal
+      :model-value="activeTagLabel !== null"
+      :tag-label="activeTagLabel"
+      @update:model-value="closeTagModal"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue';
+import { useI18n } from 'vue-i18n';
 import { useStyleTagLabel } from '@/composables/useStyleTagLabel';
 import type { StyleDnaAnnotation, StyleDnaScore } from '@/utils/computeStyleDnaResult';
 
@@ -115,6 +142,16 @@ defineProps<{
 }>();
 
 const { displayLabel } = useStyleTagLabel();
+const { t } = useI18n();
+const activeTagLabel = ref<string | null>(null);
+
+function openTagModal(label: string): void {
+  activeTagLabel.value = label;
+}
+
+function closeTagModal(): void {
+  activeTagLabel.value = null;
+}
 
 const annotationPositionClasses: Record<StyleDnaAnnotation['position'], string> = {
   left: 'left-[-12vw] top-[28%] sm:left-[6vw] lg:left-[16%] lg:top-[42%] lg:-translate-x-1/2',

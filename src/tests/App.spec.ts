@@ -28,7 +28,7 @@ describe('App', () => {
     await router.push('/');
   });
 
-  it('does not render the global header on the discover dna entry page', async () => {
+  it('renders the global header on the discover dna entry page', async () => {
     const { default: App } = await import('@/App.vue');
 
     await router.push('/discover-dna');
@@ -40,7 +40,7 @@ describe('App', () => {
       }
     });
 
-    expect(wrapper.find('header').exists()).toBe(false);
+    expect(wrapper.find('header').exists()).toBe(true);
   });
 
   it('renders StyleDnaResult on the style dna result path', async () => {

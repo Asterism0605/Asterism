@@ -48,6 +48,7 @@ const emit = defineEmits<{
   'create-folder': [];
   'save-to-folder': [folderId: string];
   'select-image': [imageId: string];
+  'select-style-tag': [tag: string];
 }>();
 
 const siteLogoSrc = SITE_LOGO_SRC;
@@ -99,7 +100,7 @@ const siteLogoSrc = SITE_LOGO_SRC;
 
     <ColorPaletteSwatch :colors="colorPalette" class="bg-transparent! p-0!" />
 
-    <ThemeTag :tags="styleTags" compact />
+    <ThemeTag :tags="styleTags" compact @select="emit('select-style-tag', $event)" />
 
     <div class="flex items-center gap-3">
       <ActionButton class="flex-1" variant="consult" @consult="emit('consult')" />

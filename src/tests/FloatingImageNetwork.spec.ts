@@ -98,6 +98,19 @@ describe('FloatingImageNetwork', () => {
     expect(wrapper.findAll('img').length).toBe(3);
   });
 
+  it('emits ready after every image has loaded', async () => {
+    const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } });
+
+    for (const image of wrapper.findAll('img')) {
+      const element = image.element as HTMLImageElement;
+      Object.defineProperty(element, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 600, configurable: true });
+      await image.trigger('load');
+    }
+
+    expect(wrapper.emitted('ready')).toHaveLength(1);
+  });
+
   it('sets correct src and alt on each img', () => {
     const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } });
     const imgs = wrapper.findAll('img');
@@ -123,6 +136,36 @@ describe('FloatingImageNetwork', () => {
 
     await wrapper.findAll('[data-testid="image-card"]')[1].trigger('click');
     expect(wrapper.emitted('click')![1]).toEqual([1]);
+  });
+
+  it('marks only the requested image card as the guide target', () => {
+    const wrapper = mount(FloatingImageNetwork, {
+      props: { images: mockImages, guideTargetIndex: 1 }
+    });
+
+    const cards = wrapper.findAll('[data-testid="image-card"]');
+
+    expect(cards[0].attributes('data-guide-image-index')).toBe('0');
+    expect(cards[1].attributes('data-guide-image-index')).toBe('1');
+    expect(cards[1].attributes('data-guide-target')).toBe('true');
+    expect(cards[1].classes()).toContain('image-card--guide-target');
+    expect(cards[0].attributes('data-guide-target')).toBeUndefined();
+    expect(cards[2].classes()).not.toContain('image-card--guide-target');
+  });
+
+  it('allows only the guide target to emit a click while the guide is active', async () => {
+    const wrapper = mount(FloatingImageNetwork, {
+      props: { images: mockImages, guideTargetIndex: 1 }
+    });
+
+    const cards = wrapper.findAll('[data-testid="image-card"]');
+    await cards[0].trigger('click');
+    await cards[1].trigger('click');
+    await cards[2].trigger('click');
+
+    expect(wrapper.emitted('click')).toEqual([[1]]);
+    expect(cards[0].attributes('aria-disabled')).toBe('true');
+    expect(cards[1].attributes('aria-disabled')).toBeUndefined();
   });
 
   it('renders ambient dots behind the image cards', () => {
@@ -202,6 +245,83 @@ describe('FloatingImageNetwork', () => {
       expect(random.mock.calls.length).toBe(randomCallsAfterLoad);
       expect(styleAfterTimer).toBe(styleAfterLoad);
 
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('cancels a pending recompute when fallback makes the layout ready', async () => {
+    vi.useFakeTimers();
+    const build = vi.spyOn(floatingImageLayout, 'buildFloatingImageLayout');
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } });
+      await wrapper.vm.$nextTick();
+      vi.advanceTimersByTime(950);
+
+      const firstImage = wrapper.find('img');
+      const element = firstImage.element as HTMLImageElement;
+      Object.defineProperty(element, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 600, configurable: true });
+      await firstImage.trigger('load');
+
+      vi.advanceTimersByTime(50);
+      const callsAfterReady = build.mock.calls.length;
+      vi.advanceTimersByTime(120);
+
+      expect(build).toHaveBeenCalledTimes(callsAfterReady);
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('emits ready on fallback but waits for every image before images-loaded', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, { props: { images: mockImages } });
+      await wrapper.vm.$nextTick();
+
+      vi.advanceTimersByTime(1000);
+      expect(wrapper.emitted('ready')).toHaveLength(1);
+      expect(wrapper.emitted('imagesLoaded')).toBeUndefined();
+
+      for (const image of wrapper.findAll('img')) {
+        await image.trigger('load');
+      }
+
+      expect(wrapper.emitted('ready')).toHaveLength(1);
+      expect(wrapper.emitted('imagesLoaded')).toHaveLength(1);
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('makes the guide target available when other images fail or remain pending', async () => {
+    vi.useFakeTimers();
+    const images = Array.from({ length: 6 }, (_, index) => ({
+      src: `/img${index}.jpg`,
+      alt: `image ${index}`
+    }));
+
+    try {
+      const wrapper = mount(FloatingImageNetwork, { props: { images } });
+      await wrapper.vm.$nextTick();
+      vi.advanceTimersByTime(1000);
+
+      await wrapper.findAll('img')[1].trigger('error');
+      const target = wrapper.findAll('img')[5];
+      const element = target.element as HTMLImageElement;
+      Object.defineProperty(element, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 600, configurable: true });
+      await target.trigger('load');
+      vi.advanceTimersByTime(120);
+
+      expect(wrapper.emitted('guideTargetReady')?.length).toBeGreaterThan(0);
+      expect(wrapper.emitted('imagesLoaded')).toBeUndefined();
       wrapper.unmount();
     } finally {
       vi.useRealTimers();

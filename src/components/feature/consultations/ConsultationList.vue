@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
 import type { AccountConsultation } from '@/types/account-consultation';
+import { formatConsultationDisplayValue } from '@/utils/consultation-display';
 
 defineProps<{
   reservations: AccountConsultation[];
@@ -9,22 +10,8 @@ defineProps<{
 
 const { t } = useI18n();
 
-const valueKeys: Record<string, string> = {
-  Online: 'consult.online',
-  'In-Person': 'consult.inPerson',
-  'Graphic Design': 'consult.fieldGraphic',
-  'Interior Design': 'consult.fieldInterior',
-  Architecture: 'consult.fieldArchitecture',
-  'Styling Design': 'consult.fieldStyling',
-  'Visual Concept': 'consult.focusVisual',
-  'Material Palette': 'consult.focusMaterial',
-  'Spatial Mood': 'consult.focusSpatial',
-  'Color Direction': 'consult.focusColor',
-  'Furniture Selection': 'consult.focusFurniture'
-};
-
-function displayValue(value: string): string {
-  return valueKeys[value] ? t(valueKeys[value]) : value;
+function displayValue(value?: string): string {
+  return formatConsultationDisplayValue(value, t);
 }
 
 function displayDate(date: string): string {

@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Lock, MoveDownLeft } from '@lucide/vue';
+import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import HomeStarLinks from '@/components/sections/HomeStarLinks';
+import HomeImageClickGuide from '@/components/feature/guide/HomeImageClickGuide.vue';
+import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
+import { useHomeTourFlow } from '@/components/feature/guide/useHomeTourFlow';
 import { getHomeInspirationImages } from '@/services/image.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
@@ -15,6 +19,7 @@ const scrollLimitVh = 150;
 const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
+const { isAuthenticated } = storeToRefs(authStore);
 const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
 const showGuestHint = ref(false);
@@ -24,6 +29,15 @@ const HOME_DENSITY_PER_100VH = 3;
 const homePreferredStyles = computed(() =>
   styleDnaStore.hasCompletedQuiz ? styleDnaStore.preferredStyles : []
 );
+const {
+  isHomeTourVisible,
+  isImageGuideVisible,
+  guideTargetIndex,
+  completeGuide,
+  handleHomeTourStart,
+  handleHomeTourExplore,
+  handleImageNetworkReady
+} = useHomeTourFlow(isAuthenticated);
 const containerHeight = computed(
   () => `${(inspirationImages.value.length / HOME_DENSITY_PER_100VH) * 100}vh`
 );
@@ -102,6 +116,10 @@ function openImageSpread(index: number) {
     return;
   }
 
+  if (isImageGuideVisible.value && index === guideTargetIndex.value) {
+    completeGuide();
+  }
+
   void router.push({
     name: 'image-spread',
     params: { imageId: image.id }
@@ -149,7 +167,10 @@ watch(homePreferredStyles, () => {
           :height="containerHeight"
           layout="home"
           show-constellations
+          :guide-target-index="guideTargetIndex ?? undefined"
           @click="openImageSpread"
+          @ready="handleImageNetworkReady"
+          @guide-target-ready="handleImageNetworkReady"
         />
       </div>
 
@@ -160,7 +181,12 @@ watch(homePreferredStyles, () => {
           Asterism
         </h1>
 
-        <div class="meteor-arrows mt-4 flex translate-x-[10vw]" aria-hidden="true">
+        <div
+          v-if="!isImageGuideVisible"
+          class="meteor-arrows mt-4 flex translate-x-[10vw]"
+          data-testid="home-meteor-arrows"
+          aria-hidden="true"
+        >
           <MoveDownLeft class="meteor-arrow meteor-arrow--primary" />
           <MoveDownLeft class="meteor-arrow meteor-arrow--secondary meteor-arrow--delay-1" />
           <MoveDownLeft class="meteor-arrow meteor-arrow--tertiary meteor-arrow--delay-2" />
@@ -169,6 +195,21 @@ watch(homePreferredStyles, () => {
     </section>
 
     <HomeStarLinks />
+
+    <HomeTourIntro
+      v-if="isHomeTourVisible"
+      :description="$t('home.tour.description')"
+      :start-label="$t('home.tour.startTour')"
+      :explore-label="$t('home.tour.exploreOnMyOwn')"
+      @start="handleHomeTourStart"
+      @explore="handleHomeTourExplore"
+    />
+
+    <HomeImageClickGuide
+      v-if="isImageGuideVisible && guideTargetIndex !== null"
+      :target-index="guideTargetIndex"
+      @dismiss="completeGuide"
+    />
 
     <Transition name="guest-hint">
       <p

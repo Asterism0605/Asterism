@@ -21,10 +21,14 @@ const props = defineProps<{
   height?: string;
   layout?: 'auto' | 'home';
   showConstellations?: boolean;
+  guideTargetIndex?: number;
 }>();
 
 const emit = defineEmits<{
   click: [index: number];
+  ready: [];
+  imagesLoaded: [];
+  guideTargetReady: [];
 }>();
 
 const containerRef = ref<HTMLElement | null>(null);
@@ -38,9 +42,30 @@ const naturalAspects = new Map<string, string>();
 // 圖片載入前用 preset 假比例排的第一版先不顯示，等拿到真實比例排好的版本才淡入，
 // 避免使用者看到「假比例 → 真比例」跳動兩次的感覺。
 const isReady = ref(false);
+const loadedImageIndexes = ref<Set<number>>(new Set());
+const failedImageIndexes = ref<Set<number>>(new Set());
 let loadedCount = 0;
+let hasEmittedImagesLoaded = false;
 let recomputeTimer: ReturnType<typeof setTimeout> | undefined;
 let readyTimer: ReturnType<typeof setTimeout> | undefined;
+
+function clearLoadTimers(): void {
+  clearTimeout(recomputeTimer);
+  clearTimeout(readyTimer);
+  recomputeTimer = undefined;
+  readyTimer = undefined;
+}
+
+function finalizeReady(): void {
+  if (isReady.value) {
+    return;
+  }
+
+  clearLoadTimers();
+  recomputeLayout();
+  isReady.value = true;
+  emit('ready');
+}
 
 function scheduleRecompute() {
   if (typeof window === 'undefined') {
@@ -54,30 +79,30 @@ function scheduleRecompute() {
 function scheduleAspectReflow() {
   if (typeof window === 'undefined') {
     reflowLayout();
+    emit('guideTargetReady');
     return;
   }
   clearTimeout(recomputeTimer);
-  recomputeTimer = setTimeout(reflowLayout, 120);
+  recomputeTimer = setTimeout(() => {
+    reflowLayout();
+    emit('guideTargetReady');
+  }, 120);
 }
 
-function markReady() {
-  if (isReady.value) return;
-
-  clearTimeout(recomputeTimer);
-  clearTimeout(readyTimer);
-
-  recomputeLayout();
-  isReady.value = true;
-}
-
-function onImageLoad(src: string, event: Event) {
+function onImageLoad(index: number, src: string, event: Event) {
   const img = event.target as HTMLImageElement;
+  let needsReflow = false;
 
   if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+    loadedImageIndexes.value = new Set(loadedImageIndexes.value).add(index);
+    const failedIndexes = new Set(failedImageIndexes.value);
+    failedIndexes.delete(index);
+    failedImageIndexes.value = failedIndexes;
     const aspect = `${img.naturalWidth}/${img.naturalHeight}`;
 
     if (naturalAspects.get(src) !== aspect) {
       naturalAspects.set(src, aspect);
+      needsReflow = true;
 
       if (!isReady.value) {
         scheduleRecompute();
@@ -87,23 +112,49 @@ function onImageLoad(src: string, event: Event) {
     }
   }
 
+  if (isReady.value && !needsReflow) {
+    emit('guideTargetReady');
+  }
+
   loadedCount += 1;
 
-  if (loadedCount >= visibleImages.value.length) {
-    markReady();
+  if (loadedCount >= visibleImages.value.length && !hasEmittedImagesLoaded) {
+    hasEmittedImagesLoaded = true;
+    // 全部載入完：用真實比例做最後一次排版，然後一次淡入。
+    // 同時清掉 1 秒後備計時器，否則它會在卡片已顯示後再重算一次隨機排版，造成二次跳動。
+    finalizeReady();
+    emit('imagesLoaded');
+  }
+}
+
+function onImageError(index: number): void {
+  const loadedIndexes = new Set(loadedImageIndexes.value);
+  loadedIndexes.delete(index);
+  loadedImageIndexes.value = loadedIndexes;
+  failedImageIndexes.value = new Set(failedImageIndexes.value).add(index);
+
+  if (isReady.value) {
+    emit('guideTargetReady');
   }
 }
 
 function startLoadCycle() {
+  clearLoadTimers();
   isReady.value = false;
+  loadedImageIndexes.value = new Set();
+  failedImageIndexes.value = new Set();
   loadedCount = 0;
+  hasEmittedImagesLoaded = false;
   recomputeLayout();
+  if (visibleImages.value.length === 0) {
+    return;
+  }
+
   if (typeof window !== 'undefined') {
     // 後備：lazy 圖片可能尚未進入 viewport 而不觸發 load，
     // 因此最多等待一段時間後仍要顯示第一版穩定 layout。
-    clearTimeout(readyTimer);
     readyTimer = setTimeout(() => {
-      markReady();
+      finalizeReady();
     }, 1000);
   }
 }
@@ -130,6 +181,16 @@ function activateCard(index: number) {
 function deactivateCard(index: number) {
   if (hoveredIndex.value === index) {
     hoveredIndex.value = null;
+  }
+}
+
+function isCardClickable(index: number): boolean {
+  return props.guideTargetIndex === undefined || props.guideTargetIndex === index;
+}
+
+function handleCardClick(index: number): void {
+  if (isCardClickable(index)) {
+    emit('click', index);
   }
 }
 
@@ -175,8 +236,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  clearTimeout(recomputeTimer);
-  clearTimeout(readyTimer);
+  clearLoadTimers();
 });
 </script>
 
@@ -206,15 +266,25 @@ onBeforeUnmount(() => {
       v-for="(image, i) in visibleImages"
       :key="`${i}-${image.src}`"
       data-testid="image-card"
-      class="group image-card absolute cursor-pointer"
-      :class="{ 'image-card--home': isHomeLayout }"
+      :data-guide-image-index="i"
+      :data-guide-image-ready="loadedImageIndexes.has(i) ? 'true' : undefined"
+      :data-guide-image-error="failedImageIndexes.has(i) ? 'true' : undefined"
+      :data-guide-target="props.guideTargetIndex === i ? 'true' : undefined"
+      :aria-disabled="isCardClickable(i) ? undefined : 'true'"
+      class="group image-card absolute"
+      :class="{
+        'image-card--home': isHomeLayout,
+        'image-card--guide-target': props.guideTargetIndex === i,
+        'cursor-pointer': isCardClickable(i),
+        'cursor-not-allowed': !isCardClickable(i)
+      }"
       :style="getCardStyle(positions[i], i)"
-      tabindex="0"
+      :tabindex="isCardClickable(i) ? 0 : -1"
       @mouseenter="activateCard(i)"
       @mouseleave="deactivateCard(i)"
       @focusin="activateCard(i)"
       @focusout="deactivateCard(i)"
-      @click="emit('click', i)"
+      @click="handleCardClick(i)"
     >
       <ConstellationBackground
         v-if="showConstellations"
@@ -239,7 +309,8 @@ onBeforeUnmount(() => {
             decoding="async"
             class="w-full"
             style="display: block; width: 100%; height: auto; border-radius: 4px"
-            @load="onImageLoad(image.src, $event)"
+            @load="onImageLoad(i, image.src, $event)"
+            @error="onImageError(i)"
           />
         </div>
       </div>
@@ -278,10 +349,37 @@ onBeforeUnmount(() => {
 }
 
 .image-card__frame {
+  position: relative;
   border: 1px solid rgba(240, 237, 230, 0.12);
   border-radius: 4px;
-  overflow: hidden;
   transition: border-color 0.6s ease;
+}
+
+.image-card--guide-target .image-card__frame {
+  border-color: rgb(240 237 230 / 0.78);
+}
+
+.image-card--guide-target .image-card__frame::after {
+  position: absolute;
+  inset: -4px;
+  border: 2px solid rgb(168 137 58 / 0.54);
+  border-radius: inherit;
+  box-shadow:
+    0 0 28px rgb(168 137 58 / 0.72),
+    0 0 60px rgb(240 237 230 / 0.24);
+  content: '';
+  pointer-events: none;
+  opacity: 0.55;
+  transform: scale(0.98);
+  animation: guideGlow 1.8s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+@keyframes guideGlow {
+  to {
+    opacity: 1;
+    transform: scale(1.025);
+  }
 }
 
 .image-card:hover .image-card__float {
@@ -305,6 +403,10 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .image-card__float {
     animation-duration: 1ms;
+  }
+
+  .image-card--guide-target .image-card__frame::after {
+    animation: none;
   }
 }
 </style>

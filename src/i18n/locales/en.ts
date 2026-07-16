@@ -67,7 +67,8 @@ export default {
     folderLimit: 'You have reached the maximum of 10 folders.',
     folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
     folderCreatedAndSaved: 'Folder created and image saved.',
-    deleteFolderFailed: 'Failed to delete the folder. Please try again.'
+    deleteFolderFailed: 'Failed to delete the folder. Please try again.',
+    deleteImageFailed: 'Failed to delete the image. Please try again.'
   },
   userMenu: {
     signedInAs: 'Signed in as',
@@ -89,6 +90,9 @@ export default {
     back: 'Back',
     viewAllAria: 'View all consultations',
     backToSelectedAria: 'Back to selected consultation',
+    loading: 'Loading your consultations…',
+    loadError: "We couldn't load your consultations.",
+    retry: 'Try again',
     sampleNotes: {
       brand: 'I would like help defining the visual direction for a new brand identity.',
       homeMaterials: 'I need advice on natural finishes and a calm material palette for my home.',
@@ -196,21 +200,22 @@ export default {
   dna: {
     discoverTitle1: 'Discover',
     discoverTitle2: 'Your Style DNA',
-    introDesc:
-      'Asterism personalizes your visual feed by cataloging your stylistic preferences. Embark on a 4-stage blind selection process to extract your architectural and sensory style values.',
+    introDesc: 'A quick visual quiz that learns your design taste.',
     participate: 'PARTICIPATE',
     skip: 'SKIP',
     loadingLine1: 'Forming',
     loadingLine2: 'Your Style DNA',
     pickerHint: 'Click one image to continue',
-    quiz: 'Quiz',
+    pickerProgress: '{current} / {total}',
     quizProgress: 'Quiz progress',
     complete: 'Style DNA Complete',
     resultYour: 'Your',
     homepagePersonalized: 'Your homepage is now personalized based on your Style DNA.',
     startExploring: 'Start Exploring',
     retakeQuiz: 'Retake Quiz',
-    sampleResultNotice: 'We do not have quiz result yet, so this is a sample Style DNA result.'
+    sampleResultNotice: 'We do not have quiz result yet, so this is a sample Style DNA result.',
+    viewTagDetails: 'View {tag} description',
+    close: 'Close'
   },
   image: {
     back: 'Back',
@@ -246,10 +251,22 @@ export default {
     deleteFolderTitle: 'Delete {name} and All Images',
     deleteConfirm: 'Delete',
     deleteCancel: 'Close',
-    deleteFolderAria: 'Delete folder'
+    deleteFolderAria: 'Delete folder',
+    deleteImageTitle: 'Delete Image from Folder',
+    deleteImageAria: 'Delete image',
+    openFolderAria: 'Open folder',
+    openImageDetailAria: 'View image detail'
   },
   home: {
     guestHint: 'Sign up or log in to keep exploring',
+    tour: {
+      description: 'uses visual exploration to organize your inspiration and turn it into practical style directions.',
+      startTour: 'Start Tour',
+      exploreOnMyOwn: 'Explore on my own'
+    },
+    guide: {
+      imageClick: 'Click an image to explore'
+    },
     limitTitle: 'Your daily inspiration limit has been reached.',
     limitDesc:
       'Create a free account to unlock endless scrolling, save your favorite pieces to boards, and define your aesthetic DNA.',
