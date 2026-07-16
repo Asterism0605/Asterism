@@ -77,7 +77,10 @@ async function handleLogout() {
 <template>
   <header
     :class="[
-      'fixed top-0 z-60 flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl',
+      /* z-[110]：故意高於 StyleTagModal 的 z-index:100，modal 開著時 AppHeader（logo／
+         語言切換／個人選單，含下拉展開的選單本身）仍蓋在最上層可操作，方便中英對照
+         review（una-hsieh review 意見）。全站其餘覆蓋層都在 z-60 以下，不受影響。 */
+      'fixed top-0 z-[110] flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl',
       isPictureDetail ? 'max-md:hidden md:w-3/5' : 'w-full'
     ]"
   >

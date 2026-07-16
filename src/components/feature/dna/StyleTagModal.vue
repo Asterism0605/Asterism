@@ -160,14 +160,12 @@ onBeforeUnmount(() => {
 <style scoped>
 .tag-modal-backdrop {
   position: fixed;
-  /* top 留給 AppHeader（實測高度 65px，含 py-4+圖示+邊框），不用 inset:0 蓋滿——
-     這樣 AppHeader（含語言切換）在 modal 開著時仍可操作，方便中英對照 review
-     （una-hsieh review 意見）；z-index 維持 100，蓋過頁面其餘內容不受影響，
-     不用把它降到 AppHeader 的 z-60 以下（降低會連頁面其他內容一起蓋不住）。 */
-  top: 65px;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  /* inset:0 蓋滿全螢幕（含 PictureDetail 頁面本身「← 返回」那類一般內容，
+     它們沒有特別拉高 z-index，理應被 modal 蓋住）。AppHeader 改在自己身上
+     拉高 z-index（見 AppHeader.vue 的 z-[110]）蓋過這裡的 z-index:100，
+     不在這裡開洞——開洞會連 PictureDetail 同一列的「← 返回」也一併露出來，
+     這正是 una-hsieh review 明確要求「header 只留 AppHeader 本身內容」的反例。 */
+  inset: 0;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -286,27 +284,30 @@ onBeforeUnmount(() => {
     padding: 0;
   }
 
+  /* 圓弧方向對照參考稿重新量測：圓心在畫面偏右、偏下（約 56vw, 62vh），
+     半徑約 68vw，讓可見弧線貼著左緣「豎直下滑」再往下彎出畫面，
+     不是先前那種圓心太靠左緣、弧線一開口就整個往右鼓出去的方向。 */
   .tag-modal-ellipse {
     position: fixed;
-    left: -55vw;
-    top: 10vh;
-    width: 145vw;
-    height: 145vw;
+    left: -12vw;
+    top: calc(62vh - 68vw);
+    width: 136vw;
+    height: 136vw;
     border-radius: 50%;
   }
 
   .tag-modal-label-connector {
     position: fixed;
-    left: 4vw;
+    left: 8vw;
     top: 33vh;
     width: 24vw;
   }
 
   .tag-modal-label {
     position: fixed;
-    left: 30vw;
+    left: 34vw;
     top: 33vh;
-    max-width: 62vw;
+    max-width: 58vw;
     font-size: 20px;
     white-space: normal;
     transform: none;
