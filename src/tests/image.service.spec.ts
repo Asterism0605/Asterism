@@ -121,21 +121,22 @@ describe('image.service', () => {
     expect(getMaxConsecutiveStyleGroupCount(styleGroups)).toBeLessThanOrEqual(2);
   });
 
-  it('prioritizes concept images that match preferred styles', async () => {
+  it('fills the first 300vh with the top Style DNA tag group, then restores interleaving', async () => {
     const images = await getHomeInspirationImages({
-      preferredStyles: ['Art Deco', 'Baroque']
+      preferredStyles: ['Y2K', 'Art Deco']
     });
     const styleGroups = images.map((image) => image.styleGroup);
+    const primaryStyleGroup = 'Y2K & Internet Aesthetics';
 
-    expect(images).toHaveLength(45);
     expect(images[0]).toEqual(
       expect.objectContaining({
-        id: 'doa-main-001',
-        styleGroup: 'Decorative & Opulent Art'
+        id: 'y2k-main-001',
+        styleGroup: primaryStyleGroup
       })
     );
-    expect(new Set(styleGroups.slice(0, 18)).size).toBe(9);
-    expect(getMaxConsecutiveStyleGroupCount(styleGroups)).toBeLessThanOrEqual(2);
+    expect(styleGroups.slice(0, 9)).toEqual(Array(9).fill(primaryStyleGroup));
+    expect(styleGroups[9]).not.toBe(primaryStyleGroup);
+    expect(getMaxConsecutiveStyleGroupCount(styleGroups.slice(9))).toBeLessThanOrEqual(2);
   });
 
   describe('getMediumGroupImages', () => {

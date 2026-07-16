@@ -324,14 +324,16 @@ describe('Home', () => {
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 
-    expect(floatingNetwork.props('height')).toBe('1500vh');
     expect(images[0]).toEqual(
       expect.objectContaining({
         id: 'doa-main-001',
         styleGroup: 'Decorative & Opulent Art'
       })
     );
-    expect(images).toHaveLength(45);
+    expect(images.slice(0, 9).every((image) => image.styleGroup === 'Decorative & Opulent Art')).toBe(
+      true
+    );
+    expect(floatingNetwork.props('height')).toBe(`${(images.length / 3) * 100}vh`);
   });
 
   it('opens the limit modal for guests when viewport bottom reaches 150vh', async () => {
