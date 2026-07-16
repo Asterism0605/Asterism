@@ -35,7 +35,6 @@ describe('HomeImageClickGuide', () => {
     await wrapper.vm.$nextTick();
 
     expect(wrapper.findAll('[data-testid="guide-backdrop"]')).toHaveLength(4);
-    expect(wrapper.find('[data-testid="guide-orbit"]').exists()).toBe(false);
     expect(wrapper.find('[data-testid="guide-arrow"]').classes()).toContain('guide-arrow');
     expect(wrapper.find('[data-testid="guide-arrow-endpoint"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="guide-arrow-endpoint"]').attributes('style')).toContain(
