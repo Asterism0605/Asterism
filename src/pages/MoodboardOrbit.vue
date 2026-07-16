@@ -204,6 +204,7 @@ const mFolders = computed(() => {
       cy: o.cy + o.ry * Math.sin(ang),
       w,
       h,
+      active: mHover.value === i || (!!folder && folder.id === clickHighlightFolderId.value),
       dimmed: isFolderDimmed(folder),
       hasFolder: !!folder
     };
@@ -582,7 +583,12 @@ function initializeSphere() {
   );
 }
 
-watch(orbitImages, () => nextTick(initializeSphere));
+watch(orbitImages, () => {
+  nextTick(initializeSphere);
+  if (isMobile.value && hasFolders.value) {
+    buildMobileHome();
+  }
+});
 
 onMounted(async () => {
   onResize();
@@ -675,9 +681,9 @@ onBeforeUnmount(() => {
               top: f.cy - f.h / 2 + 'px',
               width: f.w + 'px',
               height: f.h + 'px',
-              transform: mHover === f.i ? 'scale(1.06)' : 'scale(1)',
+              transform: f.active ? 'scale(1.06)' : 'scale(1)',
               transition: 'transform .22s ease',
-              zIndex: mHover === f.i ? 20 : 5,
+              zIndex: f.active ? 20 : 5,
               cursor: f.hasFolder ? 'pointer' : 'default',
               pointerEvents: f.hasFolder ? 'auto' : 'none'
             }"
@@ -686,7 +692,7 @@ onBeforeUnmount(() => {
             @click="onFolderClick(f.i)"
           >
             <img
-              :src="mHover === f.i ? '/images/folder-active.png' : '/images/folder-idle.png'"
+              :src="f.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
               draggable="false"
               class="w-full h-full select-none"
               :style="{
@@ -712,72 +718,6 @@ onBeforeUnmount(() => {
               }"
               @delete="requestDeleteFolder(f.i)"
             />
-          </div>
-
-          <!-- folder name appears only while a folder is hovered/pressed -->
-          <div
-            class="absolute"
-            :style="{
-              left: '28px',
-              top: '100px',
-              pointerEvents: 'none',
-              opacity: mHover >= 0 ? 1 : 0,
-              transform: mHover >= 0 ? 'translateY(0)' : 'translateY(8px)',
-              transition: 'opacity .3s ease, transform .3s ease'
-            }"
-          >
-            <div
-              class="absolute"
-              style="
-                left: -26px;
-                top: -22px;
-                width: 240px;
-                height: 118px;
-                border-radius: 34px;
-                background: radial-gradient(
-                  58% 56% at 30% 46%,
-                  rgba(9, 9, 11, 0.72),
-                  rgba(9, 9, 11, 0)
-                );
-                filter: blur(5px);
-              "
-            ></div>
-            <div
-              class="relative text-white"
-              style="
-                font-size: 21px;
-                font-weight: 400;
-                letter-spacing: 0.4px;
-                text-shadow:
-                  0 2px 18px rgba(0, 0, 0, 0.7),
-                  0 0 14px rgba(255, 255, 255, 0.14);
-              "
-            >
-              {{ mHover >= 0 ? getFolderName(mHover) : '' }}
-            </div>
-            <div class="relative flex items-center" style="gap: 8px; margin-top: 14px">
-              <span
-                style="
-                  width: 7px;
-                  height: 7px;
-                  border-radius: 50%;
-                  background: #eaecf0;
-                  box-shadow: 0 0 8px rgba(234, 236, 240, 0.7);
-                  flex: 0 0 auto;
-                "
-              ></span>
-              <span
-                style="
-                  height: 1.5px;
-                  width: 138px;
-                  background: linear-gradient(
-                    90deg,
-                    rgba(234, 236, 240, 0.95),
-                    rgba(234, 236, 240, 0.28)
-                  );
-                "
-              ></span>
-            </div>
           </div>
         </div>
 

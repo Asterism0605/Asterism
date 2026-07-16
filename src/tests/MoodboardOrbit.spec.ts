@@ -1021,6 +1021,49 @@ describe('MoodboardOrbit', () => {
       );
     });
 
+    it('clicking a folder directory item lights up the matching mobile orbit tile', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchTwoFolders();
+      const { wrapper } = await mountMoodboard();
+      await flushPromises();
+
+      await wrapper.get('[data-testid="folder-directory-item-oldest-folder"]').trigger('click');
+      await flushPromises();
+
+      expect(
+        wrapper.get('[data-testid="moodboard-folder-mobile-1"] img').attributes('src')
+      ).toBe('/images/folder-active.png');
+    });
+
+    it('clicking a folder directory item updates the mobile photo preview', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchTwoFolders();
+      const { wrapper } = await mountMoodboard();
+      await flushPromises();
+
+      const initialSources = wrapper
+        .findAll('[data-testid="moodboard-mobile-photo"] img')
+        .map((img) => img.attributes('src'));
+      expect(initialSources).toContain('/style-image/newest-image.webp');
+
+      await wrapper.get('[data-testid="folder-directory-item-oldest-folder"]').trigger('click');
+      await flushPromises();
+
+      const updatedSources = wrapper
+        .findAll('[data-testid="moodboard-mobile-photo"] img')
+        .map((img) => img.attributes('src'));
+      expect(updatedSources).toContain('/style-image/oldest-image.webp');
+      expect(updatedSources).not.toContain('/style-image/newest-image.webp');
+    });
+
     it('clicking an empty folder in the directory does nothing', async () => {
       const store = patchTwoFolders();
       store.$patch({
