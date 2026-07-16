@@ -35,7 +35,9 @@ import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/mood
 import type {
   MoodboardFolder,
   MoodboardMobilePhoto,
+  MoodboardMobileSavedPhoto,
   MoodboardPositionedPhoto,
+  MoodboardSavedPhoto,
   SavedImage
 } from '@/types/moodboard';
 import { initSphere } from '@/components/feature/moodboard/sphere';
@@ -93,7 +95,7 @@ const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96));
 const mStage = ref<HTMLElement | null>(null);
 const deskStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
-const mDetailPhotos = ref<MoodboardMobilePhoto[]>([]);
+const mDetailPhotos = ref<MoodboardMobileSavedPhoto[]>([]);
 const mHomePhotosRandom = ref<MoodboardMobilePhoto[]>([]);
 const deleteHoverIdx = ref(-1);
 const deleteTarget = ref<{ id: string; name: string } | null>(null);
@@ -298,7 +300,7 @@ async function confirmDeleteFolder() {
   }
 }
 
-function toPhotos(images: SavedImage[], mobile = false) {
+function toPhotos(images: SavedImage[], mobile = false): MoodboardSavedPhoto[] {
   const sizes = mobile ? mDetailBase : photos;
 
   return images.map((image, index) => ({
