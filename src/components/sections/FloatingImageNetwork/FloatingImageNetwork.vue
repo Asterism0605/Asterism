@@ -28,6 +28,7 @@ const emit = defineEmits<{
   click: [index: number];
   ready: [];
   imagesLoaded: [];
+  guideTargetReady: [];
 }>();
 
 const containerRef = ref<HTMLElement | null>(null);
@@ -41,6 +42,7 @@ const naturalAspects = new Map<string, string>();
 // 圖片載入前用 preset 假比例排的第一版先不顯示，等拿到真實比例排好的版本才淡入，
 // 避免使用者看到「假比例 → 真比例」跳動兩次的感覺。
 const isReady = ref(false);
+const loadedImageIndexes = ref<Set<number>>(new Set());
 let loadedCount = 0;
 let hasEmittedImagesLoaded = false;
 let recomputeTimer: ReturnType<typeof setTimeout> | undefined;
@@ -76,20 +78,27 @@ function scheduleRecompute() {
 function scheduleAspectReflow() {
   if (typeof window === 'undefined') {
     reflowLayout();
+    emit('guideTargetReady');
     return;
   }
   clearTimeout(recomputeTimer);
-  recomputeTimer = setTimeout(reflowLayout, 120);
+  recomputeTimer = setTimeout(() => {
+    reflowLayout();
+    emit('guideTargetReady');
+  }, 120);
 }
 
-function onImageLoad(src: string, event: Event) {
+function onImageLoad(index: number, src: string, event: Event) {
   const img = event.target as HTMLImageElement;
+  let needsReflow = false;
 
   if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+    loadedImageIndexes.value = new Set(loadedImageIndexes.value).add(index);
     const aspect = `${img.naturalWidth}/${img.naturalHeight}`;
 
     if (naturalAspects.get(src) !== aspect) {
       naturalAspects.set(src, aspect);
+      needsReflow = true;
 
       if (!isReady.value) {
         scheduleRecompute();
@@ -97,6 +106,10 @@ function onImageLoad(src: string, event: Event) {
         scheduleAspectReflow();
       }
     }
+  }
+
+  if (isReady.value && !needsReflow) {
+    emit('guideTargetReady');
   }
 
   loadedCount += 1;
@@ -113,6 +126,7 @@ function onImageLoad(src: string, event: Event) {
 function startLoadCycle() {
   clearLoadTimers();
   isReady.value = false;
+  loadedImageIndexes.value = new Set();
   loadedCount = 0;
   hasEmittedImagesLoaded = false;
   recomputeLayout();
@@ -237,6 +251,7 @@ onBeforeUnmount(() => {
       :key="`${i}-${image.src}`"
       data-testid="image-card"
       :data-guide-image-index="i"
+      :data-guide-image-ready="loadedImageIndexes.has(i) ? 'true' : undefined"
       :data-guide-target="props.guideTargetIndex === i ? 'true' : undefined"
       :aria-disabled="isCardClickable(i) ? undefined : 'true'"
       class="group image-card absolute"
@@ -277,7 +292,7 @@ onBeforeUnmount(() => {
             decoding="async"
             class="w-full"
             style="display: block; width: 100%; height: auto; border-radius: 4px"
-            @load="onImageLoad(image.src, $event)"
+            @load="onImageLoad(i, image.src, $event)"
           />
         </div>
       </div>
