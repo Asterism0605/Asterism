@@ -14,7 +14,7 @@ describe('classifyStyleGroup', () => {
     expect(classifyStyleGroup([-0.9, 0.1], anchors)).toBe('C');
   });
 
-  it('沒有 anchors 時丟錯', () => {
-    expect(() => classifyStyleGroup([1, 0], [])).toThrow('No style group anchors available.');
+  it('沒有 anchors 時丟錯（委派給共用的 classifyByCosineSimilarity）', () => {
+    expect(() => classifyStyleGroup([1, 0], [])).toThrow('No anchors available.');
   });
 });

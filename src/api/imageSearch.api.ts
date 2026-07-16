@@ -1,4 +1,5 @@
 import { getSupabase } from '@/api/supabaseClient';
+import { IMAGE_SEARCH_CONFIG } from '@/config/imageSearch.config';
 import type { ImageSearchResult } from '@/types/imageSearch';
 
 interface ImageSearchResultRow {
@@ -22,7 +23,7 @@ function toImageSearchResult(row: ImageSearchResultRow): ImageSearchResult {
 export async function searchImagesByEmbedding(
   embedding: number[],
   styleGroup: string,
-  matchCount = 4
+  matchCount = IMAGE_SEARCH_CONFIG.matchCount
 ): Promise<ImageSearchResult[]> {
   const { data, error } = await getSupabase().rpc('search_images_by_embedding', {
     query_embedding: embedding,
