@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { gsap } from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 
@@ -89,15 +89,29 @@ function openDialog(): void {
   }
 }
 
-function preventDismiss(event: Event): void {
-  event.preventDefault();
-}
-
 onMounted(async () => {
   openDialog();
   await nextTick();
   playReveal();
 });
+
+watch(
+  () => props.description,
+  async () => {
+    cleanupAnimation();
+    await nextTick();
+
+    if (!descriptionElement.value) {
+      return;
+    }
+
+    splitText = SplitText.create(descriptionElement.value, {
+      type: 'chars',
+      charsClass: 'home-tour-intro__char'
+    });
+    gsap.set(splitText.chars, { autoAlpha: 1, y: 0 });
+  }
+);
 
 onBeforeUnmount(() => {
   cleanupAnimation();
@@ -114,7 +128,6 @@ onBeforeUnmount(() => {
     data-testid="home-tour-intro"
     aria-labelledby="home-tour-title"
     aria-describedby="home-tour-description"
-    @cancel.prevent="preventDismiss"
   >
     <div
       class="fixed inset-x-0 bottom-0 top-[var(--app-header-height)] z-0 bg-[rgb(5_5_8_/_0.72)] backdrop-blur-[8px]"

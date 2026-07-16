@@ -1,6 +1,7 @@
 import { nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { SplitText } from 'gsap/SplitText';
 import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
 
 describe('HomeTourIntro', () => {
@@ -54,7 +55,8 @@ describe('HomeTourIntro', () => {
     expect(wrapper.emitted('explore')).toHaveLength(1);
   });
 
-  it('does not close when the dialog receives a cancel event', async () => {
+  it('rebuilds split text when the translated description changes', async () => {
+    const createSplitText = vi.spyOn(SplitText, 'create');
     const wrapper = mount(HomeTourIntro, {
       props: {
         description: 'Tour description',
@@ -64,10 +66,10 @@ describe('HomeTourIntro', () => {
     });
 
     await nextTick();
-    const dialog = wrapper.find('dialog');
-    await dialog.trigger('cancel');
+    await wrapper.setProps({ description: '新的導覽文字' });
+    await nextTick();
 
-    expect(dialog.exists()).toBe(true);
-    expect(wrapper.emitted('close')).toBeUndefined();
+    expect(createSplitText).toHaveBeenCalledTimes(2);
+    expect(wrapper.find('#home-tour-description').text()).toBe('新的導覽文字');
   });
 });
