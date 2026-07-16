@@ -80,16 +80,6 @@ async function handleLogout() {
       <img class="w-8 h-8" :src="siteLogoSrc" alt="Asterism" />
     </button>
 
-    <router-link
-      v-if="isHome"
-      :to="{ name: 'image-search' }"
-      class="size-9 shrink-0 overflow-hidden rounded-full sm:hidden"
-      :aria-label="$t('imageSearch.title')"
-      :title="$t('imageSearch.title')"
-    >
-      <img :src="imageSearchEntryIcon" alt="" class="size-full" />
-    </router-link>
-
     <div class="flex items-center gap-3">
       <div ref="langMenuRef" class="relative" @keydown.esc="langMenuOpen = false">
         <button
@@ -154,4 +144,14 @@ async function handleLogout() {
       />
     </div>
   </header>
+
+  <router-link
+    v-if="isHome"
+    :to="{ name: 'image-search' }"
+    class="fixed bottom-4 right-4 z-50 size-9 shrink-0 overflow-hidden rounded-full shadow-lg sm:hidden"
+    :aria-label="$t('imageSearch.title')"
+    :title="$t('imageSearch.title')"
+  >
+    <img :src="imageSearchEntryIcon" alt="" class="size-full" />
+  </router-link>
 </template>

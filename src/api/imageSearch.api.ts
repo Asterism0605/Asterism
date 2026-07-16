@@ -20,7 +20,9 @@ function toImageSearchResult(row: ImageSearchResultRow): ImageSearchResult {
   };
 }
 
-// 純檢索：全庫 kNN，不先分類 styleGroup。open-set 拒絕由呼叫端對 top-1 相似度設門檻。
+// 純檢索：全庫 kNN，不先分類 styleGroup——視覺相似度是骨幹，風格調整交給呼叫端的
+// 軟重排（rerankByStyle）。曾試過改打風格過濾的 RPC（search_images_by_embedding），
+// 分類邊界案例會整批犧牲視覺相似度，已回退，取捨紀錄見 imageSearch.config.ts。
 export async function searchSimilarImages(
   embedding: number[],
   matchCount = IMAGE_SEARCH_CONFIG.matchCount
