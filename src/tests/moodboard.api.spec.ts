@@ -135,7 +135,7 @@ describe('moodboard.api', () => {
     await expect(deleteMoodboardItem('item-1', 'folder-1')).rejects.toBe(error);
   });
 
-  it('throws when no item row was actually deleted (wrong folder, already deleted, or stale id)', async () => {
+  it('throws when no item row was actually deleted (wrong folder, already deleted, stale id, or blocked by RLS because the folder is not owned by the caller)', async () => {
     deleteMaybeSingle.mockResolvedValue({ data: null, error: null });
 
     await expect(deleteMoodboardItem('item-1', 'folder-1')).rejects.toThrow(

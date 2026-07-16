@@ -29,8 +29,7 @@ export function useDeleteMoodboardImage(options: UseDeleteMoodboardImageOptions)
   }
 
   async function confirmDeleteImage() {
-    const profileId = authStore.user?.id;
-    if (!deleteImageTarget.value || isDeletingImage.value || !profileId) return;
+    if (!deleteImageTarget.value || isDeletingImage.value || !authStore.user) return;
 
     const { folderId, itemId } = deleteImageTarget.value;
     isDeletingImage.value = true;
