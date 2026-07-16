@@ -250,6 +250,8 @@ export default {
     deleteImageTitle: '從資料夾中刪除圖片',
     deleteImageAria: '刪除圖片',
     openFolderAria: '開啟資料夾',
+    folderSelected: '我的資料夾',
+    folderEmptySuffix: '(空)',
     openImageDetailAria: '查看圖片詳情'
   },
   home: {

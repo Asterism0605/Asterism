@@ -11,9 +11,9 @@ import { useRouter, useRoute } from 'vue-router';
 import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConfirm.vue';
 import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
 import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
+import FolderDirectory from '@/components/feature/moodboard/FolderDirectory.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
-import ProfileCard from '@/components/ui/ProfileCard.vue';
 import { showToast } from '@/composables/useToast';
 import {
   NAV_H,
@@ -102,6 +102,7 @@ const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
 const deleteImageHoverIdx = ref<string | null>(null);
+const clickHighlightFolderId = ref<string | null>(null);
 
 const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
   useDeleteMoodboardImage({
@@ -232,7 +233,7 @@ const folderView = computed(() => {
       i,
       w,
       h,
-      active: hoverIdx.value === i,
+      active: hoverIdx.value === i || (!!folder && folder.id === clickHighlightFolderId.value),
       onLine,
       dimmed: isFolderDimmed(folder),
       hasFolder: !!folder,
@@ -242,7 +243,6 @@ const folderView = computed(() => {
   });
 });
 
-const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
 const showEmpty = computed(() => moodboardStore.status === 'idle' || moodboardStore.isEmpty);
 
 function getFolderName(index: number): string {
@@ -255,6 +255,15 @@ function hoverFolder(index: number) {
 
   hoverIdx.value = index;
   activeSphereFolderId.value = folder.id;
+  clickHighlightFolderId.value = null;
+}
+
+function selectFolderById(folderId: string) {
+  const folder = moodboardStore.folders.find((f) => f.id === folderId);
+  if (!folder?.images.length) return;
+
+  activeSphereFolderId.value = folder.id;
+  clickHighlightFolderId.value = folder.id;
 }
 
 function leaveFolder() {
@@ -419,7 +428,7 @@ function buildMobileHome() {
     gap: 12,
     xMin: 16,
     xMax: 424,
-    yMin: 200,
+    yMin: 330,
     yMax: 720
   });
   mHomePhotosRandom.value = nodes.map((d) => ({
@@ -799,7 +808,9 @@ onBeforeUnmount(() => {
               class="moodboard-photo-link"
               data-testid="moodboard-mobile-photo"
               :disabled="hasFolders ? !sphereFolder || p.placeholder : !p.imageId"
-              :aria-label="hasFolders ? $t('moodboard.openFolderAria') : $t('moodboard.openImageDetailAria')"
+              :aria-label="
+                hasFolders ? $t('moodboard.openFolderAria') : $t('moodboard.openImageDetailAria')
+              "
               @click="hasFolders ? onSphereClick() : p.imageId && goToImage(p.imageId)"
             >
               <img
@@ -835,13 +846,15 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <!-- header: asterisk logo + profile (shared ProfileCard, sm size to fit compact header) -->
-        <div v-if="authStore.isAuthenticated" class="absolute" style="left: 20px; top: 28px">
-          <ProfileCard
-            avatar-size="sm"
-            class="p-0!"
-            :name="authStore.user?.displayName ?? ''"
-            :subtitle="authStore.user?.email ?? ''"
+        <div
+          v-if="hasFolders && moodboardStore.folders.length > 0"
+          class="absolute"
+          style="left: 8px; top: 20px; right: 20px"
+        >
+          <FolderDirectory
+            :folders="moodboardStore.folders"
+            :active-folder-id="sphereFolder?.id ?? null"
+            @select="selectFolderById"
           />
         </div>
 
@@ -932,6 +945,22 @@ onBeforeUnmount(() => {
           <path :d="outerPath" stroke="rgba(220,222,228,0.45)" stroke-width="1" fill="none" />
           <path :d="innerPath" stroke="rgba(220,222,228,0.32)" stroke-width="1" fill="none" />
         </svg>
+
+        <i
+          v-if="hasFolders"
+          class="moodboard-corner-orbit moodboard-corner-orbit--one"
+          aria-hidden="true"
+        ></i>
+        <i
+          v-if="hasFolders"
+          class="moodboard-corner-orbit moodboard-corner-orbit--two"
+          aria-hidden="true"
+        ></i>
+        <i
+          v-if="hasFolders && moodboardStore.folders.length > 0"
+          class="folder-directory-spine"
+          aria-hidden="true"
+        ></i>
 
         <!-- ===== STATE A : HAS FOLDERS (orbit + photo sphere) ===== -->
         <div
@@ -1129,80 +1158,16 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <!-- ===== PROFILE (teammate's ProfileCard component, sm size — 組長回饋原尺寸太大，
-             介於改動前的 scale(0.5) 跟改動後全尺寸之間) ===== -->
-        <div v-if="authStore.isAuthenticated" class="absolute" style="left: 100px; top: 150px">
-          <ProfileCard
-            avatar-size="sm"
-            :name="authStore.user?.displayName ?? ''"
-            :subtitle="authStore.user?.email ?? ''"
-          />
-        </div>
-
-        <!-- hover title block: dark halo + glowing title + underline with a dot at its left -->
         <div
+          v-if="hasFolders && moodboardStore.folders.length > 0"
           class="absolute"
-          :style="{
-            left: '150px',
-            top: '300px',
-            pointerEvents: 'none',
-            opacity: showLeader ? 1 : 0,
-            transform: showLeader ? 'translateY(0)' : 'translateY(8px)',
-            transition: showLeader ? 'opacity .32s ease, transform .32s ease' : 'none'
-          }"
+          style="left: 100px; top: 30px; z-index: 5"
         >
-          <div
-            class="absolute"
-            style="
-              left: -34px;
-              top: -26px;
-              width: 330px;
-              height: 150px;
-              border-radius: 40px;
-              background: radial-gradient(
-                58% 56% at 32% 46%,
-                rgba(9, 9, 11, 0.72),
-                rgba(9, 9, 11, 0)
-              );
-              filter: blur(5px);
-            "
-          ></div>
-          <div
-            class="relative text-white"
-            style="
-              font-size: 16px;
-              font-weight: 400;
-              letter-spacing: 0.6px;
-              text-shadow:
-                0 2px 22px rgba(0, 0, 0, 0.7),
-                0 0 18px rgba(255, 255, 255, 0.14);
-            "
-          >
-            {{ getFolderName(hoverIdx) }}
-          </div>
-          <div class="relative flex items-center" style="gap: 10px; margin-top: 20px">
-            <span
-              style="
-                width: 9px;
-                height: 9px;
-                border-radius: 50%;
-                background: #eaecf0;
-                box-shadow: 0 0 10px rgba(234, 236, 240, 0.7);
-                flex: 0 0 auto;
-              "
-            ></span>
-            <span
-              style="
-                height: 1.5px;
-                width: 188px;
-                background: linear-gradient(
-                  90deg,
-                  rgba(234, 236, 240, 0.95),
-                  rgba(234, 236, 240, 0.28)
-                );
-              "
-            ></span>
-          </div>
+          <FolderDirectory
+            :folders="moodboardStore.folders"
+            :active-folder-id="sphereFolder?.id ?? null"
+            @select="selectFolderById"
+          />
         </div>
       </div>
     </template>
@@ -1222,6 +1187,47 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.moodboard-corner-orbit {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: cornerOrbitFloat 6.4s ease-in-out infinite;
+}
+.moodboard-corner-orbit--one {
+  left: -370px;
+  top: -590px;
+  width: 780px;
+  height: 706px;
+  border: 1px solid rgba(251, 251, 251, 0.418);
+}
+.moodboard-corner-orbit--two {
+  left: -430px;
+  top: -410px;
+  width: 730px;
+  height: 560px;
+  border: 1.3px solid rgba(248, 246, 246, 0.842);
+}
+.folder-directory-spine {
+  position: absolute;
+  left: 105px;
+  top: 0;
+  height: 1024px;
+  width: 1.8px;
+  background: rgba(240, 237, 230, 0.879);
+  pointer-events: none;
+  z-index: 1;
+  animation: cornerOrbitFloat 6.4s ease-in-out infinite;
+}
+@keyframes cornerOrbitFloat {
+  0%,
+  100% {
+    translate: 0 -12px;
+  }
+  50% {
+    translate: 0 8px;
+  }
+}
 @keyframes floatY {
   0%,
   100% {

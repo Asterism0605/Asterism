@@ -961,4 +961,95 @@ describe('MoodboardOrbit', () => {
       expect(router.currentRoute.value.path).toBe('/moodboard/studio');
     });
   });
+
+  describe('folder directory click flow', () => {
+    const savedImage = (id: string) => ({
+      itemId: `item-${id}`,
+      id,
+      src: `/style-image/${id}.webp`,
+      title: id,
+      styleGroup: 'minimal',
+      style: [],
+      createdAt: '2026-07-05T00:00:00.000Z'
+    });
+
+    function patchTwoFolders() {
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        folders: [
+          {
+            id: 'newest-folder',
+            name: 'Newest',
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [savedImage('newest-image')]
+          },
+          {
+            id: 'oldest-folder',
+            name: 'Oldest',
+            createdAt: '2026-07-03T00:00:00.000Z',
+            images: [savedImage('oldest-image')]
+          }
+        ]
+      });
+      return store;
+    }
+
+    it('clicking a folder directory item switches the sphere to that folder', async () => {
+      patchTwoFolders();
+      const { wrapper } = await mountMoodboard();
+      await flushPromises();
+
+      expect(initSphere.mock.calls.at(-1)?.[3][0].id).toBe('newest-image');
+
+      await wrapper.get('[data-testid="folder-directory-item-oldest-folder"]').trigger('click');
+      await flushPromises();
+
+      expect(updateSphereImages.mock.calls.at(-1)?.[0][0].id).toBe('oldest-image');
+    });
+
+    it('clicking a folder directory item lights up the matching orbit tile', async () => {
+      patchTwoFolders();
+      const { wrapper } = await mountMoodboard();
+      await flushPromises();
+
+      await wrapper.get('[data-testid="folder-directory-item-oldest-folder"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.get('[data-testid="moodboard-folder-1"] img').attributes('src')).toBe(
+        '/images/folder-active.png'
+      );
+    });
+
+    it('clicking an empty folder in the directory does nothing', async () => {
+      const store = patchTwoFolders();
+      store.$patch({
+        folders: [
+          ...store.folders,
+          { id: 'empty-folder', name: 'Empty', createdAt: '2026-07-07T00:00:00.000Z', images: [] }
+        ]
+      });
+      const { wrapper } = await mountMoodboard();
+      await flushPromises();
+      const updateCount = updateSphereImages.mock.calls.length;
+
+      await wrapper.get('[data-testid="folder-directory-item-empty-folder"]').trigger('click');
+      await flushPromises();
+
+      expect(updateSphereImages).toHaveBeenCalledTimes(updateCount);
+    });
+
+    it('hides the folder directory after opening a folder detail view', async () => {
+      patchTwoFolders();
+      const { wrapper } = await mountMoodboard();
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid^="folder-directory-item-"]').exists()).toBe(true);
+
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.find('[data-testid^="folder-directory-item-"]').exists()).toBe(false);
+    });
+  });
 });

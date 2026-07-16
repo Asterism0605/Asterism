@@ -26,7 +26,7 @@ export const MH = 956;
 
 export const M_HOME_ORBIT: MoodboardOrbitParams = {
   cx: 220,
-  cy: 770,
+  cy: 820,
   rx: 597,
   ry: 597,
   node: { x: 470, y: 230 }
