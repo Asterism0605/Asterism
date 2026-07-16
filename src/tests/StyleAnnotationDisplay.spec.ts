@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, it, expect } from 'vitest'
 import StyleAnnotationDisplay from '@/components/feature/dna/StyleAnnotationDisplay.vue'
 import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue'
 import type { StyleDnaAnnotation, StyleDnaScore } from '@/utils/computeStyleDnaResult'
@@ -17,6 +18,10 @@ const annotations: StyleDnaAnnotation[] = [
 ]
 
 describe('StyleAnnotationDisplay', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('renders the hero image, style scores, and annotation values', () => {
     const wrapper = mount(StyleAnnotationDisplay, {
       props: {

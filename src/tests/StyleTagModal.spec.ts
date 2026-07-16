@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { createI18n } from 'vue-i18n'
 import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue'
 import en from '@/i18n/locales/en'
@@ -25,6 +26,10 @@ function mountModal(tagLabel: string | null, locale: 'en' | 'zh' = 'en') {
 }
 
 describe('StyleTagModal', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('shows the tag name and its English description when open in English', () => {
     const wrapper = mountModal('Art Deco', 'en')
 

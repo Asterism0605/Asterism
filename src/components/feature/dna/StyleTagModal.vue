@@ -3,6 +3,7 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStyleTagLabel } from '@/composables/useStyleTagLabel';
 import { STYLE_TAG_DESCRIPTIONS } from '@/data/styleTagDescriptions';
+import { useStyleTagModalStore } from '@/stores/styleTagModal.store';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -15,6 +16,7 @@ const emit = defineEmits<{
 
 const { t, locale } = useI18n();
 const { displayLabel } = useStyleTagLabel();
+const styleTagModalStore = useStyleTagModalStore();
 
 const description = computed(() => {
   if (!props.tagLabel) return null;
@@ -86,6 +88,8 @@ async function focusPanel() {
 watch(
   isOpen,
   (open) => {
+    styleTagModalStore.setOpen(open);
+
     if (typeof window === 'undefined' || typeof document === 'undefined') {
       return;
     }
@@ -107,6 +111,8 @@ watch(
 );
 
 onBeforeUnmount(() => {
+  styleTagModalStore.setOpen(false);
+
   if (typeof window === 'undefined' || typeof document === 'undefined') {
     return;
   }
@@ -284,29 +290,30 @@ onBeforeUnmount(() => {
     padding: 0;
   }
 
-  /* 圓弧方向對照參考稿重新量測：圓心在畫面偏右、偏下（約 56vw, 62vh），
-     半徑約 68vw，讓可見弧線貼著左緣「豎直下滑」再往下彎出畫面，
-     不是先前那種圓心太靠左緣、弧線一開口就整個往右鼓出去的方向。 */
+  /* 圓弧方向：用參考稿實際像素描點反推圓心/半徑（不是用眼睛量），取樣上下兩段
+     可見弧線＋label 白點共 3 個點解圓方程式，圓心在（約 78vw, 64vh）、半徑約 87vw
+     ——比先前那版（56vw/68vw）大上不少、圓心也更靠右，弧線才會貼著左緣一路
+     豎直下滑到接近畫面底部，不是一開口就整個鼓出去。 */
   .tag-modal-ellipse {
     position: fixed;
-    left: -12vw;
-    top: calc(62vh - 68vw);
-    width: 136vw;
-    height: 136vw;
+    left: -9vw;
+    top: calc(64vh - 87vw);
+    width: 174vw;
+    height: 174vw;
     border-radius: 50%;
   }
 
   .tag-modal-label-connector {
     position: fixed;
     left: 8vw;
-    top: 33vh;
+    top: 30vh;
     width: 24vw;
   }
 
   .tag-modal-label {
     position: fixed;
     left: 34vw;
-    top: 33vh;
+    top: 30vh;
     max-width: 58vw;
     font-size: 20px;
     white-space: normal;
