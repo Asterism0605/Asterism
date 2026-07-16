@@ -169,7 +169,6 @@ export default {
     uploadedAlt: '你上傳的圖片',
     yourPhoto: '你的照片',
     noMatch: '找不到相似的圖，換一張試試？',
-    similarityLabel: '{percent}% 相似',
     invalidFileType: '請上傳 JPG、PNG 或 WebP 格式的圖片。',
     fileTooLarge: '圖片大小請勿超過 10MB。',
     modelDownloadFailed: '模型下載失敗，請檢查網路連線後重試。',

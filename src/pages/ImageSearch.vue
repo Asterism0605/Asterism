@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { ImageUp, ScanSearch } from '@lucide/vue';
 import { useClipModelStore } from '@/stores/clipModel.store';
@@ -17,7 +16,6 @@ import type { ImageSearchResult } from '@/types/imageSearch';
 import type { ImageSpreadNode } from '@/types/image';
 
 const router = useRouter();
-const { t } = useI18n();
 const model = useClipModelStore();
 const anchorsState = useClassificationAnchorsStore();
 const search = useImageSearchStore();
@@ -62,21 +60,6 @@ function toSpreadNode(result: ImageSearchResult): ImageSpreadNode {
   };
 }
 
-const similarityById = computed(() => {
-  const map = new Map<string, number>();
-  for (const result of search.results) {
-    map.set(result.id, result.similarity);
-  }
-  return map;
-});
-
-function getResultLabel(node: ImageSpreadNode): string | undefined {
-  const similarity = similarityById.value.get(node.id);
-  return similarity === undefined
-    ? undefined
-    : t('imageSearch.similarityLabel', { percent: Math.round(similarity * 100) });
-}
-
 // 帶 from=image-search，讓 PictureDetail 的返回鍵知道要導回這頁，不是探索頁。
 function handleResultSelect(node: ImageSpreadNode) {
   void router.push({
@@ -98,7 +81,7 @@ function handleSearch() {
 </script>
 
 <template>
-  <main class="relative min-h-[calc(100vh-var(--app-header-height))] overflow-x-hidden bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:60px] lg:h-[calc(100vh-var(--app-header-height))] lg:overflow-hidden">
+  <main class="relative min-h-[calc(100vh-var(--app-header-height))] overflow-x-hidden bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:69px] lg:h-[calc(100vh-var(--app-header-height))] lg:overflow-hidden">
     <ImageSpreadEntrance
       kind="wash"
       class="pointer-events-none absolute inset-0 z-0 image-search__wash"
@@ -110,7 +93,7 @@ function handleSearch() {
          結果版面本身需要的高度（見下方 RelatedImageCluster 註解）留給右欄用滿高度處理。
          小螢幕維持原本上下堆疊，直向捲動在手機上本來就是常態，不特別處理。 -->
     <div class="relative z-10 flex h-full flex-col lg:flex-row lg:items-stretch">
-      <div class="w-full shrink-0 px-6 py-10 md:py-14 lg:flex lg:h-full lg:w-[420px] lg:flex-col lg:justify-center lg:overflow-y-auto lg:py-10">
+      <div class="w-full shrink-0 px-6 py-10 md:py-14 lg:flex lg:h-full lg:w-[420px] lg:flex-col lg:justify-center lg:overflow-hidden lg:pt-16 lg:pb-10 lg:pl-16 lg:pr-6">
         <ImageSpreadEntrance kind="page">
           <p class="image-search-hero__eyebrow">{{ $t('imageSearch.eyebrow') }}</p>
           <h1 class="image-search-hero__title">
@@ -232,18 +215,19 @@ function handleSearch() {
            RelatedImageCluster 的四張卡片是用 top-X%/bottom-X% 這種相對容器「高度」
            的百分比定位，容器不夠高的話同一側的兩張卡片百分比差距換算成實際像素會太
            小，擠在一起重疊——這正是之前只加寬、沒加高，重疊問題還在的原因。
-           浮動群集只在 2xl（≥1536px）以上才用（RelatedImageCluster 的卡片寬度是用 vw
-           算的，假設 host 接近整個視窗寬——這頁左邊固定占了 420px 側欄，host 變窄後
-           vw 尺寸沒跟著縮，viewport 沒到 2xl 之前卡片可能蓋到中間的預覽圖），
-           lg~2xl 這段跟手機一樣退回 2x2 網格。 -->
+           浮動群集斷點跟探索頁一樣用 lg（≥1024px），視覺上盡量比照探索頁的間距/展開
+           程度。RelatedImageCluster 的卡片寬度是用 vw 算的，假設 host 接近整個視窗寬——
+           這頁左邊固定占了側欄，host 比探索頁窄，窄寬度（~1024-1366px）時卡片跟中間
+           預覽圖的邊角會有一點點交疊；這裡靠預覽圖那層的 z-20（比卡片群的 z-10 高）
+           保底，交疊時一律是預覽圖蓋在卡片上面，不會反過來蓋住預覽圖，實際看起來
+           像故意的堆疊效果，不是版面錯位。 -->
       <div v-if="isFullyReady && previewUrl" class="relative flex-1 lg:h-full">
         <div class="relative z-10 mx-auto flex h-full w-full max-w-[1400px] flex-col items-center justify-center gap-6 px-6 pb-10 lg:pb-6">
           <div class="relative z-10 flex w-full flex-1 items-center justify-center">
             <RelatedImageCluster
               v-if="search.status === 'success'"
-              class="hidden 2xl:block"
+              class="hidden lg:block"
               :images="search.results.map(toSpreadNode)"
-              :get-image-label="getResultLabel"
               @select="handleResultSelect"
             />
 
@@ -295,7 +279,7 @@ function handleSearch() {
           <div
             v-if="search.status === 'success'"
             data-testid="search-results"
-            class="grid w-full max-w-3xl grid-cols-2 gap-3 2xl:hidden"
+            class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden"
           >
             <RouterLink
               v-for="result in search.results"

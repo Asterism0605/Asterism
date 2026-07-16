@@ -12,10 +12,10 @@ const emit = defineEmits<{
 }>();
 
 const desktopPositions = [
-  'lg:left-[10%] lg:top-[0.8%] lg:z-30',
-  'lg:left-[14%] lg:bottom-[3%] lg:z-20',
-  'lg:right-[8%] lg:top-[8%] lg:z-30',
-  'lg:right-[14%] lg:bottom-[5%] lg:z-20'
+  'lg:left-[5%] lg:top-[0.8%] lg:z-30',
+  'lg:left-[7%] lg:bottom-[3%] lg:z-20',
+  'lg:right-[5%] lg:top-[5%] lg:z-30',
+  'lg:right-[7%] lg:bottom-[4%] lg:z-20'
 ];
 
 function getPositionClass(index: number) {

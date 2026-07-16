@@ -156,8 +156,8 @@ export default {
   },
   imageSearch: {
     eyebrow: 'Visual Search',
-    title: 'Image Search',
-    subtitle: "Upload a photo to find the most visually similar pieces in our library.",
+    title: 'Search by Image',
+    subtitle: 'Upload a photo to find the most visually similar pieces in our library.',
     downloadHint: 'First use requires downloading a ~150MB AI model — Wi-Fi recommended.',
     downloading: 'Downloading… {progress}%',
     finalizing: 'Finalizing, almost there…',
@@ -173,7 +173,6 @@ export default {
     uploadedAlt: 'Your uploaded photo',
     yourPhoto: 'Your Photo',
     noMatch: "Couldn't find a similar match — try another photo?",
-    similarityLabel: '{percent}% similar',
     invalidFileType: 'Please upload a JPG, PNG, or WebP image.',
     fileTooLarge: 'Image must be under 10MB.',
     modelDownloadFailed: 'Model download failed. Please check your connection and try again.',
