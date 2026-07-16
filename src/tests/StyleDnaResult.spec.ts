@@ -75,7 +75,7 @@ describe('StyleDnaResult', () => {
       expect.objectContaining({
         type: 'info',
         message: 'We do not have quiz result yet, so this is a sample Style DNA result.',
-        actionText: 'Retake quiz'
+        actionText: 'Retake Quiz'
       })
     );
   });

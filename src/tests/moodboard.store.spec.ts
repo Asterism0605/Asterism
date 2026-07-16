@@ -1,114 +1,207 @@
-import { setActivePinia, createPinia } from 'pinia';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { createPinia, setActivePinia } from 'pinia';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useMoodboardStore } from '@/stores/moodboard.store';
-import type { SavedImage } from '@/types/moodboard';
+import type { MoodboardFolder } from '@/types/moodboard';
 
-const STORAGE_KEY = 'asterism:moodboard:v1';
+const { getMoodboardViewModel } = vi.hoisted(() => ({
+  getMoodboardViewModel: vi.fn()
+}));
 
-const createSavedImage = (id: string): SavedImage => ({
-  id,
-  src: `/style-image/${id}.webp`
-});
+vi.mock('@/services/moodboard.service', () => ({
+  getMoodboardViewModel
+}));
+
+const folder: MoodboardFolder = {
+  id: 'folder-1',
+  name: 'Studio',
+  createdAt: '2026-07-05T00:00:00.000Z',
+  images: [
+    {
+      itemId: 'item-1',
+      id: 'image-1',
+      src: '/image-1.webp',
+      title: 'Image 1',
+      styleGroup: 'minimal',
+      style: ['Minimalism'],
+      createdAt: '2026-07-05T00:00:00.000Z'
+    }
+  ]
+};
 
 describe('moodboard store', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
-    localStorage.clear();
+    vi.clearAllMocks();
   });
 
-  it('初始化時沒有任何資料夾', () => {
+  it('loads Supabase view model and derives counts from one source of truth', async () => {
+    getMoodboardViewModel.mockResolvedValue({
+      folders: [folder],
+      allItems: folder.images,
+      totalFolderCount: 1,
+      totalSavedItemCount: 1
+    });
     const store = useMoodboardStore();
 
-    expect(store.folders).toHaveLength(0);
+    await store.fetchMoodboard('user-1');
+
+    expect(getMoodboardViewModel).toHaveBeenCalledWith('user-1');
+    expect(store.status).toBe('success');
+    expect(store.folders).toEqual([folder]);
+    expect(store.totalSavedItemCount).toBe(1);
+    expect(store.isLowCount).toBe(true);
+    expect(store.isEmpty).toBe(false);
   });
 
-  it('新增圖片到資料夾並持久化到 localStorage', () => {
-    const store = useMoodboardStore();
-    store.createFolder('我的最愛');
-    const folderId = store.folders[0].id;
-    const image = createSavedImage('y2k-001');
-
-    store.addImage(folderId, image);
-
-    expect(store.folders[0].images).toHaveLength(1);
-    expect(store.folders[0].images[0]).toEqual(image);
-
-    const persisted = JSON.parse(localStorage.getItem(STORAGE_KEY) as string);
-    expect(persisted.folders[0].images[0]).toEqual(image);
-  });
-
-  it('不會在同一個資料夾中新增重複的圖片', () => {
-    const store = useMoodboardStore();
-    store.createFolder('我的最愛');
-    const folderId = store.folders[0].id;
-    const image = createSavedImage('y2k-001');
-
-    store.addImage(folderId, image);
-    store.addImage(folderId, image);
-
-    expect(store.folders[0].images).toHaveLength(1);
-  });
-
-  it('從資料夾中移除圖片並持久化到 localStorage', () => {
-    const store = useMoodboardStore();
-    store.createFolder('我的最愛');
-    const folderId = store.folders[0].id;
-    const image = createSavedImage('y2k-001');
-    store.addImage(folderId, image);
-
-    store.removeImage(folderId, image.id);
-
-    expect(store.folders[0].images).toHaveLength(0);
-
-    const persisted = JSON.parse(localStorage.getItem(STORAGE_KEY) as string);
-    expect(persisted.folders[0].images).toHaveLength(0);
-  });
-
-  it('建立新資料夾並持久化到 localStorage', () => {
+  it('exposes loading state while the Data API request is pending', async () => {
+    let resolveRequest!: (value: {
+      folders: MoodboardFolder[];
+      allItems: [];
+      totalFolderCount: number;
+      totalSavedItemCount: number;
+    }) => void;
+    getMoodboardViewModel.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveRequest = resolve;
+        })
+    );
     const store = useMoodboardStore();
 
-    store.createFolder('我的最愛');
+    const request = store.fetchMoodboard('user-1');
 
-    expect(store.folders).toHaveLength(1);
-    expect(store.folders[0].name).toBe('我的最愛');
-    expect(store.folders[0].images).toEqual([]);
-
-    const persisted = JSON.parse(localStorage.getItem(STORAGE_KEY) as string);
-    expect(persisted.folders).toHaveLength(1);
-    expect(persisted.folders[0].name).toBe('我的最愛');
+    expect(store.status).toBe('loading');
+    resolveRequest({
+      folders: [],
+      allItems: [],
+      totalFolderCount: 0,
+      totalSavedItemCount: 0
+    });
+    await request;
+    expect(store.status).toBe('success');
   });
 
-  it('從有效的 localStorage 資料還原資料夾', () => {
-    const writer = useMoodboardStore();
-    writer.createFolder('我的最愛');
-    const folderId = writer.folders[0].id;
-    writer.addImage(folderId, createSavedImage('y2k-001'));
-
-    setActivePinia(createPinia());
-    const reader = useMoodboardStore();
-    reader.hydrate();
-
-    expect(reader.folders[0].images).toHaveLength(1);
-    expect(reader.folders[0].images[0].id).toBe('y2k-001');
-  });
-
-  it('當 localStorage 內容為格式錯誤的 JSON 時，回退為預設狀態並清除該 key', () => {
-    localStorage.setItem(STORAGE_KEY, '{not valid json');
+  it('reuses the in-flight request for the same profile', async () => {
+    let resolveRequest!: (value: {
+      folders: MoodboardFolder[];
+      allItems: MoodboardFolder['images'];
+      totalFolderCount: number;
+      totalSavedItemCount: number;
+    }) => void;
+    getMoodboardViewModel.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveRequest = resolve;
+        })
+    );
     const store = useMoodboardStore();
 
-    expect(() => store.hydrate()).not.toThrow();
+    const first = store.fetchMoodboard('user-1');
+    const second = store.fetchMoodboard('user-1');
+    let secondSettled = false;
+    void second.then(() => {
+      secondSettled = true;
+    });
+    await Promise.resolve();
+
+    expect(getMoodboardViewModel).toHaveBeenCalledTimes(1);
+    expect(secondSettled).toBe(false);
+
+    resolveRequest({
+      folders: [folder],
+      allItems: folder.images,
+      totalFolderCount: 1,
+      totalSavedItemCount: 1
+    });
+    await Promise.all([first, second]);
+
+    expect(secondSettled).toBe(true);
+    expect(store.status).toBe('success');
+    expect(store.folders).toEqual([folder]);
+  });
+
+  it('keeps Data API failures distinct from the empty state', async () => {
+    getMoodboardViewModel.mockRejectedValue(new Error('network down'));
+    const store = useMoodboardStore();
+
+    await store.fetchMoodboard('user-1');
+
+    expect(store.status).toBe('error');
+    expect(store.error).toBe('network down');
+    expect(store.isEmpty).toBe(false);
+  });
+
+  it('treats zero saved items as empty even when an empty folder exists', async () => {
+    getMoodboardViewModel.mockResolvedValue({
+      folders: [{ ...folder, images: [] }],
+      allItems: [],
+      totalFolderCount: 1,
+      totalSavedItemCount: 0
+    });
+    const store = useMoodboardStore();
+
+    await store.fetchMoodboard('user-1');
+
+    expect(store.isEmpty).toBe(true);
+    expect(store.isLowCount).toBe(false);
+    expect(store.isNormal).toBe(false);
+  });
+
+  it('uses placeholders through 19 items and switches to real-only orbit at 20', async () => {
+    const images = Array.from({ length: 20 }, (_, index) => ({
+      ...folder.images[0],
+      itemId: `item-${index}`,
+      id: `image-${index}`
+    }));
+    getMoodboardViewModel.mockResolvedValue({
+      folders: [{ ...folder, images: images.slice(0, 19) }],
+      allItems: images.slice(0, 19),
+      totalFolderCount: 1,
+      totalSavedItemCount: 19
+    });
+    const store = useMoodboardStore();
+
+    await store.fetchMoodboard('user-1');
+
+    expect(store.isLowCount).toBe(true);
+    expect(store.isNormal).toBe(false);
+
+    store.folders[0].images.push(images[19]);
+
+    expect(store.isLowCount).toBe(false);
+    expect(store.isNormal).toBe(true);
+  });
+
+  it('removes a folder locally without calling the Data API', async () => {
+    getMoodboardViewModel.mockResolvedValue({
+      folders: [folder],
+      allItems: folder.images,
+      totalFolderCount: 1,
+      totalSavedItemCount: 1
+    });
+    const store = useMoodboardStore();
+    await store.fetchMoodboard('user-1');
+
+    store.removeFolder('folder-1');
 
     expect(store.folders).toEqual([]);
-    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+    expect(getMoodboardViewModel).toHaveBeenCalledTimes(1);
   });
 
-  it('當 localStorage 內容格式不正確時，回退為預設狀態並清除該 key', () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ folders: 'not-an-array' }));
+  it('clears user-owned state on logout or account change', async () => {
+    getMoodboardViewModel.mockResolvedValue({
+      folders: [folder],
+      allItems: folder.images,
+      totalFolderCount: 1,
+      totalSavedItemCount: 1
+    });
     const store = useMoodboardStore();
+    await store.fetchMoodboard('user-1');
 
-    store.hydrate();
+    store.clear();
 
+    expect(store.status).toBe('idle');
     expect(store.folders).toEqual([]);
-    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+    expect(store.loadedProfileId).toBeNull();
   });
 });

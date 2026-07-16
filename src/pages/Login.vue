@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import LoginOverlay from '@/components/overlay/LoginOverlay.vue';
+import { useAsyncSubmit } from '@/composables/useAsyncSubmit';
 import { useAuthStore } from '@/stores/auth.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
-import { getErrorMessage } from '@/utils/api-error';
 import type { LoginPayload } from '@/types/auth';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 
@@ -16,18 +15,10 @@ const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
 const { t } = useI18n();
 
-const isSubmitting = ref(false);
-const errorMessage = ref('');
+const { isSubmitting, errorMessage, submit } = useAsyncSubmit();
 
-async function handleSubmit(payload: LoginPayload) {
-  if (isSubmitting.value) {
-    return;
-  }
-
-  isSubmitting.value = true;
-  errorMessage.value = '';
-
-  try {
+function handleSubmit(payload: LoginPayload) {
+  return submit(async () => {
     const session = await authStore.login(payload);
     try {
       await styleDnaStore.reconcileWithServer(session.user.id);
@@ -35,11 +26,15 @@ async function handleSubmit(payload: LoginPayload) {
       console.warn('[style-dna] sync after login failed:', error);
     }
     router.push(getSafeRedirectPath(route.query.next, '/'));
-  } catch (error) {
-    errorMessage.value = getErrorMessage(error, t('auth.genericError'));
-  } finally {
-    isSubmitting.value = false;
-  }
+  }, t('auth.genericError'));
+}
+
+function handleSignUp() {
+  const next = getSafeRedirectPath(route.query.next, '');
+  void router.push({
+    name: 'sign-up',
+    query: next ? { next } : undefined
+  });
 }
 </script>
 
@@ -100,6 +95,7 @@ async function handleSubmit(payload: LoginPayload) {
         :is-submitting="isSubmitting"
         :error-message="errorMessage"
         @submit="handleSubmit"
+        @signup="handleSignUp"
       />
     </div>
   </main>

@@ -15,8 +15,7 @@ import { applyAvoidAreas, getActiveAvoidRects, type PixelRect } from './avoidanc
 import { LAYOUT_PRESETS, type LayoutPreset, type NodePosition } from './config';
 
 // home 卡片之間保證的最小視覺間距（px）。不只「不重疊」，而是一定留出空隙。
-// 取 16 是因為卡片有 floatY ±6px 飄動（兩張相向最多靠近 ~12px），靜態留 16 動畫時仍分得開。
-export const HOME_MIN_GAP = 16;
+export const HOME_MIN_GAP = 24;
 
 export function resolveConfiguredHeight(rawHeight: string | undefined) {
   const resolvedHeight = rawHeight ?? '600px';
@@ -99,6 +98,7 @@ function buildLayoutNodes(
   width: number,
   height: number,
   preset: LayoutPreset,
+  viewportHeight: number,
   aspects?: (string | undefined)[]
 ) {
   // 均勻分帶從頂/底內縮一個卡片半高 + 緩衝，避免頭尾卡片被 clamp 擠在邊界疊在一起。
@@ -112,7 +112,7 @@ function buildLayoutNodes(
     const y = evenYs
       ? evenYs[i]
       : getRandomPosition(height * preset.randomY[0], height * preset.randomY[1]);
-    return {
+    const node = {
       x,
       y,
       width: preset.widths[i % preset.widths.length],
@@ -122,7 +122,36 @@ function buildLayoutNodes(
       targetX: evenYs ? x : undefined,
       targetY: evenYs ? y : undefined
     };
+
+    if (preset.homeHeroAnchor?.index === i) {
+      applyHomeHeroAnchor(node, width, viewportHeight, preset);
+    }
+
+    return node;
   });
+}
+
+function applyHomeHeroAnchor(
+  node: NodePosition,
+  width: number,
+  viewportHeight: number,
+  preset: LayoutPreset
+) {
+  const anchor = preset.homeHeroAnchor;
+
+  if (!anchor) {
+    return;
+  }
+
+  // 在標題右側安全區內重新抽位置，保留刷新時的自然變化，同時確保不超出首屏上下邊界。
+  const nodeHeight = getNodeHeight(node);
+  const x = getRandomPosition(width * anchor.x[0], width * anchor.x[1]);
+  const y = getRandomPosition(viewportHeight * anchor.y[0], viewportHeight * anchor.y[1]);
+
+  node.x = Math.max(node.width / 2, Math.min(width - node.width / 2, x));
+  node.y = Math.max(nodeHeight / 2, Math.min(viewportHeight - nodeHeight / 2, y));
+  node.targetX = node.x;
+  node.targetY = node.y;
 }
 
 function runLayoutSimulation(
@@ -204,18 +233,45 @@ function separatePair(
   distance: number,
   obstacles: PixelRect[],
   width: number,
-  height: number
+  height: number,
+  pinnedA = false,
+  pinnedB = false
 ) {
+  if (pinnedA && pinnedB) {
+    return;
+  }
+
   const sign = (axis === 'x' ? b.x - a.x : b.y - a.y) < 0 ? -1 : 1;
   const aStep = -sign;
   const bStep = sign;
   const half = distance / 2;
-  const aBlocked = moveBlocked(a, axis === 'x' ? aStep * half : 0, axis === 'y' ? aStep * half : 0, obstacles, width, height);
-  const bBlocked = moveBlocked(b, axis === 'x' ? bStep * half : 0, axis === 'y' ? bStep * half : 0, obstacles, width, height);
+  const aBlocked = moveBlocked(
+    a,
+    axis === 'x' ? aStep * half : 0,
+    axis === 'y' ? aStep * half : 0,
+    obstacles,
+    width,
+    height
+  );
+  const bBlocked = moveBlocked(
+    b,
+    axis === 'x' ? bStep * half : 0,
+    axis === 'y' ? bStep * half : 0,
+    obstacles,
+    width,
+    height
+  );
 
   let aMove = half;
   let bMove = half;
-  if (aBlocked && !bBlocked) {
+  // pinned card 是首屏主視覺，不被碰撞解算推走；只讓另一張卡片讓位。
+  if (pinnedA) {
+    aMove = 0;
+    bMove = distance;
+  } else if (pinnedB) {
+    aMove = distance;
+    bMove = 0;
+  } else if (aBlocked && !bBlocked) {
     aMove = 0;
     bMove = distance;
   } else if (bBlocked && !aBlocked) {
@@ -235,18 +291,23 @@ function separatePair(
 // 確定性鬆弛：把「卡片彼此不重疊」與「卡片避開標題」放在同一個迴圈解。
 // 標題避讓區當成「不可移動的障礙物」——卡片只會被推出障礙物、不會被推進去，
 // 兩兩重疊也沿最小軸推開且不推進障礙物。對稀疏版面幾輪就收斂。
-function resolveOverlaps(
+export function resolveOverlaps(
   nodes: NodePosition[],
   obstacles: PixelRect[],
   width: number,
   height: number,
+  pinnedIndices = new Set<number>(),
   iterations = 400
 ): NodePosition[] {
   for (let iter = 0; iter < iterations; iter++) {
     let moved = false;
 
     // 卡片 vs 標題障礙物：只移動卡片，沿「離開障礙物最短的一邊」推出去
-    for (const node of nodes) {
+    for (const [index, node] of nodes.entries()) {
+      if (pinnedIndices.has(index)) {
+        continue;
+      }
+
       const nodeHeight = getNodeHeight(node);
 
       for (const obstacle of obstacles) {
@@ -309,7 +370,8 @@ function resolveOverlaps(
         // 半寬/半高各灌上 HOME_MIN_GAP：兩張在兩軸都落在 gap 範圍內才算「太近」，
         // 沿最小軸推開後該軸間距即 ≥ HOME_MIN_GAP（不只是剛好不重疊）。
         const overlapX = (a.width + b.width) / 2 + HOME_MIN_GAP - Math.abs(b.x - a.x);
-        const overlapY = (getNodeHeight(a) + getNodeHeight(b)) / 2 + HOME_MIN_GAP - Math.abs(b.y - a.y);
+        const overlapY =
+          (getNodeHeight(a) + getNodeHeight(b)) / 2 + HOME_MIN_GAP - Math.abs(b.y - a.y);
 
         if (overlapX <= 0 || overlapY <= 0) {
           continue;
@@ -318,9 +380,29 @@ function resolveOverlaps(
         moved = true;
 
         if (overlapX < overlapY) {
-          separatePair(a, b, 'x', overlapX + 1, obstacles, width, height);
+          separatePair(
+            a,
+            b,
+            'x',
+            overlapX + 1,
+            obstacles,
+            width,
+            height,
+            pinnedIndices.has(i),
+            pinnedIndices.has(j)
+          );
         } else {
-          separatePair(a, b, 'y', overlapY + 1, obstacles, width, height);
+          separatePair(
+            a,
+            b,
+            'y',
+            overlapY + 1,
+            obstacles,
+            width,
+            height,
+            pinnedIndices.has(i),
+            pinnedIndices.has(j)
+          );
         }
       }
     }
@@ -348,11 +430,19 @@ export function buildFloatingImageLayout(
   viewportHeight: number = height,
   aspects?: (string | undefined)[]
 ) {
-  const nodes = buildLayoutNodes(count, width, height, preset, aspects);
+  const nodes = buildLayoutNodes(count, width, height, preset, viewportHeight, aspects);
 
   runLayoutSimulation(nodes, width, height, preset);
 
   const clampedNodes = nodes.map((node) => preset.clampPosition(node, width, height));
+  if (preset.homeHeroAnchor && clampedNodes[preset.homeHeroAnchor.index]) {
+    applyHomeHeroAnchor(
+      clampedNodes[preset.homeHeroAnchor.index],
+      width,
+      viewportHeight,
+      preset
+    );
+  }
 
   if (!preset.evenYDistribution) {
     // 非 home：沿用原本的避讓搬移
@@ -368,12 +458,57 @@ export function buildFloatingImageLayout(
 
   // home：把標題避讓區當不可移動障礙物，跟卡片去重疊一起鬆弛解，最後 clamp 進邊界。
   const obstacles = getActiveAvoidRects(preset.avoidAreas, width, height, viewportHeight);
+  const pinnedIndices = new Set<number>();
+  if (preset.homeHeroAnchor && clampedNodes[preset.homeHeroAnchor.index]) {
+    // 標題右側錨點圖要維持在安全區，其他圖片可以避讓它。
+    pinnedIndices.add(preset.homeHeroAnchor.index);
+  }
   const resolved = resolveOverlaps(
     clampedNodes.map((node) => ({ ...node })),
     obstacles,
     width,
-    height
+    height,
+    pinnedIndices
   );
+
+  return resolved.map((node) => ({
+    ...node,
+    x: Math.max(node.width / 2, Math.min(width - node.width / 2, node.x)),
+    y: Math.max(getNodeHeight(node) / 2, Math.min(height - getNodeHeight(node) / 2, node.y))
+  }));
+}
+
+// 已顯示的卡片只在真實比例到達時重解幾何約束；不重跑含隨機數的初始 layout。
+export function reflowFloatingImageLayout(
+  positions: NodePosition[],
+  width: number,
+  height: number,
+  preset: LayoutPreset,
+  viewportHeight: number = height,
+  aspects?: (string | undefined)[]
+) {
+  const nodes = positions.map((position, index) => ({
+    ...position,
+    aspect: aspects?.[index] ?? position.aspect
+  }));
+
+  if (!preset.evenYDistribution) {
+    const avoidedNodes = applyAvoidAreas(
+      nodes,
+      width,
+      height,
+      preset.avoidAreas,
+      viewportHeight
+    );
+    return avoidedNodes.map((node) => preset.clampPosition(node, width, height));
+  }
+
+  const obstacles = getActiveAvoidRects(preset.avoidAreas, width, height, viewportHeight);
+  const pinnedIndices = new Set<number>();
+  if (preset.homeHeroAnchor && nodes[preset.homeHeroAnchor.index]) {
+    pinnedIndices.add(preset.homeHeroAnchor.index);
+  }
+  const resolved = resolveOverlaps(nodes, obstacles, width, height, pinnedIndices);
 
   return resolved.map((node) => ({
     ...node,

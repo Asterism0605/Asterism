@@ -1,7 +1,9 @@
 import type {
+  MoodboardFolder,
   MoodboardHomePhoto,
   MoodboardOrbitParams,
-  MoodboardPhoto
+  MoodboardPhoto,
+  SavedImage
 } from '@/types/moodboard';
 
 export const NAV_H = 64;
@@ -75,6 +77,46 @@ export const photos: MoodboardPhoto[] = [
 
 export const IMG_URLS: string[] = photos.map((p) => p.src);
 export const EMPTY_STATE_PREVIEW_PHOTOS: MoodboardPhoto[] = photos;
+
+export interface MoodboardOrbitImage {
+  id: string;
+  src: string;
+  isPlaceholder: boolean;
+}
+
+export function buildMoodboardOrbitImages(savedImages: SavedImage[]): MoodboardOrbitImage[] {
+  if (savedImages.length === 0) {
+    return [];
+  }
+
+  const seen = new Set<string>();
+  const uniqueImages = savedImages.filter((image) => {
+    if (seen.has(image.id)) return false;
+    seen.add(image.id);
+    return true;
+  });
+  const realImages = uniqueImages.map((image) => ({
+    id: image.id,
+    src: image.src,
+    isPlaceholder: false
+  }));
+
+  if (uniqueImages.length >= 20) {
+    return realImages;
+  }
+
+  const placeholders = Array.from({ length: 20 - uniqueImages.length }, (_, index) => ({
+    id: `placeholder-${index}`,
+    src: photos[index % photos.length].src,
+    isPlaceholder: true
+  }));
+
+  return [...realImages, ...placeholders];
+}
+
+export function isFolderDimmed(folder?: MoodboardFolder): boolean {
+  return !folder || folder.images.length === 0;
+}
 
 const mImg = (n: number) => `/images/image${n}.png`;
 

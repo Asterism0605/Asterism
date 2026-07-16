@@ -11,6 +11,8 @@ interface ImageRow {
   medium: string | null;
   sub_medium: string | null;
   color_palette: string[] | null;
+  attribution: string | null;
+  source_url: string | null;
   needs_review: { styleGroup?: boolean; medium?: boolean; subMedium?: boolean } | null;
 }
 
@@ -28,7 +30,9 @@ function toStyleImage(row: ImageRow): StyleImage {
     style: row.style ?? [],
     medium: row.medium ?? undefined,
     subMedium: row.sub_medium ?? undefined,
-    colorPalette: row.color_palette ?? []
+    colorPalette: row.color_palette ?? [],
+    attribution: row.attribution ?? undefined,
+    sourceUrl: row.source_url ?? undefined
   };
 }
 
@@ -37,7 +41,9 @@ export async function fetchImagesApi(): Promise<StyleImage[]> {
   try {
     const { data, error } = await getSupabase()
       .from('images')
-      .select('id,url,title,style_group,style,medium,sub_medium,color_palette,needs_review')
+      .select(
+        'id,url,title,style_group,style,medium,sub_medium,color_palette,attribution,source_url,needs_review'
+      )
       .eq('excluded', false);
     if (error) throw error;
     const reviewed = (data as ImageRow[]).filter((r) => isReviewed(r.needs_review)).map(toStyleImage);

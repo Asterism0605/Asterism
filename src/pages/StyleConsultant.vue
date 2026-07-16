@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
+import ConsultationPaymentResult from '@/components/feature/consultant/ConsultationPaymentResult.vue';
 import ConsultantSummary from '@/components/feature/consultant/ConsultantSummary.vue';
 import RecommendationPanel from '@/components/feature/consultant/RecommendationPanel.vue';
+import { useConsultationPaymentFlow } from '@/composables/useConsultationPaymentFlow';
+import type { PaymentReturnStatus } from '@/composables/useConsultationPaymentFlow';
+import { matchConsultantByStyleTag } from '@/services/consultant-match.service';
 import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 
 interface ConsultantProfile {
   styleDna: Array<{
@@ -14,36 +20,68 @@ interface ConsultantProfile {
   consultantLabel: string;
 }
 
-interface BookingPayload {
-  method: 'online' | 'in_person';
-  date: string;
-  timeSlot: 'am' | 'pm';
-  designField: string;
-  designFocus: string;
-  name: string;
-  email: string;
-  contactPhone: string;
-  notes: string;
-  paymentConfirmed: boolean;
-}
+const PAYMENT_RETURN_COPY = {
+  confirming: {
+    title: 'consult.paymentConfirmingTitle',
+    description: 'consult.paymentConfirmingDescription'
+  },
+  processing: {
+    title: 'consult.paymentProcessingTitle',
+    description: 'consult.paymentProcessingDescription'
+  },
+  paid: {
+    title: 'consult.paymentPaidTitle',
+    description: 'consult.paymentPaidDescription'
+  },
+  failed: {
+    title: 'consult.paymentFailedTitle',
+    description: 'consult.paymentFailedDescription'
+  },
+  'processing-timeout': {
+    title: 'consult.paymentTimeoutTitle',
+    description: 'consult.paymentTimeoutDescription'
+  },
+  unauthenticated: {
+    title: 'consult.paymentUnauthenticatedTitle',
+    description: 'consult.paymentUnauthenticatedDescription'
+  },
+  canceled: {
+    title: 'consult.paymentCanceledTitle',
+    description: 'consult.paymentCanceledDescription'
+  },
+  'missing-booking-id': {
+    title: 'consult.paymentMissingTitle',
+    description: 'consult.paymentMissingDescription'
+  },
+  error: {
+    title: 'consult.paymentErrorTitle',
+    description: 'consult.paymentErrorDescription'
+  }
+} satisfies Record<
+  Exclude<PaymentReturnStatus, 'idle'>,
+  { title: string; description: string }
+>;
 
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 const route = useRoute();
-const bookingStatus = ref<'idle' | 'submitted'>('idle');
-const lastBooking = ref<BookingPayload | null>(null);
+const { t } = useI18n();
 
-const mockProfile: ConsultantProfile = {
-  styleDna: [
-    { label: 'Luminous Minimalism', percentage: 54 },
-    { label: 'Organic Modern', percentage: 28 },
-    { label: 'Soft Industrial', percentage: 18 }
-  ],
-  consultantLabel: 'Spatial Consultant · Mira Chen'
-};
+const profile = computed<ConsultantProfile | null>(() => {
+  const result = styleDnaStore.currentResult;
 
-// 是否帶入 DNA 測驗 mock data 
-const profile = computed(() => mockProfile);
-const hasSourceData = computed(() => Boolean(profile.value));
+  if (!authStore.isAuthenticated || !result) {
+    return null;
+  }
+
+  return {
+    styleDna: result.styles,
+    consultantLabel: matchConsultantByStyleTag(result)
+  };
+});
+const summaryStatus = computed(() => {
+  return profile.value ? 'ready' : 'missing-result';
+});
 const sourceImageId = computed(() => {
   const rawSourceImageId = route.query.sourceImageId;
 
@@ -52,16 +90,27 @@ const sourceImageId = computed(() => {
 // 從登入會員資料帶入預約表單的姓名與 Email
 const accountName = computed(() => authStore.user?.displayName ?? '');
 const accountEmail = computed(() => authStore.user?.email ?? '');
+const {
+  checkoutErrorMessage,
+  isCheckoutSubmitting,
+  paymentReturnStatus,
+  handleSubmit,
+  handleReset,
+  restartBooking
+} = useConsultationPaymentFlow(sourceImageId);
+const paymentReturnCopy = computed(() => {
+  if (paymentReturnStatus.value === 'idle') {
+    return null;
+  }
 
-function handleSubmit(payload: BookingPayload) {
-  lastBooking.value = payload;
-  bookingStatus.value = 'submitted';
-}
+  const copy = PAYMENT_RETURN_COPY[paymentReturnStatus.value];
 
-function handleReset() {
-  lastBooking.value = null;
-  bookingStatus.value = 'idle';
-}
+  return {
+    title: t(copy.title),
+    description: t(copy.description)
+  };
+});
+
 </script>
 
 <template>
@@ -90,22 +139,27 @@ function handleReset() {
     </div>
 
     <section class="style-consultant__content">
-      <ConsultantSummary :profile="profile" :has-source-data="hasSourceData" />
+      <ConsultantSummary :profile="profile" :status="summaryStatus" />
 
       <div class="style-consultant__booking">
+        <ConsultationPaymentResult
+          v-if="paymentReturnCopy"
+          :title="paymentReturnCopy.title"
+          :description="paymentReturnCopy.description"
+          @restart="restartBooking"
+        />
+
         <RecommendationPanel
+          v-else
           :account-name="accountName"
           :account-email="accountEmail"
+          :submitting="isCheckoutSubmitting"
           @submit="handleSubmit"
           @reset="handleReset"
         />
 
-        <p
-          v-if="bookingStatus === 'submitted' && lastBooking"
-          class="style-consultant__confirmation"
-          role="status"
-        >
-          {{ $t('consult.requestReceived', { name: lastBooking.name, email: lastBooking.email }) }}
+        <p v-if="checkoutErrorMessage" class="style-consultant__confirmation" role="alert">
+          {{ checkoutErrorMessage }}
         </p>
       </div>
     </section>
@@ -119,12 +173,7 @@ function handleReset() {
   overflow: hidden;
   background:
     radial-gradient(circle at 72% 48%, #f0ede614, transparent 24%),
-    linear-gradient(
-      135deg,
-      var(--color-void) 0%,
-      var(--color-deep) 62%,
-      #15151b 100%
-    );
+    linear-gradient(135deg, var(--color-void) 0%, var(--color-deep) 62%, #15151b 100%);
   color: var(--color-text-primary);
 }
 
@@ -222,8 +271,6 @@ function handleReset() {
     animation-name: consultant-fade-in-mobile;
   }
 }
-
-
 
 @keyframes consultant-fade-in {
   from {

@@ -1,12 +1,12 @@
 import rawStyleImages from '@/data/style-data.json';
 import { fetchImagesApi } from '@/api/image.api';
+import { SITE_LOGO_SRC } from '@/constants/assets.constants';
 import type {
   HomeInspirationImage,
   HomeInspirationOptions,
   ImageSpreadNode,
   StyleImage
 } from '@/types/image';
-
 
 interface RelatedImageOptions {
   limit?: number;
@@ -34,8 +34,49 @@ function toSpreadNode(image: StyleImage): ImageSpreadNode {
     style: image.style,
     medium: image.medium,
     subMedium: image.subMedium,
-    colorPalette: image.colorPalette
+    colorPalette: image.colorPalette,
+    attribution: image.attribution,
+    sourceUrl: image.sourceUrl
   };
+}
+
+export interface PhotographerInfo {
+  name: string;
+  avatarUrl?: string;
+}
+
+// attribution 格式：本地／自製圖是 "Asterism"，外部圖是 "Photo by {攝影師} / {Pexels|Unsplash}"
+// （見 asterism-backend/scripts/enrich/buildImageRow.ts）。是 Asterism 自己的圖就用站徽當頭像，
+// 外部攝影師沒有頭像可用，回傳 avatarUrl: undefined，交給 UI 端的姓名縮寫 fallback。
+export function resolvePhotographerInfo(attribution?: string): PhotographerInfo {
+  const trimmed = attribution?.trim();
+  if (!trimmed || trimmed === 'Asterism') {
+    return { name: 'Asterism', avatarUrl: SITE_LOGO_SRC };
+  }
+
+  const match = trimmed.match(/^Photo by (.+?) \/ .+$/);
+  return { name: match?.[1] ?? trimmed };
+}
+
+export interface SourceLinkInfo {
+  url: string;
+  label: string;
+}
+
+// 詳情頁「SOURCE URL」連結：只信任 http/https，擋掉 javascript:/data: 等危險協議，
+// 避免圖片資料（外部 API 回填）夾帶惡意 URL 被當成 <a href> 原樣輸出。
+// label 只取網域（例如 unsplash.com），不顯示一長串完整路徑。
+// sourceUrl 缺漏、格式不合法、或協議不是 http/https 時一律回傳 undefined，呼叫端直接不顯示連結。
+export function getSourceLinkInfo(sourceUrl?: string): SourceLinkInfo | undefined {
+  if (!sourceUrl) return undefined;
+
+  try {
+    const parsed = new URL(sourceUrl);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return undefined;
+    return { url: parsed.href, label: parsed.hostname };
+  } catch {
+    return undefined;
+  }
 }
 
 function countSharedStyles(baseImage: StyleImage, candidate: StyleImage): number {
@@ -57,10 +98,7 @@ function countPreferredStyleMatches(image: StyleImage, preferredStyles: Set<stri
   return image.style.filter((style) => preferredStyles.has(style)).length;
 }
 
-function sortByPreferredStyles(
-  images: StyleImage[],
-  preferredStyles: string[] = []
-): StyleImage[] {
+function sortByPreferredStyles(images: StyleImage[], preferredStyles: string[] = []): StyleImage[] {
   const preferredStyleSet = new Set(preferredStyles.filter(Boolean));
 
   if (preferredStyleSet.size === 0) {
@@ -83,23 +121,28 @@ function pickOneImagePerGroup(
   images: StyleImage[],
   keyOf: (image: StyleImage) => string | undefined,
   excludedIds: Set<string>,
-  rng: () => number
+  rng: () => number,
+  options: { preserveGroups?: boolean } = {}
 ): StyleImage[] {
   const groups = new Map<string, StyleImage[]>();
 
   for (const image of images) {
     const key = keyOf(image);
     if (!key) continue;
-    if (excludedIds.has(image.id)) continue;
     const list = groups.get(key);
     if (list) list.push(image);
     else groups.set(key, [image]);
   }
 
   // clamp：注入的 rng 若回傳 1（floor(1*len)=len）不得越界。
-  return [...groups.values()].map(
-    (list) => list[Math.min(Math.floor(rng() * list.length), list.length - 1)]
-  );
+  return [...groups.values()]
+    .map((list) => {
+      const available = list.filter((image) => !excludedIds.has(image.id));
+      const candidates = available.length > 0 || !options.preserveGroups ? available : list;
+
+      return candidates[Math.min(Math.floor(rng() * candidates.length), candidates.length - 1)];
+    })
+    .filter((image): image is StyleImage => Boolean(image));
 }
 
 function getRandomImagePerMedium(
@@ -107,12 +150,30 @@ function getRandomImagePerMedium(
   excludedIds: Set<string>,
   rng: () => number
 ): StyleImage[] {
-  return pickOneImagePerGroup(
-    styleImages.filter((image) => image.styleGroup === styleGroup),
-    (image) => image.medium,
-    excludedIds,
-    rng
-  );
+  const groups = new Map<string, StyleImage[]>();
+
+  for (const image of styleImages) {
+    if (image.styleGroup !== styleGroup || !image.medium) continue;
+    const list = groups.get(image.medium);
+    if (list) list.push(image);
+    else groups.set(image.medium, [image]);
+  }
+
+  return [...groups.values()].map((list) => {
+    const mediumOnly = list.filter((image) => !image.subMedium);
+    const unvisitedMediumOnly = mediumOnly.filter((image) => !excludedIds.has(image.id));
+    const unvisited = list.filter((image) => !excludedIds.has(image.id));
+    const candidates =
+      unvisitedMediumOnly.length > 0
+        ? unvisitedMediumOnly
+        : unvisited.length > 0
+          ? unvisited
+          : mediumOnly.length > 0
+            ? mediumOnly
+            : list;
+
+    return candidates[Math.min(Math.floor(rng() * candidates.length), candidates.length - 1)];
+  });
 }
 
 function getRandomImagePerSubMedium(
@@ -122,10 +183,13 @@ function getRandomImagePerSubMedium(
   rng: () => number
 ): StyleImage[] {
   return pickOneImagePerGroup(
-    styleImages.filter((image) => image.styleGroup === styleGroup && image.medium === medium),
+    styleImages.filter(
+      (image) => image.styleGroup === styleGroup && image.medium === medium && image.subMedium
+    ),
     (image) => image.subMedium,
     excludedIds,
-    rng
+    rng,
+    { preserveGroups: true }
   );
 }
 
@@ -195,7 +259,10 @@ export function getSubMediumGroupImages(
     rng
   );
 
-  return subMediumImages.slice(0, limit).map(toSpreadNode);
+  return subMediumImages
+    .filter((image) => image.id !== imageId)
+    .slice(0, limit)
+    .map(toSpreadNode);
 }
 
 function pickRelatedCandidates(
@@ -237,11 +304,60 @@ export function getRelatedImages(
   return pickRelatedCandidates(candidates, baseImage, limit).map(toSpreadNode);
 }
 
-// 首頁放團體概念照（沒有 medium 的圖），資料源為本地 style-data.json。
+// 首頁：把不同風格（styleGroup）的圖片穿插排在一起。
+function interleaveImagesByStyleGroup(images: StyleImage[], maxConsecutive = 2): StyleImage[] {
+  const groups = new Map<string, StyleImage[]>();
+
+  for (const image of images) {
+    const list = groups.get(image.styleGroup);
+    if (list) list.push(image);
+    else groups.set(image.styleGroup, [image]);
+  }
+
+  const groupQueues = [...groups.values()];
+  const orderedImages: StyleImage[] = [];
+  let previousStyleGroup: string | undefined;
+  let consecutiveCount = 0;
+  let cursor = 0;
+
+  while (orderedImages.length < images.length) {
+    const nextIndex = groupQueues.findIndex((_, offset) => {
+      const group = groupQueues[(cursor + offset) % groupQueues.length];
+      const nextStyleGroup = group[0]?.styleGroup;
+      const canUseSameGroup =
+        nextStyleGroup !== previousStyleGroup || consecutiveCount < maxConsecutive;
+
+      return group.length > 0 && canUseSameGroup;
+    });
+    const fallbackIndex = groupQueues.findIndex((group) => group.length > 0);
+    const queueIndex =
+      nextIndex >= 0 ? (cursor + nextIndex) % groupQueues.length : fallbackIndex;
+    const nextGroup = queueIndex >= 0 ? groupQueues[queueIndex] : undefined;
+
+    if (!nextGroup) break;
+
+    const nextImage = nextGroup.shift();
+    if (!nextImage) continue;
+
+    orderedImages.push(nextImage);
+    consecutiveCount =
+      nextImage.styleGroup === previousStyleGroup ? consecutiveCount + 1 : 1;
+    previousStyleGroup = nextImage.styleGroup;
+    cursor =
+      nextGroup.length > 0 && consecutiveCount < maxConsecutive
+        ? queueIndex
+        : (queueIndex + 1) % groupQueues.length;
+  }
+
+  return orderedImages;
+}
+
+// 首頁：放團體概念照（沒有 medium 的圖），資料源為本地 style-data.json。
 export async function getHomeInspirationImages(
   options: HomeInspirationOptions = {}
 ): Promise<HomeInspirationImage[]> {
   const conceptImages = styleImages.filter((image) => !image.medium);
+  const preferredImages = sortByPreferredStyles(conceptImages, options.preferredStyles);
 
-  return sortByPreferredStyles(conceptImages, options.preferredStyles).map(toHomeInspirationImage);
+  return interleaveImagesByStyleGroup(preferredImages).map(toHomeInspirationImage);
 }

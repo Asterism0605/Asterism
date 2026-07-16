@@ -10,11 +10,13 @@ import Button from '@/components/ui/Button.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
 import RelatedImageCluster from '@/components/feature/image/RelatedImageCluster.vue';
+import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel';
 import { IMAGE_SEARCH_CONFIG } from '@/config/imageSearch.config';
 import type { ImageSearchResult } from '@/types/imageSearch';
 import type { ImageSpreadNode } from '@/types/image';
 
 const router = useRouter();
+const { localizeTaxon } = useTaxonomyLabel();
 const model = useClipModelStore();
 const search = useImageSearchStore();
 const uploadedImagePreview = useUploadedImagePreviewStore();
@@ -54,6 +56,14 @@ function toSpreadNode(result: ImageSearchResult): ImageSpreadNode {
     style: [],
     colorPalette: []
   };
+}
+
+// 讓結果卡片標出 styleGroup（使用者反映搜到風格不符的圖，看不出來為什麼匹配——
+// 這是軟重排會考量、但不強制的那個風格分類，標出來才看得出取捨）。
+// 注意：不是 subMedium，那個是 medium 底下的取景分類（Full Look/Poster Design 之類），
+// 跟「浪漫」「街頭」這種風格語意無關。標籤呈現方式比照探索頁 getRelatedImageLabel。
+function getResultLabel(node: ImageSpreadNode) {
+  return localizeTaxon(node.styleGroup);
 }
 
 // 帶 from=image-search，讓 PictureDetail 的返回鍵知道要導回這頁，不是探索頁。
@@ -205,6 +215,7 @@ function handleSearch() {
               v-if="search.status === 'success'"
               class="hidden lg:block"
               :images="search.results.map(toSpreadNode)"
+              :get-image-label="getResultLabel"
               @select="handleResultSelect"
             />
 
@@ -273,7 +284,7 @@ function handleSearch() {
               :key="result.id"
               :to="{ name: 'picture-detail', params: { imageId: result.id }, query: { from: 'image-search' } }"
               data-testid="search-result-card-mobile"
-              class="overflow-hidden rounded-lg border border-white/12 bg-elevated/70"
+              class="relative overflow-hidden rounded-lg border border-white/12 bg-elevated/70"
             >
               <img
                 :src="result.src"
@@ -281,6 +292,12 @@ function handleSearch() {
                 loading="lazy"
                 class="aspect-[4/5] w-full object-cover"
               />
+              <span
+                v-if="localizeTaxon(result.styleGroup)"
+                class="absolute bottom-2 left-2 max-w-[calc(100%-1rem)] rounded-full bg-void/78 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-text-primary"
+              >
+                {{ localizeTaxon(result.styleGroup) }}
+              </span>
             </RouterLink>
           </div>
         </div>

@@ -3,6 +3,8 @@ export interface MoodboardPhoto {
   w: number;
   h: number;
   faded?: boolean;
+  placeholder?: boolean;
+  imageId?: string;
 }
 
 export interface MoodboardHomePhoto extends MoodboardPhoto {
@@ -59,14 +61,29 @@ export interface MoodboardPackOptions {
 }
 
 export interface SavedImage {
+  itemId: string;
   id: string;
   src: string;
+  title: string;
+  styleGroup: string | null;
+  style: string[];
+  createdAt: string;
 }
 
 export interface MoodboardFolder {
   id: string;
   name: string;
+  createdAt: string;
   images: SavedImage[];
 }
 
 export type MoodboardItem = SavedImage;
+
+export interface MoodboardViewModel {
+  folders: MoodboardFolder[];
+  allItems: MoodboardItem[];
+  totalFolderCount: number;
+  totalSavedItemCount: number;
+}
+
+export type MoodboardStatus = 'idle' | 'loading' | 'success' | 'error';

@@ -23,7 +23,7 @@ describe('review.service buildPatch', () => {
 
   it('approve 只清 medium/subMedium 旗標，styleGroup 保留', () => {
     expect(
-      buildPatch('approve', { needsReview: nr(true, false, true), draftMedium: 'Outfit', draftSubMedium: 'Top' })
+      buildPatch('approve', { needsReview: nr(true, false, true), draftMedium: 'Outfit', draftSubMedium: 'Top Focus' })
     ).toEqual({ needs_review: { styleGroup: true, medium: false, subMedium: false } });
   });
 
@@ -81,7 +81,7 @@ describe('review.service buildPatch', () => {
 
   it('medium 被 flag 但 draft 為空 → throw', () => {
     expect(() =>
-      buildPatch('correct', { needsReview: nr(false, true, true), draftMedium: '', draftSubMedium: 'Top' })
+      buildPatch('correct', { needsReview: nr(false, true, true), draftMedium: '', draftSubMedium: 'Top Focus' })
     ).toThrow();
   });
 });

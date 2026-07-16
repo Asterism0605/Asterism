@@ -9,6 +9,7 @@ const route = useRoute();
 const headerlessRouteNames = new Set(['discover-dna', 'auth-callback']);
 // 沉浸式 / 全畫布頁面不放流式 footer，避免破壞固定版面
 const footerlessRouteNames = new Set([
+  'home',
   'discover-dna',
   'moodboard',
   'image-spread',
@@ -16,6 +17,7 @@ const footerlessRouteNames = new Set([
   'picture-detail',
   'style-dna',
   'style-dna-result',
+  'account-consultations',
   'auth-callback'
 ]);
 const showHeader = computed(() => !headerlessRouteNames.has(String(route.name)));

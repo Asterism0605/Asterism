@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 interface DropdownOption {
   label: string;
   value: string;
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     modelValue: string;
     label: string;
@@ -29,6 +29,9 @@ const emit = defineEmits<{
 
 const isOpen = defineModel<boolean>('open', { default: false });
 const dropdownRef = ref<HTMLElement | null>(null);
+const selectedLabel = computed(
+  () => props.options.find((option) => option.value === props.modelValue)?.label
+);
 
 function toggleDropdown() {
   isOpen.value = !isOpen.value;
@@ -78,7 +81,15 @@ onBeforeUnmount(() => {
         aria-haspopup="listbox"
         @click="toggleDropdown"
       >
-        <span>{{ modelValue ? (uppercaseValue ? modelValue.toUpperCase() : modelValue) : placeholder }}</span>
+        <span>
+          {{
+            modelValue
+              ? uppercaseValue
+                ? modelValue.toUpperCase()
+                : selectedLabel || modelValue
+              : placeholder
+          }}
+        </span>
         <span aria-hidden="true" class="recommendation-panel__dropdown-icon"></span>
       </button>
 

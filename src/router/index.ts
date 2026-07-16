@@ -7,9 +7,12 @@ import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import Playground from '@/pages/Playground.vue';
 import PictureDetail from '@/pages/PictureDetail.vue';
 import SignUp from '@/pages/SignUp.vue';
+import ForgotPassword from '@/pages/ForgotPassword.vue';
+import ResetPassword from '@/pages/ResetPassword.vue';
 import StyleDna from '@/pages/StyleDna.vue';
 import StyleDnaResult from '@/pages/StyleDnaResult.vue';
 import StyleConsultant from '@/pages/StyleConsultant.vue';
+import AccountConsultations from '@/pages/AccountConsultations.vue';
 import Privacy from '@/pages/Privacy.vue';
 import Terms from '@/pages/Terms.vue';
 import AuthCallback from '@/pages/AuthCallback.vue';
@@ -63,9 +66,20 @@ const router = createRouter({
       component: SignUp
     },
     {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: ForgotPassword
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: ResetPassword
+    },
+    {
       path: '/moodboard/:slug?',
       name: 'moodboard',
-      component: MoodboardOrbit
+      component: MoodboardOrbit,
+      meta: { requiresAuth: true }
     },
     {
       path: '/playground',
@@ -91,6 +105,12 @@ const router = createRouter({
       path: '/consultant',
       name: 'consultant',
       component: StyleConsultant
+    },
+    {
+      path: '/account/consultations',
+      name: 'account-consultations',
+      component: AccountConsultations,
+      meta: { requiresAuth: true }
     },
     {
       path: '/privacy',

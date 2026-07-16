@@ -38,6 +38,24 @@ describe('ImageStagePanel', () => {
     expect(wrapper.emitted('select')).toEqual([['related-bottom-right']]);
   });
 
+  it('觸發 back：滑鼠點擊空白區、Enter、Space 三種方式都能觸發', async () => {
+    const wrapper = mount(ImageStagePanel, {
+      props: { mainImageUrl: '/main.webp', smallImages },
+      global: {
+        stubs: { ConstellationBackground: true }
+      }
+    });
+
+    const stage = wrapper.get('[role="button"]');
+    expect(stage.attributes('tabindex')).toBe('0');
+
+    await stage.trigger('keydown.enter');
+    await stage.trigger('keydown.space');
+    await stage.trigger('click');
+
+    expect(wrapper.emitted('back')).toHaveLength(3);
+  });
+
   it('點圖片以外的空白區觸發 back，不會誤觸 select', async () => {
     const wrapper = mount(ImageStagePanel, {
       props: { mainImageUrl: '/main.webp', smallImages },
@@ -46,7 +64,7 @@ describe('ImageStagePanel', () => {
       }
     });
 
-    await wrapper.find('div.relative').trigger('click');
+    await wrapper.find('[role="button"]').trigger('click');
 
     expect(wrapper.emitted('back')).toHaveLength(1);
     expect(wrapper.emitted('select')).toBeUndefined();

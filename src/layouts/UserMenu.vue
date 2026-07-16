@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { ChevronDown, LayoutDashboard, LogOut } from '@lucide/vue';
+import { CalendarCheck, ChevronDown, LayoutDashboard, LogOut, Sparkles } from '@lucide/vue';
 
 defineProps<{
   displayName: string;
@@ -9,6 +9,8 @@ defineProps<{
 
 const emit = defineEmits<{
   moodboard: [];
+  consultations: [];
+  styleDna: [];
   logout: [];
 }>();
 
@@ -32,6 +34,16 @@ function handleClickOutside(event: MouseEvent) {
 function handleMoodboard() {
   closeMenu();
   emit('moodboard');
+}
+
+function handleStyleDna() {
+  closeMenu();
+  emit('styleDna');
+}
+
+function handleConsultations() {
+  closeMenu();
+  emit('consultations');
 }
 
 function handleLogout() {
@@ -93,6 +105,28 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside, true
             >
               <LayoutDashboard class="size-4 shrink-0 opacity-60" />
               {{ $t('userMenu.moodboard') }}
+            </button>
+          </li>
+
+          <li>
+            <button
+              type="button"
+              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+              @click="handleStyleDna"
+            >
+              <Sparkles class="size-4 shrink-0 opacity-60" />
+              {{ $t('userMenu.styleDna') }}
+            </button>
+          </li>
+
+          <li>
+            <button
+              type="button"
+              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+              @click="handleConsultations"
+            >
+              <CalendarCheck class="size-4 shrink-0 opacity-60" />
+              {{ $t('userMenu.myConsultations') }}
             </button>
           </li>
 

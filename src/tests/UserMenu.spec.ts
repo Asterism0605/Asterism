@@ -36,13 +36,17 @@ describe('UserMenu', () => {
     expect(wrapper.find('[aria-haspopup="true"]').attributes('aria-expanded')).toBe('true');
     expect(wrapper.text()).toContain('Signed in as');
     expect(wrapper.text()).toContain('Moodboard');
+    expect(wrapper.text()).toContain('Consultation');
     expect(wrapper.text()).toContain('Log out');
 
     await findButtonByText(wrapper, 'Moodboard')?.trigger('click');
     await wrapper.find('[aria-haspopup="true"]').trigger('click');
+    await findButtonByText(wrapper, 'Consultation')?.trigger('click');
+    await wrapper.find('[aria-haspopup="true"]').trigger('click');
     await findButtonByText(wrapper, 'Log out')?.trigger('click');
 
     expect(wrapper.emitted('moodboard')).toHaveLength(1);
+    expect(wrapper.emitted('consultations')).toHaveLength(1);
     expect(wrapper.emitted('logout')).toHaveLength(1);
   });
 
@@ -54,5 +58,15 @@ describe('UserMenu', () => {
 
     expect(wrapper.find('[aria-haspopup="true"]').attributes('aria-expanded')).toBe('false');
     expect(wrapper.text()).not.toContain('Signed in as');
+  });
+
+  it('emits styleDna when the Style DNA item is clicked', async () => {
+    const wrapper = mountUserMenu();
+    await wrapper.find('[aria-haspopup="true"]').trigger('click');
+
+    expect(wrapper.text()).toContain('Style DNA');
+    await findButtonByText(wrapper, 'Style DNA')?.trigger('click');
+
+    expect(wrapper.emitted('styleDna')).toHaveLength(1);
   });
 });

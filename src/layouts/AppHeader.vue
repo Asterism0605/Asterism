@@ -4,10 +4,12 @@ import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { Languages, ChevronDown } from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 import Button from '@/components/ui/Button.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { getImageById } from '@/services/image.service';
 import { setLocale, SUPPORTED_LOCALES, type AppLocale } from '@/i18n';
+import { SITE_LOGO_SRC } from '@/constants/assets.constants';
 
 const { locale } = useI18n();
 
@@ -31,11 +33,12 @@ function handleLangClickOutside(event: MouseEvent) {
 onMounted(() => document.addEventListener('click', handleLangClickOutside, true));
 onUnmounted(() => document.removeEventListener('click', handleLangClickOutside, true));
 
-const siteLogoSrc = '/sitelogo.png';
+const siteLogoSrc = SITE_LOGO_SRC;
 const imageSearchEntryIcon = '/images/image-search-entry.webp';
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 
 const isPictureDetail = computed(
   () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
@@ -53,6 +56,14 @@ const initials = computed(() =>
 
 function goToMoodboard() {
   router.push({ name: 'moodboard' });
+}
+
+function goToStyleDna() {
+  router.push(styleDnaStore.hasCompletedQuiz ? '/style-dna/result' : '/discover-dna');
+}
+
+function goToConsultations() {
+  router.push({ name: 'account-consultations' });
 }
 
 async function handleLogout() {
@@ -140,6 +151,8 @@ async function handleLogout() {
         :display-name="authStore.user?.displayName ?? ''"
         :initials="initials"
         @moodboard="goToMoodboard"
+        @style-dna="goToStyleDna"
+        @consultations="goToConsultations"
         @logout="handleLogout"
       />
     </div>

@@ -7,6 +7,8 @@ export interface StyleImage {
   medium?: string;
   subMedium?: string;
   colorPalette: string[];
+  attribution?: string;
+  sourceUrl?: string;
 }
 
 export interface ImageSpreadNode {
@@ -19,6 +21,8 @@ export interface ImageSpreadNode {
   medium?: string;
   subMedium?: string;
   colorPalette: string[];
+  attribution?: string;
+  sourceUrl?: string;
 }
 
 export interface HomeInspirationImage {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
@@ -7,7 +7,9 @@ import {
   getImageById,
   getMediumEntryImage,
   getRelatedImages,
-  getStyleGroupRootImage
+  getSourceLinkInfo,
+  getStyleGroupRootImage,
+  resolvePhotographerInfo
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import { useAuthStore } from '@/stores/auth.store';
@@ -23,6 +25,9 @@ const authStore = useAuthStore();
 const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
 
+const photographerInfo = computed(() => resolvePhotographerInfo(currentImage.value?.attribution));
+const sourceLinkInfo = computed(() => getSourceLinkInfo(currentImage.value?.sourceUrl));
+
 const relatedImages = ref<ImageSpreadNode[]>([]);
 watch(
   imageId,
@@ -34,10 +39,21 @@ watch(
 const smallImages = computed(() => relatedImages.value.slice(0, 2));
 const similarImages = computed(() => relatedImages.value.slice(2, 6));
 
-const { isSaving, saveToMoodboard, createNewFolder, isCreatingFolder, isCreateFolderSuccess, justSavedFolderId } =
-  useSaveToMoodboard();
-const isSaved = computed(() => isImageSaved(currentImage.value?.id ?? ''));
+const {
+  isSaving,
+  canSave,
+  redirectGuestToLogin,
+  consumePendingSaveMenu,
+  saveToMoodboard,
+  createNewFolder,
+  isCreatingFolder,
+  isCreateFolderSuccess,
+  justSavedFolderId
+} = useSaveToMoodboard();
 const moodboardStore = useMoodboardStore();
+const isSaved = computed(() =>
+  isImageSaved(moodboardStore.folders, currentImage.value?.id ?? '')
+);
 const folders = computed(() =>
   moodboardStore.folders.map((f) => ({
     id: f.id,
@@ -46,6 +62,44 @@ const folders = computed(() =>
   }))
 );
 const showCreateFolder = ref(false);
+const saveMenuOpenRequest = ref(0);
+
+watch(
+  [imageId, canSave],
+  ([currentImageId, authenticated]) => {
+    if (authenticated && consumePendingSaveMenu(currentImageId, Boolean(currentImage.value))) {
+      saveMenuOpenRequest.value += 1;
+    }
+  },
+  { immediate: true }
+);
+
+function firstQueryValue(value: unknown): string | undefined {
+  if (Array.isArray(value)) return typeof value[0] === 'string' ? value[0] : undefined;
+
+  return typeof value === 'string' ? value : undefined;
+}
+
+function getSpreadPathContext() {
+  const spreadImageId = firstQueryValue(route.query.spreadImageId);
+  const spreadRootId = firstQueryValue(route.query.spreadRootId);
+  const spreadDetailImageId = firstQueryValue(route.query.spreadDetailImageId);
+  const spreadImage = spreadImageId ? getImageById(spreadImageId) : undefined;
+  const spreadRoot = spreadRootId ? getImageById(spreadRootId) : undefined;
+
+  if (spreadDetailImageId !== currentImage.value?.id) return undefined;
+  if (!spreadImage) return undefined;
+
+  return {
+    imageId: spreadImage.id,
+    rootId:
+      spreadRoot &&
+      spreadRoot.id !== spreadImage.id &&
+      spreadRoot.styleGroup === spreadImage.styleGroup
+        ? spreadRoot.id
+        : undefined
+  };
+}
 
 function handleBack() {
   if (route.query.from === 'image-search') {
@@ -58,10 +112,26 @@ function handleBack() {
     return;
   }
 
+  const moodboardSlug = firstQueryValue(route.query.moodboardSlug);
+  if (moodboardSlug) {
+    router.push({ name: 'moodboard', params: { slug: moodboardSlug } });
+    return;
+  }
+
+  const spreadPathContext = getSpreadPathContext();
+
+  if (spreadPathContext) {
+    router.push({
+      name: 'image-spread',
+      params: { imageId: spreadPathContext.imageId },
+      query: spreadPathContext.rootId ? { rootId: spreadPathContext.rootId } : undefined
+    });
+    return;
+  }
+
   const rootImage = getStyleGroupRootImage(currentImage.value.id);
   const spreadImage = getMediumEntryImage(currentImage.value.id) ?? currentImage.value;
-  const query =
-    rootImage && rootImage.id !== spreadImage.id ? { rootId: rootImage.id } : undefined;
+  const query = rootImage && rootImage.id !== spreadImage.id ? { rootId: rootImage.id } : undefined;
 
   router.push({
     name: 'image-spread',
@@ -76,7 +146,8 @@ function handleCreateFolder() {
 }
 
 async function handleSubmitFolder(name: string) {
-  const success = await createNewFolder(name);
+  if (!currentImage.value) return;
+  const success = await createNewFolder(name, currentImage.value.id);
   if (success) showCreateFolder.value = false;
 }
 
@@ -100,7 +171,29 @@ function handleConsult() {
 }
 
 function handleSelectImage(imageId: string) {
-  router.push({ name: 'picture-detail', params: { imageId } });
+  const spreadPathContext = getSpreadPathContext();
+  const nextImage = getImageById(imageId);
+  const spreadRoot = spreadPathContext?.rootId ? getImageById(spreadPathContext.rootId) : undefined;
+  const spreadImage = spreadPathContext ? getImageById(spreadPathContext.imageId) : undefined;
+  const isInSameSpreadPath =
+    nextImage &&
+    spreadImage &&
+    nextImage.styleGroup === spreadImage.styleGroup &&
+    nextImage.medium === spreadImage.medium;
+  const nextQuery =
+    spreadPathContext && nextImage && isInSameSpreadPath
+      ? {
+          spreadImageId: spreadPathContext.imageId,
+          spreadDetailImageId: nextImage.id,
+          ...(spreadRoot &&
+          spreadRoot.id !== spreadPathContext.imageId &&
+          spreadRoot.styleGroup === spreadImage.styleGroup
+            ? { spreadRootId: spreadRoot.id }
+            : {})
+        }
+      : undefined;
+
+  router.push({ name: 'picture-detail', params: { imageId }, query: nextQuery });
 }
 
 async function handleSaveToFolder(folderId: string) {
@@ -108,6 +201,16 @@ async function handleSaveToFolder(folderId: string) {
   await saveToMoodboard(folderId, currentImage.value.id);
 }
 
+// Esc 返回是全頁級的慣例快捷鍵，不需要先 Tab 聚焦到哪個區塊；
+// 跳過 showCreateFolder 開啟中的情況，避免使用者想關彈窗卻整頁被導走。
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && !showCreateFolder.value) {
+    handleBack();
+  }
+}
+
+onMounted(() => window.addEventListener('keydown', handleKeydown));
+onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
 </script>
 
 <template>
@@ -124,18 +227,22 @@ async function handleSaveToFolder(folderId: string) {
     <div class="w-full overflow-y-auto md:w-2/5 md:overflow-hidden">
       <ImageMetaPanel
         v-if="currentImage"
-        source-url="https://unsplash.com/"
-        source-label="Source URL.com"
+        :source-url="sourceLinkInfo?.url"
+        :source-label="sourceLinkInfo?.label"
         :color-palette="currentImage.colorPalette"
         :style-tags="currentImage.style"
         :similar-images="similarImages"
-        photographer-name="Zhenya Rukhlov"
+        :photographer-name="photographerInfo.name"
         photographer-role="Photographer"
+        :photographer-avatar-url="photographerInfo.avatarUrl"
         photographer-date="Aug 19, 2025"
         :saved="isSaved"
         :disabled="isSaving"
+        :can-save="canSave"
+        :save-menu-open-request="saveMenuOpenRequest"
         :folders="folders"
         :just-saved-folder-id="justSavedFolderId"
+        @auth-required="redirectGuestToLogin(currentImage.id)"
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"

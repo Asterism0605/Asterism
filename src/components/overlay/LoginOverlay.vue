@@ -11,6 +11,7 @@ interface LoginPayload {
 
 const emit = defineEmits<{
   submit: [payload: LoginPayload];
+  signup: [];
 }>();
 
 withDefaults(
@@ -43,7 +44,12 @@ function handleSubmit() {
 
     <form class="overlay-form-body" @submit.prevent="handleSubmit">
       <div class="overlay-fields">
-        <FormInput v-model="email" type="email" :placeholder="$t('auth.email')" autocomplete="email" />
+        <FormInput
+          v-model="email"
+          type="email"
+          :placeholder="$t('auth.email')"
+          autocomplete="email"
+        />
         <FormInput
           v-model="password"
           type="password"
@@ -52,7 +58,12 @@ function handleSubmit() {
         />
 
         <div class="overlay-helper">
-          <button type="button" class="overlay-link">{{ $t('auth.forgotPassword') }}</button>
+          <button type="button" class="overlay-link" @click="emit('signup')">
+            {{ $t('nav.signup') }}
+          </button>
+          <RouterLink :to="{ name: 'forgot-password' }" class="overlay-link">
+            {{ $t('auth.forgotPassword') }}
+          </RouterLink>
         </div>
       </div>
 

@@ -176,6 +176,19 @@ describe('ImageSearch.vue', () => {
     expect(wrapper.findAll('[data-testid="search-result-card-mobile"]')).toHaveLength(2);
   });
 
+  it('結果卡片顯示 styleGroup 標籤，讓使用者看得出比對到的風格分類', async () => {
+    clipModelState.status = 'ready';
+    imageSearchState.status = 'success';
+    imageSearchState.results = [
+      { id: 'a', src: 'u1', alt: 'A', styleGroup: 'Street & Youth Culture', similarity: 0.92 }
+    ];
+    const wrapper = await mountImageSearch();
+    await selectFile(wrapper);
+
+    expect(wrapper.find('[data-testid="related-image-card"]').text()).toContain('Street & Youth Culture');
+    expect(wrapper.find('[data-testid="search-result-card-mobile"]').text()).toContain('Street & Youth Culture');
+  });
+
   it('點桌機浮動群集裡的結果卡片會導到該圖片的詳情頁', async () => {
     clipModelState.status = 'ready';
     imageSearchState.status = 'success';

@@ -15,7 +15,8 @@
       "#0A0D1B",
       "#172040",
       "#26356F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-main-002",
@@ -33,7 +34,8 @@
       "#03121F",
       "#1A394B",
       "#BACBDE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-main-003",
@@ -51,7 +53,8 @@
       "#101431",
       "#143188",
       "#C6BBCB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-main-004",
@@ -69,7 +72,8 @@
       "#03193C",
       "#163C70",
       "#6E7CB5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-main-005",
@@ -87,7 +91,8 @@
       "#171921",
       "#444D6E",
       "#767DA6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-graphic-001",
@@ -105,7 +110,8 @@
       "#0D0B13",
       "#252644",
       "#4E4578"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-graphic-brand-001",
@@ -124,7 +130,8 @@
       "#08090B",
       "#202225",
       "#32343A"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-graphic-poster-001",
@@ -143,7 +150,8 @@
       "#171522",
       "#403852",
       "#74616F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-graphic-editorial-001",
@@ -162,7 +170,8 @@
       "#080A13",
       "#12192B",
       "#1D2954"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-outfit-001",
@@ -180,7 +189,8 @@
       "#080D1C",
       "#202C49",
       "#545676"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-outfit-top-001",
@@ -194,12 +204,13 @@
       "Neo-Tokyo"
     ],
     "medium": "Outfit",
-    "subMedium": "Top",
+    "subMedium": "Top Focus",
     "colorPalette": [
       "#1F2027",
       "#3A3D46",
       "#666974"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-outfit-bottom-001",
@@ -213,12 +224,13 @@
       "Neo-Tokyo"
     ],
     "medium": "Outfit",
-    "subMedium": "Bottom",
+    "subMedium": "Bottom Focus",
     "colorPalette": [
       "#101217",
       "#575960",
       "#6B6D75"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-outfit-dress-001",
@@ -232,12 +244,13 @@
       "Neo-Tokyo"
     ],
     "medium": "Outfit",
-    "subMedium": "Dress",
+    "subMedium": "Dress Focus",
     "colorPalette": [
       "#989EA9",
       "#BAC0CB",
       "#D8DEE7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-outfit-accessory-001",
@@ -251,12 +264,13 @@
       "Neo-Tokyo"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#262E48",
       "#434A62",
       "#606784"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-interior-001",
@@ -274,7 +288,8 @@
       "#0A0A13",
       "#1F1D2C",
       "#39374B"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-interior-lighting-001",
@@ -293,7 +308,8 @@
       "#35383D",
       "#5B646C",
       "#B8A2B6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-interior-table-001",
@@ -312,7 +328,8 @@
       "#272524",
       "#B3AEA7",
       "#C5C0BB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-interior-wall-paint-001",
@@ -331,7 +348,8 @@
       "#3A3D44",
       "#5A555B",
       "#827778"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-interior-chair-001",
@@ -350,7 +368,8 @@
       "#8D8A89",
       "#A6A4A2",
       "#C1BFBE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-architecture-001",
@@ -368,7 +387,8 @@
       "#19112B",
       "#22305C",
       "#0E5A98"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-architecture-window-001",
@@ -387,7 +407,8 @@
       "#11141B",
       "#5E6679",
       "#8691A8"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-architecture-staircase-001",
@@ -406,7 +427,8 @@
       "#0B123E",
       "#30376F",
       "#6669C7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-architecture-facade-001",
@@ -425,7 +447,8 @@
       "#0C163C",
       "#384CA8",
       "#576CCB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "ftdp-architecture-entrance-001",
@@ -444,7 +467,8 @@
       "#120C10",
       "#352228",
       "#612E30"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-main-001",
@@ -462,7 +486,8 @@
       "#AEA1AE",
       "#88B0E0",
       "#CAD1E6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-main-002",
@@ -480,7 +505,8 @@
       "#BDA9AF",
       "#D0C7D1",
       "#ECE7F2"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-main-003",
@@ -498,7 +524,8 @@
       "#181F32",
       "#D4BABB",
       "#CED6F3"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-main-004",
@@ -516,7 +543,8 @@
       "#A4C7F4",
       "#C6CDE9",
       "#DAE5FB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-main-005",
@@ -534,7 +562,8 @@
       "#8EA1B5",
       "#CDBCBB",
       "#C9DEEB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-graphic-001",
@@ -552,7 +581,8 @@
       "#7E97D5",
       "#A8B2DD",
       "#CDD5F0"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-graphic-poster-001",
@@ -571,7 +601,8 @@
       "#332B3F",
       "#9D95AF",
       "#C5BFCB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-graphic-editorial-001",
@@ -590,7 +621,8 @@
       "#A1ADD8",
       "#C4CCE5",
       "#E6E7ED"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-graphic-brand-001",
@@ -609,7 +641,8 @@
       "#B8B9CC",
       "#CECBE0",
       "#E5E1EF"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-graphic-packaging-001",
@@ -628,7 +661,8 @@
       "#A78BAD",
       "#BFABC6",
       "#E0CFE0"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-outfit-001",
@@ -646,7 +680,8 @@
       "#5A85BA",
       "#85A8D3",
       "#B8C7E4"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-outfit-accessory-001",
@@ -660,12 +695,13 @@
       "Bubblegum Futurism"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#767681",
       "#BAB4CC",
       "#E1E3EB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-outfit-top-001",
@@ -679,12 +715,13 @@
       "Bubblegum Futurism"
     ],
     "medium": "Outfit",
-    "subMedium": "Top",
+    "subMedium": "Top Focus",
     "colorPalette": [
       "#B1A8D0",
       "#CBC6E6",
       "#F4F2F5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-outfit-bottom-001",
@@ -698,12 +735,13 @@
       "Bubblegum Futurism"
     ],
     "medium": "Outfit",
-    "subMedium": "Bottom",
+    "subMedium": "Bottom Focus",
     "colorPalette": [
       "#B4A7D5",
       "#CCC0E5",
       "#F8F8F8"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-interior-001",
@@ -721,7 +759,8 @@
       "#8E8EBD",
       "#A9AAD2",
       "#90C1E9"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-interior-chair-001",
@@ -740,7 +779,8 @@
       "#A898BB",
       "#D2C6E1",
       "#F6F4F4"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-interior-wall-paint-001",
@@ -759,7 +799,8 @@
       "#857DA7",
       "#BBA3C6",
       "#EDCDDD"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-interior-wall-paint-002",
@@ -778,7 +819,8 @@
       "#D1B8D6",
       "#E6DDEC",
       "#F6F6F6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-interior-table-001",
@@ -797,7 +839,8 @@
       "#C1ACCD",
       "#D8C9DF",
       "#E7E5E6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-architecture-001",
@@ -814,7 +857,8 @@
       "#689BCF",
       "#B1B4DA",
       "#E5DBED"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-architecture-facade-001",
@@ -832,7 +876,8 @@
       "#7DA9D4",
       "#CBC5D3",
       "#EEE7EB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-architecture-entrance-001",
@@ -850,7 +895,8 @@
       "#737286",
       "#B9B5C8",
       "#D6D2E0"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-architecture-staircase-001",
@@ -868,7 +914,8 @@
       "#C6A4AD",
       "#AEAACC",
       "#D7B9C3"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "y2k-architecture-window-001",
@@ -886,7 +933,8 @@
       "#8A807C",
       "#A6999C",
       "#E9DFEF"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-main-001",
@@ -903,7 +951,8 @@
       "#0B0D0F",
       "#3E2D21",
       "#A77D57"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-main-002",
@@ -920,7 +969,8 @@
       "#19110A",
       "#B9926F",
       "#CFB39C"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-main-003",
@@ -937,7 +987,8 @@
       "#150D09",
       "#402D20",
       "#6B5241"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-main-004",
@@ -954,7 +1005,8 @@
       "#503621",
       "#6D5139",
       "#8D6F56"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-main-005",
@@ -971,7 +1023,8 @@
       "#19150D",
       "#896036",
       "#CCAC91"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-graphic-001",
@@ -988,7 +1041,8 @@
       "#A89E94",
       "#C5B9B0",
       "#D5CDC8"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-graphic-packaging-001",
@@ -1006,7 +1060,8 @@
       "#785B32",
       "#A88A61",
       "#EAE0D5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-graphic-brand-001",
@@ -1024,7 +1079,8 @@
       "#292621",
       "#B9AA9A",
       "#DBD0C5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-graphic-poster-001",
@@ -1042,7 +1098,8 @@
       "#B59976",
       "#D8C5AE",
       "#EDE0D1"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-graphic-editorial-001",
@@ -1060,7 +1117,8 @@
       "#BCAD9F",
       "#D3C7BC",
       "#E9E2DB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-outfit-001",
@@ -1077,7 +1135,8 @@
       "#150E07",
       "#39250E",
       "#654B30"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-outfit-top-001",
@@ -1090,12 +1149,13 @@
       "Maximalism"
     ],
     "medium": "Outfit",
-    "subMedium": "Top",
+    "subMedium": "Top Focus",
     "colorPalette": [
       "#0F0C09",
       "#BFAA94",
       "#D6C5B5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-outfit-bottom-001",
@@ -1108,12 +1168,13 @@
       "Maximalism"
     ],
     "medium": "Outfit",
-    "subMedium": "Bottom",
+    "subMedium": "Bottom Focus",
     "colorPalette": [
       "#120D08",
       "#3B2D1F",
       "#604D39"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-outfit-dress-001",
@@ -1126,12 +1187,13 @@
       "Maximalism"
     ],
     "medium": "Outfit",
-    "subMedium": "Dress",
+    "subMedium": "Dress Focus",
     "colorPalette": [
       "#947A5B",
       "#BBA288",
       "#CFBCAA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-outfit-accessory-001",
@@ -1144,12 +1206,13 @@
       "Maximalism"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#130E08",
       "#372817",
       "#E3CFB4"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-interior-001",
@@ -1166,7 +1229,8 @@
       "#AC9981",
       "#C9B8A6",
       "#DFD4C8"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-interior-lighting-001",
@@ -1184,7 +1248,8 @@
       "#9D8265",
       "#AF967E",
       "#BDAA96"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-interior-table-001",
@@ -1202,7 +1267,8 @@
       "#8F714B",
       "#AF997C",
       "#C5B8A8"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-interior-chair-001",
@@ -1220,7 +1286,8 @@
       "#7D6F59",
       "#A29483",
       "#C6BBB1"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-interior-wall-paint-001",
@@ -1238,7 +1305,8 @@
       "#9D8C71",
       "#B5A690",
       "#EAE2D5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-architecture-001",
@@ -1255,7 +1323,8 @@
       "#7D644A",
       "#B39475",
       "#D4C0AB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-architecture-entrance-001",
@@ -1273,7 +1342,8 @@
       "#664A26",
       "#8D7254",
       "#B4987D"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-architecture-staircase-001",
@@ -1291,7 +1361,8 @@
       "#866441",
       "#A68464",
       "#C4AC95"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-architecture-window-001",
@@ -1309,7 +1380,8 @@
       "#927C63",
       "#B5A18A",
       "#EEEBE8"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "doa-architecture-facade-001",
@@ -1327,7 +1399,8 @@
       "#9D8878",
       "#BBACA4",
       "#D4CFCF"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-main-001",
@@ -1344,7 +1417,8 @@
       "#131B1E",
       "#71716B",
       "#D0CBC4"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-main-002",
@@ -1361,7 +1435,8 @@
       "#1B2120",
       "#D1BFB0",
       "#E5DED6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-main-003",
@@ -1378,7 +1453,8 @@
       "#423E43",
       "#AFA098",
       "#D5D5D3"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-main-004",
@@ -1395,7 +1471,8 @@
       "#CABFB6",
       "#DFD7D1",
       "#F2EFEC"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-main-005",
@@ -1412,7 +1489,8 @@
       "#755F51",
       "#A28877",
       "#B9A699"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-graphic-001",
@@ -1429,7 +1507,8 @@
       "#ABA296",
       "#C6BEB6",
       "#E4E0DC"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-graphic-editorial-001",
@@ -1447,7 +1526,8 @@
       "#B1A9A0",
       "#D0CAC7",
       "#E6E2E0"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-graphic-packaging-001",
@@ -1465,7 +1545,8 @@
       "#A79E93",
       "#CBC3BB",
       "#DED8D3"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-graphic-brand-001",
@@ -1483,7 +1564,8 @@
       "#B9B0A3",
       "#CCC5BD",
       "#E2DEDA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-graphic-poster-001",
@@ -1501,7 +1583,8 @@
       "#665B50",
       "#C0B8AF",
       "#DFD8D0"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-outfit-001",
@@ -1518,7 +1601,8 @@
       "#BAB1A6",
       "#CCC4BA",
       "#E0D6C9"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-outfit-top-001",
@@ -1531,12 +1615,13 @@
       "Modernism"
     ],
     "medium": "Outfit",
-    "subMedium": "Top",
+    "subMedium": "Top Focus",
     "colorPalette": [
       "#988A7C",
       "#D2C6B9",
       "#E6E0D7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-outfit-bottom-001",
@@ -1549,12 +1634,13 @@
       "Modernism"
     ],
     "medium": "Outfit",
-    "subMedium": "Bottom",
+    "subMedium": "Bottom Focus",
     "colorPalette": [
       "#484645",
       "#88827D",
       "#E4DDD6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-outfit-dress-001",
@@ -1567,12 +1653,13 @@
       "Modernism"
     ],
     "medium": "Outfit",
-    "subMedium": "Dress",
+    "subMedium": "Dress Focus",
     "colorPalette": [
       "#A29486",
       "#B4AA9F",
       "#CDC1B4"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-outfit-accessory-001",
@@ -1585,12 +1672,13 @@
       "Modernism"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#7E7265",
       "#988878",
       "#C3B6A7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-interior-001",
@@ -1608,7 +1696,8 @@
       "#A4988B",
       "#BCB2A7",
       "#D3CDC7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-interior-wall-paint-001",
@@ -1627,7 +1716,8 @@
       "#97816A",
       "#B8A591",
       "#CDBDAD"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-interior-chair-001",
@@ -1646,7 +1736,8 @@
       "#937F6A",
       "#AD9C8B",
       "#C7BCB1"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-interior-table-001",
@@ -1665,7 +1756,8 @@
       "#B7AEA5",
       "#D1CBC5",
       "#EFEDEA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-interior-lighting-001",
@@ -1684,7 +1776,8 @@
       "#2C1706",
       "#432A11",
       "#6E4B29"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-architecture-001",
@@ -1701,7 +1794,8 @@
       "#3A3A35",
       "#B2B0AE",
       "#D5D3D2"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-architecture-staircase-001",
@@ -1719,7 +1813,8 @@
       "#6C5C4C",
       "#8A7B6B",
       "#ABA195"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-architecture-facade-001",
@@ -1737,7 +1832,8 @@
       "#252015",
       "#7E7C7C",
       "#DBDEE5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-architecture-entrance-001",
@@ -1755,7 +1851,8 @@
       "#1F150B",
       "#5B3B20",
       "#645A55"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "msm-architecture-window-001",
@@ -1773,7 +1870,8 @@
       "#1A1B1C",
       "#6C6751",
       "#DAD9D7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-main-001",
@@ -1790,7 +1888,8 @@
       "#756951",
       "#9F8E7A",
       "#BAAD9D"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-main-002",
@@ -1807,7 +1906,8 @@
       "#A28D74",
       "#C6B29D",
       "#E3D9CA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-main-003",
@@ -1824,7 +1924,8 @@
       "#584435",
       "#796759",
       "#988A80"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-main-004",
@@ -1841,7 +1942,8 @@
       "#362413",
       "#664E35",
       "#8C7358"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-main-005",
@@ -1858,7 +1960,8 @@
       "#21180F",
       "#624C32",
       "#B3A087"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-graphic-001",
@@ -1875,7 +1978,8 @@
       "#7A6C5A",
       "#A29384",
       "#C2B7AA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-graphic-poster-001",
@@ -1893,7 +1997,8 @@
       "#A59B91",
       "#C9C0B7",
       "#DCD5CE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-graphic-brand-001",
@@ -1911,7 +2016,8 @@
       "#C5B8AA",
       "#DBD1C9",
       "#E9E4DE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-graphic-packaging-001",
@@ -1929,7 +2035,8 @@
       "#251B11",
       "#43382B",
       "#6F6152"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-graphic-editorial-001",
@@ -1947,7 +2054,8 @@
       "#7A6D61",
       "#9A8E84",
       "#D2CDCA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-outfit-001",
@@ -1964,7 +2072,8 @@
       "#352210",
       "#5F4E3A",
       "#B1A08C"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-outfit-bottom-001",
@@ -1977,12 +2086,13 @@
       "Japandi"
     ],
     "medium": "Outfit",
-    "subMedium": "Bottom",
+    "subMedium": "Bottom Focus",
     "colorPalette": [
       "#948772",
       "#A59A87",
       "#E3DDD4"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-outfit-accessory-001",
@@ -1995,12 +2105,13 @@
       "Japandi"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#5D3613",
       "#A6917B",
       "#BDA993"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-outfit-top-001",
@@ -2013,12 +2124,13 @@
       "Japandi"
     ],
     "medium": "Outfit",
-    "subMedium": "Top",
+    "subMedium": "Top Focus",
     "colorPalette": [
       "#856E4F",
       "#9C8D79",
       "#B0A597"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-outfit-dress-001",
@@ -2031,12 +2143,13 @@
       "Japandi"
     ],
     "medium": "Outfit",
-    "subMedium": "Dress",
+    "subMedium": "Dress Focus",
     "colorPalette": [
       "#7B6B55",
       "#9B8F81",
       "#B1A69A"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-interior-001",
@@ -2054,7 +2167,8 @@
       "#604931",
       "#7F6A55",
       "#A5917D"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-interior-chair-001",
@@ -2073,7 +2187,8 @@
       "#836F58",
       "#9D8B78",
       "#B7A898"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-interior-lighting-001",
@@ -2092,7 +2207,8 @@
       "#261304",
       "#432B13",
       "#63482F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-interior-table-001",
@@ -2111,7 +2227,8 @@
       "#351C09",
       "#5E4328",
       "#82664A"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-interior-chair-002",
@@ -2130,7 +2247,8 @@
       "#867259",
       "#A89883",
       "#C4B5A6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-architecture-001",
@@ -2147,7 +2265,8 @@
       "#3A2812",
       "#64543E",
       "#B8AA9E"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-architecture-facade-001",
@@ -2165,7 +2284,8 @@
       "#352717",
       "#645140",
       "#8B7D71"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-architecture-entrance-001",
@@ -2183,7 +2303,8 @@
       "#1C1708",
       "#3D351D",
       "#5E513B"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-architecture-staircase-001",
@@ -2201,7 +2322,8 @@
       "#4E3B27",
       "#6B5744",
       "#8D7B6A"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eoh-architecture-window-001",
@@ -2219,7 +2341,8 @@
       "#3E2D16",
       "#61543E",
       "#867563"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-main-001",
@@ -2236,7 +2359,8 @@
       "#7E654A",
       "#A58B6F",
       "#C1A88F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-main-002",
@@ -2253,7 +2377,8 @@
       "#BA9D82",
       "#D5BDA6",
       "#E8D9C8"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-main-003",
@@ -2270,7 +2395,8 @@
       "#8D795E",
       "#B69D87",
       "#D1C1B3"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-main-004",
@@ -2287,7 +2413,8 @@
       "#B09B80",
       "#C9B8A4",
       "#E2DCD6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-main-005",
@@ -2304,7 +2431,8 @@
       "#2D2011",
       "#AF8B6A",
       "#CEB092"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-graphic-001",
@@ -2321,7 +2449,8 @@
       "#836F57",
       "#AA9786",
       "#CEBCAE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-graphic-poster-001",
@@ -2339,7 +2468,8 @@
       "#CDBA9F",
       "#DED1C2",
       "#F0E7DD"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-graphic-brand-001",
@@ -2357,7 +2487,8 @@
       "#83786B",
       "#C2B8AE",
       "#D3CCC6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-graphic-packaging-001",
@@ -2375,7 +2506,8 @@
       "#33240A",
       "#887960",
       "#B09D89"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-graphic-editorial-001",
@@ -2393,7 +2525,8 @@
       "#977A63",
       "#B49E8B",
       "#CAB9AD"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-outfit-001",
@@ -2410,7 +2543,8 @@
       "#5F5845",
       "#8E7E6C",
       "#B7A799"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-outfit-bottom-001",
@@ -2423,12 +2557,13 @@
       "Vintage Floral"
     ],
     "medium": "Outfit",
-    "subMedium": "Bottom",
+    "subMedium": "Bottom Focus",
     "colorPalette": [
       "#352D17",
       "#A08569",
       "#C2A890"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-outfit-top-001",
@@ -2441,12 +2576,13 @@
       "Vintage Floral"
     ],
     "medium": "Outfit",
-    "subMedium": "Top",
+    "subMedium": "Top Focus",
     "colorPalette": [
       "#8D7A64",
       "#A4917E",
       "#BDAD9F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-outfit-accessory-001",
@@ -2459,12 +2595,13 @@
       "Vintage Floral"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#8E7559",
       "#B19B86",
       "#D0C4B7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-outfit-dress-001",
@@ -2477,12 +2614,13 @@
       "Vintage Floral"
     ],
     "medium": "Outfit",
-    "subMedium": "Dress",
+    "subMedium": "Dress Focus",
     "colorPalette": [
       "#947D68",
       "#A5927E",
       "#C3B19F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-interior-001",
@@ -2499,7 +2637,8 @@
       "#281408",
       "#78624C",
       "#A08B78"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-interior-lighting-001",
@@ -2517,7 +2656,8 @@
       "#907B62",
       "#AC9479",
       "#E3C49C"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-interior-wall-paint-001",
@@ -2535,7 +2675,8 @@
       "#6B5A3C",
       "#7B7159",
       "#8E866F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-interior-chair-001",
@@ -2553,7 +2694,8 @@
       "#B49B83",
       "#C5B5A7",
       "#D5CABF"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-interior-table-001",
@@ -2571,7 +2713,8 @@
       "#412709",
       "#6B573A",
       "#8D7E68"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-architecture-001",
@@ -2588,7 +2731,8 @@
       "#2D2B0D",
       "#5C5333",
       "#897C5F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-architecture-facade-001",
@@ -2606,7 +2750,8 @@
       "#655342",
       "#8C7767",
       "#B59D8D"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-architecture-entrance-001",
@@ -2624,7 +2769,8 @@
       "#33290C",
       "#5B4C29",
       "#7D6E4F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-architecture-staircase-001",
@@ -2642,7 +2788,8 @@
       "#816C55",
       "#A1927F",
       "#B8AB9C"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "rpl-architecture-window-001",
@@ -2660,7 +2807,8 @@
       "#6A5B47",
       "#867B6A",
       "#ADA99B"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-main-001",
@@ -2677,7 +2825,8 @@
       "#162120",
       "#43382F",
       "#765C48"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-main-002",
@@ -2694,7 +2843,8 @@
       "#884B1B",
       "#B77842",
       "#DCA05F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-main-003",
@@ -2711,7 +2861,8 @@
       "#48372B",
       "#83523A",
       "#DDB58E"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-main-004",
@@ -2728,7 +2879,8 @@
       "#282627",
       "#5A4133",
       "#936B47"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-main-005",
@@ -2745,7 +2897,8 @@
       "#102037",
       "#914A40",
       "#D3BDA4"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-graphic-001",
@@ -2762,7 +2915,8 @@
       "#2E271A",
       "#5B4D37",
       "#DCD2C5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-graphic-poster-001",
@@ -2780,7 +2934,8 @@
       "#664828",
       "#927656",
       "#AA9579"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-graphic-brand-001",
@@ -2798,7 +2953,8 @@
       "#C46A29",
       "#CDB799",
       "#DED0BD"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-graphic-packaging-001",
@@ -2816,7 +2972,8 @@
       "#53371A",
       "#83623A",
       "#AC8A63"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-graphic-editorial-001",
@@ -2834,7 +2991,8 @@
       "#594C3A",
       "#7E715E",
       "#BEB1A1"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-outfit-001",
@@ -2851,7 +3009,8 @@
       "#703E22",
       "#8B674D",
       "#D3BFA4"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-outfit-top-001",
@@ -2864,12 +3023,13 @@
       "Americana"
     ],
     "medium": "Outfit",
-    "subMedium": "Top",
+    "subMedium": "Top Focus",
     "colorPalette": [
       "#382616",
       "#55615F",
       "#AC987D"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-outfit-bottom-001",
@@ -2882,12 +3042,13 @@
       "Americana"
     ],
     "medium": "Outfit",
-    "subMedium": "Bottom",
+    "subMedium": "Bottom Focus",
     "colorPalette": [
       "#4C2A12",
       "#B69979",
       "#D6BFA5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-outfit-dress-001",
@@ -2900,12 +3061,13 @@
       "Americana"
     ],
     "medium": "Outfit",
-    "subMedium": "Dress",
+    "subMedium": "Dress Focus",
     "colorPalette": [
       "#C2B19C",
       "#CFC4B6",
       "#E0E1DE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-outfit-accessory-001",
@@ -2918,12 +3080,13 @@
       "Americana"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#88583D",
       "#CCB191",
       "#E4CFB6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-interior-001",
@@ -2940,7 +3103,8 @@
       "#1D120A",
       "#4B2E15",
       "#6D5131"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-interior-lighting-001",
@@ -2958,7 +3122,8 @@
       "#210C04",
       "#6D492D",
       "#976741"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-interior-wall-paint-001",
@@ -2976,7 +3141,8 @@
       "#2A1B06",
       "#4D3A19",
       "#A1855A"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-interior-table-001",
@@ -2994,7 +3160,8 @@
       "#21170C",
       "#493019",
       "#6E5135"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-interior-chair-001",
@@ -3012,7 +3179,8 @@
       "#573C20",
       "#7A6246",
       "#A79070"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-architecture-001",
@@ -3029,7 +3197,8 @@
       "#4A3E2D",
       "#927B63",
       "#BBC4C7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-architecture-facade-001",
@@ -3047,7 +3216,8 @@
       "#3B3832",
       "#766D62",
       "#EBDECC"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-architecture-staircase-001",
@@ -3065,7 +3235,8 @@
       "#261D13",
       "#463623",
       "#63523B"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-architecture-entrance-001",
@@ -3083,7 +3254,8 @@
       "#261709",
       "#633E21",
       "#866349"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "retro-architecture-window-001",
@@ -3101,7 +3273,8 @@
       "#534739",
       "#948B7D",
       "#B4BDC7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-main-001",
@@ -3118,7 +3291,8 @@
       "#0F1013",
       "#2D2F31",
       "#8B8988"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-main-002",
@@ -3135,7 +3309,8 @@
       "#13171E",
       "#706D71",
       "#BCB4B5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-main-003",
@@ -3152,7 +3327,8 @@
       "#0E151E",
       "#40454A",
       "#BCB9BA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-main-004",
@@ -3169,7 +3345,8 @@
       "#191B1E",
       "#383C40",
       "#5D6165"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-main-005",
@@ -3186,7 +3363,8 @@
       "#898179",
       "#A6A19B",
       "#C1BDBA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-graphic-001",
@@ -3204,7 +3382,8 @@
       "#302F30",
       "#A9A7A5",
       "#CDCAC7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-graphic-brand-001",
@@ -3223,7 +3402,8 @@
       "#535355",
       "#7B7979",
       "#D5D3D1"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-graphic-editorial-001",
@@ -3242,7 +3422,8 @@
       "#393734",
       "#878484",
       "#B0ACAC"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-graphic-packaging-001",
@@ -3261,7 +3442,8 @@
       "#1B1915",
       "#5B554D",
       "#C0B6AC"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-graphic-poster-001",
@@ -3280,7 +3462,8 @@
       "#161210",
       "#56362F",
       "#CDC8C3"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-outfit-001",
@@ -3297,7 +3480,8 @@
       "#141313",
       "#8B857E",
       "#C2BEBA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-outfit-top-001",
@@ -3310,12 +3494,13 @@
       "Anti-Design"
     ],
     "medium": "Outfit",
-    "subMedium": "Top",
+    "subMedium": "Top Focus",
     "colorPalette": [
       "#867C72",
       "#B3AAA1",
       "#D5CEC7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-outfit-bottom-001",
@@ -3328,12 +3513,13 @@
       "Anti-Design"
     ],
     "medium": "Outfit",
-    "subMedium": "Bottom",
+    "subMedium": "Bottom Focus",
     "colorPalette": [
       "#110F0F",
       "#2F2B29",
       "#7E7B77"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-outfit-dress-001",
@@ -3346,12 +3532,13 @@
       "Anti-Design"
     ],
     "medium": "Outfit",
-    "subMedium": "Dress",
+    "subMedium": "Dress Focus",
     "colorPalette": [
       "#383735",
       "#4C4A48",
       "#ACABAD"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-outfit-accessory-001",
@@ -3364,12 +3551,13 @@
       "Anti-Design"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#7E7870",
       "#918C87",
       "#C7C1BC"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-interior-001",
@@ -3386,7 +3574,8 @@
       "#211D18",
       "#4B433A",
       "#796D5F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-interior-wall-paint-001",
@@ -3404,7 +3593,8 @@
       "#2A241C",
       "#907C69",
       "#AE9E8F"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-interior-lighting-001",
@@ -3422,7 +3612,8 @@
       "#8A7F77",
       "#ACA39C",
       "#D7D3D0"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-interior-table-001",
@@ -3440,7 +3631,8 @@
       "#54483C",
       "#7D7165",
       "#A89D92"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-interior-chair-001",
@@ -3458,7 +3650,8 @@
       "#2F2A25",
       "#695147",
       "#B2A69B"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-architecture-001",
@@ -3475,7 +3668,8 @@
       "#807F80",
       "#A2A3A6",
       "#C3C7CE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-architecture-staircase-001",
@@ -3493,7 +3687,8 @@
       "#323336",
       "#525355",
       "#9EA2AA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-architecture-facade-001",
@@ -3511,7 +3706,8 @@
       "#19130C",
       "#3F3224",
       "#6C6054"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-architecture-entrance-001",
@@ -3529,7 +3725,8 @@
       "#847B74",
       "#9FA2A6",
       "#D0D7E0"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "eag-architecture-facade-002",
@@ -3547,7 +3744,8 @@
       "#201C17",
       "#7E7D7B",
       "#D0D4DA"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-main-001",
@@ -3565,7 +3763,8 @@
       "#0E1116",
       "#2D363B",
       "#B1B9B8"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-main-002",
@@ -3583,7 +3782,8 @@
       "#0F1E1C",
       "#B7B5B0",
       "#E2E5E4"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-main-003",
@@ -3601,7 +3801,8 @@
       "#17151B",
       "#34333F",
       "#A5989D"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-main-004",
@@ -3619,7 +3820,8 @@
       "#2B3239",
       "#7A7C86",
       "#B9CAE1"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-main-005",
@@ -3637,7 +3839,8 @@
       "#0C131A",
       "#B29991",
       "#D5CECE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-graphic-001",
@@ -3654,7 +3857,8 @@
       "#1B1B16",
       "#B3866A",
       "#CBC4C0"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-graphic-poster-001",
@@ -3672,7 +3876,8 @@
       "#DDFF19",
       "#000000",
       "#5D5E54"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-graphic-brand-001",
@@ -3690,7 +3895,8 @@
       "#383A3B",
       "#9E9A96",
       "#C8C9CB"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-graphic-packaging-001",
@@ -3708,7 +3914,8 @@
       "#151513",
       "#3A3632",
       "#706760"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-graphic-editorial-001",
@@ -3726,7 +3933,8 @@
       "#4A453E",
       "#A59E97",
       "#D6D1CE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-outfit-001",
@@ -3744,7 +3952,8 @@
       "#151713",
       "#3F3E37",
       "#61615C"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-outfit-top-001",
@@ -3758,12 +3967,13 @@
       "Urban Contemporary"
     ],
     "medium": "Outfit",
-    "subMedium": "Top",
+    "subMedium": "Top Focus",
     "colorPalette": [
       "#222222",
       "#3B3B3A",
       "#515151"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-outfit-bottom-001",
@@ -3777,12 +3987,13 @@
       "Urban Contemporary"
     ],
     "medium": "Outfit",
-    "subMedium": "Bottom",
+    "subMedium": "Bottom Focus",
     "colorPalette": [
       "#747270",
       "#A39E9B",
       "#C1BDB7"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-outfit-dress-001",
@@ -3796,12 +4007,13 @@
       "Urban Contemporary"
     ],
     "medium": "Outfit",
-    "subMedium": "Dress",
+    "subMedium": "Dress Focus",
     "colorPalette": [
       "#AAA6A0",
       "#CBC9C6",
       "#E6E6E5"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-outfit-accessory-001",
@@ -3815,12 +4027,13 @@
       "Urban Contemporary"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#232225",
       "#545254",
       "#F6F6F6"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-interior-001",
@@ -3838,7 +4051,8 @@
       "#4C4132",
       "#786551",
       "#96867A"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-interior-table-001",
@@ -3857,7 +4071,8 @@
       "#4F4943",
       "#6F6962",
       "#89837D"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-interior-chair-001",
@@ -3876,7 +4091,8 @@
       "#45403B",
       "#6E6963",
       "#908D8B"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-interior-lighting-001",
@@ -3894,7 +4110,8 @@
       "#17120D",
       "#362E26",
       "#574C41"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-interior-wall-paint-001",
@@ -3912,7 +4129,8 @@
       "#1A1510",
       "#393028",
       "#5F4C3C"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-architecture-001",
@@ -3929,7 +4147,8 @@
       "#1F1911",
       "#6A625F",
       "#CCD3DE"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-architecture-facade-001",
@@ -3947,7 +4166,8 @@
       "#232319",
       "#878582",
       "#BED5E9"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-architecture-entrance-001",
@@ -3965,7 +4185,8 @@
       "#181310",
       "#2E2B2B",
       "#666062"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-architecture-staircase-001",
@@ -3983,7 +4204,8 @@
       "#1E1B15",
       "#46433A",
       "#66645C"
-    ]
+    ],
+    "attribution": "Asterism"
   },
   {
     "id": "syc-architecture-window-001",
@@ -4001,6 +4223,1908 @@
       "#191715",
       "#38383A",
       "#D3CBC5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-full-look-101",
+    "url": "/style-image/y2k-outfit-full-look-101.webp",
+    "title": "銀粉虹彩未來感套裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Full Look",
+    "colorPalette": [
+      "#D9DDF1",
+      "#F4A7D8",
+      "#9BE6F5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-top-101",
+    "url": "/style-image/y2k-outfit-top-101.webp",
+    "title": "虹彩水晶馬甲上衣",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+      "#B9EAF2",
+      "#F2B3DE",
+      "#D8E0ED"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-bottom-101",
+    "url": "/style-image/y2k-outfit-bottom-101.webp",
+    "title": "銀色虹彩工裝褲",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#D9E5F0",
+      "#F1B7D9",
+      "#A8DDF0"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-full-look-102",
+    "url": "/style-image/y2k-outfit-full-look-102.webp",
+    "title": "粉銀虹彩晚宴洋裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Full Look",
+    "colorPalette": [
+      "#F5B7D9",
+      "#D9D1EE",
+      "#E9EFF6"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-accessory-101",
+    "url": "/style-image/y2k-outfit-accessory-101.webp",
+    "title": "鑽飾星芒銀色手提包",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+      "#E6E8F2",
+      "#AEB2C1",
+      "#4D5261"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-living-101",
+    "url": "/style-image/y2k-interior-living-101.webp",
+    "title": "粉綠鏡面夢幻客餐廳",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#F4C6D5",
+      "#A5D8C6",
+      "#D487B5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-living-102",
+    "url": "/style-image/y2k-interior-living-102.webp",
+    "title": "薄荷玻璃流線客廳",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#EAF0E8",
+      "#A9D9D3",
+      "#BACCC2"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-bedroom-101",
+    "url": "/style-image/y2k-interior-bedroom-101.webp",
+    "title": "霓虹絨毛粉紅臥室",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Bubblegum Futurism",
+      "Chrome Design"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#C77D93",
+      "#E4B7AF",
+      "#964D75"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-lighting-101",
+    "url": "/style-image/y2k-interior-lighting-101.webp",
+    "title": "水晶泡泡吊燈",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#E8F2F0",
+      "#99DDE1",
+      "#B4BCC5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-decor-101",
+    "url": "/style-image/y2k-interior-decor-101.webp",
+    "title": "粉紅玻璃花器擺飾",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Decor Detail",
+    "colorPalette": [
+      "#E8B5B4",
+      "#D57283",
+      "#A87168"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-facade-101",
+    "url": "/style-image/y2k-architecture-facade-101.webp",
+    "title": "流線玻璃未來商場立面",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#F0F4F6",
+      "#2AA7D1",
+      "#79B6DE"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-entrance-101",
+    "url": "/style-image/y2k-architecture-entrance-101.webp",
+    "title": "粉銀光環商場入口",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#D5C1D0",
+      "#ED9CB7",
+      "#8998C5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-passage-101",
+    "url": "/style-image/y2k-architecture-passage-101.webp",
+    "title": "柔光玻璃中庭廊道",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+      "#D9E9EF",
+      "#F0B9D6",
+      "#7BC6E2"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-building-exterior-101",
+    "url": "/style-image/y2k-architecture-building-exterior-101.webp",
+    "title": "環形窗景未來建築",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#F2F1E9",
+      "#97D7E7",
+      "#D6B0B6"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-building-exterior-102",
+    "url": "/style-image/y2k-architecture-building-exterior-102.webp",
+    "title": "公園中的流線白色建築",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#EEF5F4",
+      "#8BCFE4",
+      "#769B73"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-main-101",
+    "url": "/style-image/ftdp-graphic-main-101.webp",
+    "title": "Neo Kyoto 2049 視覺識別套組",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#10131D",
+      "#2548CC",
+      "#C32B9A"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-poster-101",
+    "url": "/style-image/ftdp-graphic-poster-101.webp",
+    "title": "Neo Tokyo 故障藝術海報",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#101123",
+      "#0067DD",
+      "#D51DAB"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-brand-101",
+    "url": "/style-image/ftdp-graphic-brand-101.webp",
+    "title": "NK-2049 黑色品牌識別",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#10131B",
+      "#313447",
+      "#4D47E8"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-packaging-101",
+    "url": "/style-image/ftdp-graphic-packaging-101.webp",
+    "title": "NK-2077 霓虹黑色包裝",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#0B0E17",
+      "#2622B9",
+      "#2D98D5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-editorial-101",
+    "url": "/style-image/ftdp-graphic-editorial-101.webp",
+    "title": "Neo Kyoto 未來城市編輯設計",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#0D1120",
+      "#2A2D82",
+      "#8653B5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-main-102",
+    "url": "/style-image/ftdp-graphic-main-102.webp",
+    "title": "Techwear 概念視覺套組",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#121315",
+      "#B71937",
+      "#E9E4DF"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-poster-102",
+    "url": "/style-image/ftdp-graphic-poster-102.webp",
+    "title": "未來式故障排版海報",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#141218",
+      "#2827BF",
+      "#E423C5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-brand-102",
+    "url": "/style-image/ftdp-graphic-brand-102.webp",
+    "title": "02X Techwear 品牌系統",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#18191C",
+      "#F1F0EC",
+      "#48BACB"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-packaging-102",
+    "url": "/style-image/ftdp-graphic-packaging-102.webp",
+    "title": "科技機能紅黑包裝",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#08090B",
+      "#C71724",
+      "#C0C0BD"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-editorial-102",
+    "url": "/style-image/ftdp-graphic-editorial-102.webp",
+    "title": "機能服飾實驗雜誌版面",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#111114",
+      "#E3E0D9",
+      "#D10E24"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-main-101",
+    "url": "/style-image/y2k-graphic-main-101.webp",
+    "title": "Studio Play 未來感設計套組",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#E5E8E5",
+      "#7BA7D7",
+      "#ECADD0"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-poster-101",
+    "url": "/style-image/y2k-graphic-poster-101.webp",
+    "title": "Digital Dreams 流體海報系列",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#F1D6DF",
+      "#8EC4E8",
+      "#D674AA"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-brand-101",
+    "url": "/style-image/y2k-graphic-brand-101.webp",
+    "title": "Orbita 數位體驗品牌識別",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#EDF5F6",
+      "#6BD2E2",
+      "#B4DA48"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-packaging-101",
+    "url": "/style-image/y2k-graphic-packaging-101.webp",
+    "title": "Glow Hub 虹彩保養品包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#DD91D2",
+      "#8AD7E7",
+      "#B9C0F1"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-editorial-101",
+    "url": "/style-image/y2k-graphic-editorial-101.webp",
+    "title": "未來感介面雜誌編輯設計",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#E7EFF4",
+      "#ABCBE9",
+      "#EC9EB9"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-main-102",
+    "url": "/style-image/y2k-graphic-main-102.webp",
+    "title": "Orbit 98 懷舊數位視覺套組",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#B49AD8",
+      "#E49CCD",
+      "#B7D0ED"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-poster-102",
+    "url": "/style-image/y2k-graphic-poster-102.webp",
+    "title": "Orbit 98 數位記憶海報",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#BE8FDA",
+      "#E697C9",
+      "#D1C9E7"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-brand-102",
+    "url": "/style-image/y2k-graphic-brand-102.webp",
+    "title": "Orbit 98 虹彩品牌識別",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#B8A7DD",
+      "#E4A0CA",
+      "#B6C5ED"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-packaging-102",
+    "url": "/style-image/y2k-graphic-packaging-102.webp",
+    "title": "Orbit 98 未來懷舊產品包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#A286D1",
+      "#EEA4D0",
+      "#DCD0F0"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-editorial-102",
+    "url": "/style-image/y2k-graphic-editorial-102.webp",
+    "title": "Orbit 98 網路文化雜誌",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#E5D8F1",
+      "#A6B4E4",
+      "#E399C1"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-main-103",
+    "url": "/style-image/y2k-graphic-main-103.webp",
+    "title": "Pixel Bloom 糖果未來視覺套組",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#F1D6E5",
+      "#F29AB7",
+      "#A5C5EF"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-poster-103",
+    "url": "/style-image/y2k-graphic-poster-103.webp",
+    "title": "Neon Daze 千禧巡演海報",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#E7B7C8",
+      "#EE8CA9",
+      "#E7E4E5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-brand-103",
+    "url": "/style-image/y2k-graphic-brand-103.webp",
+    "title": "Velvet Byte 柔光科技識別",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#F1E8E8",
+      "#EDAAC3",
+      "#D6C1EC"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-packaging-103",
+    "url": "/style-image/y2k-graphic-packaging-103.webp",
+    "title": "Candy Socket 紫色糖果包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#7252B1",
+      "#C98CE1",
+      "#F0A3C1"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-editorial-103",
+    "url": "/style-image/y2k-graphic-editorial-103.webp",
+    "title": "Hyper Crush 網路戀愛雜誌",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#C9DBF0",
+      "#86B9E5",
+      "#E990B4"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-poster-101",
+    "url": "/style-image/rpl-graphic-poster-101.webp",
+    "title": "Garden in Verse 花園詩歌節海報",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#E9DDC5",
+      "#A97B78",
+      "#748253"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-packaging-101",
+    "url": "/style-image/rpl-graphic-packaging-101.webp",
+    "title": "Willow & Meadow 花園禮盒包裝",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#F0E1D2",
+      "#B78983",
+      "#829270"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-editorial-101",
+    "url": "/style-image/rpl-graphic-editorial-101.webp",
+    "title": "Forest Journal 鄉居生活雜誌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#D9CEB4",
+      "#897961",
+      "#6E6C51"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-main-101",
+    "url": "/style-image/rpl-graphic-main-101.webp",
+    "title": "浪漫田園生活視覺套組",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#E5DBCB",
+      "#A98A80",
+      "#82907C"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-brand-101",
+    "url": "/style-image/rpl-graphic-brand-101.webp",
+    "title": "Bellefleur 花園茶館品牌識別",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#D3C4B1",
+      "#61707A",
+      "#A65C5B"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-poster-102",
+    "url": "/style-image/rpl-graphic-poster-102.webp",
+    "title": "Flowers & Poetry 花藝詩歌節海報",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+      "#E7DCC7",
+      "#9D7470",
+      "#A3A07C"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-brand-102",
+    "url": "/style-image/rpl-graphic-brand-102.webp",
+    "title": "La Vie en Rose 茶館品牌識別",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+      "#D8CABE",
+      "#7B3B40",
+      "#8B8D9B"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-packaging-102",
+    "url": "/style-image/rpl-graphic-packaging-102.webp",
+    "title": "Meadow & Vine 花卉禮盒包裝",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#E9DDC1",
+      "#B88986",
+      "#79865C"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-building-exterior-102",
+    "url": "/style-image/msm-architecture-building-exterior-102.webp",
+    "title": "暮光玻璃藝文建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#AEBBC8",
+      "#D8D1C8",
+      "#5A4A3E"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-facade-101",
+    "url": "/style-image/msm-architecture-facade-101.webp",
+    "title": "白石框景立面",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#D8D6D2",
+      "#77777A",
+      "#342E29"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-building-exterior-101",
+    "url": "/style-image/msm-architecture-building-exterior-101.webp",
+    "title": "懸浮露台現代宅",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury",
+      "Scandinavian"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#AFC6D7",
+      "#D8D1C5",
+      "#4D493B"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-passage-101",
+    "url": "/style-image/msm-architecture-passage-101.webp",
+    "title": "柔光木框長廊",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury",
+      "Scandinavian"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+      "#EEEAE0",
+      "#C8B69D",
+      "#8D806E"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-entrance-101",
+    "url": "/style-image/msm-architecture-entrance-101.webp",
+    "title": "夜色庭院入口",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#285B8F",
+      "#55504B",
+      "#D6A15C"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-top-102",
+    "url": "/style-image/eag-outfit-top-102.webp",
+    "title": "解構拼布斗篷上衣",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism",
+      "Experimental Typography"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+      "#151719",
+      "#555452",
+      "#70432B"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-decor-detail-101",
+    "url": "/style-image/eag-interior-design-decor-detail-101.webp",
+    "title": "黑紅幾何陳設",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Decor Detail",
+    "colorPalette": [
+      "#111111",
+      "#9B9993",
+      "#A70F24"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-bedroom-102",
+    "url": "/style-image/eag-interior-design-bedroom-102.webp",
+    "title": "洞穴感混凝土臥室",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#292622",
+      "#5D554B",
+      "#9A9286"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-lighting-101",
+    "url": "/style-image/eag-interior-design-lighting-101.webp",
+    "title": "黑色構成懸吊燈",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#0B0B0B",
+      "#4A413B",
+      "#D9C4AC"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-bottom-101",
+    "url": "/style-image/eag-outfit-bottom-101.webp",
+    "title": "解構拼接闊腿褲",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#121316",
+      "#414247",
+      "#8A4028"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-living-dining-space-103",
+    "url": "/style-image/eag-interior-design-living-dining-space-103.webp",
+    "title": "雕塑混凝土客餐廳",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#252421",
+      "#77716A",
+      "#B4ADA3"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-entrance-101",
+    "url": "/style-image/eag-architecture-entrance-101.webp",
+    "title": "折板金屬門廊",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#1B1A1B",
+      "#686765",
+      "#8A5940"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-bedroom-101",
+    "url": "/style-image/eag-interior-design-bedroom-101.webp",
+    "title": "黑紅切面臥室",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#111112",
+      "#66625D",
+      "#B30E2B"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-living-dining-space-102",
+    "url": "/style-image/eag-interior-design-living-dining-space-102.webp",
+    "title": "黑白紅幾何客餐廳",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#171717",
+      "#B4B2AD",
+      "#A30E26"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-lighting-102",
+    "url": "/style-image/eag-interior-design-lighting-102.webp",
+    "title": "環線幾何吊燈",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#171513",
+      "#5F5A55",
+      "#E2D2BC"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-facade-101",
+    "url": "/style-image/eag-architecture-facade-101.webp",
+    "title": "字形巨構混凝土立面",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism",
+      "Experimental Typography"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#16171A",
+      "#777778",
+      "#CBC9C5"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-building-exterior-101",
+    "url": "/style-image/eag-architecture-building-exterior-101.webp",
+    "title": "懸挑巨構混凝土藝館",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#17181B",
+      "#77777A",
+      "#B51F2E"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-building-exterior-102",
+    "url": "/style-image/eag-architecture-building-exterior-102.webp",
+    "title": "紅線切割混凝土藝館",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#202226",
+      "#92918E",
+      "#8C2830"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-passage-101",
+    "url": "/style-image/eag-architecture-passage-101.webp",
+    "title": "深邃混凝土光廊",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+      "#171614",
+      "#4D4944",
+      "#A29C92"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-accessory-101",
+    "url": "/style-image/eag-outfit-accessory-101.webp",
+    "title": "工業拼布機能包",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+      "#171719",
+      "#5D5D5B",
+      "#ADADAA"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-fulllook-101",
+    "url": "/style-image/eag-outfit-fulllook-101.webp",
+    "title": "層疊解構工裝造型",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Full Look",
+    "colorPalette": [
+      "#17191B",
+      "#6C6B66",
+      "#C7C3B9"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-top-101",
+    "url": "/style-image/eag-outfit-top-101.webp",
+    "title": "灰黑拼接解構上衣",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+      "#171719",
+      "#5A595A",
+      "#9A4B32"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-living-dining-space-101",
+    "url": "/style-image/eag-interior-design-living-dining-space-101.webp",
+    "title": "黑白構成挑高客餐廳",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#151515",
+      "#77736C",
+      "#C7C3BA"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-living-dining-space-104",
+    "url": "/style-image/eag-interior-design-living-dining-space-104.webp",
+    "title": "斜切光影雕塑客廳",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#28231F",
+      "#71685E",
+      "#B6AA9C"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-buildingexterior-001",
+    "url": "/style-image/y2k-architecture-buildingexterior-001.webp",
+    "title": "未來感建築外觀",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#AED4EB",
+      "#B3C7D2",
+      "#D2E5EF"
+    ]
+  },
+  {
+    "id": "y2k-architecture-buildingexterior-002",
+    "url": "/style-image/y2k-architecture-buildingexterior-002.webp",
+    "title": "藍色科技建築外觀",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#02AECB",
+      "#EDF1F2",
+      "#D1E6EC"
+    ]
+  },
+  {
+    "id": "y2k-architecture-entrance-201",
+    "url": "/style-image/y2k-architecture-entrance-201.webp",
+    "title": "科技感建築入口",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#6A7790",
+      "#556D8A",
+      "#2C2D34"
+    ]
+  },
+  {
+    "id": "y2k-architecture-facade-201",
+    "url": "/style-image/y2k-architecture-facade-201.webp",
+    "title": "暖色建築立面",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#FBEAD4",
+      "#D2CBD0",
+      "#EBD6CC"
+    ]
+  },
+  {
+    "id": "y2k-architecture-passage-001",
+    "url": "/style-image/y2k-architecture-passage-001.webp",
+    "title": "粉紅通道空間",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+      "#CEAEB8",
+      "#CCC8D2",
+      "#D1B9C7"
+    ]
+  },
+  {
+    "id": "y2k-graphic-packagingdesign-001",
+    "url": "/style-image/y2k-graphic-packagingdesign-001.webp",
+    "title": "Y2K風格包裝設計",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#CDD0D2",
+      "#D7E7E7",
+      "#B7CDCC"
+    ]
+  },
+  {
+    "id": "y2k-interior-bedroom-001",
+    "url": "/style-image/y2k-interior-bedroom-001.webp",
+    "title": "Y2K風格臥室",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#91938D",
+      "#ADADAF",
+      "#AC948E"
+    ]
+  },
+  {
+    "id": "y2k-interior-lighting-001",
+    "url": "/style-image/y2k-interior-lighting-001.webp",
+    "title": "Y2K風格燈具",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#EEEBED",
+      "#8EB0C7",
+      "#D3CED5"
+    ]
+  },
+  {
+    "id": "y2k-interior-livingdining-001",
+    "url": "/style-image/y2k-interior-livingdining-001.webp",
+    "title": "Y2K客餐廳空間",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#B2AFAE",
+      "#CFCBCD",
+      "#C6B7B5"
+    ]
+  },
+  {
+    "id": "y2k-interior-livingdining-002",
+    "url": "/style-image/y2k-interior-livingdining-002.webp",
+    "title": "暖色客餐廳空間",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#B3958A",
+      "#91756D",
+      "#AE566A"
+    ]
+  },
+  {
+    "id": "street-architecture-buildingexterior-001",
+    "url": "/style-image/street-architecture-buildingexterior-001.webp",
+    "title": "街頭建築外觀",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#B0CDE6",
+      "#94B8DA",
+      "#6D7173"
+    ]
+  },
+  {
+    "id": "street-architecture-facade-001",
+    "url": "/style-image/street-architecture-facade-001.webp",
+    "title": "街頭建築立面",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#4F5050",
+      "#FAF3E9",
+      "#2D3031"
+    ]
+  },
+  {
+    "id": "street-graphic-packagingdesign-001",
+    "url": "/style-image/street-graphic-packagingdesign-001.webp",
+    "title": "街頭風格包裝設計",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#EAECED",
+      "#D1B295",
+      "#D9C5AF"
+    ]
+  },
+  {
+    "id": "street-graphic-packagingdesign-002",
+    "url": "/style-image/street-graphic-packagingdesign-002.webp",
+    "title": "暗色街頭包裝設計",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#2B2C2F",
+      "#4B4E51",
+      "#D2B08C"
+    ]
+  },
+  {
+    "id": "street-interior-lighting-001",
+    "url": "/style-image/street-interior-lighting-001.webp",
+    "title": "街頭風格燈具",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#4B5152",
+      "#111416",
+      "#6D7072"
+    ]
+  },
+  {
+    "id": "street-outfit-bottom-001",
+    "url": "/style-image/street-outfit-bottom-001.webp",
+    "title": "街頭下身穿搭",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#8D8675",
+      "#90958A",
+      "#B2A794"
+    ]
+  },
+  {
+    "id": "street-outfit-bottom-002",
+    "url": "/style-image/street-outfit-bottom-002.webp",
+    "title": "淺色街頭下身穿搭",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#EFECE7",
+      "#D8D3CC",
+      "#101010"
+    ]
+  },
+  {
+    "id": "msm-architecture-entrance-201",
+    "url": "/style-image/msm-architecture-entrance-201.webp",
+    "title": "極簡建築入口",
+    "attribution": "Asterism",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#EAE8E7",
+      "#969189",
+      "#B8B1A8"
+    ]
+  },
+  {
+    "id": "msm-architecture-entrance-002",
+    "url": "/style-image/msm-architecture-entrance-002.webp",
+    "title": "對比極簡入口",
+    "attribution": "Asterism",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#EFEBE7",
+      "#11130F",
+      "#31332A"
+    ]
+  },
+  {
+    "id": "future-architecture-passage-001",
+    "url": "/style-image/future-architecture-passage-001.webp",
+    "title": "未來科技通道",
+    "attribution": "Asterism",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+      "#0B1011",
+      "#2F2C31",
+      "#4E4752"
+    ]
+  },
+  {
+    "id": "decorate-architecture-buildingexterior-001",
+    "url": "/style-image/decorate-architecture-buildingexterior-001.webp",
+    "title": "裝飾風格建築外觀",
+    "attribution": "Asterism",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+      "#3078B1",
+      "#312D2B",
+      "#4C94C9"
+    ]
+  },
+  {
+    "id": "decorate-architecture-facade-001",
+    "url": "/style-image/decorate-architecture-facade-001.webp",
+    "title": "裝飾風格建築立面",
+    "attribution": "Asterism",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+      "#92AFCD",
+      "#0E1313",
+      "#53504B"
+    ]
+  },
+  {
+    "id": "decorate-graphic-editorialdesign-001",
+    "url": "/style-image/decorate-graphic-editorialdesign-001.webp",
+    "title": "裝飾風格編輯設計",
+    "attribution": "Asterism",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+      "#0B0C09",
+      "#2A160D",
+      "#312516"
     ]
   }
 ]

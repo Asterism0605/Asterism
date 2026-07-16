@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
+import HomeStarLinks from '@/components/sections/HomeStarLinks';
 import { getHomeInspirationImages } from '@/services/image.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
@@ -20,7 +21,7 @@ const showGuestHint = ref(false);
 const inspirationImages = ref<HomeInspirationImage[]>([]);
 
 const imageSearchEntryIcon = '/images/image-search-entry.webp';
-const HOME_DENSITY_PER_100VH = 5;
+const HOME_DENSITY_PER_100VH = 3;
 const homePreferredStyles = computed(() =>
   styleDnaStore.hasCompletedQuiz ? styleDnaStore.preferredStyles : []
 );
@@ -167,6 +168,8 @@ watch(homePreferredStyles, () => {
         </div>
       </div>
     </section>
+
+    <HomeStarLinks />
 
     <Transition name="guest-hint">
       <p

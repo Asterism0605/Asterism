@@ -3,11 +3,13 @@ import type { EmailOtpType } from '@supabase/supabase-js';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
+import { useStyleDnaStore } from '@/stores/style-dna.store';
 import { getSafeRedirectPath } from '@/utils/redirect';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const styleDnaStore = useStyleDnaStore();
 const failed = ref(false);
 
 function hasOAuthError(): boolean {
@@ -18,10 +20,11 @@ function hasOAuthError(): boolean {
 onMounted(async () => {
   if (!hasOAuthError()) {
     const tokenHash = route.query.token_hash;
+    // LINE 登入 / 信箱驗證 / 密碼重設：type 預設 magiclink。
+    const type = typeof route.query.type === 'string' ? route.query.type : 'magiclink';
     try {
       if (typeof tokenHash === 'string') {
-        // LINE 登入 / 信箱驗證：網址帶一次性 token_hash → verifyOtp 換 session（type 預設 magiclink）。
-        const type = typeof route.query.type === 'string' ? route.query.type : 'magiclink';
+        // 網址帶一次性 token_hash → verifyOtp 換 session。
         await authStore.verifyOtp(tokenHash, type as EmailOtpType);
       } else {
         // Google：detectSessionInUrl 已自動完成 PKCE，hydrate 讀回現存 session。
@@ -31,7 +34,19 @@ onMounted(async () => {
       // 下面以 isAuthenticated 判斷
     }
     if (authStore.isAuthenticated) {
-      void router.replace(getSafeRedirectPath(route.query.next, '/'));
+      // 密碼重設：只有 token_hash+recovery 驗證成功（isPasswordRecovery）才導去設定新密碼頁，
+      // 光靠 query type=recovery（例如沒帶 token_hash）不算，避免任何登入者被導進 reset 表單。
+      if (authStore.isPasswordRecovery) {
+        void router.replace({ name: 'reset-password' });
+        return;
+      }
+      // 第三方（Google/LINE）登入跟信箱驗證都會走這裡，跟 Login.vue/SignUp.vue
+      // 一樣先跟後端同步 Style DNA 結果，再決定沒有 next 時的預設落點：
+      // 確定沒做過測驗（'not-found'）才導去測驗入口；同步失敗（'failed'）時無法區分
+      // 「真的沒做過」跟「做過但這次抓不到」，保守回首頁，避免誤導已完成測驗的人重測。
+      const syncResult = await styleDnaStore.reconcileWithServer(authStore.user!.id);
+      const fallback = syncResult === 'not-found' ? '/discover-dna' : '/';
+      void router.replace(getSafeRedirectPath(route.query.next, fallback));
       return;
     }
   }
