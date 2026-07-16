@@ -34,7 +34,7 @@ export function useDeleteMoodboardImage(options: UseDeleteMoodboardImageOptions)
     const { folderId, itemId } = deleteImageTarget.value;
     isDeletingImage.value = true;
     try {
-      await deleteItem(folderId, itemId);
+      await deleteItem({ folderId, itemId });
       moodboardStore.removeImage(folderId, itemId);
       isDeleteImageModalOpen.value = false;
       deleteImageTarget.value = null;

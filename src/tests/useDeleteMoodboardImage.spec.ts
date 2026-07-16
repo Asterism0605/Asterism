@@ -100,7 +100,7 @@ describe('useDeleteMoodboardImage', () => {
     requestDeleteImage('item-1');
     await confirmDeleteImage();
 
-    expect(deleteItemMock).toHaveBeenCalledWith('folder-1', 'item-1');
+    expect(deleteItemMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemId: 'item-1' });
     expect(moodboardStore.folders[0].images).toHaveLength(0);
     expect(onDeleted).toHaveBeenCalledWith('item-1');
     expect(isDeleteImageModalOpen.value).toBe(false);

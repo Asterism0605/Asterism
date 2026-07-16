@@ -634,7 +634,7 @@ describe('MoodboardOrbit', () => {
       await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
       await flushPromises();
 
-      expect(deleteItemMock).toHaveBeenCalledWith('folder-1', first.itemId);
+      expect(deleteItemMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemId: first.itemId });
       expect(store.folders[0].images.some((image) => image.itemId === first.itemId)).toBe(false);
       expect(store.folders[0].images.some((image) => image.itemId === second.itemId)).toBe(true);
       expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(false);
@@ -681,7 +681,7 @@ describe('MoodboardOrbit', () => {
       await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
       await flushPromises();
 
-      expect(deleteItemMock).toHaveBeenCalledWith('folder-1', itemId);
+      expect(deleteItemMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemId });
       expect(store.folders[0].images.some((image) => image.itemId === itemId)).toBe(false);
     });
 
@@ -733,7 +733,7 @@ describe('MoodboardOrbit', () => {
       await flushPromises();
 
       expect(deleteItemMock).toHaveBeenCalledTimes(1);
-      expect(deleteItemMock).toHaveBeenCalledWith('folder-1', 'item-a');
+      expect(deleteItemMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemId: 'item-a' });
       expect(store.folders.find((f) => f.id === 'folder-1')?.images).toEqual([]);
       expect(store.folders.find((f) => f.id === 'folder-3')?.images).toEqual([sharedImage('item-b')]);
     });

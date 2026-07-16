@@ -35,6 +35,11 @@ export interface AddMoodboardItemInput {
   imageId: string;
 }
 
+export interface DeleteMoodboardItemInput {
+  itemId: string;
+  folderId: string;
+}
+
 const MOODBOARD_FOLDER_SELECT = `
   id,
   profile_id,
@@ -142,7 +147,10 @@ export async function addMoodboardItem(
 
 // 不像 deleteMoodboardFolder 那樣過濾 profile_id：item 的 ownership 是透過
 // folder_id 關聯到 moodboard_folders.profile_id，交給 Supabase RLS policy 擋非本人操作。
-export async function deleteMoodboardItem(itemId: string, folderId: string): Promise<void> {
+export async function deleteMoodboardItem({
+  itemId,
+  folderId
+}: DeleteMoodboardItemInput): Promise<void> {
   const { data, error } = await getSupabase()
     .from('moodboard_items')
     .delete()

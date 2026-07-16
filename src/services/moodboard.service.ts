@@ -99,8 +99,14 @@ export async function deleteFolder(folderId: string, profileId: string): Promise
   await deleteMoodboardFolder(folderId, profileId);
 }
 
-export async function deleteItem(folderId: string, itemId: string): Promise<void> {
-  await deleteMoodboardItem(itemId, folderId);
+export async function deleteItem({
+  folderId,
+  itemId
+}: {
+  folderId: string;
+  itemId: string;
+}): Promise<void> {
+  await deleteMoodboardItem({ itemId, folderId });
 }
 
 export async function addItem(folderId: string, imageId: string): Promise<SavedImage> {
