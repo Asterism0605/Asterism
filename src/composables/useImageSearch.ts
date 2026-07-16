@@ -1,12 +1,16 @@
-import { ref } from 'vue';
+import { ref, type Ref } from 'vue';
 import { classifyStyleGroup } from '@/services/styleGroupClassifier.service';
 import { meetsSimilarityThreshold, validateImageFile } from '@/services/imageSearch.service';
 import { searchImagesByEmbedding } from '@/api/imageSearch.api';
 import type { ImageSearchResult } from '@/types/imageSearch';
+import type { ClassificationAnchor } from '@/api/classificationAnchors.api';
 
 export type ImageSearchStatus = 'idle' | 'searching' | 'success' | 'no-match' | 'error';
 
-export function useImageSearch(computeEmbedding: (file: File) => Promise<number[]>) {
+export function useImageSearch(
+  computeEmbedding: (file: File) => Promise<number[]>,
+  anchors: Ref<ClassificationAnchor[]>
+) {
   const status = ref<ImageSearchStatus>('idle');
   const results = ref<ImageSearchResult[]>([]);
   const error = ref<string | null>(null);
@@ -25,7 +29,7 @@ export function useImageSearch(computeEmbedding: (file: File) => Promise<number[
 
     try {
       const embedding = await computeEmbedding(file);
-      const styleGroup = classifyStyleGroup(embedding);
+      const styleGroup = classifyStyleGroup(embedding, anchors.value);
       const matches = await searchImagesByEmbedding(embedding, styleGroup);
       const filtered = matches.filter((match) => meetsSimilarityThreshold(match.similarity));
 

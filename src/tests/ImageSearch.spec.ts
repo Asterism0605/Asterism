@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { createMemoryHistory, createRouter } from 'vue-router';
 
 const loadMock = vi.fn();
+const hasDownloadedBeforeMock = vi.fn(() => false);
 const clipModelState = {
   status: ref<'idle' | 'loading' | 'ready' | 'error'>('idle'),
   progress: ref(0),
@@ -15,7 +16,23 @@ vi.mock('@/composables/useClipModel', () => ({
     progress: clipModelState.progress,
     error: clipModelState.error,
     load: loadMock,
-    computeEmbedding: vi.fn()
+    computeEmbedding: vi.fn(),
+    hasDownloadedBefore: hasDownloadedBeforeMock
+  })
+}));
+
+const anchorsLoadMock = vi.fn();
+const anchorsState = {
+  status: ref<'idle' | 'loading' | 'ready' | 'error'>('ready'),
+  anchors: ref<{ label: string; embedding: number[] }[]>([]),
+  error: ref<string | null>(null)
+};
+vi.mock('@/composables/useClassificationAnchors', () => ({
+  useClassificationAnchors: () => ({
+    status: anchorsState.status,
+    anchors: anchorsState.anchors,
+    error: anchorsState.error,
+    load: anchorsLoadMock
   })
 }));
 
@@ -63,11 +80,33 @@ describe('ImageSearch.vue', () => {
     clipModelState.status.value = 'idle';
     clipModelState.progress.value = 0;
     clipModelState.error.value = null;
+    hasDownloadedBeforeMock.mockReturnValue(false);
+    // 預設錨點已就緒，讓不特別測錨點狀態的既有案例不用逐個手動設定。
+    anchorsState.status.value = 'ready';
+    anchorsState.anchors.value = [];
+    anchorsState.error.value = null;
     imageSearchState.status.value = 'idle';
     imageSearchState.results.value = [];
     imageSearchState.error.value = null;
     URL.createObjectURL = vi.fn(() => 'blob:mock-preview-url');
     URL.revokeObjectURL = vi.fn();
+  });
+
+  it('進頁時自動呼叫 anchorsState.load()（不像 model 需要按鈕確認）', async () => {
+    await mountImageSearch();
+    expect(anchorsLoadMock).toHaveBeenCalled();
+  });
+
+  it('這台裝置先前下載過 model 時，進頁自動背景載入不用手動點按鈕', async () => {
+    hasDownloadedBeforeMock.mockReturnValue(true);
+    await mountImageSearch();
+    expect(loadMock).toHaveBeenCalled();
+  });
+
+  it('這台裝置沒下載過 model 時，進頁不會自動載入，等使用者按按鈕', async () => {
+    hasDownloadedBeforeMock.mockReturnValue(false);
+    await mountImageSearch();
+    expect(loadMock).not.toHaveBeenCalled();
   });
 
   it('model 未就緒時顯示下載按鈕，隱藏搜尋面板', async () => {
@@ -105,6 +144,27 @@ describe('ImageSearch.vue', () => {
     expect(wrapper.find('[data-testid="model-error"]').text()).toBe('模型下載失敗，請檢查網路連線後重試。');
     await wrapper.find('[data-testid="download-model-button"]').trigger('click');
     expect(loadMock).toHaveBeenCalled();
+  });
+
+  it('model ready 但錨點還在載入時，維持在 model-gate、不顯示搜尋面板', async () => {
+    clipModelState.status.value = 'ready';
+    anchorsState.status.value = 'loading';
+    const wrapper = await mountImageSearch();
+
+    expect(wrapper.find('[data-testid="model-gate"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="anchors-loading"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="search-panel"]').exists()).toBe(false);
+  });
+
+  it('model ready 但錨點載入失敗時顯示錯誤 + 重試按鈕', async () => {
+    clipModelState.status.value = 'ready';
+    anchorsState.status.value = 'error';
+    anchorsState.error.value = '風格資料載入失敗，請稍後再試。';
+    const wrapper = await mountImageSearch();
+
+    expect(wrapper.find('[data-testid="anchors-error"]').text()).toBe('風格資料載入失敗，請稍後再試。');
+    await wrapper.find('[data-testid="retry-anchors-button"]').trigger('click');
+    expect(anchorsLoadMock).toHaveBeenCalled();
   });
 
   it('model ready 後顯示搜尋面板，選檔前搜尋按鈕 disabled、還沒有中心預覽圖', async () => {
@@ -182,7 +242,11 @@ describe('ImageSearch.vue', () => {
 
     await wrapper.find('[data-testid="related-image-card"]').trigger('click');
 
-    expect(pushSpy).toHaveBeenCalledWith({ name: 'picture-detail', params: { imageId: 'a' } });
+    expect(pushSpy).toHaveBeenCalledWith({
+      name: 'picture-detail',
+      params: { imageId: 'a' },
+      query: { from: 'image-search' }
+    });
   });
 
   it('無相似結果顯示空狀態', async () => {

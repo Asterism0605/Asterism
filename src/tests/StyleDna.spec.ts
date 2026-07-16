@@ -34,14 +34,15 @@ const mockAnswer: StyleDnaAnswer = {
 
 const mockIsCompleted = ref(false);
 const mockAnswers = reactive<StyleDnaAnswer[]>([]);
+const mockCurrentIndex = ref(0);
 const mockSelectAnswer = vi.fn();
 const mockResetQuiz = vi.fn();
 
 vi.mock('@/composables/useStyleDnaQuiz', () => ({
   useStyleDnaQuiz: () => ({
-    questions: ref([mockQuestion]),
+    questions: ref(Array.from({ length: 12 }, () => mockQuestion)),
     currentQuestion: computed(() => (mockIsCompleted.value ? null : mockQuestion)),
-    currentQuestionIndex: ref(0),
+    currentQuestionIndex: mockCurrentIndex,
     answers: mockAnswers,
     isCompleted: mockIsCompleted,
     result: ref(null),
@@ -80,6 +81,7 @@ describe('StyleDna', () => {
     vi.useFakeTimers();
     mockIsCompleted.value = false;
     mockAnswers.splice(0, mockAnswers.length);
+    mockCurrentIndex.value = 0;
     mockSelectAnswer.mockReset();
     mockResetQuiz.mockReset();
   });
@@ -111,6 +113,31 @@ describe('StyleDna', () => {
 
     expect(completeQuiz).toHaveBeenCalledWith([mockAnswer], null);
     expect(push).toHaveBeenCalledWith('/style-dna/result');
+  });
+
+  it('renders mobile quiz progress that tracks the current question (#92)', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const router = createTestRouter();
+    await router.push('/style-dna');
+    await router.isReady();
+
+    const wrapper = mountStyleDna(router, pinia);
+
+    expect(wrapper.find('.quiz-progress-mobile').exists()).toBe(true);
+    expect(wrapper.find('.qpm-current').text()).toBe('1');
+    expect(wrapper.find('.qpm-total').text()).toBe('12');
+
+    mockCurrentIndex.value = 11;
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.qpm-current').text()).toBe('12');
+    expect(wrapper.find('.qpm-total').text()).toBe('12');
+
+    // 完成瞬間 index 越界（12），Math.min 應夾住，不顯示 13/12
+    mockCurrentIndex.value = 12;
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.qpm-current').text()).toBe('12');
+    expect(wrapper.find('.qpm-total').text()).toBe('12');
   });
 
   it('syncs the current Style DNA result when an authenticated user completes the quiz', async () => {

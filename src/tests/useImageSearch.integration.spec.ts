@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ref } from 'vue';
 
 // 只 mock 網路邊界（Supabase RPC），classifyStyleGroup / meetsSimilarityThreshold /
 // validateImageFile 全部走真實實作，驗證 useImageSearch → styleGroupClassifier →
@@ -7,18 +8,21 @@ const rpc = vi.fn();
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ rpc }) }));
 
 import { useImageSearch } from '@/composables/useImageSearch';
-import { STYLE_GROUP_ANCHOR_EMBEDDINGS } from '@/data/styleGroupAnchorEmbeddings';
 
 function makeFile(type = 'image/jpeg', size = 1024): File {
   return new File([new Uint8Array(size)], 'photo.jpg', { type });
 }
 
-// 直接拿某個錨點的真實 embedding 當作 fake computeEmbedding 的輸出。
+// 固定測試錨點：用某一組錨點自己的 embedding 當作 fake computeEmbedding 的輸出。
 // cosine similarity 跟自己算一定是 1.0（理論最大值），所以真正的 classifyStyleGroup
-// 一定會把它分類到這個錨點對應的 styleGroup，不會因浮點數誤差而不穩定。
-const targetAnchor = STYLE_GROUP_ANCHOR_EMBEDDINGS[0];
+// 一定會把它分類到這個錨點對應的 label，不會因浮點數誤差而不穩定。
+const testAnchors = ref([
+  { label: 'Retro & Nostalgia', embedding: [1, 0, 0] },
+  { label: 'Y2K & Internet Aesthetics', embedding: [0, 1, 0] }
+]);
+const targetAnchor = testAnchors.value[0];
 const fakeEmbedding = targetAnchor.embedding;
-const expectedStyleGroup = targetAnchor.styleGroup;
+const expectedStyleGroup = targetAnchor.label;
 
 async function computeEmbedding(): Promise<number[]> {
   return fakeEmbedding;
@@ -42,13 +46,13 @@ describe('useImageSearch 整合測試（真實 classifyStyleGroup + 真實門檻
           url: 'https://img/b.jpg',
           title: 'B',
           style_group: expectedStyleGroup,
-          similarity: 0.5
+          similarity: 0.3
         }
       ],
       error: null
     });
 
-    const search = useImageSearch(computeEmbedding);
+    const search = useImageSearch(computeEmbedding, testAnchors);
     await search.search(makeFile());
 
     // 驗證真的用「真實分類器算出來的 styleGroup」去打 RPC，而不是隨便帶一個字串
@@ -64,7 +68,7 @@ describe('useImageSearch 整合測試（真實 classifyStyleGroup + 真實門檻
     ]);
   });
 
-  it('無匹配流程：真實門檻邏輯會把低於 0.75 的結果全部濾掉', async () => {
+  it('無匹配流程：真實門檻邏輯會把低於 0.5 的結果全部濾掉', async () => {
     rpc.mockResolvedValue({
       data: [
         {
@@ -72,7 +76,7 @@ describe('useImageSearch 整合測試（真實 classifyStyleGroup + 真實門檻
           url: 'https://img/a.jpg',
           title: 'A',
           style_group: expectedStyleGroup,
-          similarity: 0.6
+          similarity: 0.4
         },
         {
           id: 'b',
@@ -85,7 +89,7 @@ describe('useImageSearch 整合測試（真實 classifyStyleGroup + 真實門檻
       error: null
     });
 
-    const search = useImageSearch(computeEmbedding);
+    const search = useImageSearch(computeEmbedding, testAnchors);
     await search.search(makeFile());
 
     expect(rpc).toHaveBeenCalledWith('search_images_by_embedding', {

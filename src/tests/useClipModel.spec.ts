@@ -7,10 +7,14 @@ vi.mock('@/services/clipEmbedding.service', () => ({
   computeImageEmbedding: (...args: unknown[]) => computeImageEmbeddingMock(...args)
 }));
 
-import { useClipModel } from '@/composables/useClipModel';
+import { resetClipModelState, useClipModel } from '@/composables/useClipModel';
 
 describe('useClipModel', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    resetClipModelState();
+    localStorage.clear();
+  });
 
   it('load 成功後 status 變 ready、progress 到 100', async () => {
     loadClipModelMock.mockImplementation(async (onProgress: (e: { progress: number }) => void) => {
@@ -53,5 +57,16 @@ describe('useClipModel', () => {
 
     expect(computeImageEmbeddingMock).toHaveBeenCalledWith(file);
     expect(result).toEqual([1, 2, 3]);
+  });
+
+  it('load 成功前 hasDownloadedBefore 是 false，成功後變 true（供 F5 後自動載入判斷）', async () => {
+    loadClipModelMock.mockResolvedValue(undefined);
+    const model = useClipModel();
+
+    expect(model.hasDownloadedBefore()).toBe(false);
+
+    await model.load();
+
+    expect(model.hasDownloadedBefore()).toBe(true);
   });
 });

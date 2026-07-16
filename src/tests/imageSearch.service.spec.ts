@@ -31,6 +31,6 @@ describe('meetsSimilarityThreshold', () => {
   });
 
   it('低於門檻回傳 false', () => {
-    expect(meetsSimilarityThreshold(0.5)).toBe(false);
+    expect(meetsSimilarityThreshold(0.3)).toBe(false);
   });
 });

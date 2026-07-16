@@ -1,15 +1,6 @@
 import { classifyByCosineSimilarity } from '@/services/classifier.service';
-import {
-  STYLE_GROUP_ANCHOR_EMBEDDINGS,
-  type StyleGroupAnchor
-} from '@/data/styleGroupAnchorEmbeddings';
+import type { ClassificationAnchor } from '@/api/classificationAnchors.api';
 
-export function classifyStyleGroup(
-  embedding: number[],
-  anchors: StyleGroupAnchor[] = STYLE_GROUP_ANCHOR_EMBEDDINGS
-): string {
-  return classifyByCosineSimilarity(
-    embedding,
-    anchors.map((anchor) => ({ label: anchor.styleGroup, embedding: anchor.embedding }))
-  );
+export function classifyStyleGroup(embedding: number[], anchors: ClassificationAnchor[]): string {
+  return classifyByCosineSimilarity(embedding, anchors);
 }

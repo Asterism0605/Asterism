@@ -3,9 +3,9 @@ import { classifyStyleGroup } from '@/services/styleGroupClassifier.service';
 
 describe('classifyStyleGroup', () => {
   const anchors = [
-    { styleGroup: 'A', embedding: [1, 0] },
-    { styleGroup: 'B', embedding: [0, 1] },
-    { styleGroup: 'C', embedding: [-1, 0] }
+    { label: 'A', embedding: [1, 0] },
+    { label: 'B', embedding: [0, 1] },
+    { label: 'C', embedding: [-1, 0] }
   ];
 
   it('回傳 cosine similarity 最高的 styleGroup', () => {
