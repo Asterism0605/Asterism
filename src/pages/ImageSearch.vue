@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { ImageUp, ScanSearch } from '@lucide/vue';
-import { useClipModel } from '@/composables/useClipModel';
-import { useImageSearch } from '@/composables/useImageSearch';
-import { useClassificationAnchors } from '@/composables/useClassificationAnchors';
-import { useUploadedImagePreview } from '@/composables/useUploadedImagePreview';
+import { useClipModelStore } from '@/stores/clipModel.store';
+import { useImageSearchStore } from '@/stores/imageSearch.store';
+import { useClassificationAnchorsStore } from '@/stores/classificationAnchors.store';
+import { useUploadedImagePreviewStore } from '@/stores/uploadedImagePreview.store';
 import Button from '@/components/ui/Button.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
@@ -17,31 +18,30 @@ import type { ImageSpreadNode } from '@/types/image';
 
 const router = useRouter();
 const { t } = useI18n();
-const model = useClipModel();
-const anchorsState = useClassificationAnchors('styleGroup');
-const search = useImageSearch(model.computeEmbedding, anchorsState.anchors);
+const model = useClipModelStore();
+const anchorsState = useClassificationAnchorsStore();
+const search = useImageSearchStore();
+const uploadedImagePreview = useUploadedImagePreviewStore();
+const { selectedFile, previewUrl } = storeToRefs(uploadedImagePreview);
+const { setFile } = uploadedImagePreview;
 
 // 錨點資料只是 9 筆小查詢，不像 CLIP model 要下載 150MB，不需要另外跳確認，
 // 進頁就在背景默默載入即可。
 // CLIP model 如果這台裝置先前已經下載過（瀏覽器 Cache Storage 裡還在），就不用
 // 再讓使用者手動點一次「下載模型」——直接背景載入，pipeline() 會自己從快取讀取。
 onMounted(() => {
-  void anchorsState.load();
+  void anchorsState.load('styleGroup');
   if (model.hasDownloadedBefore()) {
     void model.load();
   }
 });
 
-const { selectedFile, previewUrl, setFile } = useUploadedImagePreview();
-
-const isModelReady = computed(() => model.status.value === 'ready');
-const isFullyReady = computed(() => isModelReady.value && anchorsState.status.value === 'ready');
+const isModelReady = computed(() => model.status === 'ready');
+const isFullyReady = computed(() => isModelReady.value && anchorsState.status === 'ready');
 // model.progress 到 100 只代表「檔案下載完」，pipeline() 之後還要花時間初始化
 // （建立 ONNX runtime session 等），這段沒有位元組進度可回報，UI 會卡在 100% 好幾秒。
 // 用這個旗標切到「準備中」文案 + spinner，至少讓使用者知道還在動，不是卡住了。
-const isFinalizingModel = computed(
-  () => model.status.value === 'loading' && model.progress.value >= 100
-);
+const isFinalizingModel = computed(() => model.status === 'loading' && model.progress >= 100);
 const acceptedFileTypes = IMAGE_SEARCH_CONFIG.allowedFileTypes.join(',');
 
 // 探索頁（ImageSpread）的中心卡片是給「已經在圖庫裡的圖」用的，帶著存收藏/返回上一層那些
@@ -64,7 +64,7 @@ function toSpreadNode(result: ImageSearchResult): ImageSpreadNode {
 
 const similarityById = computed(() => {
   const map = new Map<string, number>();
-  for (const result of search.results.value) {
+  for (const result of search.results) {
     map.set(result.id, result.similarity);
   }
   return map;
@@ -127,15 +127,15 @@ function handleSearch() {
           data-testid="model-gate"
           class="image-search-panel mt-8"
         >
-          <p v-if="model.status.value === 'idle'" class="text-sm text-text-secondary">
+          <p v-if="model.status === 'idle'" class="text-sm text-text-secondary">
             {{ $t('imageSearch.downloadHint') }}
           </p>
-          <div v-else-if="model.status.value === 'loading' && !isFinalizingModel" class="space-y-2">
+          <div v-else-if="model.status === 'loading' && !isFinalizingModel" class="space-y-2">
             <p data-testid="model-progress" class="flex items-center justify-between text-sm">
-              <span>{{ $t('imageSearch.downloading', { progress: model.progress.value }) }}</span>
+              <span>{{ $t('imageSearch.downloading', { progress: model.progress }) }}</span>
             </p>
             <div class="image-search-progress">
-              <div class="image-search-progress__fill" :style="{ width: model.progress.value + '%' }" />
+              <div class="image-search-progress__fill" :style="{ width: model.progress + '%' }" />
             </div>
           </div>
           <p
@@ -149,22 +149,22 @@ function handleSearch() {
             />
             {{ $t('imageSearch.finalizing') }}
           </p>
-          <p v-else-if="model.status.value === 'error'" data-testid="model-error" class="text-sm text-red-400">
-            {{ model.error.value }}
+          <p v-else-if="model.status === 'error'" data-testid="model-error" class="text-sm text-red-400">
+            {{ model.error }}
           </p>
 
           <Button
-            v-if="model.status.value === 'idle' || model.status.value === 'error'"
+            v-if="model.status === 'idle' || model.status === 'error'"
             data-testid="download-model-button"
             type="button"
             class="mt-4"
             @click="model.load()"
           >
-            {{ model.status.value === 'error' ? $t('imageSearch.retryDownload') : $t('imageSearch.downloadModel') }}
+            {{ model.status === 'error' ? $t('imageSearch.retryDownload') : $t('imageSearch.downloadModel') }}
           </Button>
 
           <p
-            v-if="isModelReady && anchorsState.status.value === 'loading'"
+            v-if="anchorsState.status === 'loading'"
             data-testid="anchors-loading"
             class="mt-4 flex items-center gap-2 text-sm"
           >
@@ -174,11 +174,11 @@ function handleSearch() {
             />
             {{ $t('imageSearch.loadingStyleData') }}
           </p>
-          <template v-else-if="isModelReady && anchorsState.status.value === 'error'">
+          <template v-else-if="anchorsState.status === 'error'">
             <p data-testid="anchors-error" class="mt-4 text-sm text-red-400">
-              {{ anchorsState.error.value }}
+              {{ anchorsState.error }}
             </p>
-            <Button data-testid="retry-anchors-button" type="button" class="mt-4" @click="anchorsState.load()">
+            <Button data-testid="retry-anchors-button" type="button" class="mt-4" @click="anchorsState.load('styleGroup')">
               {{ $t('imageSearch.retry') }}
             </Button>
           </template>
@@ -213,38 +213,41 @@ function handleSearch() {
           <Button
             data-testid="search-button"
             type="button"
-            :disabled="!selectedFile || search.status.value === 'searching'"
+            :disabled="!selectedFile || search.status === 'searching'"
             @click="handleSearch"
           >
             <span
-              v-if="search.status.value === 'searching'"
+              v-if="search.status === 'searching'"
               data-testid="search-spinner"
               class="mr-2 inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white align-[-2px]"
               aria-hidden="true"
             />
-            {{ search.status.value === 'searching' ? $t('imageSearch.searching') : $t('imageSearch.search') }}
+            {{ search.status === 'searching' ? $t('imageSearch.searching') : $t('imageSearch.search') }}
           </Button>
         </ImageSpreadEntrance>
       </div>
 
-      <!-- 探索頁式版面：中心是使用者上傳的圖，四張衛星卡片是搜尋結果，桌機用浮動群集、
-           手機退回 2x2 網格（跟探索頁的響應式策略一致）。
+      <!-- 探索頁式版面：中心是使用者上傳的圖，四張衛星卡片是搜尋結果。
            右欄刻意用滿高度（lg:h-full，父層已是 lg:h-[100vh-header]）：
            RelatedImageCluster 的四張卡片是用 top-X%/bottom-X% 這種相對容器「高度」
            的百分比定位，容器不夠高的話同一側的兩張卡片百分比差距換算成實際像素會太
-           小，擠在一起重疊——這正是之前只加寬、沒加高，重疊問題還在的原因。 -->
+           小，擠在一起重疊——這正是之前只加寬、沒加高，重疊問題還在的原因。
+           浮動群集只在 2xl（≥1536px）以上才用（RelatedImageCluster 的卡片寬度是用 vw
+           算的，假設 host 接近整個視窗寬——這頁左邊固定占了 420px 側欄，host 變窄後
+           vw 尺寸沒跟著縮，viewport 沒到 2xl 之前卡片可能蓋到中間的預覽圖），
+           lg~2xl 這段跟手機一樣退回 2x2 網格。 -->
       <div v-if="isFullyReady && previewUrl" class="relative flex-1 lg:h-full">
         <div class="relative z-10 mx-auto flex h-full w-full max-w-[1400px] flex-col items-center justify-center gap-6 px-6 pb-10 lg:pb-6">
           <div class="relative z-10 flex w-full flex-1 items-center justify-center">
             <RelatedImageCluster
-              v-if="search.status.value === 'success'"
-              class="hidden lg:block"
-              :images="search.results.value.map(toSpreadNode)"
+              v-if="search.status === 'success'"
+              class="hidden 2xl:block"
+              :images="search.results.map(toSpreadNode)"
               :get-image-label="getResultLabel"
               @select="handleResultSelect"
             />
 
-            <div class="relative flex w-full justify-center">
+            <div class="relative z-20 flex w-full justify-center">
               <ConstellationBackground
                 active
                 class-name="absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2"
@@ -279,23 +282,23 @@ function handleSearch() {
           </div>
 
           <p
-            v-if="search.status.value === 'error'"
+            v-if="search.status === 'error'"
             data-testid="search-error"
             class="image-search-status image-search-status--error"
           >
-            {{ search.error.value }}
+            {{ search.error }}
           </p>
-          <p v-else-if="search.status.value === 'no-match'" data-testid="search-no-match" class="image-search-status">
+          <p v-else-if="search.status === 'no-match'" data-testid="search-no-match" class="image-search-status">
             {{ $t('imageSearch.noMatch') }}
           </p>
 
           <div
-            v-if="search.status.value === 'success'"
+            v-if="search.status === 'success'"
             data-testid="search-results"
-            class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden"
+            class="grid w-full max-w-3xl grid-cols-2 gap-3 2xl:hidden"
           >
             <RouterLink
-              v-for="result in search.results.value"
+              v-for="result in search.results"
               :key="result.id"
               :to="{ name: 'picture-detail', params: { imageId: result.id }, query: { from: 'image-search' } }"
               data-testid="search-result-card-mobile"

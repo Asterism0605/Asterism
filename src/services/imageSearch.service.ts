@@ -10,6 +10,10 @@ export function validateImageFile(file: File): string | null {
     return i18n.global.t('imageSearch.fileTooLarge');
   }
 
+  if (file.size === 0) {
+    return i18n.global.t('imageSearch.invalidFileType');
+  }
+
   return null;
 }
 

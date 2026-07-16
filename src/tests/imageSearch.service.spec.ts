@@ -23,6 +23,12 @@ describe('validateImageFile', () => {
       'Image must be under 10MB.'
     );
   });
+
+  it('拒絕 0 byte 的檔案', () => {
+    expect(validateImageFile(makeFile('image/jpeg', 0))).toBe(
+      'Please upload a JPG, PNG, or WebP image.'
+    );
+  });
 });
 
 describe('meetsSimilarityThreshold', () => {

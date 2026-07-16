@@ -1,59 +1,45 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ref } from 'vue';
+import { reactive } from 'vue';
+import { createPinia, setActivePinia } from 'pinia';
 import { createMemoryHistory, createRouter } from 'vue-router';
 
 const loadMock = vi.fn();
 const hasDownloadedBeforeMock = vi.fn(() => false);
-const clipModelState = {
-  status: ref<'idle' | 'loading' | 'ready' | 'error'>('idle'),
-  progress: ref(0),
-  error: ref<string | null>(null)
-};
-vi.mock('@/composables/useClipModel', () => ({
-  useClipModel: () => ({
-    status: clipModelState.status,
-    progress: clipModelState.progress,
-    error: clipModelState.error,
-    load: loadMock,
-    computeEmbedding: vi.fn(),
-    hasDownloadedBefore: hasDownloadedBeforeMock
-  })
+const clipModelState = reactive({
+  status: 'idle' as 'idle' | 'loading' | 'ready' | 'error',
+  progress: 0,
+  error: null as string | null,
+  load: loadMock,
+  computeEmbedding: vi.fn(),
+  hasDownloadedBefore: hasDownloadedBeforeMock
+});
+vi.mock('@/stores/clipModel.store', () => ({
+  useClipModelStore: () => clipModelState
 }));
 
 const anchorsLoadMock = vi.fn();
-const anchorsState = {
-  status: ref<'idle' | 'loading' | 'ready' | 'error'>('ready'),
-  anchors: ref<{ label: string; embedding: number[] }[]>([]),
-  error: ref<string | null>(null)
-};
-vi.mock('@/composables/useClassificationAnchors', () => ({
-  useClassificationAnchors: () => ({
-    status: anchorsState.status,
-    anchors: anchorsState.anchors,
-    error: anchorsState.error,
-    load: anchorsLoadMock
-  })
+const anchorsState = reactive({
+  status: 'ready' as 'idle' | 'loading' | 'ready' | 'error',
+  anchors: [] as { label: string; embedding: number[] }[],
+  error: null as string | null,
+  load: anchorsLoadMock
+});
+vi.mock('@/stores/classificationAnchors.store', () => ({
+  useClassificationAnchorsStore: () => anchorsState
 }));
 
 const searchMock = vi.fn();
-const imageSearchState = {
-  status: ref<'idle' | 'searching' | 'success' | 'no-match' | 'error'>('idle'),
-  results: ref<{ id: string; src: string; alt: string; styleGroup: string; similarity: number }[]>(
-    []
-  ),
-  error: ref<string | null>(null)
-};
-vi.mock('@/composables/useImageSearch', () => ({
-  useImageSearch: () => ({
-    status: imageSearchState.status,
-    results: imageSearchState.results,
-    error: imageSearchState.error,
-    search: searchMock
-  })
+const imageSearchState = reactive({
+  status: 'idle' as 'idle' | 'searching' | 'success' | 'no-match' | 'error',
+  results: [] as { id: string; src: string; alt: string; styleGroup: string; similarity: number }[],
+  error: null as string | null,
+  search: searchMock
+});
+vi.mock('@/stores/imageSearch.store', () => ({
+  useImageSearchStore: () => imageSearchState
 }));
 
-import { resetUploadedImagePreviewState } from '@/composables/useUploadedImagePreview';
 import ImageSearch from '@/pages/ImageSearch.vue';
 
 const router = createRouter({
@@ -78,25 +64,25 @@ async function selectFile(wrapper: Awaited<ReturnType<typeof mountImageSearch>>)
 describe('ImageSearch.vue', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    clipModelState.status.value = 'idle';
-    clipModelState.progress.value = 0;
-    clipModelState.error.value = null;
+    setActivePinia(createPinia());
+    clipModelState.status = 'idle';
+    clipModelState.progress = 0;
+    clipModelState.error = null;
     hasDownloadedBeforeMock.mockReturnValue(false);
     // 預設錨點已就緒，讓不特別測錨點狀態的既有案例不用逐個手動設定。
-    anchorsState.status.value = 'ready';
-    anchorsState.anchors.value = [];
-    anchorsState.error.value = null;
-    imageSearchState.status.value = 'idle';
-    imageSearchState.results.value = [];
-    imageSearchState.error.value = null;
-    resetUploadedImagePreviewState();
+    anchorsState.status = 'ready';
+    anchorsState.anchors = [];
+    anchorsState.error = null;
+    imageSearchState.status = 'idle';
+    imageSearchState.results = [];
+    imageSearchState.error = null;
     URL.createObjectURL = vi.fn(() => 'blob:mock-preview-url');
     URL.revokeObjectURL = vi.fn();
   });
 
   it('進頁時自動呼叫 anchorsState.load()（不像 model 需要按鈕確認）', async () => {
     await mountImageSearch();
-    expect(anchorsLoadMock).toHaveBeenCalled();
+    expect(anchorsLoadMock).toHaveBeenCalledWith('styleGroup');
   });
 
   it('這台裝置先前下載過 model 時，進頁自動背景載入不用手動點按鈕', async () => {
@@ -124,23 +110,23 @@ describe('ImageSearch.vue', () => {
   });
 
   it('model loading 時顯示進度', async () => {
-    clipModelState.status.value = 'loading';
-    clipModelState.progress.value = 42;
+    clipModelState.status = 'loading';
+    clipModelState.progress = 42;
     const wrapper = await mountImageSearch();
     expect(wrapper.find('[data-testid="model-progress"]').text()).toContain('42');
   });
 
   it('model progress 到 100 但還在 loading 時顯示「準備中」而非停在 100%', async () => {
-    clipModelState.status.value = 'loading';
-    clipModelState.progress.value = 100;
+    clipModelState.status = 'loading';
+    clipModelState.progress = 100;
     const wrapper = await mountImageSearch();
     expect(wrapper.find('[data-testid="model-progress"]').exists()).toBe(false);
     expect(wrapper.find('[data-testid="model-finalizing"]').exists()).toBe(true);
   });
 
   it('model 下載失敗顯示錯誤訊息，點重試按鈕再次呼叫 load()', async () => {
-    clipModelState.status.value = 'error';
-    clipModelState.error.value = '模型下載失敗，請檢查網路連線後重試。';
+    clipModelState.status = 'error';
+    clipModelState.error = '模型下載失敗，請檢查網路連線後重試。';
     const wrapper = await mountImageSearch();
 
     expect(wrapper.find('[data-testid="model-error"]').text()).toBe('模型下載失敗，請檢查網路連線後重試。');
@@ -149,8 +135,8 @@ describe('ImageSearch.vue', () => {
   });
 
   it('model ready 但錨點還在載入時，維持在 model-gate、不顯示搜尋面板', async () => {
-    clipModelState.status.value = 'ready';
-    anchorsState.status.value = 'loading';
+    clipModelState.status = 'ready';
+    anchorsState.status = 'loading';
     const wrapper = await mountImageSearch();
 
     expect(wrapper.find('[data-testid="model-gate"]').exists()).toBe(true);
@@ -159,18 +145,27 @@ describe('ImageSearch.vue', () => {
   });
 
   it('model ready 但錨點載入失敗時顯示錯誤 + 重試按鈕', async () => {
-    clipModelState.status.value = 'ready';
-    anchorsState.status.value = 'error';
-    anchorsState.error.value = '風格資料載入失敗，請稍後再試。';
+    clipModelState.status = 'ready';
+    anchorsState.status = 'error';
+    anchorsState.error = '風格資料載入失敗，請稍後再試。';
     const wrapper = await mountImageSearch();
 
     expect(wrapper.find('[data-testid="anchors-error"]').text()).toBe('風格資料載入失敗，請稍後再試。');
     await wrapper.find('[data-testid="retry-anchors-button"]').trigger('click');
-    expect(anchorsLoadMock).toHaveBeenCalled();
+    expect(anchorsLoadMock).toHaveBeenCalledWith('styleGroup');
+  });
+
+  it('model 還沒開始下載（新使用者未點按鈕）時，錨點載入失敗也要顯示錯誤，不能悶不吭聲', async () => {
+    clipModelState.status = 'idle';
+    anchorsState.status = 'error';
+    anchorsState.error = '風格資料載入失敗，請稍後再試。';
+    const wrapper = await mountImageSearch();
+
+    expect(wrapper.find('[data-testid="anchors-error"]').text()).toBe('風格資料載入失敗，請稍後再試。');
   });
 
   it('model ready 後顯示搜尋面板，選檔前搜尋按鈕 disabled、還沒有中心預覽圖', async () => {
-    clipModelState.status.value = 'ready';
+    clipModelState.status = 'ready';
     const wrapper = await mountImageSearch();
 
     expect(wrapper.find('[data-testid="search-panel"]').exists()).toBe(true);
@@ -179,7 +174,7 @@ describe('ImageSearch.vue', () => {
   });
 
   it('選檔後顯示中心預覽圖（探索頁式版面），點搜尋呼叫 search()', async () => {
-    clipModelState.status.value = 'ready';
+    clipModelState.status = 'ready';
     const wrapper = await mountImageSearch();
     const file = await selectFile(wrapper);
 
@@ -193,8 +188,8 @@ describe('ImageSearch.vue', () => {
   });
 
   it('搜尋中顯示 spinner，搜尋按鈕維持 disabled', async () => {
-    clipModelState.status.value = 'ready';
-    imageSearchState.status.value = 'searching';
+    clipModelState.status = 'ready';
+    imageSearchState.status = 'searching';
     const wrapper = await mountImageSearch();
     await selectFile(wrapper);
 
@@ -203,9 +198,9 @@ describe('ImageSearch.vue', () => {
   });
 
   it('搜尋失敗顯示錯誤訊息', async () => {
-    clipModelState.status.value = 'ready';
-    imageSearchState.status.value = 'error';
-    imageSearchState.error.value = '搜尋失敗，請稍後再試。';
+    clipModelState.status = 'ready';
+    imageSearchState.status = 'error';
+    imageSearchState.error = '搜尋失敗，請稍後再試。';
     const wrapper = await mountImageSearch();
     await selectFile(wrapper);
 
@@ -213,9 +208,9 @@ describe('ImageSearch.vue', () => {
   });
 
   it('搜尋成功時，中心是使用者上傳的圖、四張結果卡片在周圍發散（桌機浮動群集 + 手機 2x2 網格）', async () => {
-    clipModelState.status.value = 'ready';
-    imageSearchState.status.value = 'success';
-    imageSearchState.results.value = [
+    clipModelState.status = 'ready';
+    imageSearchState.status = 'success';
+    imageSearchState.results = [
       { id: 'a', src: 'u1', alt: 'A', styleGroup: 'Retro & Nostalgia', similarity: 0.92 },
       { id: 'b', src: 'u2', alt: 'B', styleGroup: 'Retro & Nostalgia', similarity: 0.81 }
     ];
@@ -233,9 +228,9 @@ describe('ImageSearch.vue', () => {
   });
 
   it('點桌機浮動群集裡的結果卡片會導到該圖片的詳情頁', async () => {
-    clipModelState.status.value = 'ready';
-    imageSearchState.status.value = 'success';
-    imageSearchState.results.value = [
+    clipModelState.status = 'ready';
+    imageSearchState.status = 'success';
+    imageSearchState.results = [
       { id: 'a', src: 'u1', alt: 'A', styleGroup: 'Retro & Nostalgia', similarity: 0.92 }
     ];
     const wrapper = await mountImageSearch();
@@ -252,8 +247,8 @@ describe('ImageSearch.vue', () => {
   });
 
   it('無相似結果顯示空狀態', async () => {
-    clipModelState.status.value = 'ready';
-    imageSearchState.status.value = 'no-match';
+    clipModelState.status = 'ready';
+    imageSearchState.status = 'no-match';
     const wrapper = await mountImageSearch();
     await selectFile(wrapper);
 

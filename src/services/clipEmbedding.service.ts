@@ -3,6 +3,12 @@ import { IMAGE_SEARCH_CONFIG } from '@/config/imageSearch.config';
 export interface ModelProgress {
   status: string;
   progress?: number;
+  // transformers.js 下載模型時是逐檔案回報進度（config/tokenizer/onnx 權重各自一個
+  // file），這兩個欄位（同一個 file 才會一起出現）讓呼叫端可以跨檔案累加算總進度，
+  // 而不是直接拿單一檔案的 progress 覆蓋掉整體進度（見 useClipModel.ts）。
+  file?: string;
+  loaded?: number;
+  total?: number;
 }
 
 type Extractor = (input: string) => Promise<{ data: ArrayLike<number> }>;

@@ -1,34 +1,32 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
-import {
-  resetUploadedImagePreviewState,
-  useUploadedImagePreview
-} from '@/composables/useUploadedImagePreview';
+import { createPinia, setActivePinia } from 'pinia';
+import { useUploadedImagePreviewStore } from '@/stores/uploadedImagePreview.store';
 
 function makeFile(name = 'a.jpg'): File {
   return new File([new Uint8Array(4)], name, { type: 'image/jpeg' });
 }
 
-describe('useUploadedImagePreview', () => {
+describe('useUploadedImagePreviewStore', () => {
   beforeEach(() => {
-    resetUploadedImagePreviewState();
+    setActivePinia(createPinia());
     URL.createObjectURL = vi.fn(() => 'blob:mock-url');
     URL.revokeObjectURL = vi.fn();
   });
 
   it('setFile 後 selectedFile/previewUrl 都會填入', async () => {
-    const preview = useUploadedImagePreview();
+    const preview = useUploadedImagePreviewStore();
     const file = makeFile();
 
     preview.setFile(file);
     await nextTick();
 
-    expect(preview.selectedFile.value).toBe(file);
-    expect(preview.previewUrl.value).toBe('blob:mock-url');
+    expect(preview.selectedFile).toBe(file);
+    expect(preview.previewUrl).toBe('blob:mock-url');
   });
 
   it('換檔案時會 revoke 舊的 preview URL', async () => {
-    const preview = useUploadedImagePreview();
+    const preview = useUploadedImagePreviewStore();
     preview.setFile(makeFile('a.jpg'));
     await nextTick();
 
@@ -38,14 +36,14 @@ describe('useUploadedImagePreview', () => {
     expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:mock-url');
   });
 
-  it('重新呼叫 useUploadedImagePreview() 仍拿到同一份狀態（跨頁面卸載/重新掛載存活）', async () => {
-    const first = useUploadedImagePreview();
+  it('重新呼叫 useUploadedImagePreviewStore() 仍拿到同一份狀態（跨頁面卸載/重新掛載存活）', async () => {
+    const first = useUploadedImagePreviewStore();
     first.setFile(makeFile());
     await nextTick();
 
-    const second = useUploadedImagePreview();
+    const second = useUploadedImagePreviewStore();
 
-    expect(second.selectedFile.value).toBe(first.selectedFile.value);
-    expect(second.previewUrl.value).toBe('blob:mock-url');
+    expect(second.selectedFile).toBe(first.selectedFile);
+    expect(second.previewUrl).toBe('blob:mock-url');
   });
 });
