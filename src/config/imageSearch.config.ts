@@ -27,7 +27,11 @@ export const IMAGE_SEARCH_CONFIG = {
   // 實測救回 gate=0.246 被誤擋的學院風穿搭照。抓圖 pipeline 用的 RELEVANCE_THRESHOLD=0.22
   // 母體不同（候選圖 vs 使用者上傳圖），不能沿用。
   // gate prompt 或圖庫大幅變動時重跑 backend 的 npm run eval:domain。
-  domainGateThreshold: 0.24,
+  // 2026-07-16：0.24→0.22。實測商品去背照（無場景/無人物的電商鞋類照）gate=0.225，
+  // 只差 0.24 一點點被誤擋；使用者實測放寬到 0.22 後接受度較好。
+  // ⚠️ 沒有重跑 evalDomainGate.ts 全套校準——上面 2026-07-15 那次校準測過 0.23 時
+  // FPR 已經到 22.8%，0.22 大概率更寬鬆，之後有時間要補跑校準腳本驗證離題誤放率。
+  domainGateThreshold: 0.22,
   // Domain Gate 過了以後，top-1 檢索相似度低於此值 → 照樣給「最像的」結果，
   // 但加「相似度中等，圖庫擴充中」提示，誠實管理期望而不是硬擋。
   weakMatchThreshold: 0.85,
