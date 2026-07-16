@@ -1,24 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
+import { IMAGE_SEARCH_CONFIG } from '@/config/imageSearch.config';
 
 const computeEmbeddingMock = vi.fn();
 vi.mock('@/stores/clipModel.store', () => ({
   useClipModelStore: () => ({ computeEmbedding: computeEmbeddingMock })
 }));
 
-const testAnchors = [{ label: 'Retro & Nostalgia', embedding: [1, 0] }];
-vi.mock('@/stores/classificationAnchors.store', () => ({
-  useClassificationAnchorsStore: () => ({ anchors: testAnchors })
-}));
-
-const classifyStyleGroupMock = vi.fn();
-vi.mock('@/services/styleGroupClassifier.service', () => ({
-  classifyStyleGroup: (...args: unknown[]) => classifyStyleGroupMock(...args)
-}));
-
-const searchImagesByEmbeddingMock = vi.fn();
+const searchSimilarImagesMock = vi.fn();
 vi.mock('@/api/imageSearch.api', () => ({
-  searchImagesByEmbedding: (...args: unknown[]) => searchImagesByEmbeddingMock(...args)
+  searchSimilarImages: (...args: unknown[]) => searchSimilarImagesMock(...args)
 }));
 
 import { useImageSearchStore } from '@/stores/imageSearch.store';
@@ -26,6 +17,12 @@ import { useImageSearchStore } from '@/stores/imageSearch.store';
 function makeFile(type = 'image/jpeg', size = 1024): File {
   return new File([new Uint8Array(size)], 'photo.jpg', { type });
 }
+
+function makeResult(id: string, styleGroup: string, similarity: number) {
+  return { id, src: `u-${id}`, alt: id, styleGroup, similarity };
+}
+
+const { retrievalRejectThreshold, weakMatchThreshold } = IMAGE_SEARCH_CONFIG;
 
 describe('useImageSearchStore', () => {
   beforeEach(() => {
@@ -43,31 +40,51 @@ describe('useImageSearchStore', () => {
     expect(search.error).toBe('Please upload a JPG, PNG, or WebP image.');
   });
 
-  it('成功流程：算 embedding → 分類 styleGroup（帶入 useClassificationAnchorsStore 的錨點）→ 查詢 → 依門檻過濾', async () => {
+  it('top-1 過門檻 → success，結果照 RPC 排序、weakMatch 為 false', async () => {
     computeEmbeddingMock.mockResolvedValue([1, 0]);
-    classifyStyleGroupMock.mockReturnValue('Retro & Nostalgia');
-    searchImagesByEmbeddingMock.mockResolvedValue([
-      { id: 'a', src: 'u1', alt: 'A', styleGroup: 'Retro & Nostalgia', similarity: 0.9 },
-      { id: 'b', src: 'u2', alt: 'B', styleGroup: 'Retro & Nostalgia', similarity: 0.4 }
+    searchSimilarImagesMock.mockResolvedValue([
+      makeResult('a', 'Retro & Nostalgia', 0.9),
+      makeResult('b', 'Y2K & Internet Aesthetics', 0.8)
     ]);
     const search = useImageSearchStore();
 
     await search.search(makeFile());
 
-    expect(classifyStyleGroupMock).toHaveBeenCalledWith([1, 0], testAnchors);
-    expect(searchImagesByEmbeddingMock).toHaveBeenCalledWith([1, 0], 'Retro & Nostalgia');
+    expect(searchSimilarImagesMock).toHaveBeenCalledWith([1, 0]);
     expect(search.status).toBe('success');
-    expect(search.results).toEqual([
-      { id: 'a', src: 'u1', alt: 'A', styleGroup: 'Retro & Nostalgia', similarity: 0.9 }
-    ]);
+    expect(search.results.map((r) => r.id)).toEqual(['a', 'b']);
+    expect(search.weakMatch).toBe(false);
   });
 
-  it('全部結果都低於門檻 → status 變 no-match', async () => {
+  it('top-1 低於 reject 門檻 → no-match、不留結果', async () => {
     computeEmbeddingMock.mockResolvedValue([1, 0]);
-    classifyStyleGroupMock.mockReturnValue('Retro & Nostalgia');
-    searchImagesByEmbeddingMock.mockResolvedValue([
-      { id: 'a', src: 'u1', alt: 'A', styleGroup: 'Retro & Nostalgia', similarity: 0.2 }
+    searchSimilarImagesMock.mockResolvedValue([
+      makeResult('a', 'Retro & Nostalgia', retrievalRejectThreshold - 0.05)
     ]);
+    const search = useImageSearchStore();
+
+    await search.search(makeFile());
+
+    expect(search.status).toBe('no-match');
+    expect(search.results).toEqual([]);
+  });
+
+  it('top-1 介於 reject 與 weak 之間 → success + weakMatch 提示', async () => {
+    computeEmbeddingMock.mockResolvedValue([1, 0]);
+    searchSimilarImagesMock.mockResolvedValue([
+      makeResult('a', 'Retro & Nostalgia', (retrievalRejectThreshold + weakMatchThreshold) / 2)
+    ]);
+    const search = useImageSearchStore();
+
+    await search.search(makeFile());
+
+    expect(search.status).toBe('success');
+    expect(search.weakMatch).toBe(true);
+  });
+
+  it('RPC 回空陣列 → no-match', async () => {
+    computeEmbeddingMock.mockResolvedValue([1, 0]);
+    searchSimilarImagesMock.mockResolvedValue([]);
     const search = useImageSearchStore();
 
     await search.search(makeFile());
@@ -88,8 +105,7 @@ describe('useImageSearchStore', () => {
 
   it('連續呼叫兩次 search，第二次在第一次還在 searching 時會被擋下（重入防呆）', async () => {
     computeEmbeddingMock.mockResolvedValue([1, 0]);
-    classifyStyleGroupMock.mockReturnValue('Retro & Nostalgia');
-    searchImagesByEmbeddingMock.mockResolvedValue([]);
+    searchSimilarImagesMock.mockResolvedValue([]);
     const search = useImageSearchStore();
 
     const first = search.search(makeFile());

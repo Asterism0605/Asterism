@@ -17,6 +17,12 @@ export function validateImageFile(file: File): string | null {
   return null;
 }
 
-export function meetsSimilarityThreshold(similarity: number): boolean {
-  return similarity >= IMAGE_SEARCH_CONFIG.similarityThreshold;
+// top-1 相似度低於 reject 門檻 → 圖庫裡沒有夠像的圖。
+export function isRejected(top1Similarity: number): boolean {
+  return top1Similarity < IMAGE_SEARCH_CONFIG.retrievalRejectThreshold;
+}
+
+// top-1 過 reject 門檻但低於 weak 門檻 → 相似度中等，UI 顯示提示但照樣給結果。
+export function isWeakMatch(top1Similarity: number): boolean {
+  return top1Similarity < IMAGE_SEARCH_CONFIG.weakMatchThreshold;
 }

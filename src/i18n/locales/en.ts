@@ -155,16 +155,14 @@ export default {
     login: 'Log In'
   },
   imageSearch: {
-    eyebrow: 'Visual Search',
-    title: 'Search by Image',
-    subtitle: 'Upload a photo to find the most visually similar pieces in our library.',
+    eyebrow: 'Style Navigator',
+    title: 'Style Star Map',
+    subtitle: 'Upload a photo to see where it lands on our aesthetic star map.',
     downloadHint: 'First use requires downloading a ~150MB AI model — Wi-Fi recommended.',
     downloading: 'Downloading… {progress}%',
     finalizing: 'Finalizing, almost there…',
     downloadModel: 'Download Model',
     retryDownload: 'Retry Download',
-    loadingStyleData: 'Loading style data…',
-    retry: 'Retry',
     chooseFile: 'Choose Photo',
     chooseFileHint: 'JPG, PNG, or WebP — up to 10MB',
     noFileChosen: 'No file chosen',
@@ -172,11 +170,11 @@ export default {
     searching: 'Searching…',
     uploadedAlt: 'Your uploaded photo',
     yourPhoto: 'Your Photo',
-    noMatch: "Couldn't find a similar match — try another photo?",
+    noMatch: 'No sufficiently similar images in our library yet. We are constantly expanding it — try another photo.',
+    weakMatchNotice: 'These matches are moderately similar — our library is still growing.',
     invalidFileType: 'Please upload a JPG, PNG, or WebP image.',
     fileTooLarge: 'Image must be under 10MB.',
     modelDownloadFailed: 'Model download failed. Please check your connection and try again.',
-    anchorsLoadFailed: 'Failed to load style data. Please try again later.',
     searchFailed: 'Search failed. Please try again later.'
   }
 };

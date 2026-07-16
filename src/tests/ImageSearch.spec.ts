@@ -18,22 +18,12 @@ vi.mock('@/stores/clipModel.store', () => ({
   useClipModelStore: () => clipModelState
 }));
 
-const anchorsLoadMock = vi.fn();
-const anchorsState = reactive({
-  status: 'ready' as 'idle' | 'loading' | 'ready' | 'error',
-  anchors: [] as { label: string; embedding: number[] }[],
-  error: null as string | null,
-  load: anchorsLoadMock
-});
-vi.mock('@/stores/classificationAnchors.store', () => ({
-  useClassificationAnchorsStore: () => anchorsState
-}));
-
 const searchMock = vi.fn();
 const imageSearchState = reactive({
   status: 'idle' as 'idle' | 'searching' | 'success' | 'no-match' | 'error',
   results: [] as { id: string; src: string; alt: string; styleGroup: string; similarity: number }[],
   error: null as string | null,
+  weakMatch: false,
   search: searchMock
 });
 vi.mock('@/stores/imageSearch.store', () => ({
@@ -69,20 +59,12 @@ describe('ImageSearch.vue', () => {
     clipModelState.progress = 0;
     clipModelState.error = null;
     hasDownloadedBeforeMock.mockReturnValue(false);
-    // 預設錨點已就緒，讓不特別測錨點狀態的既有案例不用逐個手動設定。
-    anchorsState.status = 'ready';
-    anchorsState.anchors = [];
-    anchorsState.error = null;
     imageSearchState.status = 'idle';
     imageSearchState.results = [];
     imageSearchState.error = null;
+    imageSearchState.weakMatch = false;
     URL.createObjectURL = vi.fn(() => 'blob:mock-preview-url');
     URL.revokeObjectURL = vi.fn();
-  });
-
-  it('進頁時自動呼叫 anchorsState.load()（不像 model 需要按鈕確認）', async () => {
-    await mountImageSearch();
-    expect(anchorsLoadMock).toHaveBeenCalledWith('styleGroup');
   });
 
   it('這台裝置先前下載過 model 時，進頁自動背景載入不用手動點按鈕', async () => {
@@ -132,36 +114,6 @@ describe('ImageSearch.vue', () => {
     expect(wrapper.find('[data-testid="model-error"]').text()).toBe('模型下載失敗，請檢查網路連線後重試。');
     await wrapper.find('[data-testid="download-model-button"]').trigger('click');
     expect(loadMock).toHaveBeenCalled();
-  });
-
-  it('model ready 但錨點還在載入時，維持在 model-gate、不顯示搜尋面板', async () => {
-    clipModelState.status = 'ready';
-    anchorsState.status = 'loading';
-    const wrapper = await mountImageSearch();
-
-    expect(wrapper.find('[data-testid="model-gate"]').exists()).toBe(true);
-    expect(wrapper.find('[data-testid="anchors-loading"]').exists()).toBe(true);
-    expect(wrapper.find('[data-testid="search-panel"]').exists()).toBe(false);
-  });
-
-  it('model ready 但錨點載入失敗時顯示錯誤 + 重試按鈕', async () => {
-    clipModelState.status = 'ready';
-    anchorsState.status = 'error';
-    anchorsState.error = '風格資料載入失敗，請稍後再試。';
-    const wrapper = await mountImageSearch();
-
-    expect(wrapper.find('[data-testid="anchors-error"]').text()).toBe('風格資料載入失敗，請稍後再試。');
-    await wrapper.find('[data-testid="retry-anchors-button"]').trigger('click');
-    expect(anchorsLoadMock).toHaveBeenCalledWith('styleGroup');
-  });
-
-  it('model 還沒開始下載（新使用者未點按鈕）時，錨點載入失敗也要顯示錯誤，不能悶不吭聲', async () => {
-    clipModelState.status = 'idle';
-    anchorsState.status = 'error';
-    anchorsState.error = '風格資料載入失敗，請稍後再試。';
-    const wrapper = await mountImageSearch();
-
-    expect(wrapper.find('[data-testid="anchors-error"]').text()).toBe('風格資料載入失敗，請稍後再試。');
   });
 
   it('model ready 後顯示搜尋面板，選檔前搜尋按鈕 disabled、還沒有中心預覽圖', async () => {
@@ -217,13 +169,10 @@ describe('ImageSearch.vue', () => {
     const wrapper = await mountImageSearch();
     await selectFile(wrapper);
 
-    // 中心：使用者上傳的圖，不是搜尋結果
     expect(wrapper.find('[data-testid="search-preview-image"]').attributes('src')).toBe(
       'blob:mock-preview-url'
     );
-    // 桌機：重用 RelatedImageCluster（探索頁同一顆元件，內部固定 testid related-image-card）
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(2);
-    // 手機：2x2 網格 fallback
     expect(wrapper.findAll('[data-testid="search-result-card-mobile"]')).toHaveLength(2);
   });
 
@@ -253,5 +202,22 @@ describe('ImageSearch.vue', () => {
     await selectFile(wrapper);
 
     expect(wrapper.find('[data-testid="search-no-match"]').exists()).toBe(true);
+  });
+
+  it('相似度中等（weakMatch）時顯示提示，非中等時不顯示', async () => {
+    clipModelState.status = 'ready';
+    imageSearchState.status = 'success';
+    imageSearchState.results = [
+      { id: 'a', src: 'u1', alt: 'A', styleGroup: 'Retro & Nostalgia', similarity: 0.78 }
+    ];
+    imageSearchState.weakMatch = true;
+    const wrapper = await mountImageSearch();
+    await selectFile(wrapper);
+
+    expect(wrapper.find('[data-testid="search-weak-match"]').exists()).toBe(true);
+
+    imageSearchState.weakMatch = false;
+    await flushPromises();
+    expect(wrapper.find('[data-testid="search-weak-match"]').exists()).toBe(false);
   });
 });

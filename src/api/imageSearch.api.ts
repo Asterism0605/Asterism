@@ -20,14 +20,13 @@ function toImageSearchResult(row: ImageSearchResultRow): ImageSearchResult {
   };
 }
 
-export async function searchImagesByEmbedding(
+// 純檢索：全庫 kNN，不先分類 styleGroup。open-set 拒絕由呼叫端對 top-1 相似度設門檻。
+export async function searchSimilarImages(
   embedding: number[],
-  styleGroup: string,
   matchCount = IMAGE_SEARCH_CONFIG.matchCount
 ): Promise<ImageSearchResult[]> {
-  const { data, error } = await getSupabase().rpc('search_images_by_embedding', {
+  const { data, error } = await getSupabase().rpc('search_similar_images', {
     query_embedding: embedding,
-    p_style_group: styleGroup,
     match_count: matchCount
   });
 

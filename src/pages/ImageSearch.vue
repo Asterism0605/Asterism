@@ -5,7 +5,6 @@ import { useRouter } from 'vue-router';
 import { ImageUp, ScanSearch } from '@lucide/vue';
 import { useClipModelStore } from '@/stores/clipModel.store';
 import { useImageSearchStore } from '@/stores/imageSearch.store';
-import { useClassificationAnchorsStore } from '@/stores/classificationAnchors.store';
 import { useUploadedImagePreviewStore } from '@/stores/uploadedImagePreview.store';
 import Button from '@/components/ui/Button.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
@@ -17,25 +16,22 @@ import type { ImageSpreadNode } from '@/types/image';
 
 const router = useRouter();
 const model = useClipModelStore();
-const anchorsState = useClassificationAnchorsStore();
 const search = useImageSearchStore();
 const uploadedImagePreview = useUploadedImagePreviewStore();
 const { selectedFile, previewUrl } = storeToRefs(uploadedImagePreview);
 const { setFile } = uploadedImagePreview;
 
-// 錨點資料只是 9 筆小查詢，不像 CLIP model 要下載 150MB，不需要另外跳確認，
-// 進頁就在背景默默載入即可。
 // CLIP model 如果這台裝置先前已經下載過（瀏覽器 Cache Storage 裡還在），就不用
 // 再讓使用者手動點一次「下載模型」——直接背景載入，pipeline() 會自己從快取讀取。
 onMounted(() => {
-  void anchorsState.load('styleGroup');
   if (model.hasDownloadedBefore()) {
     void model.load();
   }
 });
 
+// 純檢索不再需要 styleGroup 錨點分類，model 就緒即可搜尋。
 const isModelReady = computed(() => model.status === 'ready');
-const isFullyReady = computed(() => isModelReady.value && anchorsState.status === 'ready');
+const isFullyReady = computed(() => isModelReady.value);
 // model.progress 到 100 只代表「檔案下載完」，pipeline() 之後還要花時間初始化
 // （建立 ONNX runtime session 等），這段沒有位元組進度可回報，UI 會卡在 100% 好幾秒。
 // 用這個旗標切到「準備中」文案 + spinner，至少讓使用者知道還在動，不是卡住了。
@@ -146,25 +142,6 @@ function handleSearch() {
             {{ model.status === 'error' ? $t('imageSearch.retryDownload') : $t('imageSearch.downloadModel') }}
           </Button>
 
-          <p
-            v-if="anchorsState.status === 'loading'"
-            data-testid="anchors-loading"
-            class="mt-4 flex items-center gap-2 text-sm"
-          >
-            <span
-              class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
-              aria-hidden="true"
-            />
-            {{ $t('imageSearch.loadingStyleData') }}
-          </p>
-          <template v-else-if="anchorsState.status === 'error'">
-            <p data-testid="anchors-error" class="mt-4 text-sm text-red-400">
-              {{ anchorsState.error }}
-            </p>
-            <Button data-testid="retry-anchors-button" type="button" class="mt-4" @click="anchorsState.load('styleGroup')">
-              {{ $t('imageSearch.retry') }}
-            </Button>
-          </template>
         </ImageSpreadEntrance>
 
         <ImageSpreadEntrance
@@ -274,6 +251,13 @@ function handleSearch() {
           </p>
           <p v-else-if="search.status === 'no-match'" data-testid="search-no-match" class="image-search-status">
             {{ $t('imageSearch.noMatch') }}
+          </p>
+          <p
+            v-else-if="search.status === 'success' && search.weakMatch"
+            data-testid="search-weak-match"
+            class="image-search-status"
+          >
+            {{ $t('imageSearch.weakMatchNotice') }}
           </p>
 
           <div

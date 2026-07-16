@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { meetsSimilarityThreshold, validateImageFile } from '@/services/imageSearch.service';
+import { isRejected, isWeakMatch, validateImageFile } from '@/services/imageSearch.service';
+import { IMAGE_SEARCH_CONFIG } from '@/config/imageSearch.config';
 
 function makeFile(type: string, sizeBytes: number): File {
   return new File([new Uint8Array(sizeBytes)], 'photo.jpg', { type });
@@ -31,12 +32,22 @@ describe('validateImageFile', () => {
   });
 });
 
-describe('meetsSimilarityThreshold', () => {
-  it('高於門檻回傳 true', () => {
-    expect(meetsSimilarityThreshold(0.8)).toBe(true);
+describe('isRejected', () => {
+  it('top-1 低於 reject 門檻 → 拒絕', () => {
+    expect(isRejected(IMAGE_SEARCH_CONFIG.retrievalRejectThreshold - 0.01)).toBe(true);
   });
 
-  it('低於門檻回傳 false', () => {
-    expect(meetsSimilarityThreshold(0.3)).toBe(false);
+  it('top-1 達到 reject 門檻 → 不拒絕', () => {
+    expect(isRejected(IMAGE_SEARCH_CONFIG.retrievalRejectThreshold)).toBe(false);
+  });
+});
+
+describe('isWeakMatch', () => {
+  it('top-1 低於 weak 門檻 → 弱相似（顯示提示）', () => {
+    expect(isWeakMatch(IMAGE_SEARCH_CONFIG.weakMatchThreshold - 0.01)).toBe(true);
+  });
+
+  it('top-1 達到 weak 門檻 → 非弱相似', () => {
+    expect(isWeakMatch(IMAGE_SEARCH_CONFIG.weakMatchThreshold)).toBe(false);
   });
 });

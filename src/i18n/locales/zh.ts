@@ -151,16 +151,14 @@ export default {
     login: '登入'
   },
   imageSearch: {
-    eyebrow: '影像搜尋',
-    title: '以圖搜圖',
-    subtitle: '上傳一張圖片，找出圖庫裡風格最相似的作品。',
+    eyebrow: '風格導航',
+    title: '風格星圖',
+    subtitle: '上傳一張圖片，看看它落在美學星圖的哪個位置。',
     downloadHint: '首次使用需下載約 150MB 的 AI 模型，建議 Wi-Fi 環境下使用。',
     downloading: '下載中… {progress}%',
     finalizing: '準備中，快好了…',
     downloadModel: '下載模型',
     retryDownload: '重試下載',
-    loadingStyleData: '載入風格資料中…',
-    retry: '重試',
     chooseFile: '選擇照片',
     chooseFileHint: '支援 JPG、PNG、WebP，最大 10MB',
     noFileChosen: '尚未選擇檔案',
@@ -168,11 +166,11 @@ export default {
     searching: '搜尋中…',
     uploadedAlt: '你上傳的圖片',
     yourPhoto: '你的照片',
-    noMatch: '找不到相似的圖，換一張試試？',
+    noMatch: '圖庫裡還沒有夠相似的圖。我們持續在擴充圖庫，可以換一張試試。',
+    weakMatchNotice: '找到的結果相似度中等——圖庫持續擴充中，之後會更準。',
     invalidFileType: '請上傳 JPG、PNG 或 WebP 格式的圖片。',
     fileTooLarge: '圖片大小請勿超過 10MB。',
     modelDownloadFailed: '模型下載失敗，請檢查網路連線後重試。',
-    anchorsLoadFailed: '風格資料載入失敗，請稍後再試。',
     searchFailed: '搜尋失敗，請稍後再試。'
   }
 };
