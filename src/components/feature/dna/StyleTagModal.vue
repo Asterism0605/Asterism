@@ -305,15 +305,17 @@ onBeforeUnmount(() => {
 
   .tag-modal-label-connector {
     position: fixed;
-    left: 8vw;
-    top: 30vh;
-    width: 24vw;
+    left: 18vw;
+    top: 40vh;
+    width: 50vw;
+    height: auto;
+    align-items: flex-start;
   }
 
   .tag-modal-label {
     position: fixed;
-    left: 34vw;
-    top: 30vh;
+    left: 40vw;
+    top: 34vh;
     max-width: 58vw;
     font-size: 20px;
     white-space: normal;
@@ -322,18 +324,25 @@ onBeforeUnmount(() => {
 
   .tag-modal-close {
     position: fixed;
-    top: calc(65px + 1rem);
+    top: 20vh;
     right: 6vw;
   }
 
   .tag-modal-description {
     position: fixed;
-    left: 8vw;
-    top: 45vh;
-    max-width: 80vw;
+    left: 30vw;
+    top: 50vh;
+    max-width: 60vw;
     font-size: 14px;
     text-align: left;
     transform: none;
+  }
+
+  .tag-modal-label-tail::after {
+    left: -5px;
+    top: -7px;
+    width: 18px;
+    height: 18px;
   }
 }
 </style>
