@@ -208,7 +208,10 @@ function handleSearch() {
               @select="handleResultSelect"
             />
 
-            <div class="relative z-20 flex w-full justify-center">
+            <!-- pointer-events-none：這層是全寬透明容器、又疊在 z-10 的結果卡片上，
+                 不放行的話卡片會被透明區域擋住點不到（詳情頁導航整個失效）。
+                 預覽圖本體再開回 auto，讓「視覺上被預覽圖蓋住的卡片角」維持不可點，跟看到的一致。 -->
+            <div class="pointer-events-none relative z-20 flex w-full justify-center">
               <ConstellationBackground
                 active
                 class-name="absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2"
@@ -227,7 +230,7 @@ function handleSearch() {
                 as="figure"
                 kind="centerFrame"
                 data-testid="search-preview-frame"
-                class="image-search-preview-frame relative w-full max-w-[min(72vw,360px)] overflow-hidden rounded-lg border border-white/12 bg-elevated/60"
+                class="image-search-preview-frame pointer-events-auto relative w-full max-w-[min(72vw,360px)] overflow-hidden rounded-lg border border-white/12 bg-elevated/60"
               >
                 <img
                   data-testid="search-preview-image"
