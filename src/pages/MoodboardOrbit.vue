@@ -41,7 +41,8 @@ import type {
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
-import { deleteFolder, deleteItem } from '@/services/moodboard.service';
+import { useDeleteMoodboardImage } from '@/composables/useDeleteMoodboardImage';
+import { deleteFolder } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -99,9 +100,16 @@ const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
 const deleteImageHoverIdx = ref<string | null>(null);
-const deleteImageTarget = ref<{ folderId: string; itemId: string } | null>(null);
-const isDeleteImageModalOpen = ref(false);
-const isDeletingImage = ref(false);
+
+const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
+  useDeleteMoodboardImage({
+    getFolder: () => moodboardStore.folders[selectedFolder.value],
+    onDeleted: (itemId) => {
+      scatter.value = scatter.value.filter((n) => n.itemId !== itemId);
+      mDetailPhotos.value = mDetailPhotos.value.filter((p) => p.itemId !== itemId);
+      deleteImageHoverIdx.value = null;
+    }
+  });
 
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
@@ -287,35 +295,6 @@ async function confirmDeleteFolder() {
     showToast({ type: 'error', message: t('toast.deleteFolderFailed') });
   } finally {
     isDeletingFolder.value = false;
-  }
-}
-
-function requestDeleteImage(itemId: string) {
-  const folder = moodboardStore.folders[selectedFolder.value];
-  if (!folder || !folder.images.some((image) => image.itemId === itemId)) return;
-
-  deleteImageTarget.value = { folderId: folder.id, itemId };
-  isDeleteImageModalOpen.value = true;
-}
-
-async function confirmDeleteImage() {
-  const profileId = authStore.user?.id;
-  if (!deleteImageTarget.value || isDeletingImage.value || !profileId) return;
-
-  const { folderId, itemId } = deleteImageTarget.value;
-  isDeletingImage.value = true;
-  try {
-    await deleteItem(folderId, itemId);
-    moodboardStore.removeImage(folderId, itemId);
-    scatter.value = scatter.value.filter((n) => n.itemId !== itemId);
-    mDetailPhotos.value = mDetailPhotos.value.filter((p) => p.itemId !== itemId);
-    isDeleteImageModalOpen.value = false;
-    deleteImageTarget.value = null;
-    deleteImageHoverIdx.value = null;
-  } catch {
-    showToast({ type: 'error', message: t('toast.deleteImageFailed') });
-  } finally {
-    isDeletingImage.value = false;
   }
 }
 
