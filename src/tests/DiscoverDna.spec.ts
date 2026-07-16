@@ -21,7 +21,7 @@ describe('DiscoverDna', () => {
     expect(wrapper.find('.discover-dna-page').exists()).toBe(true)
     expect(wrapper.text()).toContain('Discover')
     expect(wrapper.text()).toContain('Your Style DNA')
-    expect(wrapper.text()).toContain('Asterism personalizes your visual feed')
+    expect(wrapper.text()).toContain('A quick visual quiz that learns your design taste')
     expect(wrapper.findAll('[data-testid="constellation"]').length).toBeGreaterThan(0)
   })
 

@@ -196,21 +196,22 @@ export default {
   dna: {
     discoverTitle1: '探索',
     discoverTitle2: '你的 Style DNA',
-    introDesc:
-      'Asterism 會記錄你的風格偏好，為你打造專屬的視覺探索。透過 4 個階段的盲選，萃取你在空間與感官上的風格取向。',
+    introDesc: '一個快速的視覺測驗，讀懂你的設計品味。',
     participate: '開始測驗',
     skip: '略過',
     loadingLine1: '正在生成',
     loadingLine2: '你的 Style DNA',
     pickerHint: '點選一張圖片繼續',
-    quiz: '測驗',
+    pickerProgress: '{current} / {total}',
     quizProgress: '測驗進度',
     complete: 'Style DNA 完成',
     resultYour: '你的',
     homepagePersonalized: '你的首頁已根據你的 Style DNA 個人化。',
     startExploring: '開始探索',
     retakeQuiz: '重新測驗',
-    sampleResultNotice: '目前還沒有測驗結果，這是範例 Style DNA 結果。'
+    sampleResultNotice: '目前還沒有測驗結果，這是範例 Style DNA 結果。',
+    viewTagDetails: '查看 {tag} 說明',
+    close: '關閉'
   },
   image: {
     back: '返回',

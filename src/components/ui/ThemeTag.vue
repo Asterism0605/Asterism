@@ -12,6 +12,10 @@ const props = withDefaults(
   }
 );
 
+const emit = defineEmits<{
+  select: [tag: string];
+}>();
+
 const { displayLabel } = useStyleTagLabel();
 
 const localizedTags = computed(() =>
@@ -31,7 +35,8 @@ const localizedTags = computed(() =>
           v-for="tag in localizedTags"
           :key="tag.source"
           type="button"
-          class="min-h-8 rounded-full border border-gold-dim/70 px-3 text-xs font-semibold uppercase tracking-[0.12em] text-gold-dim transition-all duration-200 hover:border-gold-dim hover:bg-gold-dim/10 hover:text-text-primary hover:shadow-[0_0_22px_rgba(168,137,58,0.28)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim"
+          class="min-h-8 cursor-pointer rounded-full border border-gold-dim/70 px-3 text-xs font-semibold uppercase tracking-[0.12em] text-gold-dim transition-all duration-200 hover:border-gold-dim hover:bg-gold-dim/10 hover:text-text-primary hover:shadow-[0_0_22px_rgba(168,137,58,0.28)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim"
+          @click="emit('select', tag.source)"
         >
           {{ tag.label }}
         </button>
@@ -48,7 +53,8 @@ const localizedTags = computed(() =>
             v-for="tag in localizedTags"
             :key="tag.source"
             type="button"
-            class="min-h-10 rounded-full border border-gold-dim/70 px-4 text-xs font-semibold uppercase tracking-[0.12em] text-gold-dim transition-all duration-200 hover:border-gold-dim hover:bg-gold-dim/10 hover:text-text-primary hover:shadow-[0_0_22px_rgba(168,137,58,0.28)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim sm:px-7 sm:tracking-[0.22em]"
+            class="min-h-10 cursor-pointer rounded-full border border-gold-dim/70 px-4 text-xs font-semibold uppercase tracking-[0.12em] text-gold-dim transition-all duration-200 hover:border-gold-dim hover:bg-gold-dim/10 hover:text-text-primary hover:shadow-[0_0_22px_rgba(168,137,58,0.28)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim sm:px-7 sm:tracking-[0.22em]"
+            @click="emit('select', tag.source)"
           >
             {{ tag.label }}
           </button>

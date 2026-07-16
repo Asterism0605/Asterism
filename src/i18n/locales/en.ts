@@ -200,21 +200,22 @@ export default {
   dna: {
     discoverTitle1: 'Discover',
     discoverTitle2: 'Your Style DNA',
-    introDesc:
-      'Asterism personalizes your visual feed by cataloging your stylistic preferences. Embark on a 4-stage blind selection process to extract your architectural and sensory style values.',
+    introDesc: 'A quick visual quiz that learns your design taste.',
     participate: 'PARTICIPATE',
     skip: 'SKIP',
     loadingLine1: 'Forming',
     loadingLine2: 'Your Style DNA',
     pickerHint: 'Click one image to continue',
-    quiz: 'Quiz',
+    pickerProgress: '{current} / {total}',
     quizProgress: 'Quiz progress',
     complete: 'Style DNA Complete',
     resultYour: 'Your',
     homepagePersonalized: 'Your homepage is now personalized based on your Style DNA.',
     startExploring: 'Start Exploring',
     retakeQuiz: 'Retake Quiz',
-    sampleResultNotice: 'We do not have quiz result yet, so this is a sample Style DNA result.'
+    sampleResultNotice: 'We do not have quiz result yet, so this is a sample Style DNA result.',
+    viewTagDetails: 'View {tag} description',
+    close: 'Close'
   },
   image: {
     back: 'Back',

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Button from '@/components/ui/Button.vue'
+import Button from '@/components/ui/Button.vue';
 
 defineEmits<{
-  start: []
-  skip: []
-}>()
+  start: [];
+  skip: [];
+}>();
 </script>
 
 <template>
@@ -24,7 +24,9 @@ defineEmits<{
           <Button type="button" data-testid="start-dna-cta" @click="$emit('start')">
             {{ $t('dna.participate') }}
           </Button>
-          <Button type="button" variant="secondary" @click="$emit('skip')">{{ $t('dna.skip') }}</Button>
+          <Button type="button" variant="secondary" @click="$emit('skip')">{{
+            $t('dna.skip')
+          }}</Button>
         </div>
       </div>
     </div>
@@ -85,7 +87,7 @@ defineEmits<{
   max-width: 620px;
   margin: 0 auto;
   color: rgb(240 237 230 / 0.72);
-  font-size: var(--text-caption);
+  font-size: 18px;
   line-height: 1.55;
 }
 

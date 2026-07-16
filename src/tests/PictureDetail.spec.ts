@@ -257,6 +257,25 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.params.imageId).toBe('ftdp-graphic-poster-001')
   })
 
+  it('點擊風格標籤開啟說明 modal（una-hsieh review：詳情頁標籤也須可點擊）', async () => {
+    // StyleTagModal 用 <Teleport to="body">，內容會搬到 document.body，
+    // 不在 wrapper 自己的渲染樹底下，故直接查 document（跟下面 CREATE FOLDER
+    // modal 那個既有測試查 document.querySelector 是同一招）。
+    const { wrapper } = await mountPictureDetail(undefined, true, { attachTo: document.body })
+
+    const tagBtn = wrapper.findAll('button').find((b) => b.text() === 'Y2K')
+    await tagBtn!.trigger('click')
+    await flushPromises()
+
+    const dialog = document.querySelector('[role="dialog"]')
+    expect(dialog).not.toBeNull()
+    expect(dialog!.textContent).toContain(
+      'Y2K is a visual style rooted in early-2000s technological optimism'
+    )
+
+    wrapper.unmount()
+  })
+
   it('導向選取的相似圖片詳情頁', async () => {
     const { router, wrapper } = await mountPictureDetail()
     const expectedImageId = getRelatedImages('y2k-main-001', { limit: 6 })[2].id
