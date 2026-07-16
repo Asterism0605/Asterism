@@ -32,6 +32,7 @@ onMounted(() => document.addEventListener('click', handleLangClickOutside, true)
 onUnmounted(() => document.removeEventListener('click', handleLangClickOutside, true));
 
 const siteLogoSrc = '/sitelogo.png';
+const imageSearchEntryIcon = '/images/image-search-entry.webp';
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
@@ -39,6 +40,7 @@ const authStore = useAuthStore();
 const isPictureDetail = computed(
   () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
 );
+const isHome = computed(() => route.name === 'home');
 
 const initials = computed(() =>
   (authStore.user?.displayName ?? '')
@@ -77,6 +79,16 @@ async function handleLogout() {
     >
       <img class="w-8 h-8" :src="siteLogoSrc" alt="Asterism" />
     </button>
+
+    <router-link
+      v-if="isHome"
+      :to="{ name: 'image-search' }"
+      class="size-9 shrink-0 overflow-hidden rounded-full sm:hidden"
+      :aria-label="$t('imageSearch.title')"
+      :title="$t('imageSearch.title')"
+    >
+      <img :src="imageSearchEntryIcon" alt="" class="size-full" />
+    </router-link>
 
     <div class="flex items-center gap-3">
       <div ref="langMenuRef" class="relative" @keydown.esc="langMenuOpen = false">

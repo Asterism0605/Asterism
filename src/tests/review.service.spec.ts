@@ -45,11 +45,11 @@ describe('review.service buildPatch', () => {
       buildPatch('correct', {
         needsReview: nr(false, true, true),
         draftMedium: 'Outfit',
-        draftSubMedium: 'Top'
+        draftSubMedium: 'Top Focus'
       })
     ).toEqual({
       medium: 'Outfit',
-      sub_medium: 'Top',
+      sub_medium: 'Top Focus',
       needs_review: { styleGroup: false, medium: false, subMedium: false }
     });
   });
