@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useClipModel } from '@/composables/useClipModel';
 import { useImageSearch } from '@/composables/useImageSearch';
 import { useClassificationAnchors } from '@/composables/useClassificationAnchors';
+import { useUploadedImagePreview } from '@/composables/useUploadedImagePreview';
 import Button from '@/components/ui/Button.vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
@@ -28,8 +29,7 @@ onMounted(() => {
   }
 });
 
-const selectedFile = ref<File | null>(null);
-const previewUrl = ref<string | null>(null);
+const { selectedFile, previewUrl, setFile } = useUploadedImagePreview();
 
 const isModelReady = computed(() => model.status.value === 'ready');
 const isFullyReady = computed(() => isModelReady.value && anchorsState.status.value === 'ready');
@@ -81,22 +81,9 @@ function handleResultSelect(node: ImageSpreadNode) {
   });
 }
 
-watch(selectedFile, (file) => {
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value);
-  }
-  previewUrl.value = file ? URL.createObjectURL(file) : null;
-});
-
-onBeforeUnmount(() => {
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value);
-  }
-});
-
 function handleFileChange(event: Event) {
   const input = event.target as HTMLInputElement;
-  selectedFile.value = input.files?.[0] ?? null;
+  setFile(input.files?.[0] ?? null);
 }
 
 function handleSearch() {

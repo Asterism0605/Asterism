@@ -11,7 +11,7 @@ vi.mock('@/api/imageSearch.api', () => ({
   searchImagesByEmbedding: (...args: unknown[]) => searchImagesByEmbeddingMock(...args)
 }));
 
-import { useImageSearch } from '@/composables/useImageSearch';
+import { resetImageSearchState, useImageSearch } from '@/composables/useImageSearch';
 
 function makeFile(type = 'image/jpeg', size = 1024): File {
   return new File([new Uint8Array(size)], 'photo.jpg', { type });
@@ -20,7 +20,10 @@ function makeFile(type = 'image/jpeg', size = 1024): File {
 const testAnchors = ref([{ label: 'Retro & Nostalgia', embedding: [1, 0] }]);
 
 describe('useImageSearch', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    resetImageSearchState();
+  });
 
   it('檔案格式不對 → 不呼叫 embedding、直接進 error', async () => {
     const computeEmbedding = vi.fn();

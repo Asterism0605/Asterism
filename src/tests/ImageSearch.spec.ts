@@ -53,6 +53,7 @@ vi.mock('@/composables/useImageSearch', () => ({
   })
 }));
 
+import { resetUploadedImagePreviewState } from '@/composables/useUploadedImagePreview';
 import ImageSearch from '@/pages/ImageSearch.vue';
 
 const router = createRouter({
@@ -88,6 +89,7 @@ describe('ImageSearch.vue', () => {
     imageSearchState.status.value = 'idle';
     imageSearchState.results.value = [];
     imageSearchState.error.value = null;
+    resetUploadedImagePreviewState();
     URL.createObjectURL = vi.fn(() => 'blob:mock-preview-url');
     URL.revokeObjectURL = vi.fn();
   });

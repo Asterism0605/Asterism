@@ -7,7 +7,7 @@ import { ref } from 'vue';
 const rpc = vi.fn();
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ rpc }) }));
 
-import { useImageSearch } from '@/composables/useImageSearch';
+import { resetImageSearchState, useImageSearch } from '@/composables/useImageSearch';
 
 function makeFile(type = 'image/jpeg', size = 1024): File {
   return new File([new Uint8Array(size)], 'photo.jpg', { type });
@@ -29,7 +29,10 @@ async function computeEmbedding(): Promise<number[]> {
 }
 
 describe('useImageSearch 整合測試（真實 classifyStyleGroup + 真實門檻邏輯）', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    resetImageSearchState();
+  });
 
   it('成功流程：真實分類出的 styleGroup 會被拿去查詢，高於門檻的結果留下', async () => {
     rpc.mockResolvedValue({
