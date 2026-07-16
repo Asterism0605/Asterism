@@ -217,7 +217,7 @@ describe('ImageSearch.vue', () => {
     expect(wrapper.find('[data-testid="search-no-match"]').exists()).toBe(true);
   });
 
-  it('相似度中等（weakMatch）時顯示提示，非中等時不顯示', async () => {
+  it('有搜尋結果時不顯示任何狀態文字，即使是相似度中等的弱匹配', async () => {
     clipModelState.status = 'ready';
     imageSearchState.status = 'success';
     imageSearchState.results = [
@@ -227,10 +227,7 @@ describe('ImageSearch.vue', () => {
     const wrapper = await mountImageSearch();
     await selectFile(wrapper);
 
-    expect(wrapper.find('[data-testid="search-weak-match"]').exists()).toBe(true);
-
-    imageSearchState.weakMatch = false;
-    await flushPromises();
     expect(wrapper.find('[data-testid="search-weak-match"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="search-no-match"]').exists()).toBe(false);
   });
 });

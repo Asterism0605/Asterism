@@ -266,13 +266,6 @@ function handleSearch() {
           <p v-else-if="search.status === 'no-match'" data-testid="search-no-match" class="image-search-status">
             {{ $t('imageSearch.noMatch') }}
           </p>
-          <p
-            v-else-if="search.status === 'success' && search.weakMatch"
-            data-testid="search-weak-match"
-            class="image-search-status"
-          >
-            {{ $t('imageSearch.weakMatchNotice') }}
-          </p>
 
           <div
             v-if="search.status === 'success'"
