@@ -67,7 +67,8 @@ export default {
     folderLimit: 'You have reached the maximum of 10 folders.',
     folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
     folderCreatedAndSaved: 'Folder created and image saved.',
-    deleteFolderFailed: 'Failed to delete the folder. Please try again.'
+    deleteFolderFailed: 'Failed to delete the folder. Please try again.',
+    deleteImageFailed: 'Failed to delete the image. Please try again.'
   },
   userMenu: {
     signedInAs: 'Signed in as',
@@ -250,6 +251,8 @@ export default {
     deleteConfirm: 'Delete',
     deleteCancel: 'Close',
     deleteFolderAria: 'Delete folder',
+    deleteImageTitle: 'Delete Image from Folder',
+    deleteImageAria: 'Delete image',
     openFolderAria: 'Open folder',
     openImageDetailAria: 'View image detail'
   },

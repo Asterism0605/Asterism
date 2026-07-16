@@ -67,7 +67,8 @@ export default {
     folderLimit: '你已達到資料夾數量上限（10 個）。',
     folderCleanupFailed: '圖片儲存失敗，且資料夾清除失敗，請至情緒板手動刪除此資料夾。',
     folderCreatedAndSaved: '資料夾已建立，圖片已儲存。',
-    deleteFolderFailed: '資料夾刪除失敗，請再試一次。'
+    deleteFolderFailed: '資料夾刪除失敗，請再試一次。',
+    deleteImageFailed: '圖片刪除失敗，請再試一次。'
   },
   userMenu: {
     signedInAs: '目前登入身分',
@@ -245,6 +246,8 @@ export default {
     deleteConfirm: '刪除',
     deleteCancel: '關閉',
     deleteFolderAria: '刪除資料夾',
+    deleteImageTitle: '從資料夾中刪除圖片',
+    deleteImageAria: '刪除圖片',
     openFolderAria: '開啟資料夾',
     openImageDetailAria: '查看圖片詳情'
   },

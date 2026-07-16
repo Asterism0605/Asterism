@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
-import Button from '@/components/ui/Button.vue';
+import DeleteConfirmModal from './DeleteConfirmModal.vue';
 
 const FOLDER_NAME_TITLE_MAX_LENGTH = 10;
 
@@ -19,27 +18,14 @@ const truncatedFolderName = computed(() =>
 </script>
 
 <template>
-  <ModalOverlay :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)">
-    <template #title>{{ $t('moodboard.deleteFolderTitle', { name: truncatedFolderName }) }}</template>
-    <template #actions>
-      <Button
-        variant="primary"
-        type="button"
-        data-testid="delete-folder-confirm"
-        :disabled="isDeleting"
-        @click="emit('confirm')"
-      >
-        {{ $t('moodboard.deleteConfirm') }}
-      </Button>
-      <Button
-        variant="secondary"
-        type="button"
-        data-testid="delete-folder-cancel"
-        :disabled="isDeleting"
-        @click="emit('update:modelValue', false)"
-      >
-        {{ $t('moodboard.deleteCancel') }}
-      </Button>
-    </template>
-  </ModalOverlay>
+  <DeleteConfirmModal
+    :model-value="modelValue"
+    :is-deleting="isDeleting"
+    title-key="moodboard.deleteFolderTitle"
+    :title-params="{ name: truncatedFolderName }"
+    confirm-test-id="delete-folder-confirm"
+    cancel-test-id="delete-folder-cancel"
+    @update:model-value="emit('update:modelValue', $event)"
+    @confirm="emit('confirm')"
+  />
 </template>

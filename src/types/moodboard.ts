@@ -4,7 +4,14 @@ export interface MoodboardPhoto {
   h: number;
   faded?: boolean;
   placeholder?: boolean;
+  itemId?: string;
   imageId?: string;
+}
+
+// 已收藏圖片轉成排版用的 photo，itemId 必填——跟純視覺 placeholder 明確區分，
+// 讓 toPhotos／scatter／mDetailPhotos 漏傳 itemId 時型別檢查抓得到，而不是刪除按鈕悄悄消失。
+export interface MoodboardSavedPhoto extends MoodboardPhoto {
+  itemId: string;
 }
 
 export interface MoodboardHomePhoto extends MoodboardPhoto {
@@ -13,7 +20,7 @@ export interface MoodboardHomePhoto extends MoodboardPhoto {
   cy: number;
 }
 
-export interface MoodboardPositionedPhoto extends MoodboardPhoto {
+export interface MoodboardPositionedPhoto extends MoodboardSavedPhoto {
   id: string;
   delay: string;
   x: number;
@@ -21,6 +28,13 @@ export interface MoodboardPositionedPhoto extends MoodboardPhoto {
 }
 
 export interface MoodboardMobilePhoto extends MoodboardPhoto {
+  id: string;
+  delay: string;
+  cx: number;
+  cy: number;
+}
+
+export interface MoodboardMobileSavedPhoto extends MoodboardSavedPhoto {
   id: string;
   delay: string;
   cx: number;

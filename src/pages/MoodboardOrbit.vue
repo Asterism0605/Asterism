@@ -10,6 +10,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
 import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConfirm.vue';
 import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
+import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
@@ -34,12 +35,15 @@ import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/mood
 import type {
   MoodboardFolder,
   MoodboardMobilePhoto,
+  MoodboardMobileSavedPhoto,
   MoodboardPositionedPhoto,
+  MoodboardSavedPhoto,
   SavedImage
 } from '@/types/moodboard';
 import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
+import { useDeleteMoodboardImage } from '@/composables/useDeleteMoodboardImage';
 import { deleteFolder } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
@@ -91,12 +95,23 @@ const deskTabTop = computed(() => Math.round(deskVisibleH.value - 96));
 const mStage = ref<HTMLElement | null>(null);
 const deskStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
-const mDetailPhotos = ref<MoodboardMobilePhoto[]>([]);
+const mDetailPhotos = ref<MoodboardMobileSavedPhoto[]>([]);
 const mHomePhotosRandom = ref<MoodboardMobilePhoto[]>([]);
 const deleteHoverIdx = ref(-1);
 const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
+const deleteImageHoverIdx = ref<string | null>(null);
+
+const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
+  useDeleteMoodboardImage({
+    getFolder: () => moodboardStore.folders[selectedFolder.value],
+    onDeleted: (itemId) => {
+      scatter.value = scatter.value.filter((n) => n.itemId !== itemId);
+      mDetailPhotos.value = mDetailPhotos.value.filter((p) => p.itemId !== itemId);
+      deleteImageHoverIdx.value = null;
+    }
+  });
 
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
@@ -285,11 +300,12 @@ async function confirmDeleteFolder() {
   }
 }
 
-function toPhotos(images: SavedImage[], mobile = false) {
+function toPhotos(images: SavedImage[], mobile = false): MoodboardSavedPhoto[] {
   const sizes = mobile ? mDetailBase : photos;
 
   return images.map((image, index) => ({
     src: image.src,
+    itemId: image.itemId,
     w: sizes[index % sizes.length].w,
     h: sizes[index % sizes.length].h,
     imageId: image.id
@@ -338,6 +354,7 @@ function buildDetail() {
   });
   scatter.value = nodes.map((d) => ({
     id: d.id,
+    itemId: d.itemId,
     src: d.src,
     w: d.w,
     h: d.h,
@@ -369,6 +386,7 @@ function buildMobileDetail() {
   });
   mDetailPhotos.value = nodes.map((d) => ({
     id: d.id,
+    itemId: d.itemId,
     src: d.src,
     w: d.w,
     h: d.h,
@@ -675,10 +693,12 @@ onBeforeUnmount(() => {
             <DeleteIconButton
               v-if="f.hasFolder"
               :data-testid="`folder-delete-mobile-${f.i}`"
+              :size="28"
+              :icon-size="20"
               :style="{
                 position: 'absolute',
-                top: '-6px',
-                right: '-6px',
+                top: '-10px',
+                right: '-15px',
                 zIndex: 40
               }"
               @delete="requestDeleteFolder(f.i)"
@@ -805,6 +825,13 @@ onBeforeUnmount(() => {
                 "
               ></div>
             </button>
+            <DeleteIconButton
+              v-if="p.itemId"
+              :data-testid="`image-delete-mobile-${p.itemId}`"
+              :aria-label="$t('moodboard.deleteImageAria')"
+              :style="{ position: 'absolute', top: '-12px', right: '-12px', zIndex: 40 }"
+              @delete="requestDeleteImage(p.itemId)"
+            />
           </div>
         </div>
 
@@ -951,10 +978,12 @@ onBeforeUnmount(() => {
             <DeleteIconButton
               v-if="fv.hasFolder"
               :data-testid="`folder-delete-${fv.i}`"
+              :size="28"
+              :icon-size="20"
               :style="{
                 position: 'absolute',
-                top: '-6px',
-                right: '-6px',
+                top: '-3px',
+                right: '-3px',
                 opacity: deleteHoverIdx === fv.i ? 1 : 0,
                 pointerEvents: deleteHoverIdx === fv.i ? 'auto' : 'none',
                 transition: 'opacity .2s ease',
@@ -970,6 +999,7 @@ onBeforeUnmount(() => {
           <div
             v-for="n in scatter"
             :key="n.id"
+            :data-testid="n.itemId ? `moodboard-image-${n.itemId}` : undefined"
             class="absolute image-card"
             :style="{
               left: n.x - n.w / 2 + 'px',
@@ -978,6 +1008,8 @@ onBeforeUnmount(() => {
               height: n.h + 'px',
               animationDelay: n.delay + 's'
             }"
+            @mouseenter="n.itemId && (deleteImageHoverIdx = n.itemId)"
+            @mouseleave="deleteImageHoverIdx = null"
           >
             <button
               type="button"
@@ -1011,6 +1043,21 @@ onBeforeUnmount(() => {
                 "
               ></div>
             </button>
+            <DeleteIconButton
+              v-if="n.itemId"
+              :data-testid="`image-delete-${n.itemId}`"
+              :aria-label="$t('moodboard.deleteImageAria')"
+              :style="{
+                position: 'absolute',
+                top: '-12px',
+                right: '-12px',
+                zIndex: 40,
+                opacity: deleteImageHoverIdx === n.itemId ? 1 : 0,
+                pointerEvents: deleteImageHoverIdx === n.itemId ? 'auto' : 'none',
+                transition: 'opacity .2s ease'
+              }"
+              @delete="requestDeleteImage(n.itemId)"
+            />
           </div>
 
           <!-- back link (sits just above the docked tab, against the visible bottom) -->
@@ -1165,6 +1212,11 @@ onBeforeUnmount(() => {
       :is-deleting="isDeletingFolder"
       :folder-name="deleteTarget?.name ?? ''"
       @confirm="confirmDeleteFolder"
+    />
+    <DeleteImageConfirm
+      v-model="isDeleteImageModalOpen"
+      :is-deleting="isDeletingImage"
+      @confirm="confirmDeleteImage"
     />
   </div>
 </template>
