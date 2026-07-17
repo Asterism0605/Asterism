@@ -15,10 +15,7 @@ interface RelatedImageOptions {
 }
 
 const DEFAULT_RELATED_LIMIT = 4;
-const HOME_IMAGES_PER_100_VH = 3;
-const STYLE_DNA_PRIMARY_GROUP_VH = 300;
-const STYLE_DNA_PRIMARY_GROUP_IMAGE_COUNT =
-  (STYLE_DNA_PRIMARY_GROUP_VH / 100) * HOME_IMAGES_PER_100_VH;
+const STYLE_DNA_PRIMARY_GROUP_IMAGE_COUNT = 12;
 
 // 可變快取，預設＝打包 JSON；啟動時由 loadImages() 換成 Supabase（已 gate）資料。
 // 預設值讓未呼叫 loadImages 的情境（多數單元測試、載入前瞬間）行為與現狀一致。
@@ -361,8 +358,8 @@ function interleaveImagesByStyleGroup(
   return orderedImages;
 }
 
-// Style DNA 專屬排序：第一名 styleTag 所屬的 styleGroup 佔滿首頁前 300vh。
-// 首頁密度為每 100vh 三張，因此前九張固定為該 group；後續恢復最多連續兩張的穿插規則。
+// Style DNA 專屬排序：前 12 張固定為第一名 styleTag 所屬的 styleGroup，
+// 後續恢復最多連續兩張的穿插規則。這裡只保證資料順序，不宣稱實際 layout 的 vh 範圍。
 function orderStyleDnaHomeImages(images: StyleImage[], primaryStyle: string): StyleImage[] {
   const primaryStyleGroup = images.find((image) => image.style.includes(primaryStyle))?.styleGroup;
 

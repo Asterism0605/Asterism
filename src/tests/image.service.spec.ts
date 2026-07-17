@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import rawStyleImages from '@/data/style-data.json';
 import {
   getHomeInspirationImages,
   getImageById,
@@ -25,6 +26,24 @@ function getMaxConsecutiveStyleGroupCount(styleGroups: string[]): number {
 }
 
 describe('image.service', () => {
+  it('keeps every style tag within a single style group', () => {
+    const styleGroupsByStyle = new Map<string, Set<string>>();
+
+    for (const image of rawStyleImages) {
+      for (const style of image.style) {
+        const styleGroups = styleGroupsByStyle.get(style) ?? new Set<string>();
+        styleGroups.add(image.styleGroup);
+        styleGroupsByStyle.set(style, styleGroups);
+      }
+    }
+
+    const crossGroupStyles = [...styleGroupsByStyle.entries()]
+      .filter(([, styleGroups]) => styleGroups.size > 1)
+      .map(([style, styleGroups]) => ({ style, styleGroups: [...styleGroups] }));
+
+    expect(crossGroupStyles).toEqual([]);
+  });
+
   it('finds an image by id and returns undefined for unknown ids', () => {
     expect(getImageById('y2k-main-001')?.id).toBe('y2k-main-001');
     expect(getImageById('missing-image')).toBeUndefined();
@@ -121,7 +140,7 @@ describe('image.service', () => {
     expect(getMaxConsecutiveStyleGroupCount(styleGroups)).toBeLessThanOrEqual(2);
   });
 
-  it('fills the first 300vh with the top Style DNA tag group, then restores interleaving', async () => {
+  it('puts 12 images from the top Style DNA tag group first, then restores interleaving', async () => {
     const images = await getHomeInspirationImages({
       preferredStyles: ['Y2K', 'Art Deco']
     });
@@ -134,9 +153,9 @@ describe('image.service', () => {
         styleGroup: primaryStyleGroup
       })
     );
-    expect(styleGroups.slice(0, 9)).toEqual(Array(9).fill(primaryStyleGroup));
-    expect(styleGroups[9]).not.toBe(primaryStyleGroup);
-    expect(getMaxConsecutiveStyleGroupCount(styleGroups.slice(9))).toBeLessThanOrEqual(2);
+    expect(styleGroups.slice(0, 12)).toEqual(Array(12).fill(primaryStyleGroup));
+    expect(styleGroups[12]).not.toBe(primaryStyleGroup);
+    expect(getMaxConsecutiveStyleGroupCount(styleGroups.slice(12))).toBeLessThanOrEqual(2);
   });
 
   describe('getMediumGroupImages', () => {

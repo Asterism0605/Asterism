@@ -572,9 +572,9 @@ describe('Home', () => {
         styleGroup: 'Decorative & Opulent Art'
       })
     );
-    expect(images.slice(0, 9).every((image) => image.styleGroup === 'Decorative & Opulent Art')).toBe(
-      true
-    );
+    expect(
+      images.slice(0, 12).every((image) => image.styleGroup === 'Decorative & Opulent Art')
+    ).toBe(true);
     expect(floatingNetwork.props('height')).toBe(`${(images.length / 3) * 100}vh`);
   });
 
