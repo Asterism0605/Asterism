@@ -90,7 +90,7 @@ describe('FolderDirectory', () => {
     const folders = [buildFolder({ id: 'folder-1', images: [] })];
     const wrapper = mountFolderDirectory({ folders });
 
-    await wrapper.get('[data-testid="folder-directory-item-folder-1"]').trigger('mouseenter');
+    await wrapper.get('[data-testid="folder-directory-item-folder-1"]').trigger('pointerenter');
 
     expect(wrapper.emitted('preview')).toEqual([['folder-1']]);
   });
@@ -130,10 +130,10 @@ describe('FolderDirectory', () => {
     const wrapper = mountFolderDirectory({ folders });
     const item = wrapper.get('[data-testid="folder-directory-item-folder-1"]');
 
-    await item.trigger('mouseenter');
+    await item.trigger('pointerenter');
     expect(wrapper.emitted('preview')).toEqual([['folder-1']]);
 
-    await item.trigger('mouseleave');
+    await item.trigger('pointerleave');
     expect(wrapper.emitted('previewEnd')).toHaveLength(1);
   });
 
@@ -152,4 +152,46 @@ describe('FolderDirectory', () => {
     ).not.toContain('folder-node--active');
   });
 
+  it('滿版 10 個資料夾（MAX_FOLDERS）全部渲染，不補空位也不截斷', () => {
+    const folders = Array.from({ length: 10 }, (_, index) =>
+      buildFolder({ id: `folder-${index}`, name: `Folder ${index}` })
+    );
+    const wrapper = mountFolderDirectory({ folders });
+
+    expect(wrapper.findAll('[data-testid^="folder-directory-item-"]')).toHaveLength(10);
+  });
+
+  it('10 個資料夾全部是空的也能正常渲染，每個都有 (Empty) 後綴', () => {
+    const folders = Array.from({ length: 10 }, (_, index) =>
+      buildFolder({ id: `folder-${index}`, name: `Folder ${index}`, images: [] })
+    );
+    const wrapper = mountFolderDirectory({ folders });
+
+    const labels = wrapper
+      .findAll('[data-testid^="folder-directory-item-"] .folder-node__label')
+      .map((label) => label.text());
+
+    expect(labels).toHaveLength(10);
+    labels.forEach((label) => expect(label).toContain('(Empty)'));
+  });
+
+  it('接近資料夾名稱上限（40 字）時會完整顯示在 DOM 中，不會被截斷', () => {
+    const longName = 'A'.repeat(40);
+    const folders = [buildFolder({ id: 'folder-1', name: longName })];
+    const wrapper = mountFolderDirectory({ folders });
+
+    const label = wrapper.get('[data-testid="folder-directory-item-folder-1"] .folder-node__label');
+    expect(label.text()).toBe(longName);
+  });
+
+  it('資料夾名稱標籤沒有設定 max-width 或 ellipsis 這類會截斷文字的樣式', () => {
+    const folders = [buildFolder({ id: 'folder-1', name: 'Studio' })];
+    const wrapper = mountFolderDirectory({ folders });
+
+    const label = wrapper.get('[data-testid="folder-directory-item-folder-1"] .folder-node__label');
+    const style = getComputedStyle(label.element);
+
+    expect(style.textOverflow).not.toBe('ellipsis');
+    expect(style.overflow).not.toBe('hidden');
+  });
 });

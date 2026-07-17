@@ -690,7 +690,9 @@ describe('MoodboardOrbit', () => {
       deleteItemMock.mockResolvedValue(undefined);
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
-      await wrapper.get('[data-testid="moodboard-folder-mobile-0"]').trigger('click');
+      const homeIcon = wrapper.get('[data-testid="moodboard-folder-mobile-0"]');
+      await homeIcon.trigger('pointerenter');
+      await homeIcon.trigger('click');
       await flushPromises();
       const itemId = store.folders[0].images[0].itemId;
 
@@ -846,7 +848,9 @@ describe('MoodboardOrbit', () => {
       patchSingleImageFolder();
       const { wrapper, router } = await mountMoodboard();
 
-      await wrapper.get('[data-testid="moodboard-folder-mobile-0"]').trigger('click');
+      const homeIcon = wrapper.get('[data-testid="moodboard-folder-mobile-0"]');
+      await homeIcon.trigger('pointerenter');
+      await homeIcon.trigger('click');
       await flushPromises();
 
       const photoButton = wrapper.get('[data-testid="moodboard-mobile-photo"]');
@@ -1053,6 +1057,7 @@ describe('MoodboardOrbit', () => {
       await flushPromises();
 
       const item = wrapper.get('[data-testid="folder-directory-item-oldest-folder"]');
+      await item.trigger('pointerenter');
       await item.trigger('click');
       await flushPromises();
 
@@ -1060,7 +1065,46 @@ describe('MoodboardOrbit', () => {
       expect(item.classes()).toContain('folder-node--active');
     });
 
-    it('on mobile, clicking the already-previewed folder a second time opens its detail view', async () => {
+    it('on mobile, tapping the already-previewed folder a second time opens its detail view', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchTwoFolders();
+      const { wrapper, router } = await mountMoodboard();
+      await flushPromises();
+
+      const item = wrapper.get('[data-testid="folder-directory-item-oldest-folder"]');
+      await item.trigger('pointerenter');
+      await item.trigger('click');
+      await flushPromises();
+      await item.trigger('pointerenter');
+      await item.trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard/oldest');
+    });
+
+    it('on mobile, tapping the folder that is already the default preview opens it on the first tap', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchTwoFolders();
+      const { wrapper, router } = await mountMoodboard();
+      await flushPromises();
+
+      const item = wrapper.get('[data-testid="folder-directory-item-newest-folder"]');
+      await item.trigger('pointerenter');
+      await item.trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard/newest');
+    });
+
+    it('on mobile, a single click with no preceding pointerenter still needs a second tap to open (no self-arming race)', async () => {
       Object.defineProperty(window, 'innerWidth', {
         value: 375,
         configurable: true,
@@ -1073,26 +1117,8 @@ describe('MoodboardOrbit', () => {
       const item = wrapper.get('[data-testid="folder-directory-item-oldest-folder"]');
       await item.trigger('click');
       await flushPromises();
-      await item.trigger('click');
-      await flushPromises();
 
-      expect(router.currentRoute.value.path).toBe('/moodboard/oldest');
-    });
-
-    it('on mobile, clicking the folder that is already the default preview opens it on the first click', async () => {
-      Object.defineProperty(window, 'innerWidth', {
-        value: 375,
-        configurable: true,
-        writable: true
-      });
-      patchTwoFolders();
-      const { wrapper, router } = await mountMoodboard();
-      await flushPromises();
-
-      await wrapper.get('[data-testid="folder-directory-item-newest-folder"]').trigger('click');
-      await flushPromises();
-
-      expect(router.currentRoute.value.path).toBe('/moodboard/newest');
+      expect(router.currentRoute.value.path).toBe('/moodboard');
     });
 
     it('on mobile, the orbit ring folder icon also needs a second tap on the same folder to open it', async () => {
@@ -1106,10 +1132,12 @@ describe('MoodboardOrbit', () => {
       await flushPromises();
 
       const ringIcon = wrapper.get('[data-testid="moodboard-folder-mobile-1"]');
+      await ringIcon.trigger('pointerenter');
       await ringIcon.trigger('click');
       await flushPromises();
       expect(router.currentRoute.value.path).toBe('/moodboard');
 
+      await ringIcon.trigger('pointerenter');
       await ringIcon.trigger('click');
       await flushPromises();
       expect(router.currentRoute.value.path).toBe('/moodboard/oldest');
@@ -1145,9 +1173,12 @@ describe('MoodboardOrbit', () => {
       const { wrapper, router } = await mountMoodboard();
       await flushPromises();
 
-      await wrapper.get('[data-testid="moodboard-folder-mobile-1"]').trigger('click');
+      const ringIcon = wrapper.get('[data-testid="moodboard-folder-mobile-1"]');
+      await ringIcon.trigger('pointerenter');
+      await ringIcon.trigger('click');
       await flushPromises();
-      await wrapper.get('[data-testid="moodboard-folder-mobile-1"]').trigger('click');
+      await ringIcon.trigger('pointerenter');
+      await ringIcon.trigger('click');
       await flushPromises();
       expect(router.currentRoute.value.path).toBe('/moodboard/oldest');
 
@@ -1174,7 +1205,7 @@ describe('MoodboardOrbit', () => {
 
       await wrapper
         .get('[data-testid="folder-directory-item-oldest-folder"]')
-        .trigger('mouseenter');
+        .trigger('pointerenter');
       await flushPromises();
 
       expect(updateSphereImages.mock.calls.at(-1)?.[0][0].id).toBe('oldest-image');
@@ -1187,7 +1218,7 @@ describe('MoodboardOrbit', () => {
 
       await wrapper
         .get('[data-testid="folder-directory-item-oldest-folder"]')
-        .trigger('mouseenter');
+        .trigger('pointerenter');
       await flushPromises();
 
       expect(wrapper.get('[data-testid="moodboard-folder-1"] img').attributes('src')).toBe(
@@ -1208,7 +1239,7 @@ describe('MoodboardOrbit', () => {
 
       await wrapper
         .get('[data-testid="folder-directory-item-empty-folder"]')
-        .trigger('mouseenter');
+        .trigger('pointerenter');
       await flushPromises();
 
       const lastImages = updateSphereImages.mock.calls.at(-1)?.[0];
@@ -1235,7 +1266,7 @@ describe('MoodboardOrbit', () => {
 
       await wrapper
         .get('[data-testid="folder-directory-item-empty-folder"]')
-        .trigger('mouseenter');
+        .trigger('pointerenter');
       await flushPromises();
 
       const cta = wrapper.get('[data-testid="moodboard-empty-folder-preview-cta"]');
@@ -1243,7 +1274,7 @@ describe('MoodboardOrbit', () => {
 
       await wrapper
         .get('[data-testid="folder-directory-item-newest-folder"]')
-        .trigger('mouseenter');
+        .trigger('pointerenter');
       await flushPromises();
 
       expect(
@@ -1263,9 +1294,9 @@ describe('MoodboardOrbit', () => {
       await flushPromises();
 
       const emptyItem = wrapper.get('[data-testid="folder-directory-item-empty-folder"]');
-      await emptyItem.trigger('mouseenter');
+      await emptyItem.trigger('pointerenter');
       await flushPromises();
-      await emptyItem.trigger('mouseleave');
+      await emptyItem.trigger('pointerleave');
       await flushPromises();
 
       expect(
@@ -1276,7 +1307,7 @@ describe('MoodboardOrbit', () => {
 
       await wrapper
         .get('[data-testid="folder-directory-item-newest-folder"]')
-        .trigger('mouseenter');
+        .trigger('pointerenter');
       await flushPromises();
 
       expect(updateSphereImages.mock.calls.at(-1)?.[0][0].id).toBe('newest-image');
@@ -1295,7 +1326,7 @@ describe('MoodboardOrbit', () => {
 
       await wrapper
         .get('[data-testid="folder-directory-item-oldest-folder"]')
-        .trigger('mouseenter');
+        .trigger('pointerenter');
       await flushPromises();
 
       expect(updateSphereImages).toHaveBeenCalledTimes(updateCount);
@@ -1318,7 +1349,7 @@ describe('MoodboardOrbit', () => {
 
       await wrapper
         .get('[data-testid="folder-directory-item-oldest-folder"]')
-        .trigger('mouseenter');
+        .trigger('pointerenter');
       await flushPromises();
 
       const updatedSources = wrapper
@@ -1350,7 +1381,7 @@ describe('MoodboardOrbit', () => {
 
       await wrapper
         .get('[data-testid="folder-directory-item-empty-folder"]')
-        .trigger('mouseenter');
+        .trigger('pointerenter');
       await flushPromises();
 
       const photoCards = wrapper.findAll('[data-testid="moodboard-mobile-photo"]');

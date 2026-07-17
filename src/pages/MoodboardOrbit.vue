@@ -58,6 +58,9 @@ const props = defineProps({
 const emit = defineEmits(['open', 'home']);
 
 const DIMMED_OPACITY = 0.7;
+const ORBIT_SNAP_ANGLE_DESKTOP = -Math.PI / 2 - Math.PI / 3;
+const ORBIT_SNAP_ANGLE_MOBILE = -Math.PI / 2;
+const ORBIT_SNAP_HOLD_MS = 2000;
 
 const router = useRouter();
 const route = useRoute();
@@ -93,6 +96,9 @@ const scale = ref(1);
 const hasFolders = ref(true);
 const orbitPhase = ref(0);
 const hoverIdx = ref(-1);
+const orbitHoldFolderIndex = ref<number | null>(null);
+let orbitHoldTimer: ReturnType<typeof setTimeout> | null = null;
+const mobileArmedFolderId = ref<string | null>(null);
 const selectedFolder = ref(0);
 const selectedName = computed(() => getFolderName(selectedFolder.value));
 const scatter = ref<MoodboardPositionedPhoto[]>([]);
@@ -267,9 +273,27 @@ function hoverFolder(index: number) {
   previewingEmptyFolderId.value = null;
 }
 
+function snapOrbitToFolder(index: number) {
+  const targetAngle = isMobile.value ? ORBIT_SNAP_ANGLE_MOBILE : ORBIT_SNAP_ANGLE_DESKTOP;
+  orbitPhase.value = targetAngle - (index / MAX_FOLDERS) * Math.PI * 2 + Math.PI / 2;
+
+  if (!isMobile.value) return;
+
+  orbitHoldFolderIndex.value = index;
+  if (orbitHoldTimer) clearTimeout(orbitHoldTimer);
+  orbitHoldTimer = setTimeout(() => {
+    orbitHoldFolderIndex.value = null;
+    orbitHoldTimer = null;
+  }, ORBIT_SNAP_HOLD_MS);
+}
+
 function previewFolder(index: number) {
   const folder = moodboardStore.folders[index];
   if (!folder) return;
+
+  mobileArmedFolderId.value = highlightedFolderId.value === folder.id ? folder.id : null;
+
+  snapOrbitToFolder(index);
 
   if (!folder.images.length) {
     hoverIdx.value = index;
@@ -497,6 +521,7 @@ function goHome() {
   dragging.value = false;
   activeSphereFolderId.value = null;
   previewingEmptyFolderId.value = null;
+  mobileArmedFolderId.value = null;
   navigate('', -1);
 }
 
@@ -522,10 +547,12 @@ function openFolderById(folderId: string) {
 }
 
 function armOrOpenMobileFolder(index: number) {
+  if (consumeDidDrag()) return;
+
   const folder = moodboardStore.folders[index];
   if (!folder) return;
 
-  if (highlightedFolderId.value === folder.id) {
+  if (mobileArmedFolderId.value === folder.id) {
     openFolder(index);
     return;
   }
@@ -553,7 +580,6 @@ function onSphereClick() {
 function hoverMobileFolderAt(i: number) {
   if (!moodboardStore.folders[i]) return;
   mHover.value = i;
-  previewFolder(i);
 }
 
 function leaveMobileFolder() {
@@ -569,7 +595,7 @@ function orbitLoop(ts: number) {
   if (orbitLast === null) orbitLast = ts;
   const dt = Math.min(0.05, (ts - orbitLast) / 1000);
   orbitLast = ts;
-  const previewPause = !isMobile.value && hoverIdx.value >= 0;
+  const previewPause = orbitHoldFolderIndex.value !== null || (!isMobile.value && hoverIdx.value >= 0);
   if (hasFolders.value && !dragging.value && !previewPause) orbitPhase.value += ORBIT_SPEED * dt;
   orbitRaf = requestAnimationFrame(orbitLoop);
 }
@@ -670,6 +696,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize);
   cancelAnimationFrame(orbitRaf);
+  if (orbitHoldTimer) clearTimeout(orbitHoldTimer);
   sphereHandle?.dispose();
   sphereHandle = null;
 });
@@ -771,7 +798,7 @@ onBeforeUnmount(() => {
         <div
           v-if="previewingEmptyFolderId"
           class="absolute flex items-center justify-center"
-          style="left: 16px; top: 330px; width: 408px; height: 390px; pointer-events: none"
+          style="left: 16px; top: 330px; width: 408px; height: 390px; pointer-events: none; z-index: 35"
         >
           <RouterLink
             data-testid="moodboard-empty-folder-preview-cta-mobile"
@@ -976,7 +1003,7 @@ onBeforeUnmount(() => {
           <div
             v-if="previewingEmptyFolderId"
             class="absolute flex items-center justify-center"
-            :style="{ ...sphereStyle, pointerEvents: 'none' }"
+            :style="{ ...sphereStyle, pointerEvents: 'none', zIndex: 35 }"
           >
             <RouterLink
               data-testid="moodboard-empty-folder-preview-cta"

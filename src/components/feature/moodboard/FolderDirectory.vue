@@ -41,8 +41,8 @@ function folderLabel(folder: MoodboardFolder): string {
         }"
         :data-testid="`folder-directory-item-${folder.id}`"
         :aria-current="folder.id === activeFolderId ? 'true' : undefined"
-        @mouseenter="emit('preview', folder.id)"
-        @mouseleave="emit('previewEnd')"
+        @pointerenter="emit('preview', folder.id)"
+        @pointerleave="emit('previewEnd')"
         @click="emit('open', folder.id)"
       >
         <span class="folder-node__anchor" aria-hidden="true"></span>
@@ -147,6 +147,7 @@ function folderLabel(folder: MoodboardFolder): string {
 @media (max-width: 768px) {
   .folder-directory {
     padding-top: 15px;
+    height: 210px;
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
@@ -159,38 +160,34 @@ function folderLabel(folder: MoodboardFolder): string {
   }
 
   .folder-directory__list {
-    display: flex;
-    align-items: flex-start;
-    height: 190px;
+    grid-auto-flow: column;
+    grid-auto-columns: 33.333%;
+    width: 100%;
+    height: 100%;
+    gap: 0;
     padding-left: 0;
   }
 
   .folder-node {
     position: relative;
-    width: max-content;
-    flex-shrink: 0;
-    height: 32px;
-    margin-inline-end: 16px;
+    width: 100%;
+    min-width: 0;
+    height: 40px;
   }
 
-  .folder-node:nth-of-type(5n + 1) {
-    margin-top: 45px;
+  .folder-node:nth-of-type(3n + 1) {
+    left: 8px;
+    top: 0;
   }
 
-  .folder-node:nth-of-type(5n + 2) {
-    margin-top: 50px;
+  .folder-node:nth-of-type(3n + 2) {
+    left: 24%;
+    top: 36px;
   }
 
-  .folder-node:nth-of-type(5n + 3) {
-    margin-top: 95px;
-  }
-
-  .folder-node:nth-of-type(5n + 4) {
-    margin-top: 80px;
-  }
-
-  .folder-node:nth-of-type(5n) {
-    margin-top: 100px;
+  .folder-node:nth-of-type(3n) {
+    left: 52%;
+    top: 72px;
   }
 
   .folder-node__connector {
@@ -198,32 +195,27 @@ function folderLabel(folder: MoodboardFolder): string {
   }
 
   .folder-node__anchor {
+    display: block;
+    flex: 0 0 4px;
     width: 4px;
     height: 4px;
     margin-left: 0;
-    margin-right: 6px;
-  }
-
-  .folder-node--active {
-    transform: translate(25px, -40px);
   }
 
   .folder-node--active .folder-node__anchor {
     width: 4px;
     height: 4px;
     margin-left: 0;
-    transform: scale(1.5);
+    transform: scale(1.25);
   }
 
   .folder-node__label {
-    margin-left: 0;
-    font-size: 15px;
+    margin-left: 12px;
+    font-size: 14px;
   }
 
   .folder-node--active .folder-node__label {
-    font-size: 15px;
-    transform: scale(1.3);
-    transform-origin: left center;
+    font-size: 14px;
   }
 }
 </style>
