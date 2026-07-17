@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { GUIDE_STORAGE_KEY, GUIDE_TARGET_INDEX } from './constants';
+import { GUIDE_STORAGE_KEY, GUIDE_TARGET_INDEX } from '../constants/constants';
 
 const GUIDE_COMPLETED_VALUE = 'completed';
 
