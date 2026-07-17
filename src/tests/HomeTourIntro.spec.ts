@@ -2,7 +2,7 @@ import { nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SplitText } from 'gsap/SplitText';
-import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
+import HomeTourIntro from '@/components/feature/guide/components/HomeTourIntro.vue';
 
 describe('HomeTourIntro', () => {
   beforeEach(() => {

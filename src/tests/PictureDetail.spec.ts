@@ -3,12 +3,14 @@ import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import PictureDetail from '@/pages/PictureDetail.vue'
+import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue'
 import { getRelatedImages } from '@/services/image.service'
 import { addItem, createFolder } from '@/services/moodboard.service'
 import { showToast } from '@/composables/useToast'
 import { useAuthStore } from '@/stores/auth.store'
 import { useMoodboardStore } from '@/stores/moodboard.store'
 import { savePendingMoodboardAction } from '@/services/pendingMoodboardAction.service'
+import { useUserTour } from '@/components/feature/guide/composables/useUserTour'
 import type { MoodboardFolder, SavedImage } from '@/types/moodboard'
 
 vi.mock('@/services/moodboard.service', () => ({
@@ -159,6 +161,76 @@ describe('PictureDetail', () => {
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(false)
     expect(addItem).toHaveBeenCalledOnce()
+  })
+
+  it('skips a missing thumbnail target and completes when the real save menu opens', async () => {
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-thumbnail', 'y2k-main-001')
+    const host = document.createElement('div')
+    document.body.append(host)
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      step: 'detail-style-tag'
+    })
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain(
+      'Understand style tags'
+    )
+    expect(document.querySelector('[data-testid="user-tour-next"]')).toBeNull()
+
+    await wrapper.get('[data-tour="detail-style-tag"] button').trigger('click')
+    wrapper.findComponent(StyleTagModal).vm.$emit('update:modelValue', false)
+    await flushPromises()
+    await wrapper.get('[data-tour="detail-save"] button').trigger('click')
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'completed',
+      step: null
+    })
+
+    wrapper.unmount()
+    host.remove()
+    rects.mockRestore()
+  })
+
+  it('continues from the desktop thumbnail through steps 7 and 8', async () => {
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-thumbnail', 'y2k-main-001')
+    const visibleThumbnailTarget = document.createElement('button')
+    visibleThumbnailTarget.dataset.tour = 'detail-thumbnail'
+    const host = document.createElement('div')
+    document.body.append(visibleThumbnailTarget, host)
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
+    await flushPromises()
+
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 8')
+    await wrapper.get('[data-test="image-stage-panel"]').trigger('click')
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-style-tag'
+    })
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('7 / 8')
+
+    await wrapper.get('[data-tour="detail-style-tag"] button').trigger('click')
+    wrapper.findComponent(StyleTagModal).vm.$emit('update:modelValue', false)
+    await flushPromises()
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('8 / 8')
+
+    wrapper.unmount()
+    visibleThumbnailTarget.remove()
+    host.remove()
+    rects.mockRestore()
   })
 
   it('點擊 SAVE TO FOLDER 時以目前圖片 id 呼叫 addItem', async () => {

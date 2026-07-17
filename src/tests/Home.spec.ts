@@ -37,6 +37,7 @@ const guideFloatingImageNetworkStub = {
         :data-guide-image-index="index"
         :data-guide-image-ready="index === HOME_HERO_IMAGE_INDEX ? 'true' : undefined"
         :data-guide-target="guideTargetIndex === index ? 'true' : undefined"
+        :data-tour="guideTargetIndex === index ? 'home-image' : undefined"
         @click="$emit('click', index)"
       />
     </div>
@@ -143,6 +144,7 @@ function getMaxConsecutiveStyleGroupCount(styleGroups: string[]): number {
 describe('Home', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
     setActivePinia(createPinia());
     localStorage.clear();
   });
@@ -397,15 +399,13 @@ describe('Home', () => {
     expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
   });
 
-  it('starts the image guide from Start Tour and persists the choice', async () => {
-    let guideFrameCallback: FrameRequestCallback | undefined;
-    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
-      guideFrameCallback = callback;
-      return 1;
-    });
+  it('starts the authenticated core tour without mounting the guest guide', async () => {
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(
       new DOMRect(100, 100, 200, 300)
     );
+    vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList);
     const router = createTestRouter();
     const authStore = useAuthStore();
     const session: AuthSession = {
@@ -444,26 +444,19 @@ describe('Home', () => {
     await flushPromises();
     await wrapper.find('[data-test="home-tour-start"]').trigger('click');
     await flushPromises();
-    wrapper.findAll('[data-test="guide-image-card"]')[HOME_HERO_IMAGE_INDEX].element.removeAttribute(
-      'data-guide-image-ready'
-    );
-    guideFrameCallback?.(0);
-    await wrapper.vm.$nextTick();
 
-    expect(localStorage.getItem('asterism:tour:welcome')).toBe('handled');
-    expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
+    expect(localStorage.getItem('asterism:tour:welcome:user-1')).toBe('handled');
+    expect(floatingNetwork.props('guideTargetIndex')).toBe(HOME_HERO_IMAGE_INDEX);
+    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
+    expect(localStorage.getItem('asterism:tour:core:user-1')).toContain('home-overview');
+    expect(document.querySelector('.asterism-tour-popover')).not.toBeNull();
 
-    wrapper.findAll('[data-test="guide-image-card"]')[HOME_HERO_IMAGE_INDEX].element.setAttribute(
-      'data-guide-image-ready',
-      'true'
-    );
+    const firstPopover = document.querySelector('.asterism-tour-popover');
     floatingNetwork.vm.$emit('guideTargetReady');
     await flushPromises();
-    guideFrameCallback?.(0);
-    await wrapper.vm.$nextTick();
 
+    expect(document.querySelector('.asterism-tour-popover')).toBe(firstPopover);
     expect(floatingNetwork.props('guideTargetIndex')).toBe(HOME_HERO_IMAGE_INDEX);
-    expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(true);
 
     wrapper.unmount();
   });
@@ -504,7 +497,7 @@ describe('Home', () => {
     await wrapper.find('[data-test="home-tour-explore"]').trigger('click');
     await wrapper.vm.$nextTick();
 
-    expect(localStorage.getItem('asterism:tour:welcome')).toBe('handled');
+    expect(localStorage.getItem('asterism:tour:welcome:user-1')).toBe('handled');
     expect(wrapper.find('[data-test="home-tour-intro"]').exists()).toBe(false);
     expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
   });

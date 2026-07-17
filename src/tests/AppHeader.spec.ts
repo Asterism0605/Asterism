@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import router from '@/router';
 import AppHeader from '@/layouts/AppHeader.vue';
-import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
+import HomeTourIntro from '@/components/feature/guide/components/HomeTourIntro.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
@@ -131,9 +131,19 @@ describe('AppHeader', () => {
 
     await wrapper.get('header button[aria-haspopup="menu"]').trigger('click');
 
-    expect(wrapper.get('header').classes()).toContain('z-60');
+    expect(wrapper.get('header').classes()).toContain('z-[110]');
     expect(wrapper.get('[data-testid="home-tour-intro"]').classes()).toContain('z-50');
     expect(wrapper.get('header ul[role="menu"]').isVisible()).toBe(true);
+  });
+
+  it('marks only the language control as interactive during a Driver tour', () => {
+    const { wrapper } = createMountedHeader();
+
+    expect(wrapper.get('header').attributes('data-tour-header')).toBe('');
+    expect(wrapper.get('[data-tour-interactive="language"]').attributes('data-tour-interactive')).toBe(
+      'language'
+    );
+    expect(wrapper.get('header > button').attributes('data-tour-interactive')).toBeUndefined();
   });
 });
 
