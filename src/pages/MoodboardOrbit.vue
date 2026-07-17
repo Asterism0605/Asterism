@@ -29,6 +29,7 @@ import {
   photos,
   mDetailBase,
   buildMoodboardOrbitImages,
+  buildPlaceholderOrbitImages,
   isFolderDimmed
 } from '@/components/feature/moodboard/config';
 import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
@@ -56,7 +57,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['open', 'home']);
 
-const DIMMED_OPACITY = 0.4;
+const DIMMED_OPACITY = 0.7;
 
 const router = useRouter();
 const route = useRoute();
@@ -65,6 +66,7 @@ const moodboardStore = useMoodboardStore();
 const authStore = useAuthStore();
 
 const activeSphereFolderId = ref<string | null>(null);
+const previewingEmptyFolderId = ref<string | null>(null);
 const folderNames = computed(() => moodboardStore.folders.map((folder) => folder.name));
 const sphereFolder = computed(() => {
   const activeFolder = moodboardStore.folders.find(
@@ -77,7 +79,14 @@ const sphereFolder = computed(() => {
     return !newest || folder.createdAt > newest.createdAt ? folder : newest;
   }, undefined);
 });
-const orbitImages = computed(() => buildMoodboardOrbitImages(sphereFolder.value?.images ?? []));
+const orbitImages = computed(() =>
+  previewingEmptyFolderId.value
+    ? buildPlaceholderOrbitImages()
+    : buildMoodboardOrbitImages(sphereFolder.value?.images ?? [])
+);
+const highlightedFolderId = computed(
+  () => previewingEmptyFolderId.value ?? sphereFolder.value?.id ?? null
+);
 
 /* ---- reactive state ---- */
 const scale = ref(1);
@@ -102,7 +111,6 @@ const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
 const deleteImageHoverIdx = ref<string | null>(null);
-const clickHighlightFolderId = ref<string | null>(null);
 
 const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
   useDeleteMoodboardImage({
@@ -204,7 +212,7 @@ const mFolders = computed(() => {
       cy: o.cy + o.ry * Math.sin(ang),
       w,
       h,
-      active: mHover.value === i || (!!folder && folder.id === clickHighlightFolderId.value),
+      active: !!folder && folder.id === highlightedFolderId.value,
       dimmed: isFolderDimmed(folder),
       hasFolder: !!folder
     };
@@ -234,7 +242,7 @@ const folderView = computed(() => {
       i,
       w,
       h,
-      active: hoverIdx.value === i || (!!folder && folder.id === clickHighlightFolderId.value),
+      active: hoverIdx.value === i,
       onLine,
       dimmed: isFolderDimmed(folder),
       hasFolder: !!folder,
@@ -256,15 +264,24 @@ function hoverFolder(index: number) {
 
   hoverIdx.value = index;
   activeSphereFolderId.value = folder.id;
-  clickHighlightFolderId.value = null;
+  previewingEmptyFolderId.value = null;
 }
 
-function selectFolderById(folderId: string) {
-  const folder = moodboardStore.folders.find((f) => f.id === folderId);
-  if (!folder?.images.length) return;
+function previewFolder(index: number) {
+  const folder = moodboardStore.folders[index];
+  if (!folder) return;
 
-  activeSphereFolderId.value = folder.id;
-  clickHighlightFolderId.value = folder.id;
+  if (!folder.images.length) {
+    hoverIdx.value = index;
+    previewingEmptyFolderId.value = folder.id;
+    return;
+  }
+  hoverFolder(index);
+}
+
+function previewFolderById(folderId: string) {
+  const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
+  if (index !== -1) previewFolder(index);
 }
 
 function leaveFolder() {
@@ -274,7 +291,7 @@ function leaveFolder() {
 // deleteHoverIdx 獨立於 hoverFolder：空資料夾（0 張圖片）也要能 hover 顯示刪除 icon
 function onFolderMouseEnter(index: number) {
   deleteHoverIdx.value = index;
-  hoverFolder(index);
+  previewFolder(index);
 }
 
 function onFolderMouseLeave() {
@@ -446,7 +463,7 @@ function buildMobileHome() {
 }
 
 function openFolder(i: number) {
-  if (!moodboardStore.folders[i]) return;
+  if (!moodboardStore.folders[i]?.images.length) return;
 
   selectedFolder.value = i;
   hasFolders.value = false;
@@ -478,6 +495,8 @@ function goHome() {
   hoverIdx.value = -1;
   mHover.value = -1;
   dragging.value = false;
+  activeSphereFolderId.value = null;
+  previewingEmptyFolderId.value = null;
   navigate('', -1);
 }
 
@@ -497,6 +516,28 @@ function onFolderClick(i: number) {
   openFolder(i);
 }
 
+function openFolderById(folderId: string) {
+  const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
+  if (index !== -1) openFolder(index);
+}
+
+function armOrOpenMobileFolder(index: number) {
+  const folder = moodboardStore.folders[index];
+  if (!folder) return;
+
+  if (highlightedFolderId.value === folder.id) {
+    openFolder(index);
+    return;
+  }
+
+  previewFolder(index);
+}
+
+function armOrOpenMobileFolderById(folderId: string) {
+  const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
+  if (index !== -1) armOrOpenMobileFolder(index);
+}
+
 function onSphereClick() {
   if (consumeDidDrag()) return;
 
@@ -512,6 +553,12 @@ function onSphereClick() {
 function hoverMobileFolderAt(i: number) {
   if (!moodboardStore.folders[i]) return;
   mHover.value = i;
+  previewFolder(i);
+}
+
+function leaveMobileFolder() {
+  mHover.value = -1;
+  leaveFolder();
 }
 
 let sphereHandle: SphereHandle | null = null;
@@ -522,8 +569,8 @@ function orbitLoop(ts: number) {
   if (orbitLast === null) orbitLast = ts;
   const dt = Math.min(0.05, (ts - orbitLast) / 1000);
   orbitLast = ts;
-  if (hasFolders.value && !dragging.value && hoverIdx.value < 0 && mHover.value < 0)
-    orbitPhase.value += ORBIT_SPEED * dt;
+  const previewPause = !isMobile.value && hoverIdx.value >= 0;
+  if (hasFolders.value && !dragging.value && !previewPause) orbitPhase.value += ORBIT_SPEED * dt;
   orbitRaf = requestAnimationFrame(orbitLoop);
 }
 
@@ -688,8 +735,8 @@ onBeforeUnmount(() => {
               pointerEvents: f.hasFolder ? 'auto' : 'none'
             }"
             @pointerenter="hoverMobileFolderAt(f.i)"
-            @pointerleave="mHover = -1"
-            @click="onFolderClick(f.i)"
+            @pointerleave="leaveMobileFolder"
+            @click="armOrOpenMobileFolder(f.i)"
           >
             <img
               :src="f.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
@@ -719,6 +766,20 @@ onBeforeUnmount(() => {
               @delete="requestDeleteFolder(f.i)"
             />
           </div>
+        </div>
+
+        <div
+          v-if="previewingEmptyFolderId"
+          class="absolute flex items-center justify-center"
+          style="left: 16px; top: 330px; width: 408px; height: 390px; pointer-events: none"
+        >
+          <RouterLink
+            data-testid="moodboard-empty-folder-preview-cta-mobile"
+            to="/"
+            class="pointer-events-auto inline-flex rounded-full bg-[#d96643] px-7 py-3 font-semibold text-white transition hover:bg-[#e67550] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            {{ $t('moodboard.startExploring') }}
+          </RouterLink>
         </div>
 
         <!-- photos (peek on home, randomised + fade-in on detail) -->
@@ -793,8 +854,10 @@ onBeforeUnmount(() => {
         >
           <FolderDirectory
             :folders="moodboardStore.folders"
-            :active-folder-id="sphereFolder?.id ?? null"
-            @select="selectFolderById"
+            :active-folder-id="highlightedFolderId"
+            @preview="previewFolderById"
+            @preview-end="leaveFolder"
+            @open="armOrOpenMobileFolderById"
           />
         </div>
 
@@ -909,6 +972,20 @@ onBeforeUnmount(() => {
           :style="{ cursor: dragging ? 'grabbing' : 'default', touchAction: 'none' }"
         >
           <canvas ref="sphereCanvas" class="absolute" :style="sphereStyle"></canvas>
+
+          <div
+            v-if="previewingEmptyFolderId"
+            class="absolute flex items-center justify-center"
+            :style="{ ...sphereStyle, pointerEvents: 'none' }"
+          >
+            <RouterLink
+              data-testid="moodboard-empty-folder-preview-cta"
+              to="/"
+              class="pointer-events-auto inline-flex rounded-full bg-[#d96643] px-7 py-3 font-semibold text-white transition hover:bg-[#e67550] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              {{ $t('moodboard.startExploring') }}
+            </RouterLink>
+          </div>
 
           <!-- folder images orbit the ellipse; hovering swaps to the active image + pauses the orbit -->
           <div
@@ -1105,8 +1182,10 @@ onBeforeUnmount(() => {
         >
           <FolderDirectory
             :folders="moodboardStore.folders"
-            :active-folder-id="sphereFolder?.id ?? null"
-            @select="selectFolderById"
+            :active-folder-id="highlightedFolderId"
+            @preview="previewFolderById"
+            @preview-end="leaveFolder"
+            @open="openFolderById"
           />
         </div>
       </div>

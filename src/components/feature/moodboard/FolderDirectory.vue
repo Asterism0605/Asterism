@@ -9,7 +9,9 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  select: [folderId: string];
+  preview: [folderId: string];
+  previewEnd: [];
+  open: [folderId: string];
 }>();
 
 const { t } = useI18n();
@@ -28,25 +30,20 @@ function folderLabel(folder: MoodboardFolder): string {
 <template>
   <nav class="folder-directory" :aria-label="t('moodboard.folderSelected')">
     <div class="folder-directory__list">
-      <button type="button" disabled class="folder-node folder-node--heading">
-        <span class="folder-node__anchor" aria-hidden="true"></span>
-        <span class="folder-node__connector" aria-hidden="true"></span>
-        <span class="folder-node__label">{{ t('moodboard.folderSelected') }}</span>
-      </button>
-
       <button
         v-for="folder in sortedFolders"
         :key="folder.id"
         type="button"
-        :disabled="folder.images.length === 0"
         class="folder-node"
         :class="{
-          'folder-node--active': folder.id === activeFolderId && folder.images.length > 0,
+          'folder-node--active': folder.id === activeFolderId,
           'folder-node--empty': folder.images.length === 0
         }"
         :data-testid="`folder-directory-item-${folder.id}`"
         :aria-current="folder.id === activeFolderId ? 'true' : undefined"
-        @click="emit('select', folder.id)"
+        @mouseenter="emit('preview', folder.id)"
+        @mouseleave="emit('previewEnd')"
+        @click="emit('open', folder.id)"
       >
         <span class="folder-node__anchor" aria-hidden="true"></span>
         <span class="folder-node__connector" aria-hidden="true"></span>
@@ -88,7 +85,7 @@ function folderLabel(folder: MoodboardFolder): string {
     opacity 180ms ease;
 }
 
-.folder-node:not(.folder-node--empty):is(:hover, :focus-visible) {
+.folder-node:is(:hover, :focus-visible) {
   color: #f0ede6d6;
   opacity: 0.76;
   filter: drop-shadow(0 0 7px #f0ede657);
@@ -104,7 +101,7 @@ function folderLabel(folder: MoodboardFolder): string {
 }
 
 .folder-node__connector {
-  width: 48px;
+  width: 42px;
   height: 1px;
   flex: 0 0 auto;
   background: #f0ede6c2;
@@ -116,64 +113,35 @@ function folderLabel(folder: MoodboardFolder): string {
   font-weight: 400;
   letter-spacing: 0.025em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 160px;
+  overflow: visible;
+  text-overflow: clip;
+  width: max-content;
+  max-width: none;
 }
 
-.folder-node--active,
-.folder-node--heading {
+.folder-node--active {
   opacity: 1;
   color: var(--color-text-primary);
 }
 
-.folder-node--heading {
-  cursor: default;
-}
-
-.folder-node--empty {
-  cursor: not-allowed;
-}
-
-.folder-node--empty .folder-node__label {
-  overflow: visible;
-  text-overflow: clip;
-  max-width: none;
-}
-
-.folder-node--active .folder-node__anchor {
-  box-shadow:
-    0 0 0 1px #f0ede68c,
-    0 0 10px #f0ede62e;
-  transform: scale(1.15);
-}
-
-.folder-node--active .folder-node__label {
-  overflow: visible;
-  text-overflow: clip;
-  max-width: none;
-}
-
-.folder-node--active .folder-node__connector {
-  background: #f0ede6e6;
-}
-
-.folder-node--heading .folder-node__anchor {
+.folder-node--active .folder-node__anchor,
+.folder-node:is(:hover, :focus-visible) .folder-node__anchor {
   width: 12px;
   height: 12px;
   margin-left: -6px;
+  box-shadow:
+    0 0 0 1px #f0ede68c,
+    0 0 10px #f0ede62e;
 }
 
-.folder-node--heading .folder-node__connector {
-  width: 66px;
+.folder-node--active .folder-node__label,
+.folder-node:is(:hover, :focus-visible) .folder-node__label {
+  font-size: 20px;
 }
 
-.folder-node--heading .folder-node__label {
-  font-size: 18px;
-  font-weight: 500;
-  overflow: visible;
-  text-overflow: clip;
-  max-width: none;
+.folder-node--active .folder-node__connector {
+  width: 72px;
+  background: #f0ede6e6;
 }
 
 @media (max-width: 768px) {
@@ -191,51 +159,38 @@ function folderLabel(folder: MoodboardFolder): string {
   }
 
   .folder-directory__list {
-    grid-auto-flow: column;
-    grid-auto-columns: 18.2%;
-    width: 100%;
+    display: flex;
+    align-items: flex-start;
     height: 190px;
-    gap: 0;
     padding-left: 0;
   }
 
   .folder-node {
     position: relative;
-    width: 100%;
-    min-width: 0;
+    width: max-content;
+    flex-shrink: 0;
     height: 32px;
+    margin-inline-end: 16px;
   }
 
-  .folder-node--heading {
-    position: sticky;
-    z-index: 3;
-    top: -15px;
-    left: 45px;
+  .folder-node:nth-of-type(5n + 1) {
+    margin-top: 45px;
   }
 
-  .folder-node:not(.folder-node--heading):nth-of-type(5n + 2) {
-    left: -40px;
-    top: 45px;
+  .folder-node:nth-of-type(5n + 2) {
+    margin-top: 50px;
   }
 
-  .folder-node:not(.folder-node--heading):nth-of-type(5n + 3) {
-    left: 60px;
-    top: 50px;
+  .folder-node:nth-of-type(5n + 3) {
+    margin-top: 95px;
   }
 
-  .folder-node:not(.folder-node--heading):nth-of-type(5n + 4) {
-    left: -95px;
-    top: 95px;
+  .folder-node:nth-of-type(5n + 4) {
+    margin-top: 80px;
   }
 
-  .folder-node:not(.folder-node--heading):nth-of-type(5n) {
-    left: 20px;
-    top: 80px;
-  }
-
-  .folder-node:not(.folder-node--heading):nth-of-type(5n + 1) {
-    left: -130px;
-    top: 100px;
+  .folder-node:nth-of-type(5n) {
+    margin-top: 100px;
   }
 
   .folder-node__connector {
@@ -249,23 +204,26 @@ function folderLabel(folder: MoodboardFolder): string {
     margin-right: 6px;
   }
 
-  .folder-node--heading .folder-node__anchor {
-    width: 6px;
-    height: 6px;
+  .folder-node--active {
+    transform: translate(25px, -40px);
+  }
+
+  .folder-node--active .folder-node__anchor {
+    width: 4px;
+    height: 4px;
     margin-left: 0;
+    transform: scale(1.5);
   }
 
   .folder-node__label {
     margin-left: 0;
     font-size: 15px;
-    max-width: 120px;
   }
 
-  .folder-node--heading .folder-node__label {
-    font-size: 17px;
-    overflow: visible;
-    text-overflow: clip;
-    max-width: none;
+  .folder-node--active .folder-node__label {
+    font-size: 15px;
+    transform: scale(1.3);
+    transform-origin: left center;
   }
 }
 </style>
