@@ -270,6 +270,7 @@ onBeforeUnmount(() => {
       :data-guide-image-ready="loadedImageIndexes.has(i) ? 'true' : undefined"
       :data-guide-image-error="failedImageIndexes.has(i) ? 'true' : undefined"
       :data-guide-target="props.guideTargetIndex === i ? 'true' : undefined"
+      :data-tour="props.guideTargetIndex === i ? 'home-image' : undefined"
       :aria-disabled="isCardClickable(i) ? undefined : 'true'"
       class="group image-card absolute"
       :class="{

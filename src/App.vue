@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import AppToast from './components/ui/AppToast.vue';
 import AppHeader from './layouts/AppHeader.vue';
 import AppFooter from './layouts/AppFooter.vue';
+import UserTourPauseModal from './components/feature/guide/components/UserTourPauseModal.vue';
 
 const route = useRoute();
 const headerlessRouteNames = new Set(['auth-callback']);
@@ -27,4 +28,5 @@ const showFooter = computed(() => !footerlessRouteNames.has(String(route.name)))
   <RouterView />
   <AppFooter v-if="showFooter" />
   <AppToast />
+  <UserTourPauseModal />
 </template>

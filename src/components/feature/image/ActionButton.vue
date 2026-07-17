@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   consult: [];
   'auth-required': [];
+  opened: [];
   'create-folder': [];
   'save-to-folder': [folderId: string];
 }>();
@@ -57,6 +58,7 @@ function toggleDropdown() {
 
   isOpen.value = !isOpen.value;
   showFolderList.value = false;
+  if (isOpen.value) emit('opened');
 }
 
 function handleOutsideClick(event: MouseEvent) {

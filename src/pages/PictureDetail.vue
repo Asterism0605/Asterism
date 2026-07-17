@@ -13,6 +13,7 @@ import {
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import { useAuthStore } from '@/stores/auth.store';
+import { usePageUserTour } from '@/components/feature/guide/composables/usePageUserTour';
 import { isImageSaved } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
@@ -22,6 +23,7 @@ import type { ImageSpreadNode } from '@/types/image';
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const coreTour = usePageUserTour(computed(() => authStore.user?.id));
 
 const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
@@ -143,6 +145,14 @@ function handleCreateFolder() {
 }
 
 function handleSelectStyleTag(tag: string) {
+  if (
+    coreTour.state.value.status === 'active' &&
+    coreTour.state.value.step === 'detail-style-tag'
+  ) {
+    coreTour.advance('detail-save', currentImage.value?.id);
+    coreTour.destroy();
+  }
+
   activeStyleTag.value = tag;
 }
 
@@ -172,6 +182,14 @@ function handleConsult() {
 }
 
 function handleSelectImage(imageId: string) {
+  if (
+    coreTour.state.value.status === 'active' &&
+    coreTour.state.value.step === 'detail-thumbnail'
+  ) {
+    coreTour.advance('detail-style-tag', imageId);
+    coreTour.destroy();
+  }
+
   const spreadPathContext = getSpreadPathContext();
   const nextImage = getImageById(imageId);
   const spreadRoot = spreadPathContext?.rootId ? getImageById(spreadPathContext.rootId) : undefined;
@@ -197,6 +215,43 @@ function handleSelectImage(imageId: string) {
   router.push({ name: 'picture-detail', params: { imageId }, query: nextQuery });
 }
 
+function handleSaveOpened() {
+  if (coreTour.state.value.status === 'active' && coreTour.state.value.step === 'detail-save') {
+    coreTour.complete();
+    coreTour.destroy();
+  }
+}
+
+async function showCurrentDetailTourStep() {
+  const step = coreTour.state.value.step;
+  if (coreTour.state.value.status !== 'active') {
+    return;
+  }
+
+  if (step !== 'detail-thumbnail' && step !== 'detail-style-tag' && step !== 'detail-save') {
+    coreTour.pause();
+    return;
+  }
+
+  if (
+    step === 'detail-thumbnail' &&
+    coreTour.state.value.targetImageId &&
+    coreTour.state.value.targetImageId !== currentImage.value?.id
+  ) {
+    coreTour.pause();
+    return;
+  }
+
+  if (await coreTour.showStep(step)) return;
+
+  if (step === 'detail-thumbnail') {
+    coreTour.advance('detail-style-tag', currentImage.value?.id);
+    if (await coreTour.showStep('detail-style-tag')) return;
+  }
+
+  coreTour.pause();
+}
+
 async function handleSaveToFolder(folderId: string) {
   if (!currentImage.value) return;
   await saveToMoodboard(folderId, currentImage.value.id);
@@ -212,6 +267,14 @@ function handleKeydown(event: KeyboardEvent) {
 
 onMounted(() => window.addEventListener('keydown', handleKeydown));
 onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
+
+watch(
+  [currentImage, () => coreTour.state.value.step, activeStyleTag],
+  ([, , styleTag]) => {
+    if (styleTag === null) void showCurrentDetailTourStep();
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -247,6 +310,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
+        @save-opened="handleSaveOpened"
         @select-style-tag="handleSelectStyleTag"
         @save-to-folder="handleSaveToFolder"
         @select-image="handleSelectImage"

@@ -24,7 +24,10 @@ function getPositionClass(index: number) {
 </script>
 
 <template>
-  <div class="pointer-events-none absolute inset-0 z-10">
+  <div
+    class="pointer-events-none absolute inset-0 z-10"
+    data-tour="spread-related-group"
+  >
     <ImageSpreadEntrance
       v-for="(image, index) in images"
       :key="image.id"
@@ -32,6 +35,7 @@ function getPositionClass(index: number) {
       kind="relatedCard"
       :spread-index="index"
       data-testid="related-image-card"
+      :data-tour="index === 0 ? 'spread-related-image' : undefined"
       type="button"
       class="pointer-events-auto group relative cursor-pointer overflow-hidden rounded-lg border border-white/12 bg-elevated/70 text-left shadow-[0_20px_70px_rgba(0,0,0,0.38)] transition duration-300 hover:z-40 hover:-translate-y-1 hover:border-white/34 focus-visible:z-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-dim lg:absolute lg:w-[clamp(132px,14vw,220px)]"
       :class="getPositionClass(index)"

@@ -14,11 +14,15 @@ import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard'
 import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel'
 import { isImageSaved } from '@/services/moodboard.service'
 import { useMoodboardStore } from '@/stores/moodboard.store'
+import { useAuthStore } from '@/stores/auth.store'
+import { usePageUserTour } from '@/components/feature/guide/composables/usePageUserTour'
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue'
 import type { ImageSpreadNode } from '@/types/image'
 
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuthStore()
+const coreTour = usePageUserTour(computed(() => authStore.user?.id))
 const { localizeTaxon } = useTaxonomyLabel()
 
 const {
@@ -150,6 +154,14 @@ function returnToPreviousLayer() {
 
 function handleRelatedSelect(image: ImageSpreadNode) {
   if (spreadDepth.value >= 1) {
+    if (
+      coreTour.state.value.status === 'active' &&
+      coreTour.state.value.step === 'spread-related-image'
+    ) {
+      coreTour.advance('detail-thumbnail', image.id)
+      coreTour.destroy()
+    }
+
     void router.push({
       name: 'picture-detail',
       params: { imageId: image.id },
@@ -162,11 +174,50 @@ function handleRelatedSelect(image: ImageSpreadNode) {
     return
   }
 
+  if (
+    coreTour.state.value.status === 'active' &&
+    coreTour.state.value.step === 'spread-related-image'
+  ) {
+    coreTour.destroy()
+  }
+
   centerImage.value = image
   visitedImageIds.value = [...visitedImageIds.value, image.id]
   spreadDepth.value = 1
   refreshRelatedImages(image.id)
   syncSpreadRoute(image.id)
+}
+
+async function showCurrentSpreadTourStep() {
+  const step = coreTour.state.value.step
+  if (coreTour.state.value.status !== 'active') {
+    return
+  }
+
+  if (step === 'detail-thumbnail' || step === 'detail-style-tag' || step === 'detail-save') {
+    coreTour.destroy()
+    return
+  }
+
+  if (
+    step !== 'spread-center' &&
+    step !== 'spread-related-group' &&
+    step !== 'spread-related-image'
+  ) {
+    coreTour.pause()
+    return
+  }
+
+  if (
+    step === 'spread-center' &&
+    coreTour.state.value.targetImageId &&
+    coreTour.state.value.targetImageId !== routeImageId.value
+  ) {
+    coreTour.pause()
+    return
+  }
+
+  if (!(await coreTour.showStep(step))) coreTour.pause()
 }
 
 function handleCreateFolder() {
@@ -194,6 +245,14 @@ watch(
     }
 
     loadImageSpread(imageId)
+  },
+  { immediate: true }
+)
+
+watch(
+  [centerImage, relatedImages, () => coreTour.state.value.step],
+  () => {
+    void showCurrentSpreadTourStep()
   },
   { immediate: true }
 )
@@ -248,7 +307,10 @@ watch(
         />
       </div>
 
-      <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
+      <div
+        class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden"
+        data-tour="spread-related-group"
+      >
         <ImageSpreadEntrance
           v-for="(image, index) in relatedImages"
           :key="image.id"
@@ -256,6 +318,7 @@ watch(
           kind="relatedCard"
           :spread-index="index"
           data-testid="related-image-card-mobile"
+          :data-tour="index === 0 ? 'spread-related-image' : undefined"
           type="button"
           class="relative cursor-pointer overflow-hidden rounded-lg border border-white/12 bg-elevated/70 text-left"
           @click="handleRelatedSelect(image)"

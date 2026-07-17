@@ -82,6 +82,7 @@ async function handleLogout() {
 
 <template>
   <header
+    data-tour-header
     :class="[
       /* z-[110]：故意高於 StyleTagModal 的 z-index:100，modal 開著時 AppHeader（logo／
          語言切換／個人選單，含下拉展開的選單本身）仍蓋在最上層可操作，方便中英對照
@@ -99,7 +100,12 @@ async function handleLogout() {
     </button>
 
     <div class="flex items-center gap-3">
-      <div ref="langMenuRef" class="relative" @keydown.esc="langMenuOpen = false">
+      <div
+        ref="langMenuRef"
+        class="relative"
+        data-tour-interactive="language"
+        @keydown.esc="langMenuOpen = false"
+      >
         <button
           type="button"
           class="group flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium tracking-wide text-text-secondary backdrop-blur-sm cursor-pointer touch-manipulation transition-[transform,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-white/20 hover:text-text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-dim/40 motion-reduce:transition-none"

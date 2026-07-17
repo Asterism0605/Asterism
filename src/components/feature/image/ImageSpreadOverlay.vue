@@ -72,6 +72,7 @@ const mainImageLabel = computed(() => {
       <ImageSpreadEntrance
         as="figure"
         kind="centerFrame"
+        data-tour="spread-center"
         data-testid="spread-main-image-frame"
         class="relative w-full max-w-[min(72vw,360px)] cursor-pointer overflow-hidden rounded-lg border border-white/12 bg-elevated/60 shadow-[0_30px_90px_rgba(0,0,0,0.45)]"
       >
