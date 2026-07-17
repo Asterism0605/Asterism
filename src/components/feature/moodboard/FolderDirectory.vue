@@ -202,7 +202,8 @@ function folderLabel(folder: MoodboardFolder): string {
     margin-left: 0;
   }
 
-  .folder-node--active .folder-node__anchor {
+  .folder-node--active .folder-node__anchor,
+  .folder-node:is(:hover, :focus-visible) .folder-node__anchor {
     width: 4px;
     height: 4px;
     margin-left: 0;
@@ -214,7 +215,8 @@ function folderLabel(folder: MoodboardFolder): string {
     font-size: 14px;
   }
 
-  .folder-node--active .folder-node__label {
+  .folder-node--active .folder-node__label,
+  .folder-node:is(:hover, :focus-visible) .folder-node__label {
     font-size: 14px;
   }
 }
