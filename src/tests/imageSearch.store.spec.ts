@@ -130,6 +130,36 @@ describe('useImageSearchStore', () => {
     expect(fetchClassificationAnchorsMock).toHaveBeenCalledTimes(2);
   });
 
+  it('anchors 抓回來是空陣列 → error（設定壞了），不是 no-match（誤導成圖庫沒有像的圖）', async () => {
+    computeEmbeddingMock.mockResolvedValue([1, 0]);
+    fetchClassificationAnchorsMock.mockResolvedValue([]);
+    const search = useImageSearchStore();
+
+    await search.search(makeFile());
+
+    expect(search.status).toBe('error');
+    expect(search.error).toBe('Search failed. Please try again later.');
+    expect(searchSimilarImagesMock).not.toHaveBeenCalled();
+  });
+
+  it('reset() 清掉上一輪的結果與狀態（換檔案時用）', async () => {
+    computeEmbeddingMock.mockResolvedValue([1, 0]);
+    fetchClassificationAnchorsMock.mockResolvedValue(passingAnchors);
+    searchSimilarImagesMock.mockResolvedValue([
+      makeResult('a', 'Retro & Nostalgia', weakMatchThreshold - 0.2)
+    ]);
+    const search = useImageSearchStore();
+    await search.search(makeFile());
+    expect(search.status).toBe('success');
+
+    search.reset();
+
+    expect(search.status).toBe('idle');
+    expect(search.results).toEqual([]);
+    expect(search.error).toBeNull();
+    expect(search.weakMatch).toBe(false);
+  });
+
   it('連續呼叫兩次 search，第二次在第一次還在 searching 時會被擋下（重入防呆）', async () => {
     computeEmbeddingMock.mockResolvedValue([1, 0]);
     fetchClassificationAnchorsMock.mockResolvedValue(passingAnchors);

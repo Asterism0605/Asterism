@@ -19,12 +19,14 @@ vi.mock('@/stores/clipModel.store', () => ({
 }));
 
 const searchMock = vi.fn();
+const resetMock = vi.fn();
 const imageSearchState = reactive({
   status: 'idle' as 'idle' | 'searching' | 'success' | 'no-match' | 'error',
   results: [] as { id: string; src: string; alt: string; styleGroup: string; similarity: number }[],
   error: null as string | null,
   weakMatch: false,
-  search: searchMock
+  search: searchMock,
+  reset: resetMock
 });
 vi.mock('@/stores/imageSearch.store', () => ({
   useImageSearchStore: () => imageSearchState
@@ -147,6 +149,29 @@ describe('ImageSearch.vue', () => {
 
     expect(wrapper.find('[data-testid="search-spinner"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="search-button"]').attributes('disabled')).toBeDefined();
+  });
+
+  it('搜尋中檔案選擇器 disabled，不能中途換檔', async () => {
+    clipModelState.status = 'ready';
+    imageSearchState.status = 'searching';
+    const wrapper = await mountImageSearch();
+
+    expect(
+      wrapper.find('[data-testid="image-file-input"]').attributes('disabled')
+    ).toBeDefined();
+  });
+
+  it('換檔案時呼叫 reset() 清掉上一輪搜尋結果', async () => {
+    clipModelState.status = 'ready';
+    imageSearchState.status = 'success';
+    imageSearchState.results = [
+      { id: 'a', src: 'u1', alt: 'A', styleGroup: 'Retro & Nostalgia', similarity: 0.92 }
+    ];
+    const wrapper = await mountImageSearch();
+
+    await selectFile(wrapper);
+
+    expect(resetMock).toHaveBeenCalled();
   });
 
   it('搜尋失敗顯示錯誤訊息', async () => {

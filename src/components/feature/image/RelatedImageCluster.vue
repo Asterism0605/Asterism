@@ -2,24 +2,28 @@
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
-defineProps<{
+const props = defineProps<{
   images: ImageSpreadNode[];
   getImageLabel?: (image: ImageSpreadNode) => string | undefined;
+  // 卡片定位可由呼叫端覆寫（以圖搜圖頁 host 較窄需要不同版位）；
+  // 預設值維持探索頁原本的排法，不傳就是原行為。
+  positions?: string[];
 }>();
 
 const emit = defineEmits<{
   select: [image: ImageSpreadNode];
 }>();
 
-const desktopPositions = [
-  'lg:left-[5%] lg:top-[0.8%] lg:z-30',
-  'lg:left-[7%] lg:bottom-[3%] lg:z-20',
-  'lg:right-[5%] lg:top-[5%] lg:z-30',
-  'lg:right-[7%] lg:bottom-[4%] lg:z-20'
+const defaultPositions = [
+  'lg:left-[10%] lg:top-[0.8%] lg:z-30',
+  'lg:left-[14%] lg:bottom-[3%] lg:z-20',
+  'lg:right-[8%] lg:top-[8%] lg:z-30',
+  'lg:right-[14%] lg:bottom-[5%] lg:z-20'
 ];
 
 function getPositionClass(index: number) {
-  return desktopPositions[index] ?? desktopPositions[0];
+  const positions = props.positions ?? defaultPositions;
+  return positions[index] ?? positions[0];
 }
 </script>
 

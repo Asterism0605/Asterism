@@ -75,29 +75,62 @@ function handleResultSelect(node: ImageSpreadNode) {
   });
 }
 
+// 換檔案時清掉上一輪搜尋結果（否則預覽換新圖、衛星卡片還是舊圖的結果）；
+// 搜尋中檔案選擇器整個 disable（見 template），不用處理中途換檔的 race。
 function handleFileChange(event: Event) {
   const input = event.target as HTMLInputElement;
   setFile(input.files?.[0] ?? null);
+  search.reset();
 }
 
 function handleSearch() {
   if (!selectedFile.value) return;
   void search.search(selectedFile.value);
 }
+
+const isSearching = computed(() => search.status === 'searching');
+
+// 這頁左邊固定占了 420px 側欄、結果容器比探索頁窄，卡片要比探索頁的預設版位
+// 更靠外緣才不會壓到中央預覽圖；用 prop 覆寫、不動共用元件的預設值，
+// 避免牽動探索頁既有版面（PR #202 review 意見）。
+const resultCardPositions = [
+  'lg:left-[5%] lg:top-[0.8%] lg:z-30',
+  'lg:left-[7%] lg:bottom-[3%] lg:z-20',
+  'lg:right-[5%] lg:top-[5%] lg:z-30',
+  'lg:right-[7%] lg:bottom-[4%] lg:z-20'
+];
+
+// ---- template 版面設計決策（放 script 註解，不放 template——HTML 註解在 dev 模式
+// 會進 DOM，reviewer 會在 DevTools 看到一大段中文設計說明（PR #202 review 意見）。----
+//
+// main 高度：AppHeader 是 fixed 定位，main 從視窗頂端起算，高度要用滿版 100vh——
+// 用 100vh-header 會讓整頁比視窗短一截，底部露出 body 背景（PR #202 review 意見）。
+//
+// lg 以上左右分欄：左欄標題/控制項、右欄探索頁式結果版面，選完圖按搜尋後結果跟
+// 控制項同屏出現，不用往下滑。小螢幕維持上下堆疊，直向捲動在手機上是常態。
+//
+// 右欄刻意用滿高度（lg:h-full）：RelatedImageCluster 的卡片用 top-X%/bottom-X% 這種
+// 相對容器「高度」的百分比定位，容器不夠高的話同側兩張卡片的百分比差距換算成實際
+// 像素會太小、擠在一起重疊——這正是之前只加寬、沒加高，重疊問題還在的原因。
+//
+// 浮動群集斷點跟探索頁一樣用 lg（≥1024px）。卡片寬度用 vw 算、假設 host 接近整個
+// 視窗寬，但這頁左邊固定占了側欄、host 比探索頁窄，窄寬度（~1024-1366px）時卡片跟
+// 中央預覽圖邊角會有一點點交疊；靠預覽圖那層的 z-20（高於卡片群 z-10）保底，交疊時
+// 一律是預覽圖蓋在卡片上面，看起來像故意的堆疊效果，不是版面錯位。
+//
+// 中央預覽的全寬透明 wrapper 要 pointer-events-none 放行滑鼠事件（它疊在 z-10 的
+// 結果卡片上，不放行的話卡片點不到、詳情頁導航失效），預覽圖本體再開回 auto，
+// 讓被預覽圖蓋住的卡片角維持不可點、跟視覺一致。
 </script>
 
 <template>
-  <main class="relative min-h-[calc(100vh-var(--app-header-height))] overflow-x-hidden bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:69px] lg:h-[calc(100vh-var(--app-header-height))] lg:overflow-hidden">
+  <main class="relative min-h-screen overflow-x-hidden bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:69px] lg:h-screen lg:overflow-hidden">
     <ImageSpreadEntrance
       kind="wash"
       class="pointer-events-none absolute inset-0 z-0 image-search__wash"
       aria-hidden="true"
     />
 
-    <!-- lg 以上改左右分欄：左邊放標題／控制項，右邊放搜尋結果的探索頁式版面。
-         這樣選完圖按搜尋後，結果會跟控制項同時出現在第一屏，不用再往下滑——
-         結果版面本身需要的高度（見下方 RelatedImageCluster 註解）留給右欄用滿高度處理。
-         小螢幕維持原本上下堆疊，直向捲動在手機上本來就是常態，不特別處理。 -->
     <div class="relative z-10 flex h-full flex-col lg:flex-row lg:items-stretch">
       <div class="w-full shrink-0 px-6 py-10 md:py-14 lg:flex lg:h-full lg:w-[420px] lg:flex-col lg:justify-center lg:overflow-hidden lg:pt-16 lg:pb-10 lg:pl-16 lg:pr-6">
         <ImageSpreadEntrance kind="page">
@@ -164,7 +197,10 @@ function handleSearch() {
           <label
             for="image-file-input"
             class="image-search-dropzone"
-            :class="{ 'image-search-dropzone--filled': selectedFile }"
+            :class="{
+              'image-search-dropzone--filled': selectedFile,
+              'pointer-events-none opacity-60': isSearching
+            }"
           >
             <ImageUp class="image-search-dropzone__icon" aria-hidden="true" />
             <span class="image-search-dropzone__text">
@@ -178,6 +214,7 @@ function handleSearch() {
             type="file"
             class="sr-only"
             :accept="acceptedFileTypes"
+            :disabled="isSearching"
             @change="handleFileChange"
           />
           <Button
@@ -197,17 +234,6 @@ function handleSearch() {
         </ImageSpreadEntrance>
       </div>
 
-      <!-- 探索頁式版面：中心是使用者上傳的圖，四張衛星卡片是搜尋結果。
-           右欄刻意用滿高度（lg:h-full，父層已是 lg:h-[100vh-header]）：
-           RelatedImageCluster 的四張卡片是用 top-X%/bottom-X% 這種相對容器「高度」
-           的百分比定位，容器不夠高的話同一側的兩張卡片百分比差距換算成實際像素會太
-           小，擠在一起重疊——這正是之前只加寬、沒加高，重疊問題還在的原因。
-           浮動群集斷點跟探索頁一樣用 lg（≥1024px），視覺上盡量比照探索頁的間距/展開
-           程度。RelatedImageCluster 的卡片寬度是用 vw 算的，假設 host 接近整個視窗寬——
-           這頁左邊固定占了側欄，host 比探索頁窄，窄寬度（~1024-1366px）時卡片跟中間
-           預覽圖的邊角會有一點點交疊；這裡靠預覽圖那層的 z-20（比卡片群的 z-10 高）
-           保底，交疊時一律是預覽圖蓋在卡片上面，不會反過來蓋住預覽圖，實際看起來
-           像故意的堆疊效果，不是版面錯位。 -->
       <div v-if="isFullyReady && previewUrl" class="relative flex-1 lg:h-full">
         <div class="relative z-10 mx-auto flex h-full w-full max-w-[1400px] flex-col items-center justify-center gap-6 px-6 pb-10 lg:pb-6">
           <div class="relative z-10 flex w-full flex-1 items-center justify-center">
@@ -216,12 +242,10 @@ function handleSearch() {
               class="hidden lg:block"
               :images="search.results.map(toSpreadNode)"
               :get-image-label="getResultLabel"
+              :positions="resultCardPositions"
               @select="handleResultSelect"
             />
 
-            <!-- pointer-events-none：這層是全寬透明容器、又疊在 z-10 的結果卡片上，
-                 不放行的話卡片會被透明區域擋住點不到（詳情頁導航整個失效）。
-                 預覽圖本體再開回 auto，讓「視覺上被預覽圖蓋住的卡片角」維持不可點，跟看到的一致。 -->
             <div class="pointer-events-none relative z-20 flex w-full justify-center">
               <ConstellationBackground
                 active

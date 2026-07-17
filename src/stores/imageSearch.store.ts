@@ -44,6 +44,14 @@ export const useImageSearchStore = defineStore('image-search', () => {
         gateAnchors.value ?? fetchClassificationAnchors('gate'),
         styleAnchors.value ?? fetchClassificationAnchors('styleGroup')
       ]);
+
+      // 錨點空陣列代表 DB 沒資料（部署漏跑 anchor 腳本之類的設定問題），要走 error
+      // 讓人知道壞了；不能放行到 domainGateScore——Math.max(...[]) 是 -Infinity，
+      // 會把所有查詢誤判成 no-match，看起來像「圖庫沒有像的圖」而不是系統故障。
+      if (anchors.length === 0 || styleAnchorList.length === 0) {
+        throw new Error('classification anchors unavailable');
+      }
+
       gateAnchors.value = anchors;
       styleAnchors.value = styleAnchorList;
 
@@ -74,5 +82,15 @@ export const useImageSearchStore = defineStore('image-search', () => {
     }
   }
 
-  return { status, results, error, weakMatch, search };
+  // 使用者換了上傳檔案時清掉上一輪的結果——不清的話中央預覽已換成新圖、
+  // 衛星卡片還是舊圖的搜尋結果，看起來像新圖的結果，會誤導。
+  function reset() {
+    if (status.value === 'searching') return;
+    status.value = 'idle';
+    results.value = [];
+    error.value = null;
+    weakMatch.value = false;
+  }
+
+  return { status, results, error, weakMatch, search, reset };
 });
