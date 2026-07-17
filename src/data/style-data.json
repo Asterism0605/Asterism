@@ -7237,5 +7237,104 @@
         "#55502C"
       ],
     "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-design-living-dining-space-501",
+    "url": "/style-image/y2k-interior-design-living-dining-space-501.webp",
+    "title": "Y2K粉彩客餐廳空間",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#D4C5C2",
+      "#B0B8C8",
+      "#D8A8B8"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "street-interior-bedroom-501",
+    "url": "/style-image/street-interior-design-bedroom-501.webp",
+    "title": "街頭風格臥室空間",
+    "styleGroup": "Street Style & Urban Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#1A1C1E",
+      "#5C5E60",
+      "#C8A882"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rom-interior-design-living-dining-space-501",
+    "url": "/style-image/rom-interior-design-living-dining-space-501.webp",
+    "title": "浪漫風格燈光設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#2C1810",
+      "#D4A574",
+      "#F5E6D3"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-outfit-accessory-501",
+    "url": "/style-image/msm-outfit-accessoryfocus-501.webp",
+    "title": "極簡風格配件細節",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory",
+    "colorPalette": [
+      "#F0EDE8",
+      "#2F2F2F",
+      "#9C8B72"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "experimental-architecture-entrance-501",
+    "url": "/style-image/experimental-architecture-entrance-501.webp",
+    "title": "實驗性建築入口空間",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#0B0E1A",
+      "#3D7EBF",
+      "#D6DCE4"
+    ],
+    "attribution": "Asterism"
   }
 ]
