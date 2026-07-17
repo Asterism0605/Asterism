@@ -214,6 +214,19 @@
     border-radius: 16px;
   }
 
+  .asterism-tour-popover:not(.asterism-tour-popover--centered) {
+    /* 強制在小螢幕下左右預留 16px 間距，避免貼邊 */
+    left: 16px !important;
+    right: 16px !important;
+    width: auto !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+
+  /* 小螢幕下隱藏箭頭，避免因 popover 強制拉回而導致箭頭指向偏差 */
+  .asterism-tour-popover:not(.asterism-tour-popover--centered) .driver-popover-arrow {
+    display: none !important;
+  }
+
   .asterism-tour-popover .driver-popover-title {
     font-size: 1.25rem;
   }
