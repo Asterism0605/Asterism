@@ -166,7 +166,7 @@
 }
 
 .driver-active [data-tour-header] {
-  z-index: 1000;
+  z-index: 903;
 }
 
 .driver-active [data-tour-interactive],
@@ -180,7 +180,7 @@
 }
 
 .tour-pause-modal {
-  z-index: 1000000005;
+  z-index: 904;
   pointer-events: auto;
 }
 

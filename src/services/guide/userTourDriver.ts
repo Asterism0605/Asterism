@@ -4,6 +4,9 @@ import 'driver.js/dist/driver.css';
 import '@/styles/user-tour.css';
 import UserTourActions from '@/components/feature/guide/UserTourActions.vue';
 
+const TOUR_OVERLAY_Z_INDEX = '900';
+const TOUR_POPOVER_Z_INDEX = '902';
+
 export interface UserTourPresentation {
   target: string | Element | (() => Element | null);
   title: string;
@@ -80,8 +83,7 @@ export function createUserTourDriver() {
 
   function mountPopoverActions(popover: PopoverDOM, step: UserTourPresentation): void {
     unmountActions();
-
-    popover.wrapper.style.zIndex = '1000000003';
+    popover.wrapper.style.zIndex = TOUR_POPOVER_Z_INDEX;
 
     const meta = document.createElement('div');
     meta.className = 'asterism-tour-popover__meta';
@@ -134,6 +136,12 @@ export function createUserTourDriver() {
         showButtons: [],
         onPopoverRender: (popover) => mountPopoverActions(popover, step)
       }
+    });
+    requestAnimationFrame(() => {
+      document.querySelector<SVGElement>('.driver-overlay')?.style.setProperty(
+        'z-index',
+        TOUR_OVERLAY_Z_INDEX
+      );
     });
     trackTargetMotion(target);
 

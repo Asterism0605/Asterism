@@ -38,6 +38,16 @@ describe('useWelcomeTour', () => {
     expect(localStorage.getItem('asterism:tour:welcome:user-a')).toBe('handled');
   });
 
+  it('does not assign anonymous handled state to the next authenticated user', () => {
+    localStorage.setItem('asterism:tour:welcome', 'handled');
+
+    const authenticatedTour = useWelcomeTour('user-a');
+
+    expect(authenticatedTour.isHandled.value).toBe(false);
+    expect(localStorage.getItem('asterism:tour:welcome')).toBe('handled');
+    expect(localStorage.getItem('asterism:tour:welcome:user-a')).toBeNull();
+  });
+
   it('keeps the current session usable when storage access fails', () => {
     vi.spyOn(localStorage, 'getItem').mockImplementation(() => {
       throw new Error('Storage unavailable');

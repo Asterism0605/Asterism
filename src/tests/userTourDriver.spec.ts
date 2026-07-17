@@ -28,8 +28,13 @@ describe('createUserTourDriver', () => {
       })
     ).toBe(true);
 
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
     const popover = document.querySelector('.asterism-tour-popover');
+    const overlay = document.querySelector<SVGElement>('.driver-overlay');
     expect(popover).not.toBeNull();
+    expect(overlay).not.toBeNull();
+    expect(window.getComputedStyle(overlay as SVGElement).zIndex).toBe('900');
+    expect(window.getComputedStyle(popover as Element).zIndex).toBe('902');
     expect(popover?.querySelector('.driver-popover-arrow')).not.toBeNull();
     expect(popover?.textContent).toContain('1 / 3');
     expect(popover?.textContent).toContain('首頁導覽');

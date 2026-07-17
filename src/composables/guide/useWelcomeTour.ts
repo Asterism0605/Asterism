@@ -14,18 +14,7 @@ function readHandled(userId?: string | null): boolean {
 
   try {
     const key = getStorageKey(userId);
-    if (window.localStorage.getItem(key) === WELCOME_TOUR_HANDLED_VALUE) return true;
-
-    if (
-      userId &&
-      window.localStorage.getItem(WELCOME_TOUR_STORAGE_KEY) === WELCOME_TOUR_HANDLED_VALUE
-    ) {
-      window.localStorage.setItem(key, WELCOME_TOUR_HANDLED_VALUE);
-      window.localStorage.removeItem(WELCOME_TOUR_STORAGE_KEY);
-      return true;
-    }
-
-    return false;
+    return window.localStorage.getItem(key) === WELCOME_TOUR_HANDLED_VALUE;
   } catch {
     return false;
   }
