@@ -446,10 +446,13 @@ describe('Home', () => {
     await flushPromises();
 
     expect(localStorage.getItem('asterism:tour:welcome:user-1')).toBe('handled');
-    expect(floatingNetwork.props('guideTargetIndex')).toBe(HOME_HERO_IMAGE_INDEX);
+    expect(floatingNetwork.props('guideTargetIndex')).toBeUndefined();
     expect(wrapper.find('[data-test="home-image-click-guide"]').exists()).toBe(false);
     expect(localStorage.getItem('asterism:tour:core:user-1')).toContain('home-overview');
     expect(document.querySelector('.asterism-tour-popover')).not.toBeNull();
+
+    document.querySelector<HTMLButtonElement>('[data-testid="user-tour-next"]')?.click();
+    await flushPromises();
 
     const firstPopover = document.querySelector('.asterism-tour-popover');
     floatingNetwork.vm.$emit('guideTargetReady');

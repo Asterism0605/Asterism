@@ -13,13 +13,13 @@ describe('useUserTour', () => {
     const tour = useUserTour('user-a');
 
     tour.start('image-42');
-    tour.advance('spread-center');
+    tour.advance('spread-related-group');
     tour.pause();
 
     expect(tour.state.value).toMatchObject({
       enabled: true,
       status: 'paused',
-      step: 'spread-center',
+      step: 'spread-related-group',
       targetImageId: 'image-42'
     });
 
@@ -27,7 +27,7 @@ describe('useUserTour', () => {
     restored.resume();
 
     expect(restored.state.value.status).toBe('active');
-    expect(restored.state.value.step).toBe('spread-center');
+    expect(restored.state.value.step).toBe('spread-related-group');
     expect(useUserTour('user-b').state.value.status).toBe('idle');
   });
 

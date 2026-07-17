@@ -4,10 +4,10 @@ import Button from '@/components/ui/Button.vue';
 import UserTourActions from '@/components/feature/guide/UserTourActions.vue';
 
 describe('UserTourActions', () => {
-  it('uses shared Button variants and emits pause and next actions', async () => {
+  it('uses shared Button variants and emits previous and next actions', async () => {
     const wrapper = mount(UserTourActions, {
       props: {
-        pauseLabel: '暫停',
+        previousLabel: '上一步',
         nextLabel: '下一步'
       }
     });
@@ -17,22 +17,22 @@ describe('UserTourActions', () => {
     expect(buttons[0].props('variant')).toBe('secondary');
     expect(buttons[1].props('variant')).toBe('primary');
 
-    await wrapper.get('[data-testid="user-tour-pause"]').trigger('click');
+    await wrapper.get('[data-testid="user-tour-previous"]').trigger('click');
     await wrapper.get('[data-testid="user-tour-next"]').trigger('click');
 
-    expect(wrapper.emitted('pause')).toHaveLength(1);
+    expect(wrapper.emitted('previous')).toHaveLength(1);
     expect(wrapper.emitted('next')).toHaveLength(1);
   });
 
-  it('renders pause only when the step advances by clicking its target', () => {
+  it('renders no previous button on the first step', () => {
     const wrapper = mount(UserTourActions, {
-      props: { pauseLabel: '暫停' }
+      props: { nextLabel: '下一步' }
     });
 
     const buttons = wrapper.findAllComponents(Button);
     expect(buttons).toHaveLength(1);
-    expect(buttons[0].props('variant')).toBe('secondary');
-    expect(wrapper.get('[data-testid="user-tour-pause"]').text()).toBe('暫停');
-    expect(wrapper.find('[data-testid="user-tour-next"]').exists()).toBe(false);
+    expect(buttons[0].props('variant')).toBe('primary');
+    expect(wrapper.find('[data-testid="user-tour-previous"]').exists()).toBe(false);
+    expect(wrapper.get('[data-testid="user-tour-next"]').text()).toBe('下一步');
   });
 });

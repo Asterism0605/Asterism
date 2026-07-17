@@ -120,6 +120,12 @@ describe('PictureDetail', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    document.body.innerHTML = ''
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 1024
+    })
   })
 
   it('本地圖（attribution=Asterism）顯示 Asterism 站徽當作者頭像', async () => {
@@ -185,6 +191,40 @@ describe('PictureDetail', () => {
     rects.mockRestore()
   })
 
+  it('skips the hidden thumbnail step on mobile and continues with style tags', async () => {
+    const originalInnerWidth = window.innerWidth
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 375
+    })
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-thumbnail', 'y2k-main-001')
+    const host = document.createElement('div')
+    document.body.append(host)
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-style-tag'
+    })
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 7')
+
+    wrapper.unmount()
+    host.remove()
+    rects.mockRestore()
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: originalInnerWidth
+    })
+  })
+
   it('continues from the desktop thumbnail through steps 7 and 8', async () => {
     const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
       new DOMRect(100, 100, 200, 300)
@@ -199,7 +239,7 @@ describe('PictureDetail', () => {
     const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
     await flushPromises()
 
-    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 8')
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('5 / 7')
     await wrapper.get('[data-test="image-stage-panel"]').trigger('click')
     await flushPromises()
 
@@ -207,12 +247,12 @@ describe('PictureDetail', () => {
       status: 'active',
       step: 'detail-style-tag'
     })
-    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('7 / 8')
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 7')
 
     await wrapper.get('[data-tour="detail-style-tag"] button').trigger('click')
     wrapper.findComponent(StyleTagModal).vm.$emit('update:modelValue', false)
     await flushPromises()
-    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('8 / 8')
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('7 / 7')
 
     wrapper.unmount()
     visibleThumbnailTarget.remove()
