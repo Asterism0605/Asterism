@@ -25,6 +25,7 @@ const hasTriggeredLimit = ref(false);
 const showGuestHint = ref(false);
 const inspirationImages = ref<HomeInspirationImage[]>([]);
 
+const imageSearchEntryIcon = '/images/image-search-entry.webp';
 const HOME_DENSITY_PER_100VH = 3;
 const homePreferredStyles = computed(() =>
   styleDnaStore.hasCompletedQuiz ? styleDnaStore.preferredStyles : []
@@ -221,6 +222,15 @@ watch(homePreferredStyles, () => {
       </p>
     </Transition>
 
+    <router-link
+      :to="{ name: 'image-search' }"
+      class="image-search-entry hidden sm:block"
+      :aria-label="$t('imageSearch.title')"
+      :title="$t('imageSearch.title')"
+    >
+      <img :src="imageSearchEntryIcon" alt="" class="size-full" />
+    </router-link>
+
     <ModalOverlay
       v-model="isLimitModalOpen"
       max-width="590px"
@@ -245,7 +255,9 @@ watch(homePreferredStyles, () => {
         <Button variant="primary" data-testid="cta-create-account" @click="startStyleDnaSignUp">
           {{ $t('home.createAccount') }}
         </Button>
-        <Button variant="secondary" data-testid="cta-login" @click="goToLogin">{{ $t('home.login') }}</Button>
+        <Button variant="secondary" data-testid="cta-login" @click="goToLogin">{{
+          $t('home.login')
+        }}</Button>
       </template>
     </ModalOverlay>
   </main>
@@ -307,6 +319,35 @@ watch(homePreferredStyles, () => {
 .guest-hint-leave-from {
   opacity: 1;
   transform: translateX(-50%);
+}
+
+.image-search-entry {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 0.4);
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.image-search-entry:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 26px rgb(0 0 0 / 0.5);
+}
+
+@media (min-width: 640px) {
+  .image-search-entry {
+    right: 32px;
+    bottom: 32px;
+    width: 52px;
+    height: 52px;
+  }
 }
 
 .meteor-arrow {

@@ -273,6 +273,28 @@ export default {
     createAccount: 'Create Free Account',
     login: 'Log In'
   },
+  imageSearch: {
+    eyebrow: 'Style Navigator',
+    title: 'Style Star Map',
+    subtitle: 'Upload a photo to see where it lands on our aesthetic star map.',
+    downloadHint: 'First use requires downloading a ~150MB AI model — Wi-Fi recommended.',
+    downloading: 'Downloading… {progress}%',
+    finalizing: 'Finalizing, almost there…',
+    downloadModel: 'Download Model',
+    retryDownload: 'Retry Download',
+    chooseFile: 'Choose Photo',
+    chooseFileHint: 'JPG, PNG, or WebP — up to 10MB',
+    noFileChosen: 'No file chosen',
+    search: 'Search',
+    searching: 'Searching…',
+    uploadedAlt: 'Your uploaded photo',
+    yourPhoto: 'Your Photo',
+    noMatch: 'No sufficiently similar style found. Try a photo of an outfit, interior space, building exterior, or graphic design piece instead.',
+    invalidFileType: 'Please upload a JPG, PNG, or WebP image.',
+    fileTooLarge: 'Image must be under 10MB.',
+    modelDownloadFailed: 'Model download failed. Please check your connection and try again.',
+    searchFailed: 'Search failed. Please try again later.'
+  },
   playground: {
     eyebrow: 'Component Playground',
     title: 'Asterism overlay and constellation effects',

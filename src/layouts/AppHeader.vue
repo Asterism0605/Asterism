@@ -35,6 +35,7 @@ onMounted(() => document.addEventListener('click', handleLangClickOutside, true)
 onUnmounted(() => document.removeEventListener('click', handleLangClickOutside, true));
 
 const siteLogoSrc = SITE_LOGO_SRC;
+const imageSearchEntryIcon = '/images/image-search-entry.webp';
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
@@ -44,6 +45,7 @@ const styleTagModalStore = useStyleTagModalStore();
 const isPictureDetail = computed(
   () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
 );
+const isHome = computed(() => route.name === 'home');
 // PictureDetail 平常把 AppHeader 縮到 60% 寬，讓頁面自己的「返回」列並排在右側 40%；
 // 但 StyleTagModal 開著時那塊區域會被 modal 蓋住（見 StyleTagModal 的 z-index 說明），
 // 縮寬就只剩右邊空一塊黑，不好看——modal 開著時 AppHeader 改滿版，蓋滿整排。
@@ -164,4 +166,14 @@ async function handleLogout() {
       />
     </div>
   </header>
+
+  <router-link
+    v-if="isHome"
+    :to="{ name: 'image-search' }"
+    class="fixed bottom-4 right-4 z-50 size-9 shrink-0 overflow-hidden rounded-full shadow-lg sm:hidden"
+    :aria-label="$t('imageSearch.title')"
+    :title="$t('imageSearch.title')"
+  >
+    <img :src="imageSearchEntryIcon" alt="" class="size-full" />
+  </router-link>
 </template>

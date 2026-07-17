@@ -13,6 +13,7 @@ const footerlessRouteNames = new Set([
   'discover-dna',
   'moodboard',
   'image-spread',
+  'image-search',
   'picture-detail',
   'style-dna',
   'style-dna-result',

@@ -131,7 +131,7 @@ describe('AppHeader', () => {
 
     await wrapper.get('header button[aria-haspopup="menu"]').trigger('click');
 
-    expect(wrapper.get('header').classes()).toContain('z-60');
+    expect(wrapper.get('header').classes()).toContain('z-[110]');
     expect(wrapper.get('[data-testid="home-tour-intro"]').classes()).toContain('z-50');
     expect(wrapper.get('header ul[role="menu"]').isVisible()).toBe(true);
   });

@@ -101,6 +101,7 @@ function createTestRouter() {
       },
       { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
       { path: '/login', name: 'login', component: { template: '<div />' } },
+      { path: '/search-by-image', name: 'image-search', component: { template: '<div />' } },
       { path: '/privacy', name: 'privacy', component: { template: '<div />' } },
       { path: '/terms', name: 'terms', component: { template: '<div />' } }
     ]

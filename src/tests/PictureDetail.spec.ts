@@ -25,9 +25,11 @@ vi.mock('@/composables/useToast', () => ({
 
 vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
   default: {
-    emits: ['select'],
+    emits: ['select', 'back'],
     template:
-      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'ftdp-graphic-poster-001\')" />'
+      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'ftdp-graphic-poster-001\')">' +
+      '<div data-test="image-stage-back" @click.stop="$emit(\'back\')" />' +
+      '</div>'
   }
 }))
 
@@ -64,6 +66,7 @@ async function mountPictureDetail(
     routes: [
       { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
       { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
+      { path: '/search-by-image', name: 'image-search', component: { template: '<div />' } },
       { path: '/consultant', name: 'consultant', component: { template: '<div />' } },
       { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
       { path: '/login', name: 'login', component: { template: '<div />' } },
@@ -247,6 +250,17 @@ describe('PictureDetail', () => {
     expect(localStorage.getItem('asterism:pending-moodboard-action')).toBeNull()
   })
 
+  it('點 stage 面板空白區（背景）觸發返回，跟右側返回鍵同一套邏輯', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-001');
+
+    await wrapper.find('[data-test="image-stage-back"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('rpl-interior-001');
+    expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
+  });
+
   it('導向選取的 stage 圖片詳情頁', async () => {
     const { router, wrapper } = await mountPictureDetail()
 
@@ -319,6 +333,69 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.params.imageId).toBe('rpl-interior-001')
     expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001')
   })
+
+  it('從以圖搜圖頁進來的詳情頁，返回鍵回以圖搜圖頁而不是探索頁', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-001?from=image-search')
+
+    await wrapper.find('button').trigger('click')
+    await flushPromises()
+
+    expect(router.currentRoute.value.name).toBe('image-search')
+  })
+
+  it('重開 SAVE TO NEW FOLDER modal 後 input 不再 disabled', async () => {
+    vi.useFakeTimers();
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
+        {
+          path: '/images/:imageId/spread',
+          name: 'image-spread',
+          component: { template: '<div />' }
+        },
+        { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
+      ]
+    });
+    await router.push('/images/y2k-main-001');
+    await router.isReady();
+
+    const wrapper = mount(PictureDetail, {
+      attachTo: document.body,
+      global: { plugins: [router] }
+    });
+
+    try {
+      const findBtn = (text: string) =>
+        wrapper.findAll('button').find((b) => b.text().includes(text))!;
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      const input = document.querySelector('input') as HTMLInputElement;
+      input.value = 'My Folder';
+      input.dispatchEvent(new Event('input'));
+      await flushPromises();
+
+      const sendBtn = Array.from(document.querySelectorAll('button')).find((b) =>
+        b.textContent?.includes('SEND')
+      ) as HTMLButtonElement;
+      sendBtn.click();
+      await flushPromises();
+      vi.advanceTimersByTime(800);
+      await flushPromises();
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      expect((document.querySelector('input') as HTMLInputElement).disabled).toBe(false);
+    } finally {
+      wrapper.unmount();
+      document.body.innerHTML = '';
+    }
+  });
 
   it('有符合目前圖片的 spread path context 時返回原本路徑上的 spread target', async () => {
     const { router, wrapper } = await mountPictureDetail(

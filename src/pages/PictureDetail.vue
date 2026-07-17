@@ -104,6 +104,11 @@ function getSpreadPathContext() {
 }
 
 function handleBack() {
+  if (route.query.from === 'image-search') {
+    router.push({ name: 'image-search' });
+    return;
+  }
+
   if (!currentImage.value) {
     router.back();
     return;

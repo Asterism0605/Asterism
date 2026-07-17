@@ -55,4 +55,32 @@ describe('ImageStagePanel', () => {
 
     expect(wrapper.emitted('back')).toHaveLength(3);
   });
+
+  it('點圖片以外的空白區觸發 back，不會誤觸 select', async () => {
+    const wrapper = mount(ImageStagePanel, {
+      props: { mainImageUrl: '/main.webp', smallImages },
+      global: {
+        stubs: { ConstellationBackground: true }
+      }
+    });
+
+    await wrapper.find('[role="button"]').trigger('click');
+
+    expect(wrapper.emitted('back')).toHaveLength(1);
+    expect(wrapper.emitted('select')).toBeUndefined();
+  });
+
+  it('點主圖或衛星圖片按鈕不會誤觸 back', async () => {
+    const wrapper = mount(ImageStagePanel, {
+      props: { mainImageUrl: '/main.webp', smallImages },
+      global: {
+        stubs: { ConstellationBackground: true }
+      }
+    });
+
+    await wrapper.find('img[alt=""]').trigger('click');
+    await wrapper.findAll('button')[0].trigger('click');
+
+    expect(wrapper.emitted('back')).toBeUndefined();
+  });
 });

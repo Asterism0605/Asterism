@@ -267,6 +267,28 @@ export default {
     createAccount: '建立免費帳號',
     login: '登入'
   },
+  imageSearch: {
+    eyebrow: '風格導航',
+    title: '風格星圖',
+    subtitle: '上傳一張圖片，看看它落在美學星圖的哪個位置。',
+    downloadHint: '首次使用需下載約 150MB 的 AI 模型，建議 Wi-Fi 環境下使用。',
+    downloading: '下載中… {progress}%',
+    finalizing: '準備中，快好了…',
+    downloadModel: '下載模型',
+    retryDownload: '重試下載',
+    chooseFile: '選擇照片',
+    chooseFileHint: '支援 JPG、PNG、WebP，最大 10MB',
+    noFileChosen: '尚未選擇檔案',
+    search: '開始搜尋',
+    searching: '搜尋中…',
+    uploadedAlt: '你上傳的圖片',
+    yourPhoto: '你的照片',
+    noMatch: '目前圖庫沒有找到夠相似的風格圖。建議上傳穿搭、室內空間、建築外觀或平面設計類的照片，換一張再試試。',
+    invalidFileType: '請上傳 JPG、PNG 或 WebP 格式的圖片。',
+    fileTooLarge: '圖片大小請勿超過 10MB。',
+    modelDownloadFailed: '模型下載失敗，請檢查網路連線後重試。',
+    searchFailed: '搜尋失敗，請稍後再試。'
+  },
   playground: {
     eyebrow: '元件展示區',
     title: 'Asterism 浮層與星座特效',
