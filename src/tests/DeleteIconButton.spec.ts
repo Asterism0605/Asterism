@@ -29,4 +29,19 @@ describe('DeleteIconButton', () => {
     expect(wrapper.findComponent(DeleteIconButton).emitted('delete')).toHaveLength(1);
     expect(outerClick).not.toHaveBeenCalled();
   });
+
+  it('按下刪除按鈕時不會讓外層開始處理拖曳', async () => {
+    const outerPointerDown = vi.fn();
+    const wrapper = mount({
+      components: { DeleteIconButton },
+      setup() {
+        return { outerPointerDown };
+      },
+      template: '<div @pointerdown="outerPointerDown"><DeleteIconButton /></div>'
+    });
+
+    await wrapper.get('button').trigger('pointerdown');
+
+    expect(outerPointerDown).not.toHaveBeenCalled();
+  });
 });

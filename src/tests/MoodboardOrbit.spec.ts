@@ -359,6 +359,98 @@ describe('MoodboardOrbit', () => {
       const populatedFolder = wrapper.get('[data-testid="moodboard-folder-0"]');
       expect(populatedFolder.get('img').attributes('style')).not.toContain('grayscale(1)');
     });
+
+    it('previews an orbit folder on hover without snapping the folder away from the pointer', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      const folder = wrapper.get('[data-testid="moodboard-folder-0"]');
+      const element = folder.element as HTMLElement;
+      const initialPosition = { left: element.style.left, top: element.style.top };
+
+      await folder.trigger('mouseenter');
+      await flushPromises();
+
+      expect(element.style.left).toBe(initialPosition.left);
+      expect(element.style.top).toBe(initialPosition.top);
+      expect(folder.get('img').attributes('src')).toBe('/images/folder-active.png');
+    });
+
+    it('keeps a folder click on the folder when the pointer was not dragged', async () => {
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+      const scale = window.innerWidth / 1440;
+      const stage = wrapper.get('[data-testid="moodboard-stage-desktop"]');
+      const setPointerCapture = vi.fn();
+      Object.defineProperty(stage.element, 'setPointerCapture', {
+        configurable: true,
+        value: setPointerCapture
+      });
+      const pointerDown = new Event('pointerdown', { bubbles: true, cancelable: true });
+      Object.defineProperties(pointerDown, {
+        pointerId: { value: 6 },
+        clientX: { value: 980 * scale },
+        clientY: { value: 50 * scale }
+      });
+      const pointerUp = new Event('pointerup', { bubbles: true });
+      Object.defineProperty(pointerUp, 'pointerId', { value: 6 });
+
+      stage.element.dispatchEvent(pointerDown);
+      stage.element.dispatchEvent(pointerUp);
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('click');
+      await flushPromises();
+
+      expect(setPointerCapture).not.toHaveBeenCalled();
+      expect(router.currentRoute.value.path).toBe('/moodboard/studio');
+    });
+
+    it('ignores orbit hover previews while the user is dragging the track', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await flushPromises();
+      const updateCount = updateSphereImages.mock.calls.length;
+      const scale = window.innerWidth / 1440;
+      const stage = wrapper.get('[data-testid="moodboard-stage-desktop"]');
+      const rectSpy = vi.spyOn(stage.element, 'getBoundingClientRect');
+      const setPointerCapture = vi.fn();
+      Object.defineProperty(stage.element, 'setPointerCapture', {
+        configurable: true,
+        value: setPointerCapture
+      });
+      const draggedFolder = wrapper.get('[data-testid="moodboard-folder-0"]');
+      const initialLeft = (draggedFolder.element as HTMLElement).style.left;
+      const pointerDown = new Event('pointerdown', { bubbles: true, cancelable: true });
+      Object.defineProperties(pointerDown, {
+        pointerId: { value: 7 },
+        clientX: { value: 980 * scale },
+        clientY: { value: 50 * scale }
+      });
+
+      stage.element.dispatchEvent(pointerDown);
+      await flushPromises();
+      const pointerMove = new Event('pointermove', { bubbles: true, cancelable: true });
+      Object.defineProperties(pointerMove, {
+        pointerId: { value: 7 },
+        clientX: { value: (980 + 500 * Math.cos((-80 * Math.PI) / 180)) * scale },
+        clientY: { value: (550 + 500 * Math.sin((-80 * Math.PI) / 180)) * scale }
+      });
+      stage.element.dispatchEvent(pointerMove);
+      await wrapper.get('[data-testid="moodboard-folder-1"]').trigger('mouseenter');
+      await flushPromises();
+
+      expect(updateSphereImages).toHaveBeenCalledTimes(updateCount);
+      expect(wrapper.find('[data-testid="moodboard-empty-folder-preview-cta"]').exists()).toBe(
+        false
+      );
+
+      const pointerUp = new Event('pointerup', { bubbles: true });
+      Object.defineProperty(pointerUp, 'pointerId', { value: 7 });
+      stage.element.dispatchEvent(pointerUp);
+      await flushPromises();
+
+      expect(rectSpy).toHaveBeenCalledOnce();
+      expect(setPointerCapture).toHaveBeenCalledWith(7);
+      expect((draggedFolder.element as HTMLElement).style.left).not.toBe(initialLeft);
+    });
   });
 
   describe('mobile home orbit placeholder photos', () => {

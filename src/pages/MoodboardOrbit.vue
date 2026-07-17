@@ -304,6 +304,7 @@ function previewFolder(index: number) {
 }
 
 function previewFolderById(folderId: string) {
+  if (dragging.value) return;
   const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
   if (index !== -1) previewFolder(index);
 }
@@ -315,7 +316,19 @@ function leaveFolder() {
 // deleteHoverIdx 獨立於 hoverFolder：空資料夾（0 張圖片）也要能 hover 顯示刪除 icon
 function onFolderMouseEnter(index: number) {
   deleteHoverIdx.value = index;
-  previewFolder(index);
+  if (dragging.value) return;
+
+  const folder = moodboardStore.folders[index];
+  if (!folder) return;
+
+  // 軌道圖示本身只切換預覽；若在 hover 時重新指定 orbitPhase，圖示會從游標下
+  // 瞬間跳到定位點，並在拖曳時和 pointermove 互相搶控制權。
+  if (!folder.images.length) {
+    hoverIdx.value = index;
+    previewingEmptyFolderId.value = folder.id;
+    return;
+  }
+  hoverFolder(index);
 }
 
 function onFolderMouseLeave() {
@@ -955,6 +968,7 @@ onBeforeUnmount(() => {
       <div
         v-else
         ref="deskStage"
+        data-testid="moodboard-stage-desktop"
         class="relative"
         :style="stageStyle"
         @pointerdown="onDragStart"
