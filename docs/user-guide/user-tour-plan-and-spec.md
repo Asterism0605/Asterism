@@ -169,7 +169,7 @@ interface UserTourState {
 
 ### 5.4 Phase 1 身份分流
 
-- 未登入使用者：維持現有 `src/components/feature/guide/` 的首頁圖片導覽。
+- 未登入使用者：維持現有首頁圖片導覽流程。
 - 已登入使用者：首次進入首頁時不自動啟動圖片導覽，先顯示首頁聚焦導覽；完成選擇後不再重複顯示。
 - `Start Tour`：離開聚焦狀態，並接續首頁指定圖片導覽。
 - `Explore on my own`：離開聚焦狀態，直接恢復首頁自由操作，不啟動後續導覽。
@@ -331,20 +331,29 @@ interface UserTourState {
 ### 7.1 元件組成
 
 ```txt
-src/components/feature/guide/
-├─ HomeImageClickGuide.vue
-├─ HomeTourIntro.vue
-├─ UserTourActions.vue
-├─ userTourDriver.ts
-├─ userTourSteps.ts
-├─ useHomeImageGuide.ts
-├─ useUserTour.ts
-├─ useUserTourPresenter.ts
-├─ user-tour.css
-└─ constants.ts
+src/
+├─ components/feature/guide/
+│  ├─ HomeImageClickGuide.vue
+│  ├─ HomeTourIntro.vue
+│  ├─ UserTourActions.vue
+│  └─ UserTourPauseModal.vue
+├─ composables/guide/
+│  ├─ useHomeImageGuide.ts
+│  ├─ useHomeTourFlow.ts
+│  ├─ usePageUserTour.ts
+│  ├─ useUserTour.ts
+│  ├─ useUserTourPresenter.ts
+│  └─ useWelcomeTour.ts
+├─ services/guide/
+│  ├─ userTourDriver.ts
+│  └─ userTourPause.ts
+├─ constants/
+│  └─ userTour.ts
+└─ styles/
+   └─ user-tour.css
 ```
 
-Phase 2 已出現第二個以上的跨頁 target 流程，但規模仍可維持既有 `guide` feature 邊界；以一個本機狀態 composable、Driver adapter 與步驟設定檔共用行為，不額外建立 Pinia Store、全域 `TourProvider`、Service 或 Portal。
+Phase 2 已出現第二個以上的跨頁 target 流程，依既有 type-based 架構分離元件、composable、service、constants 與樣式；導覽狀態仍維持頁面級，不額外建立 Pinia Store、全域 `TourProvider` 或 Portal。
 
 ### 7.2 Tooltip 必要元素
 
@@ -382,13 +391,12 @@ Phase 2 已出現第二個以上的跨頁 target 流程，但規模仍可維持�
 
 ```txt
 src/
-└─ components/feature/guide/
-   ├─ HomeImageClickGuide.vue
-   ├─ useHomeImageGuide.ts
-   └─ constants.ts
+├─ components/feature/guide/HomeImageClickGuide.vue
+├─ composables/guide/useHomeImageGuide.ts
+└─ constants/userTour.ts
 ```
 
-本期架構以現有專案為準：導覽元件、Driver adapter、頁面級 composable 與步驟設定集中在 `src/components/feature/guide/`。不為尚未實作的 Moodboard、顧問諮詢等流程預先建立 Store、Service 或額外型別層。
+本期架構以現有專案為準：導覽元件、頁面級 composable 與常數依責任放入既有的 type-based 目錄。不為尚未實作的 Moodboard、顧問諮詢等流程預先建立 Store 或額外型別層。
 
 ### 8.2 Target 規範
 

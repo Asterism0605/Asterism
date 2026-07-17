@@ -26,8 +26,8 @@
 
 | 檔案                                                                    | 動作 | 責任                                          |
 | ----------------------------------------------------------------------- | ---- | --------------------------------------------- |
-| `src/components/feature/guide/constants.ts`                             | 新增 | 單一儲存鍵與目標圖片索引常數。                |
-| `src/components/feature/guide/useHomeImageGuide.ts`                     | 新增 | 導覽狀態、安全 storage 與 fallback 目標選擇。 |
+| `src/constants/userTour.ts`                                             | 新增 | 單一儲存鍵與目標圖片索引常數。                |
+| `src/composables/guide/useHomeImageGuide.ts`                            | 新增 | 導覽狀態、安全 storage 與 fallback 目標選擇。 |
 | `src/components/feature/guide/HomeImageClickGuide.vue`                  | 新增 | 暗幕洞口、星軌、tooltip 與目標位置追蹤。      |
 | `src/components/sections/FloatingImageNetwork/FloatingImageNetwork.vue` | 修改 | 接收目標索引、標記並發亮該卡片。              |
 | `src/pages/Home.vue`                                                    | 修改 | 等待首頁資料渲染、串接 guide、保留既有導頁。  |
@@ -37,7 +37,7 @@
 
 ## 設計說明
 
-導覽是單一、獨立的首頁 feature，因此其元件、常數與 composable 收在 `src/components/feature/guide/`。導覽狀態仍是頁面級 UX 狀態，不使用 Pinia。視覺層獨立為元件，避免 `Home.vue` 同時持有 SVG、幾何定位與頁面導覽流程；圖片網路元件只知道「哪個索引是目標」並提供標記，不持有導覽儲存或路由邏輯。
+導覽依專案既有的 type-based 架構分層：元件放在 `src/components/feature/guide/`、composable 放在 `src/composables/guide/`、常數放在 `src/constants/`。導覽狀態仍是頁面級 UX 狀態，不使用 Pinia。視覺層獨立為元件，避免 `Home.vue` 同時持有 SVG、幾何定位與頁面導覽流程；圖片網路元件只知道「哪個索引是目標」並提供標記，不持有導覽儲存或路由邏輯。
 
 暗幕使用四片元素，而非一張攔截事件的全螢幕遮罩；目標圖片保持可見、可點，星軌預設不攔截操作。若 tooltip 未來加入關閉按鈕，tooltip 本身才需要 `pointer-events: auto`。
 
