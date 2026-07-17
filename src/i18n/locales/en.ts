@@ -260,8 +260,10 @@ export default {
   userTour: {
     progress: '{current} / {total}',
     actions: {
-      pause: 'Pause',
+      previous: 'Previous',
       next: 'Next',
+      close: 'Close tour',
+      resume: 'Resume tour',
       done: 'Done'
     },
     pauseConfirmation: {
@@ -270,11 +272,6 @@ export default {
         'After pausing, tours on other pages will not appear automatically. You can continue anytime from the tour entry in the top-right corner.',
       continue: 'Continue tour',
       confirm: 'Pause tour'
-    },
-    sections: {
-      home: 'Home Tour',
-      imageSpread: 'Image Spread Tour',
-      pictureDetail: 'Picture Detail Tour'
     },
     steps: {
       homeOverview: {
@@ -285,13 +282,9 @@ export default {
         title: 'Open an inspiration image',
         description: 'Select the highlighted image to see how its style extends across everyday settings.'
       },
-      spreadCenter: {
-        title: 'Your core inspiration',
-        description: 'This is the core inspiration you just selected.'
-      },
       spreadRelatedGroup: {
-        title: 'One style, different settings',
-        description: 'The surrounding images show how the same style extends into different areas of life.'
+        title: 'One style, across different areas of life',
+        description: 'These four mediums show how the same style appears across different areas of life.'
       },
       spreadRelatedImage: {
         title: 'Explore more deeply',

@@ -178,6 +178,7 @@ function handleRelatedSelect(image: ImageSpreadNode) {
     coreTour.state.value.status === 'active' &&
     coreTour.state.value.step === 'spread-related-image'
   ) {
+    coreTour.advance('spread-related-image', image.id)
     coreTour.destroy()
   }
 
@@ -186,6 +187,22 @@ function handleRelatedSelect(image: ImageSpreadNode) {
   spreadDepth.value = 1
   refreshRelatedImages(image.id)
   syncSpreadRoute(image.id)
+}
+
+function handlePreviousSpreadTourStep(): void {
+  const step = coreTour.state.value.step
+
+  if (step === 'spread-related-image') {
+    coreTour.advance('spread-related-group', coreTour.state.value.targetImageId)
+    void showCurrentSpreadTourStep()
+    return
+  }
+
+  if (step === 'spread-related-group') {
+    coreTour.advance('home-image', coreTour.state.value.targetImageId)
+    coreTour.destroy()
+    void router.push({ name: 'home' })
+  }
 }
 
 async function showCurrentSpreadTourStep() {
@@ -199,25 +216,16 @@ async function showCurrentSpreadTourStep() {
     return
   }
 
-  if (
-    step !== 'spread-center' &&
-    step !== 'spread-related-group' &&
-    step !== 'spread-related-image'
-  ) {
+  if (step === 'home-image' || step === 'home-overview') {
+    return
+  }
+
+  if (step !== 'spread-related-group' && step !== 'spread-related-image') {
     coreTour.pause()
     return
   }
 
-  if (
-    step === 'spread-center' &&
-    coreTour.state.value.targetImageId &&
-    coreTour.state.value.targetImageId !== routeImageId.value
-  ) {
-    coreTour.pause()
-    return
-  }
-
-  await coreTour.showStep(step)
+  await coreTour.showStep(step, { onPrevious: handlePreviousSpreadTourStep })
 }
 
 function handleCreateFolder() {
@@ -250,7 +258,7 @@ watch(
 )
 
 watch(
-  [centerImage, relatedImages, () => coreTour.state.value.step],
+  [centerImage, relatedImages, () => coreTour.state.value.status, () => coreTour.state.value.step],
   () => {
     void showCurrentSpreadTourStep()
   },
@@ -307,10 +315,7 @@ watch(
         />
       </div>
 
-      <div
-        class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden"
-        data-tour="spread-related-group"
-      >
+      <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
         <ImageSpreadEntrance
           v-for="(image, index) in relatedImages"
           :key="image.id"
@@ -331,6 +336,7 @@ watch(
           />
           <span
             v-if="getRelatedImageLabel(image)"
+            data-tour-medium-label
             class="absolute bottom-2 left-2 max-w-[calc(100%-1rem)] rounded-full bg-void/78 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-text-primary"
           >
             {{ getRelatedImageLabel(image) }}

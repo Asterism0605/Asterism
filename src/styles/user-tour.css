@@ -23,6 +23,25 @@
   overflow: visible;
 }
 
+.asterism-tour-popover.asterism-tour-popover--centered {
+  position: fixed !important;
+  inset: auto !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.asterism-tour-popover.asterism-tour-popover--centered .driver-popover-arrow {
+  display: none !important;
+}
+
+.asterism-tour-popover .asterism-tour-close-root {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+}
+
 .asterism-tour-popover .asterism-tour-popover__meta {
   display: flex;
   align-items: center;
@@ -32,6 +51,7 @@
   color: var(--color-text-secondary);
   font-size: 0.75rem;
   letter-spacing: 0.04em;
+  padding-right: 2.5rem;
 }
 
 .asterism-tour-popover .driver-popover-progress-text {

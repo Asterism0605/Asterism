@@ -255,8 +255,10 @@ export default {
   userTour: {
     progress: '{current} / {total}',
     actions: {
-      pause: '暫停',
+      previous: '上一步',
       next: '下一步',
+      close: '關閉導覽',
+      resume: '繼續導覽',
       done: '完成'
     },
     pauseConfirmation: {
@@ -265,11 +267,6 @@ export default {
         '暫停後，其他頁面的導覽也不會自動顯示。你可以隨時從右上角的導覽入口繼續。',
       continue: '繼續導覽',
       confirm: '暫停導覽'
-    },
-    sections: {
-      home: '首頁導覽',
-      imageSpread: '圖片延展導覽',
-      pictureDetail: '圖片詳情導覽'
     },
     steps: {
       homeOverview: {
@@ -280,13 +277,9 @@ export default {
         title: '展開一張靈感圖片',
         description: '點擊指定圖片，查看它在不同生活領域中的風格延伸。'
       },
-      spreadCenter: {
-        title: '核心靈感',
-        description: '這是你剛才選擇的核心靈感。'
-      },
       spreadRelatedGroup: {
-        title: '同一風格，不同生活領域',
-        description: '周圍圖片顯示相同風格在不同生活領域中的延伸。'
+        title: '同一風格，在不同生活領域的樣貌',
+        description: '這四種 Medium 展示相同風格在不同生活領域中的樣貌。'
       },
       spreadRelatedImage: {
         title: '繼續深入探索',

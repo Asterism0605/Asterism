@@ -8,6 +8,10 @@ import type { UserTourStep, useUserTour } from './useUserTour';
 type UserTourController = ReturnType<typeof useUserTour>;
 const TARGET_READY_RETRY_FRAMES = 8;
 
+export interface UserTourShowOptions {
+  onPrevious?: () => void;
+}
+
 function nextFrame(): Promise<void> {
   return new Promise((resolve) => requestAnimationFrame(() => resolve()));
 }
@@ -16,11 +20,16 @@ export function useUserTourPresenter(tour: UserTourController) {
   const { locale, t } = useI18n();
   const presenter = createUserTourDriver();
   let showRequestId = 0;
+  let activeShowOptions: UserTourShowOptions = {};
 
-  async function show(step: UserTourStep): Promise<boolean> {
+  async function show(
+    step: UserTourStep,
+    options: UserTourShowOptions = activeShowOptions
+  ): Promise<boolean> {
     const definition = USER_TOUR_STEPS[step];
     if (!definition) return false;
 
+    activeShowOptions = options;
     const requestId = ++showRequestId;
 
     for (let attempt = 0; attempt <= TARGET_READY_RETRY_FRAMES; attempt += 1) {
@@ -45,17 +54,20 @@ export function useUserTourPresenter(tour: UserTourController) {
         },
         title: t(definition.titleKey),
         description: t(definition.descriptionKey),
-        sectionLabel: t(definition.sectionKey),
         progressLabel: t('userTour.progress', {
           current: definition.progress,
           total: USER_TOUR_STEP_COUNT
         }),
-        pauseLabel: t('userTour.actions.pause'),
+        previousLabel: definition.previousStep ? t('userTour.actions.previous') : undefined,
         nextLabel: definition.nextStep ? t('userTour.actions.next') : undefined,
+        closeLabel: t('userTour.actions.close'),
         side: definition.side,
         align: definition.align,
         allowInteraction: definition.allowInteraction,
-        onPause: () =>
+        multiTargetSelector: definition.multiTargetSelector,
+        centerPopover: definition.centerPopover,
+        onPrevious: options.onPrevious,
+        onClose: () =>
           requestUserTourPause(() => {
             tour.pause();
             destroy();
@@ -63,7 +75,7 @@ export function useUserTourPresenter(tour: UserTourController) {
         onNext: definition.nextStep
           ? () => {
               tour.advance(definition.nextStep as UserTourStep);
-              void show(definition.nextStep as UserTourStep);
+              void show(definition.nextStep as UserTourStep, options);
             }
           : undefined
       });
@@ -84,7 +96,9 @@ export function useUserTourPresenter(tour: UserTourController) {
 
   watch(locale, () => {
     const step = tour.state.value.step;
-    if (tour.state.value.status === 'active' && step && presenter.isActive()) void show(step);
+    if (tour.state.value.status === 'active' && step && presenter.isActive()) {
+      void show(step, activeShowOptions);
+    }
   });
 
   return {

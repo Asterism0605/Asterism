@@ -24,10 +24,7 @@ function getPositionClass(index: number) {
 </script>
 
 <template>
-  <div
-    class="pointer-events-none absolute inset-0 z-10"
-    data-tour="spread-related-group"
-  >
+  <div class="pointer-events-none absolute inset-0 z-10" data-tour="spread-related-group">
     <ImageSpreadEntrance
       v-for="(image, index) in images"
       :key="image.id"
@@ -49,6 +46,7 @@ function getPositionClass(index: number) {
       />
       <span
         v-if="getImageLabel?.(image)"
+        data-tour-medium-label
         class="absolute bottom-3 left-3 z-10 max-w-[calc(100%-1.5rem)] rounded-full bg-void/78 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-primary backdrop-blur-md"
       >
         {{ getImageLabel(image) }}

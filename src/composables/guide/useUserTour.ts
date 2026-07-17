@@ -1,11 +1,10 @@
-import { ref, toValue, watch, type MaybeRefOrGetter } from 'vue';
+import { getCurrentInstance, onBeforeUnmount, ref, toValue, watch, type MaybeRefOrGetter } from 'vue';
 
 export type UserTourStatus = 'idle' | 'active' | 'paused' | 'completed';
 
 export type UserTourStep =
   | 'home-overview'
   | 'home-image'
-  | 'spread-center'
   | 'spread-related-group'
   | 'spread-related-image'
   | 'detail-thumbnail'
@@ -22,11 +21,11 @@ export interface UserTourState {
 }
 
 const STORAGE_PREFIX = 'asterism:tour:core';
+const USER_TOUR_STATE_EVENT = 'asterism:user-tour-state-change';
 const STATUSES: ReadonlySet<UserTourStatus> = new Set(['idle', 'active', 'paused', 'completed']);
 const STEPS: ReadonlySet<UserTourStep> = new Set([
   'home-overview',
   'home-image',
-  'spread-center',
   'spread-related-group',
   'spread-related-image',
   'detail-thumbnail',
@@ -94,6 +93,23 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
     toValue(userId) ? readState(toValue(userId) as string) : createIdleState()
   );
 
+  const currentInstance = getCurrentInstance();
+  const handleExternalStateChange = (event: Event) => {
+    const currentUserId = toValue(userId);
+    const detail = (event as CustomEvent<{ userId?: string }>).detail;
+
+    if (currentUserId && detail?.userId === currentUserId) {
+      state.value = readState(currentUserId);
+    }
+  };
+
+  if (currentInstance && typeof window !== 'undefined') {
+    window.addEventListener(USER_TOUR_STATE_EVENT, handleExternalStateChange);
+    onBeforeUnmount(() => {
+      window.removeEventListener(USER_TOUR_STATE_EVENT, handleExternalStateChange);
+    });
+  }
+
   function persist(next: UserTourState): void {
     state.value = next;
 
@@ -104,6 +120,12 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
       window.localStorage.setItem(getUserTourStorageKey(currentUserId), JSON.stringify(next));
     } catch {
       // The current session can continue without persistence.
+    }
+
+    if (currentInstance) {
+      window.dispatchEvent(
+        new CustomEvent(USER_TOUR_STATE_EVENT, { detail: { userId: currentUserId } })
+      );
     }
   }
 

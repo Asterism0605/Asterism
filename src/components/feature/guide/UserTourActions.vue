@@ -2,12 +2,12 @@
 import Button from '@/components/ui/Button.vue';
 
 defineProps<{
-  pauseLabel: string;
+  previousLabel?: string;
   nextLabel?: string;
 }>();
 
 const emit = defineEmits<{
-  pause: [];
+  previous: [];
   next: [];
 }>();
 </script>
@@ -15,12 +15,13 @@ const emit = defineEmits<{
 <template>
   <div class="flex w-full items-center justify-between gap-4">
     <Button
+      v-if="previousLabel"
       type="button"
       variant="secondary"
-      data-testid="user-tour-pause"
-      @click="emit('pause')"
+      data-testid="user-tour-previous"
+      @click="emit('previous')"
     >
-      {{ pauseLabel }}
+      {{ previousLabel }}
     </Button>
     <Button
       v-if="nextLabel"

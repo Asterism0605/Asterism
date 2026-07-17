@@ -11,6 +11,7 @@ import UserMenu from '@/layouts/UserMenu.vue';
 import { getImageById } from '@/services/image.service';
 import { setLocale, SUPPORTED_LOCALES, type AppLocale } from '@/i18n';
 import { SITE_LOGO_SRC } from '@/constants/assets.constants';
+import { useUserTour } from '@/composables/guide/useUserTour';
 
 const { locale } = useI18n();
 
@@ -40,6 +41,10 @@ const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
 const styleTagModalStore = useStyleTagModalStore();
+const userTour = useUserTour(computed(() => authStore.user?.id));
+const isUserTourPaused = computed(
+  () => userTour.state.value.status === 'paused' && userTour.state.value.step !== null
+);
 
 const isPictureDetail = computed(
   () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
@@ -77,6 +82,37 @@ async function handleLogout() {
     console.warn('[auth] 登出失敗：', e);
   }
   router.push({ name: 'home' });
+}
+
+function resumeUserTour(): void {
+  const step = userTour.state.value.step;
+  const targetImageId = userTour.state.value.targetImageId;
+  if (!step) return;
+
+  userTour.resume();
+
+  if (step === 'home-overview' || step === 'home-image') {
+    void router.push({ name: 'home' });
+    return;
+  }
+
+  if (
+    (step === 'spread-related-group' || step === 'spread-related-image') &&
+    targetImageId
+  ) {
+    void router.push({ name: 'image-spread', params: { imageId: targetImageId } });
+    return;
+  }
+
+  if (
+    (step === 'detail-thumbnail' || step === 'detail-style-tag' || step === 'detail-save') &&
+    targetImageId
+  ) {
+    void router.push({ name: 'picture-detail', params: { imageId: targetImageId } });
+    return;
+  }
+
+  void router.push({ name: 'home' });
 }
 </script>
 
@@ -153,6 +189,16 @@ async function handleLogout() {
           </ul>
         </Transition>
       </div>
+
+      <Button
+        v-if="isUserTourPaused"
+        variant="ghost"
+        class="min-w-[92px] text-center"
+        data-testid="user-tour-resume"
+        @click="resumeUserTour"
+      >
+        {{ $t('userTour.actions.resume') }}
+      </Button>
 
       <template v-if="!authStore.isAuthenticated">
         <Button variant="ghost" class="min-w-[80px] text-center" @click="router.push({ name: 'login' })">{{ $t('nav.login') }}</Button>

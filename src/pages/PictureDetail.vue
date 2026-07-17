@@ -222,9 +222,76 @@ function handleSaveOpened() {
   }
 }
 
+function hasVisibleTourTarget(selector: string): boolean {
+  const target = document.querySelector<HTMLElement>(selector);
+  if (!target) return false;
+
+  return window.getComputedStyle(target).display !== 'none' && target.getClientRects().length > 0;
+}
+
+function shouldSkipMobileThumbnailStep(): boolean {
+  return window.innerWidth < 768;
+}
+
+function returnToSpreadTourStep(): void {
+  coreTour.advance('spread-related-image', coreTour.state.value.targetImageId);
+
+  const spreadPathContext = getSpreadPathContext();
+  if (spreadPathContext) {
+    void router.push({
+      name: 'image-spread',
+      params: { imageId: spreadPathContext.imageId },
+      query: spreadPathContext.rootId ? { rootId: spreadPathContext.rootId } : undefined
+    });
+    return;
+  }
+
+  const spreadImage = currentImage.value
+    ? getMediumEntryImage(currentImage.value.id) ?? currentImage.value
+    : undefined;
+  if (spreadImage) {
+    void router.push({ name: 'image-spread', params: { imageId: spreadImage.id } });
+  }
+}
+
+function handlePreviousDetailTourStep(): void {
+  const step = coreTour.state.value.step;
+
+  if (step === 'detail-save') {
+    activeStyleTag.value = null;
+    coreTour.advance('detail-style-tag', currentImage.value?.id);
+    void showCurrentDetailTourStep();
+    return;
+  }
+
+  if (step === 'detail-style-tag') {
+    if (window.innerWidth >= 768 && hasVisibleTourTarget('[data-tour="detail-thumbnail"]')) {
+      coreTour.advance('detail-thumbnail', currentImage.value?.id);
+      void showCurrentDetailTourStep();
+      return;
+    }
+
+    returnToSpreadTourStep();
+    return;
+  }
+
+  if (step === 'detail-thumbnail') {
+    returnToSpreadTourStep();
+  }
+}
+
 async function showCurrentDetailTourStep() {
   const step = coreTour.state.value.step;
   if (coreTour.state.value.status !== 'active') {
+    return;
+  }
+
+  if (
+    step === 'home-overview' ||
+    step === 'home-image' ||
+    step === 'spread-related-group' ||
+    step === 'spread-related-image'
+  ) {
     return;
   }
 
@@ -242,7 +309,13 @@ async function showCurrentDetailTourStep() {
     return;
   }
 
-  await coreTour.showStep(step);
+  if (step === 'detail-thumbnail' && shouldSkipMobileThumbnailStep()) {
+    coreTour.advance('detail-style-tag', currentImage.value?.id);
+    await coreTour.showStep('detail-style-tag', { onPrevious: handlePreviousDetailTourStep });
+    return;
+  }
+
+  await coreTour.showStep(step, { onPrevious: handlePreviousDetailTourStep });
 }
 
 async function handleSaveToFolder(folderId: string) {
@@ -262,8 +335,8 @@ onMounted(() => window.addEventListener('keydown', handleKeydown));
 onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
 
 watch(
-  [currentImage, () => coreTour.state.value.step, activeStyleTag],
-  ([, , styleTag]) => {
+  [currentImage, () => coreTour.state.value.status, () => coreTour.state.value.step, activeStyleTag],
+  ([, , , styleTag]) => {
     if (styleTag === null) void showCurrentDetailTourStep();
   },
   { immediate: true }

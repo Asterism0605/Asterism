@@ -52,7 +52,7 @@ const isCoreHomeTourActive = computed(
 const activeGuideTargetIndex = computed(() =>
   isImageGuideVisible.value
     ? guideTargetIndex.value
-    : isCoreHomeTourActive.value
+    : coreTour.state.value.status === 'active' && coreTour.state.value.step === 'home-image'
       ? coreGuideTargetIndex.value
       : null
 );
@@ -143,7 +143,7 @@ function openImageSpread(index: number) {
     coreTour.state.value.step === 'home-image' &&
     index === coreGuideTargetIndex.value
   ) {
-    coreTour.advance('spread-center', image.id);
+    coreTour.advance('spread-related-group', image.id);
     coreTour.destroy();
   }
 
@@ -170,8 +170,17 @@ async function showCurrentHomeTourStep(): Promise<void> {
     return;
   }
 
-  prepareCoreTourTarget();
-  await coreTour.showStep(step);
+  if (step === 'home-image') {
+    prepareCoreTourTarget();
+  }
+  await coreTour.showStep(step, { onPrevious: handlePreviousHomeTourStep });
+}
+
+function handlePreviousHomeTourStep(): void {
+  if (coreTour.state.value.step !== 'home-image') return;
+
+  coreTour.advance('home-overview', coreTour.state.value.targetImageId);
+  void showCurrentHomeTourStep();
 }
 
 async function startCoreTour(): Promise<void> {
@@ -221,9 +230,12 @@ watch(homePreferredStyles, () => {
 });
 
 watch(
-  () => coreTour.state.value.status,
-  (status) => {
+  [() => coreTour.state.value.status, () => coreTour.state.value.step],
+  ([status, step]) => {
     if (status !== 'active') coreGuideTargetIndex.value = null;
+    if (status === 'active' && (step === 'home-overview' || step === 'home-image')) {
+      void showCurrentHomeTourStep();
+    }
   }
 );
 </script>
