@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import Button from '@/components/ui/Button.vue';
-import UserTourActions from '@/components/feature/guide/components/UserTourActions.vue';
+import UserTourActions from '@/components/feature/guide/UserTourActions.vue';
 
 describe('UserTourActions', () => {
   it('uses shared Button variants and emits pause and next actions', async () => {

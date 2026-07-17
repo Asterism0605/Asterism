@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import HomeImageClickGuide from '@/components/feature/guide/components/HomeImageClickGuide.vue';
+import HomeImageClickGuide from '@/components/feature/guide/HomeImageClickGuide.vue';
 import { i18n } from '@/i18n';
 
 function appendTarget(rect: DOMRect): HTMLElement {

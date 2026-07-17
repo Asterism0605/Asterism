@@ -1,8 +1,8 @@
 import { h, render } from 'vue';
 import { driver, type Alignment, type Driver, type PopoverDOM, type Side } from 'driver.js';
 import 'driver.js/dist/driver.css';
-import '../styles/user-tour.css';
-import UserTourActions from '../components/UserTourActions.vue';
+import '@/styles/user-tour.css';
+import UserTourActions from '@/components/feature/guide/UserTourActions.vue';
 
 export interface UserTourPresentation {
   target: string | Element | (() => Element | null);

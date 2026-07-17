@@ -1,8 +1,8 @@
 import { onBeforeUnmount, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { createUserTourDriver } from '../services/userTourDriver';
-import { USER_TOUR_STEP_COUNT, USER_TOUR_STEPS } from '../constants/userTourSteps';
-import { requestUserTourPause } from '../services/userTourPause';
+import { USER_TOUR_STEP_COUNT, USER_TOUR_STEPS } from '@/constants/userTour';
+import { createUserTourDriver } from '@/services/guide/userTourDriver';
+import { requestUserTourPause } from '@/services/guide/userTourPause';
 import type { UserTourStep, useUserTour } from './useUserTour';
 
 type UserTourController = ReturnType<typeof useUserTour>;

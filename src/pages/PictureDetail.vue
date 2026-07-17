@@ -13,7 +13,7 @@ import {
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import { useAuthStore } from '@/stores/auth.store';
-import { usePageUserTour } from '@/components/feature/guide/composables/usePageUserTour';
+import { usePageUserTour } from '@/composables/guide/usePageUserTour';
 import { isImageSaved } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';

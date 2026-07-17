@@ -1,5 +1,11 @@
 import type { Alignment, Side } from 'driver.js';
-import type { UserTourStep } from '../composables/useUserTour';
+import type { UserTourStep } from '@/composables/guide/useUserTour';
+
+export const GUIDE_STORAGE_KEY = 'asterism:guide:home-image-click';
+export { HOME_HERO_IMAGE_INDEX as GUIDE_TARGET_INDEX } from '@/components/sections/FloatingImageNetwork/config';
+export const TOOLTIP_GAP = 32;
+export const VIEWPORT_MARGIN = 16;
+export const TOOLTIP_SPACE_THRESHOLD = 48;
 
 interface UserTourStepDefinition {
   selector: string;

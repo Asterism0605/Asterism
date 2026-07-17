@@ -5,7 +5,7 @@ import {
   cancelUserTourPause,
   confirmUserTourPause,
   isUserTourPauseOpen
-} from '../services/userTourPause';
+} from '@/services/guide/userTourPause';
 </script>
 
 <template>

@@ -15,7 +15,7 @@ import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel'
 import { isImageSaved } from '@/services/moodboard.service'
 import { useMoodboardStore } from '@/stores/moodboard.store'
 import { useAuthStore } from '@/stores/auth.store'
-import { usePageUserTour } from '@/components/feature/guide/composables/usePageUserTour'
+import { usePageUserTour } from '@/composables/guide/usePageUserTour'
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue'
 import type { ImageSpreadNode } from '@/types/image'
 

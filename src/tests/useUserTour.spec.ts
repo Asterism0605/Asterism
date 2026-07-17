@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import {
   getUserTourStorageKey,
   useUserTour
-} from '@/components/feature/guide/composables/useUserTour';
+} from '@/composables/guide/useUserTour';
 
 describe('useUserTour', () => {
   beforeEach(() => {

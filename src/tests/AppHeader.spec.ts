@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import router from '@/router';
 import AppHeader from '@/layouts/AppHeader.vue';
-import HomeTourIntro from '@/components/feature/guide/components/HomeTourIntro.vue';
+import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';

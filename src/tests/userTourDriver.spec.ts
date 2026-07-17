@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createUserTourDriver } from '@/components/feature/guide/services/userTourDriver';
+import { createUserTourDriver } from '@/services/guide/userTourDriver';
 
 describe('createUserTourDriver', () => {
   afterEach(() => {

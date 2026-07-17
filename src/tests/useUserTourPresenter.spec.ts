@@ -2,8 +2,8 @@ import { mount } from '@vue/test-utils';
 import { defineComponent, nextTick, onMounted, ref } from 'vue';
 import { afterEach, describe, expect, it } from 'vitest';
 import { setLocale } from '@/i18n';
-import { useUserTour } from '@/components/feature/guide/composables/useUserTour';
-import { useUserTourPresenter } from '@/components/feature/guide/composables/useUserTourPresenter';
+import { useUserTour } from '@/composables/guide/useUserTour';
+import { useUserTourPresenter } from '@/composables/guide/useUserTourPresenter';
 
 describe('useUserTourPresenter', () => {
   afterEach(() => {

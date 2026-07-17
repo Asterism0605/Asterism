@@ -10,7 +10,7 @@ import { showToast } from '@/composables/useToast'
 import { useAuthStore } from '@/stores/auth.store'
 import { useMoodboardStore } from '@/stores/moodboard.store'
 import { savePendingMoodboardAction } from '@/services/pendingMoodboardAction.service'
-import { useUserTour } from '@/components/feature/guide/composables/useUserTour'
+import { useUserTour } from '@/composables/guide/useUserTour'
 import type { MoodboardFolder, SavedImage } from '@/types/moodboard'
 
 vi.mock('@/services/moodboard.service', () => ({

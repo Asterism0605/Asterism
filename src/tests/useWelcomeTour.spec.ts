@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useWelcomeTour } from '@/components/feature/guide/composables/useWelcomeTour';
+import { useWelcomeTour } from '@/composables/guide/useWelcomeTour';
 
 describe('useWelcomeTour', () => {
   beforeEach(() => {

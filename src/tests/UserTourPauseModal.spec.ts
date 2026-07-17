@@ -1,13 +1,13 @@
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
-import UserTourPauseModal from '@/components/feature/guide/components/UserTourPauseModal.vue';
+import UserTourPauseModal from '@/components/feature/guide/UserTourPauseModal.vue';
 import {
   cancelUserTourPause,
   confirmUserTourPause,
   isUserTourPauseOpen,
   requestUserTourPause
-} from '@/components/feature/guide/services/userTourPause';
+} from '@/services/guide/userTourPause';
 
 describe('user tour pause confirmation', () => {
   afterEach(() => {
