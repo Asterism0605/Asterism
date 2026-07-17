@@ -54,6 +54,13 @@ const router = createRouter({
       component: ImageSpread
     },
     {
+      path: '/search-by-image',
+      name: 'image-search',
+      // Lazy load：這頁會拉進 CLIP/transformers.js 整條依賴鏈，不用讓每個使用者
+      // 一進站就下載，比照既有 not-found 頁的寫法。
+      component: () => import('@/pages/ImageSearch.vue')
+    },
+    {
       path: '/sign-up',
       name: 'sign-up',
       component: SignUp

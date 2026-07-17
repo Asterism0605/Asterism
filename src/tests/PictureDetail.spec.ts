@@ -3,12 +3,14 @@ import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import PictureDetail from '@/pages/PictureDetail.vue'
+import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue'
 import { getRelatedImages } from '@/services/image.service'
 import { addItem, createFolder } from '@/services/moodboard.service'
 import { showToast } from '@/composables/useToast'
 import { useAuthStore } from '@/stores/auth.store'
 import { useMoodboardStore } from '@/stores/moodboard.store'
 import { savePendingMoodboardAction } from '@/services/pendingMoodboardAction.service'
+import { useUserTour } from '@/composables/guide/useUserTour'
 import type { MoodboardFolder, SavedImage } from '@/types/moodboard'
 
 vi.mock('@/services/moodboard.service', () => ({
@@ -25,9 +27,11 @@ vi.mock('@/composables/useToast', () => ({
 
 vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
   default: {
-    emits: ['select'],
+    emits: ['select', 'back'],
     template:
-      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'ftdp-graphic-poster-001\')" />'
+      '<div data-test="image-stage-panel" @click="$emit(\'select\', \'ftdp-graphic-poster-001\')">' +
+      '<div data-test="image-stage-back" @click.stop="$emit(\'back\')" />' +
+      '</div>'
   }
 }))
 
@@ -64,6 +68,7 @@ async function mountPictureDetail(
     routes: [
       { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
       { path: '/images/:imageId/spread', name: 'image-spread', component: { template: '<div />' } },
+      { path: '/search-by-image', name: 'image-search', component: { template: '<div />' } },
       { path: '/consultant', name: 'consultant', component: { template: '<div />' } },
       { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
       { path: '/login', name: 'login', component: { template: '<div />' } },
@@ -118,6 +123,12 @@ describe('PictureDetail', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    document.body.innerHTML = ''
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 1024
+    })
   })
 
   it('本地圖（attribution=Asterism）顯示 Asterism 站徽當作者頭像', async () => {
@@ -159,6 +170,97 @@ describe('PictureDetail', () => {
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(false)
     expect(addItem).toHaveBeenCalledOnce()
+  })
+
+  it('keeps the tour active when the thumbnail target is not mounted yet', async () => {
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-thumbnail', 'y2k-main-001')
+    const host = document.createElement('div')
+    document.body.append(host)
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-thumbnail'
+    })
+
+    wrapper.unmount()
+    host.remove()
+    rects.mockRestore()
+  })
+
+  it('skips the hidden thumbnail step on mobile and continues with style tags', async () => {
+    const originalInnerWidth = window.innerWidth
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 375
+    })
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-thumbnail', 'y2k-main-001')
+    const host = document.createElement('div')
+    document.body.append(host)
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-style-tag'
+    })
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 7')
+
+    wrapper.unmount()
+    host.remove()
+    rects.mockRestore()
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: originalInnerWidth
+    })
+  })
+
+  it('continues from the desktop thumbnail through steps 7 and 8', async () => {
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-thumbnail', 'y2k-main-001')
+    const visibleThumbnailTarget = document.createElement('button')
+    visibleThumbnailTarget.dataset.tour = 'detail-thumbnail'
+    const host = document.createElement('div')
+    document.body.append(visibleThumbnailTarget, host)
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
+    await flushPromises()
+
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('5 / 7')
+    await wrapper.get('[data-test="image-stage-panel"]').trigger('click')
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-style-tag'
+    })
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 7')
+
+    await wrapper.get('[data-tour="detail-style-tag"] button').trigger('click')
+    wrapper.findComponent(StyleTagModal).vm.$emit('update:modelValue', false)
+    await flushPromises()
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('7 / 7')
+
+    wrapper.unmount()
+    visibleThumbnailTarget.remove()
+    host.remove()
+    rects.mockRestore()
   })
 
   it('點擊 SAVE TO FOLDER 時以目前圖片 id 呼叫 addItem', async () => {
@@ -247,6 +349,17 @@ describe('PictureDetail', () => {
     expect(localStorage.getItem('asterism:pending-moodboard-action')).toBeNull()
   })
 
+  it('點 stage 面板空白區（背景）觸發返回，跟右側返回鍵同一套邏輯', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-001');
+
+    await wrapper.find('[data-test="image-stage-back"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('rpl-interior-001');
+    expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001');
+  });
+
   it('導向選取的 stage 圖片詳情頁', async () => {
     const { router, wrapper } = await mountPictureDetail()
 
@@ -319,6 +432,69 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.params.imageId).toBe('rpl-interior-001')
     expect(router.currentRoute.value.query.rootId).toBe('rpl-main-001')
   })
+
+  it('從以圖搜圖頁進來的詳情頁，返回鍵回以圖搜圖頁而不是探索頁', async () => {
+    const { router, wrapper } = await mountPictureDetail('rpl-interior-001?from=image-search')
+
+    await wrapper.find('button').trigger('click')
+    await flushPromises()
+
+    expect(router.currentRoute.value.name).toBe('image-search')
+  })
+
+  it('重開 SAVE TO NEW FOLDER modal 後 input 不再 disabled', async () => {
+    vi.useFakeTimers();
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/images/:imageId', name: 'picture-detail', component: PictureDetail },
+        {
+          path: '/images/:imageId/spread',
+          name: 'image-spread',
+          component: { template: '<div />' }
+        },
+        { path: '/consultant', name: 'consultant', component: { template: '<div />' } }
+      ]
+    });
+    await router.push('/images/y2k-main-001');
+    await router.isReady();
+
+    const wrapper = mount(PictureDetail, {
+      attachTo: document.body,
+      global: { plugins: [router] }
+    });
+
+    try {
+      const findBtn = (text: string) =>
+        wrapper.findAll('button').find((b) => b.text().includes(text))!;
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      const input = document.querySelector('input') as HTMLInputElement;
+      input.value = 'My Folder';
+      input.dispatchEvent(new Event('input'));
+      await flushPromises();
+
+      const sendBtn = Array.from(document.querySelectorAll('button')).find((b) =>
+        b.textContent?.includes('SEND')
+      ) as HTMLButtonElement;
+      sendBtn.click();
+      await flushPromises();
+      vi.advanceTimersByTime(800);
+      await flushPromises();
+
+      await findBtn('ADD TO MOODBOARD').trigger('click');
+      await findBtn('SAVE TO NEW FOLDER').trigger('click');
+      await flushPromises();
+
+      expect((document.querySelector('input') as HTMLInputElement).disabled).toBe(false);
+    } finally {
+      wrapper.unmount();
+      document.body.innerHTML = '';
+    }
+  });
 
   it('有符合目前圖片的 spread path context 時返回原本路徑上的 spread target', async () => {
     const { router, wrapper } = await mountPictureDetail(

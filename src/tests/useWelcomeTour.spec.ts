@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useWelcomeTour } from '@/components/feature/guide/useWelcomeTour';
+import { useWelcomeTour } from '@/composables/guide/useWelcomeTour';
 
 describe('useWelcomeTour', () => {
   beforeEach(() => {
@@ -27,6 +27,25 @@ describe('useWelcomeTour', () => {
 
     expect(tour.isHandled.value).toBe(false);
     expect(localStorage.getItem('asterism:tour:welcome')).toBeNull();
+  });
+
+  it('keeps the handled state isolated between authenticated users', () => {
+    const firstUser = useWelcomeTour('user-a');
+    firstUser.complete();
+
+    expect(firstUser.isHandled.value).toBe(true);
+    expect(useWelcomeTour('user-b').isHandled.value).toBe(false);
+    expect(localStorage.getItem('asterism:tour:welcome:user-a')).toBe('handled');
+  });
+
+  it('does not assign anonymous handled state to the next authenticated user', () => {
+    localStorage.setItem('asterism:tour:welcome', 'handled');
+
+    const authenticatedTour = useWelcomeTour('user-a');
+
+    expect(authenticatedTour.isHandled.value).toBe(false);
+    expect(localStorage.getItem('asterism:tour:welcome')).toBe('handled');
+    expect(localStorage.getItem('asterism:tour:welcome:user-a')).toBeNull();
   });
 
   it('keeps the current session usable when storage access fails', () => {

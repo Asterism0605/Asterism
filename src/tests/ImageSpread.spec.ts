@@ -9,6 +9,7 @@ import { showToast } from '@/composables/useToast'
 import { useMoodboardStore } from '@/stores/moodboard.store'
 import { useAuthStore } from '@/stores/auth.store'
 import { savePendingMoodboardAction } from '@/services/pendingMoodboardAction.service'
+import { useUserTour } from '@/composables/guide/useUserTour'
 import type { MoodboardFolder, SavedImage } from '@/types/moodboard'
 
 vi.mock('@/services/moodboard.service', () => ({
@@ -23,7 +24,7 @@ vi.mock('@/composables/useToast', () => ({
   useToast: () => ({ toast: { value: null } })
 }))
 
-async function mountImageSpread(imageId = 'y2k-main-001') {
+async function mountImageSpread(imageId = 'y2k-main-001', attachTo?: HTMLElement) {
   const [routeImageId, routeQuery] = imageId.split('?')
   const router = createRouter({
     history: createMemoryHistory(),
@@ -41,6 +42,7 @@ async function mountImageSpread(imageId = 'y2k-main-001') {
   await router.isReady()
 
   const wrapper = mount(ImageSpread, {
+    attachTo,
     global: {
       plugins: [router],
       stubs: {
@@ -109,6 +111,72 @@ describe('ImageSpread', () => {
     expect(wrapper.text()).toContain('Return')
     expect(wrapper.text()).toContain('ADD TO MOODBOARD')
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4)
+  })
+
+  it('resumes the persisted spread tour and advances through the real related image click', async () => {
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('spread-related-group', 'y2k-main-001')
+    const host = document.createElement('div')
+    document.body.append(host)
+    const { router, wrapper } = await mountImageSpread('y2k-main-001', host)
+    await flushPromises()
+
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain(
+      'One style, across different areas of life'
+    )
+
+    document.querySelector<HTMLButtonElement>('[data-testid="user-tour-next"]')?.click()
+    await flushPromises()
+    await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click')
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'spread-related-image'
+    })
+    await flushPromises()
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('4 / 7')
+
+    await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click')
+    await flushPromises()
+    expect(router.currentRoute.value.name).toBe('picture-detail')
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-thumbnail'
+    })
+
+    wrapper.unmount()
+    host.remove()
+    rects.mockRestore()
+  })
+
+  it('returns to the home image step when Previous crosses back from the spread page', async () => {
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('spread-related-group', 'y2k-main-001')
+    const host = document.createElement('div')
+    document.body.append(host)
+    const { router, wrapper } = await mountImageSpread('y2k-main-001', host)
+    await flushPromises()
+
+    document.querySelector<HTMLButtonElement>('[data-testid="user-tour-previous"]')?.click()
+    await flushPromises()
+
+    expect(router.currentRoute.value.name).toBe('home')
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'home-image'
+    })
+
+    wrapper.unmount()
+    host.remove()
+    rects.mockRestore()
   })
 
   it('未登入點擊收藏時直接導向註冊頁且保留目前路徑', async () => {

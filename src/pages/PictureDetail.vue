@@ -13,6 +13,7 @@ import {
 } from '@/services/image.service';
 import { useSaveToMoodboard } from '@/composables/useSaveToMoodboard';
 import { useAuthStore } from '@/stores/auth.store';
+import { usePageUserTour } from '@/composables/guide/usePageUserTour';
 import { isImageSaved } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
@@ -22,6 +23,7 @@ import type { ImageSpreadNode } from '@/types/image';
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const coreTour = usePageUserTour(computed(() => authStore.user?.id));
 
 const imageId = computed(() => route.params.imageId as string);
 const currentImage = computed(() => getImageById(imageId.value));
@@ -104,6 +106,11 @@ function getSpreadPathContext() {
 }
 
 function handleBack() {
+  if (route.query.from === 'image-search') {
+    router.push({ name: 'image-search' });
+    return;
+  }
+
   if (!currentImage.value) {
     router.back();
     return;
@@ -143,6 +150,14 @@ function handleCreateFolder() {
 }
 
 function handleSelectStyleTag(tag: string) {
+  if (
+    coreTour.state.value.status === 'active' &&
+    coreTour.state.value.step === 'detail-style-tag'
+  ) {
+    coreTour.advance('detail-save', currentImage.value?.id);
+    coreTour.destroy();
+  }
+
   activeStyleTag.value = tag;
 }
 
@@ -172,6 +187,14 @@ function handleConsult() {
 }
 
 function handleSelectImage(imageId: string) {
+  if (
+    coreTour.state.value.status === 'active' &&
+    coreTour.state.value.step === 'detail-thumbnail'
+  ) {
+    coreTour.advance('detail-style-tag', imageId);
+    coreTour.destroy();
+  }
+
   const spreadPathContext = getSpreadPathContext();
   const nextImage = getImageById(imageId);
   const spreadRoot = spreadPathContext?.rootId ? getImageById(spreadPathContext.rootId) : undefined;
@@ -197,6 +220,109 @@ function handleSelectImage(imageId: string) {
   router.push({ name: 'picture-detail', params: { imageId }, query: nextQuery });
 }
 
+function handleSaveOpened() {
+  if (coreTour.state.value.status === 'active' && coreTour.state.value.step === 'detail-save') {
+    coreTour.complete();
+    coreTour.destroy();
+  }
+}
+
+function hasVisibleTourTarget(selector: string): boolean {
+  const target = document.querySelector<HTMLElement>(selector);
+  if (!target) return false;
+
+  return window.getComputedStyle(target).display !== 'none' && target.getClientRects().length > 0;
+}
+
+function shouldSkipMobileThumbnailStep(): boolean {
+  return window.innerWidth < 768;
+}
+
+function returnToSpreadTourStep(): void {
+  coreTour.advance('spread-related-image', coreTour.state.value.targetImageId);
+
+  const spreadPathContext = getSpreadPathContext();
+  if (spreadPathContext) {
+    void router.push({
+      name: 'image-spread',
+      params: { imageId: spreadPathContext.imageId },
+      query: spreadPathContext.rootId ? { rootId: spreadPathContext.rootId } : undefined
+    });
+    return;
+  }
+
+  const spreadImage = currentImage.value
+    ? getMediumEntryImage(currentImage.value.id) ?? currentImage.value
+    : undefined;
+  if (spreadImage) {
+    void router.push({ name: 'image-spread', params: { imageId: spreadImage.id } });
+  }
+}
+
+function handlePreviousDetailTourStep(): void {
+  const step = coreTour.state.value.step;
+
+  if (step === 'detail-save') {
+    activeStyleTag.value = null;
+    coreTour.advance('detail-style-tag', currentImage.value?.id);
+    void showCurrentDetailTourStep();
+    return;
+  }
+
+  if (step === 'detail-style-tag') {
+    if (window.innerWidth >= 768 && hasVisibleTourTarget('[data-tour="detail-thumbnail"]')) {
+      coreTour.advance('detail-thumbnail', currentImage.value?.id);
+      void showCurrentDetailTourStep();
+      return;
+    }
+
+    returnToSpreadTourStep();
+    return;
+  }
+
+  if (step === 'detail-thumbnail') {
+    returnToSpreadTourStep();
+  }
+}
+
+async function showCurrentDetailTourStep() {
+  const step = coreTour.state.value.step;
+  if (coreTour.state.value.status !== 'active') {
+    return;
+  }
+
+  if (
+    step === 'home-overview' ||
+    step === 'home-image' ||
+    step === 'spread-related-group' ||
+    step === 'spread-related-image'
+  ) {
+    return;
+  }
+
+  if (step !== 'detail-thumbnail' && step !== 'detail-style-tag' && step !== 'detail-save') {
+    coreTour.pause();
+    return;
+  }
+
+  if (
+    step === 'detail-thumbnail' &&
+    coreTour.state.value.targetImageId &&
+    coreTour.state.value.targetImageId !== currentImage.value?.id
+  ) {
+    coreTour.pause();
+    return;
+  }
+
+  if (step === 'detail-thumbnail' && shouldSkipMobileThumbnailStep()) {
+    coreTour.advance('detail-style-tag', currentImage.value?.id);
+    await coreTour.showStep('detail-style-tag', { onPrevious: handlePreviousDetailTourStep });
+    return;
+  }
+
+  await coreTour.showStep(step, { onPrevious: handlePreviousDetailTourStep });
+}
+
 async function handleSaveToFolder(folderId: string) {
   if (!currentImage.value) return;
   await saveToMoodboard(folderId, currentImage.value.id);
@@ -212,6 +338,14 @@ function handleKeydown(event: KeyboardEvent) {
 
 onMounted(() => window.addEventListener('keydown', handleKeydown));
 onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
+
+watch(
+  [currentImage, () => coreTour.state.value.status, () => coreTour.state.value.step, activeStyleTag],
+  ([, , , styleTag]) => {
+    if (styleTag === null) void showCurrentDetailTourStep();
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -247,6 +381,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
         @back="handleBack"
         @consult="handleConsult"
         @create-folder="handleCreateFolder"
+        @save-opened="handleSaveOpened"
         @select-style-tag="handleSelectStyleTag"
         @save-to-folder="handleSaveToFolder"
         @select-image="handleSelectImage"

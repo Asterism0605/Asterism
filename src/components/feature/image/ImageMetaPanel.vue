@@ -45,6 +45,7 @@ const emit = defineEmits<{
   back: [];
   consult: [];
   'auth-required': [];
+  'save-opened': [];
   'create-folder': [];
   'save-to-folder': [folderId: string];
   'select-image': [imageId: string];
@@ -100,12 +101,15 @@ const siteLogoSrc = SITE_LOGO_SRC;
 
     <ColorPaletteSwatch :colors="colorPalette" class="bg-transparent! p-0!" />
 
-    <ThemeTag :tags="styleTags" compact @select="emit('select-style-tag', $event)" />
+    <div data-tour="detail-style-tag">
+      <ThemeTag :tags="styleTags" compact @select="emit('select-style-tag', $event)" />
+    </div>
 
     <div class="flex items-center gap-3">
       <ActionButton class="flex-1" variant="consult" @consult="emit('consult')" />
       <ActionButton
         class="flex-1"
+        data-tour="detail-save"
         :saved="saved"
         :disabled="disabled"
         :can-save="canSave"
@@ -113,6 +117,7 @@ const siteLogoSrc = SITE_LOGO_SRC;
         :folders="folders"
         :just-saved-folder-id="justSavedFolderId"
         @auth-required="emit('auth-required')"
+        @opened="emit('save-opened')"
         @create-folder="emit('create-folder')"
         @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
       />

@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   GUIDE_STORAGE_KEY,
   GUIDE_TARGET_INDEX
-} from '@/components/feature/guide/constants';
-import { useHomeImageGuide } from '@/components/feature/guide/useHomeImageGuide';
+} from '@/constants/userTour';
+import { useHomeImageGuide } from '@/composables/guide/useHomeImageGuide';
 import { LAYOUT_PRESETS } from '@/components/sections/FloatingImageNetwork/config';
 
 function appendGuideCandidate(
