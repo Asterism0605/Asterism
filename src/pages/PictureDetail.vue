@@ -242,14 +242,7 @@ async function showCurrentDetailTourStep() {
     return;
   }
 
-  if (await coreTour.showStep(step)) return;
-
-  if (step === 'detail-thumbnail') {
-    coreTour.advance('detail-style-tag', currentImage.value?.id);
-    if (await coreTour.showStep('detail-style-tag')) return;
-  }
-
-  coreTour.pause();
+  await coreTour.showStep(step);
 }
 
 async function handleSaveToFolder(folderId: string) {

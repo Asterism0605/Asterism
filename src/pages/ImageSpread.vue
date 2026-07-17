@@ -217,7 +217,7 @@ async function showCurrentSpreadTourStep() {
     return
   }
 
-  if (!(await coreTour.showStep(step))) coreTour.pause()
+  await coreTour.showStep(step)
 }
 
 function handleCreateFolder() {

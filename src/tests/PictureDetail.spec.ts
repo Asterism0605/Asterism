@@ -163,7 +163,7 @@ describe('PictureDetail', () => {
     expect(addItem).toHaveBeenCalledOnce()
   })
 
-  it('skips a missing thumbnail target and completes when the real save menu opens', async () => {
+  it('keeps the tour active when the thumbnail target is not mounted yet', async () => {
     const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
       new DOMRect(100, 100, 200, 300)
     ] as unknown as DOMRectList)
@@ -176,21 +176,8 @@ describe('PictureDetail', () => {
     await flushPromises()
 
     expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
-      step: 'detail-style-tag'
-    })
-    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain(
-      'Understand style tags'
-    )
-    expect(document.querySelector('[data-testid="user-tour-next"]')).toBeNull()
-
-    await wrapper.get('[data-tour="detail-style-tag"] button').trigger('click')
-    wrapper.findComponent(StyleTagModal).vm.$emit('update:modelValue', false)
-    await flushPromises()
-    await wrapper.get('[data-tour="detail-save"] button').trigger('click')
-
-    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
-      status: 'completed',
-      step: null
+      status: 'active',
+      step: 'detail-thumbnail'
     })
 
     wrapper.unmount()

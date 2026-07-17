@@ -38,6 +38,19 @@ describe('ImageStagePanel', () => {
     expect(wrapper.emitted('select')).toEqual([['related-bottom-right']]);
   });
 
+  it('uses the bottom-right floating image as the tour target', () => {
+    const wrapper = mount(ImageStagePanel, {
+      props: { mainImageUrl: '/main.webp', smallImages },
+      global: {
+        stubs: { ConstellationBackground: true }
+      }
+    });
+
+    const target = wrapper.get('[data-tour="detail-thumbnail"]');
+
+    expect(target.find('img').attributes('src')).toBe('/related-bottom-right.webp');
+  });
+
   it('觸發 back：滑鼠點擊空白區、Enter、Space 三種方式都能觸發', async () => {
     const wrapper = mount(ImageStagePanel, {
       props: { mainImageUrl: '/main.webp', smallImages },

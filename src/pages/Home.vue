@@ -171,7 +171,7 @@ async function showCurrentHomeTourStep(): Promise<void> {
   }
 
   prepareCoreTourTarget();
-  if (!(await coreTour.showStep(step))) coreTour.pause();
+  await coreTour.showStep(step);
 }
 
 async function startCoreTour(): Promise<void> {
@@ -179,7 +179,7 @@ async function startCoreTour(): Promise<void> {
   const targetIndex = prepareCoreTourTarget();
   const targetImageId = targetIndex === null ? undefined : inspirationImages.value[targetIndex]?.id;
   coreTour.start(targetImageId);
-  if (!(await coreTour.showStep('home-overview'))) coreTour.pause();
+  await coreTour.showStep('home-overview');
 }
 
 function exploreWithoutTour(): void {
