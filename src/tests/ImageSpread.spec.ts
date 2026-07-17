@@ -255,6 +255,27 @@ describe('ImageSpread', () => {
     expect(push).toHaveBeenCalledWith({ name: 'home' })
   })
 
+  it('點擊桌面版空白背景時從根層 spread 返回首頁', async () => {
+    const { wrapper, push } = await mountImageSpread()
+
+    await wrapper.find('[data-testid="spread-background-return"]').trigger('click')
+
+    expect(push).toHaveBeenCalledWith({ name: 'home' })
+  })
+
+  it('點擊桌面版空白背景時從 medium spread 返回根層', async () => {
+    const { wrapper, router } = await mountImageSpread(
+      'rpl-interior-001?rootId=rpl-main-001'
+    )
+
+    await wrapper.find('[data-testid="spread-background-return"]').trigger('click')
+    await flushPromises()
+
+    expect(router.currentRoute.value.name).toBe('image-spread')
+    expect(router.currentRoute.value.params.imageId).toBe('rpl-main-001')
+    expect(router.currentRoute.value.query.rootId).toBeUndefined()
+  })
+
   it('從 medium spread 層返回根層，再返回首頁', async () => {
     const { wrapper, push, router } = await mountImageSpread('rpl-interior-001?rootId=rpl-main-001')
 

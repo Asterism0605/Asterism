@@ -221,9 +221,19 @@ watch(
       aria-hidden="true"
     />
 
+    <!-- 桌面版整個空白背景返回上一層；圖片卡片與中央操作區位於更高層，不會觸發此按鈕。 -->
+    <button
+      v-if="centerImage"
+      type="button"
+      data-testid="spread-background-return"
+      class="absolute inset-0 z-[1] hidden cursor-pointer bg-transparent transition-colors duration-200 hover:bg-white/[0.03] lg:block"
+      :aria-label="$t('image.return')"
+      @click="returnToPreviousLayer"
+    />
+
     <section
       v-if="centerImage"
-      class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] w-full max-w-[1600px] flex-col items-center justify-center gap-8 px-6 pb-10 pt-6 lg:px-10 lg:pt-8"
+      class="pointer-events-none relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] w-full max-w-[1600px] flex-col items-center justify-center gap-8 px-6 pb-10 pt-6 lg:px-10 lg:pt-8"
     >
       <div class="relative z-10 flex w-full flex-1 items-center justify-center">
         <RelatedImageCluster
@@ -234,6 +244,7 @@ watch(
         />
 
         <ImageSpreadOverlay
+          class="pointer-events-auto"
           :image="centerImage"
           :saved="isSaved"
           :disabled="isSaving"
@@ -248,7 +259,7 @@ watch(
         />
       </div>
 
-      <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
+      <div class="pointer-events-auto grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
         <ImageSpreadEntrance
           v-for="(image, index) in relatedImages"
           :key="image.id"
