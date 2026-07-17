@@ -22,6 +22,8 @@ const props = defineProps<{
   layout?: 'auto' | 'home';
   showConstellations?: boolean;
   guideTargetIndex?: number;
+  safeCutoffVh?: number;
+  safeCutoffOffsetPx?: number;
 }>();
 
 const emit = defineEmits<{
@@ -161,6 +163,14 @@ function startLoadCycle() {
 const isHomeLayout = computed(() => props.layout === 'home');
 const layoutKey = computed<'auto' | 'home'>(() => (props.layout === 'home' ? 'home' : 'auto'));
 
+function getSafeCutoffY(viewportHeight: number): number | undefined {
+  if (props.safeCutoffVh === undefined) {
+    return undefined;
+  }
+
+  return (viewportHeight * props.safeCutoffVh) / 100 - (props.safeCutoffOffsetPx ?? 0);
+}
+
 function getCardStyle(position: NodePosition | undefined, index: number) {
   const item = position ?? getFallbackCard(layoutKey.value);
 
@@ -207,7 +217,8 @@ function recomputeLayout() {
     height,
     resolveLayoutPreset(layoutKey.value),
     viewportHeight,
-    aspects
+    aspects,
+    getSafeCutoffY(viewportHeight)
   );
 }
 
@@ -224,7 +235,8 @@ function reflowLayout() {
     height,
     resolveLayoutPreset(layoutKey.value),
     viewportHeight,
-    aspects
+    aspects,
+    getSafeCutoffY(viewportHeight)
   );
 }
 

@@ -20,7 +20,7 @@ vi.mock('@/api/image.api', () => ({
 }));
 
 const floatingImageNetworkStub = {
-  props: ['images', 'height'],
+  props: ['images', 'height', 'safeCutoffVh', 'safeCutoffOffsetPx'],
   template: '<button data-test="floating-image-network" @click="$emit(\'click\', 0)" />'
 };
 
@@ -578,11 +578,11 @@ describe('Home', () => {
     expect(floatingNetwork.props('height')).toBe(`${(images.length / 3) * 100}vh`);
   });
 
-  it('opens the limit modal for guests when viewport bottom reaches 150vh', async () => {
+  it('opens the limit modal for guests when viewport bottom reaches 450vh', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const viewport = mockViewport(501);
+    const viewport = mockViewport(3501);
 
     const wrapper = mount(Home, {
       attachTo: document.body,
@@ -599,6 +599,9 @@ describe('Home', () => {
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
+    const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
+    expect(floatingNetwork.props('safeCutoffVh')).toBe(450);
+    expect(floatingNetwork.props('safeCutoffOffsetPx')).toBe(60);
     expect(wrapper.text()).toContain('Your daily inspiration limit has been reached.');
     expect(viewport.scrollTo).not.toHaveBeenCalled();
 
@@ -609,7 +612,7 @@ describe('Home', () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const viewport = mockViewport(501);
+    const viewport = mockViewport(3501);
 
     const wrapper = mount(Home, {
       attachTo: document.body,
@@ -632,16 +635,16 @@ describe('Home', () => {
     // 關閉後：不再彈窗、改顯示 header 區淡提示，並夾在限制處（非回頂）。
     expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
     expect(wrapper.text()).toContain('Sign up or log in to keep exploring');
-    expect(viewport.getScrollY()).toBe(500);
+    expect(viewport.getScrollY()).toBe(3500);
 
     // 再次捲過限制：維持不彈窗、提示仍在、繼續夾在限制處。
-    viewport.setScrollY(900);
+    viewport.setScrollY(3900);
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
     expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
     expect(wrapper.text()).toContain('Sign up or log in to keep exploring');
-    expect(viewport.getScrollY()).toBe(500);
+    expect(viewport.getScrollY()).toBe(3500);
 
     wrapper.unmount();
   });
@@ -650,7 +653,7 @@ describe('Home', () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const viewport = mockViewport(501);
+    const viewport = mockViewport(3501);
 
     const wrapper = mount(Home, {
       attachTo: document.body,
@@ -669,10 +672,10 @@ describe('Home', () => {
     await wrapper.vm.$nextTick();
 
     expect(viewport.scrollTo).toHaveBeenCalledWith({
-      top: 500,
+      top: 3500,
       behavior: 'auto'
     });
-    expect(viewport.getScrollY()).toBe(500);
+    expect(viewport.getScrollY()).toBe(3500);
 
     wrapper.unmount();
   });
@@ -681,7 +684,7 @@ describe('Home', () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const firstViewport = mockViewport(501);
+    const firstViewport = mockViewport(3501);
 
     const firstWrapper = mount(Home, {
       attachTo: document.body,
@@ -699,11 +702,11 @@ describe('Home', () => {
     await firstWrapper.find('.overlay-backdrop').trigger('click');
     await firstWrapper.vm.$nextTick();
     expect(firstWrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
-    expect(firstViewport.getScrollY()).toBe(500);
+    expect(firstViewport.getScrollY()).toBe(3500);
     firstWrapper.unmount();
     firstViewport.scrollTo.mockRestore();
 
-    const secondViewport = mockViewport(501);
+    const secondViewport = mockViewport(3501);
     const secondWrapper = mount(Home, {
       attachTo: document.body,
       global: {
@@ -724,11 +727,11 @@ describe('Home', () => {
     secondWrapper.unmount();
   });
 
-  it('does not open the limit modal for authenticated users when viewport bottom reaches 150vh', async () => {
+  it('does not open the limit modal for authenticated users when viewport bottom reaches 450vh', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const viewport = mockViewport(501);
+    const viewport = mockViewport(3501);
     const authStore = useAuthStore();
     const session: AuthSession = {
       accessToken: 'test-token',
@@ -761,6 +764,7 @@ describe('Home', () => {
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
+    expect(wrapper.findComponent(floatingImageNetworkStub).props('safeCutoffVh')).toBeUndefined();
     expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
     expect(viewport.scrollTo).not.toHaveBeenCalled();
 
@@ -785,7 +789,7 @@ describe('Home', () => {
       }
     });
 
-    mockViewport(501);
+    mockViewport(3501);
     await openLimitModal(wrapper);
     await wrapper.find('[data-testid="cta-create-account"]').trigger('click');
 
