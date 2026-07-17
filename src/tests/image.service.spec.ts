@@ -92,7 +92,7 @@ describe('image.service', () => {
     const images = await getHomeInspirationImages();
     const styleGroups = images.map((image) => image.styleGroup);
 
-    expect(images).toHaveLength(45);
+    expect(images).toHaveLength(108);
     expect(new Set(styleGroups).size).toBe(9);
     expect(images[0]).toEqual(
       expect.objectContaining({
@@ -250,7 +250,7 @@ describe('image.service', () => {
         limit: 100
       });
 
-      expect(relatedImages).toHaveLength(55);
+      expect(relatedImages).toHaveLength(56);
       expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
         true
       );

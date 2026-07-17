@@ -528,8 +528,8 @@ describe('Home', () => {
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 
-    expect(floatingNetwork.props('height')).toBe('1500vh');
-    expect(images).toHaveLength(45);
+    expect(floatingNetwork.props('height')).toBe(`${(images.length / 3) * 100}vh`);
+    expect(images).toHaveLength(108);
     const styleGroups = images.map((image) => image.styleGroup);
     expect(new Set(styleGroups).size).toBe(9);
     expect(new Set(styleGroups.slice(0, 18)).size).toBe(9);
@@ -538,7 +538,7 @@ describe('Home', () => {
       acc[image.styleGroup] = (acc[image.styleGroup] ?? 0) + 1;
       return acc;
     }, {});
-    expect(Object.values(perGroup).every((count) => count === 5)).toBe(true);
+    expect(Object.values(perGroup).every((count) => count === 12)).toBe(true);
   });
 
   it('passes Style DNA preferred styles to the home inspiration image service', async () => {

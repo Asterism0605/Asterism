@@ -7262,7 +7262,7 @@
     "id": "street-interior-bedroom-501",
     "url": "/style-image/street-interior-design-bedroom-501.webp",
     "title": "街頭風格臥室空間",
-    "styleGroup": "Street Style & Urban Culture",
+    "styleGroup": "Street & Youth Culture",
     "style": [
       "Streetwear",
       "Urban Contemporary",
@@ -7279,8 +7279,8 @@
     "attribution": "Asterism"
   },
   {
-    "id": "rom-interior-design-living-dining-space-501",
-    "url": "/style-image/rom-interior-design-living-dining-space-501.webp",
+    "id": "rom-interior-design-lighting-501",
+    "url": "/style-image/rom-interior-design-lighting-501.webp",
     "title": "浪漫風格燈光設計",
     "styleGroup": "Romantic & Pastoral Living",
     "style": [
@@ -7299,8 +7299,8 @@
     "attribution": "Asterism"
   },
   {
-    "id": "msm-outfit-accessory-501",
-    "url": "/style-image/msm-outfit-accessoryfocus-501.webp",
+    "id": "msm-outfit-accessory-focus-501",
+    "url": "/style-image/msm-outfit-accessory-focus-501.webp",
     "title": "極簡風格配件細節",
     "styleGroup": "Minimal & Structured Modern",
     "style": [
@@ -7309,7 +7309,7 @@
       "Quiet Luxury"
     ],
     "medium": "Outfit",
-    "subMedium": "Accessory",
+    "subMedium": "Accessory Focus",
     "colorPalette": [
       "#F0EDE8",
       "#2F2F2F",
