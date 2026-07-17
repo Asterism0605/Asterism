@@ -252,6 +252,60 @@ export default {
     openFolderAria: '開啟資料夾',
     openImageDetailAria: '查看圖片詳情'
   },
+  userTour: {
+    progress: '{current} / {total}',
+    actions: {
+      pause: '暫停',
+      next: '下一步',
+      done: '完成'
+    },
+    pauseConfirmation: {
+      title: '暫停網站導覽？',
+      description:
+        '暫停後，其他頁面的導覽也不會自動顯示。你可以隨時從右上角的導覽入口繼續。',
+      continue: '繼續導覽',
+      confirm: '暫停導覽'
+    },
+    sections: {
+      home: '首頁導覽',
+      imageSpread: '圖片延展導覽',
+      pictureDetail: '圖片詳情導覽'
+    },
+    steps: {
+      homeOverview: {
+        title: '探索靈感星圖',
+        description: '首頁是一座靈感星圖，每張圖片都可以展開探索。'
+      },
+      homeImage: {
+        title: '展開一張靈感圖片',
+        description: '點擊指定圖片，查看它在不同生活領域中的風格延伸。'
+      },
+      spreadCenter: {
+        title: '核心靈感',
+        description: '這是你剛才選擇的核心靈感。'
+      },
+      spreadRelatedGroup: {
+        title: '同一風格，不同生活領域',
+        description: '周圍圖片顯示相同風格在不同生活領域中的延伸。'
+      },
+      spreadRelatedImage: {
+        title: '繼續深入探索',
+        description: '點擊指定延展圖片，探索更細的主題與相似內容。'
+      },
+      detailThumbnail: {
+        title: '切換相關圖片',
+        description: '點擊縮圖，可以切換同一風格中的相關圖片。'
+      },
+      detailStyleTag: {
+        title: '認識風格標籤',
+        description: '風格標籤可查看背景、視覺特徵與常見應用方式。'
+      },
+      detailSave: {
+        title: '收藏到 Moodboard',
+        description: '開啟收藏選單，將圖片存入既有資料夾或建立新的 Moodboard。'
+      }
+    }
+  },
   home: {
     guestHint: '登入或註冊以繼續探索靈感',
     tour: {
