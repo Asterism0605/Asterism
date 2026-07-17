@@ -3,7 +3,10 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { addItem, createFolder, deleteFolder } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
-import { MOODBOARD_FEEDBACK_DISPLAY_MS } from '@/constants/moodboard.constants';
+import {
+  MOODBOARD_FEEDBACK_DISPLAY_MS,
+  MOODBOARD_FOLDER_NAME_MAX_LENGTH
+} from '@/constants/moodboard.constants';
 import { useAuthStore } from '@/stores/auth.store';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import {
@@ -131,7 +134,9 @@ export function useSaveToMoodboard() {
       const message =
         raw === 'You have reached the maximum of 10 folders.'
           ? t('toast.folderLimit')
-          : t('toast.saveFailed');
+          : raw === `Folder name must be ${MOODBOARD_FOLDER_NAME_MAX_LENGTH} characters or fewer.`
+            ? t('toast.folderNameTooLong')
+            : t('toast.saveFailed');
       showToast({ type: 'error', message });
       return false;
     } finally {

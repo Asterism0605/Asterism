@@ -150,6 +150,13 @@ describe('moodboard.service', () => {
     });
   });
 
+  it('rejects folder names longer than 15 characters before writing', async () => {
+    await expect(
+      createFolder('user-1', 'This name is way too long', existingFolders)
+    ).rejects.toThrow('Folder name must be 15 characters or fewer.');
+    expect(createMoodboardFolder).not.toHaveBeenCalled();
+  });
+
   it('rejects duplicate folder names before writing', async () => {
     const folders = [
       {

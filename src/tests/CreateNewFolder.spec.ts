@@ -86,4 +86,65 @@ describe('CreateNewFolder', () => {
     await wrapper.setProps({ modelValue: true });
     expect(getInput(wrapper).value).toBe('');
   });
+
+  it('輸入超過 15 字時顯示錯誤樣式與文字，且 SEND 按鈕 disabled', async () => {
+    const wrapper = mountCreateNewFolder();
+    const input = getInput(wrapper);
+    input.value = 'This name is way too long';
+    input.dispatchEvent(new Event('input'));
+    await flushPromises();
+
+    expect(input.classList.contains('input-error-border')).toBe(true);
+    expect(wrapper.find('.folder-name-error').exists()).toBe(true);
+    expect(getSendButton(wrapper).disabled).toBe(true);
+  });
+
+  it('縮短到 15 字以內後錯誤消失，SEND 按鈕恢復可用', async () => {
+    const wrapper = mountCreateNewFolder();
+    const input = getInput(wrapper);
+    input.value = 'This name is way too long';
+    input.dispatchEvent(new Event('input'));
+    await flushPromises();
+
+    input.value = 'Short name';
+    input.dispatchEvent(new Event('input'));
+    await flushPromises();
+
+    expect(input.classList.contains('input-error-border')).toBe(false);
+    expect(wrapper.find('.folder-name-error').exists()).toBe(false);
+    expect(getSendButton(wrapper).disabled).toBe(false);
+  });
+
+  it('超過 15 字時按 Enter 不會 emit submit', async () => {
+    const wrapper = mountCreateNewFolder();
+    const input = getInput(wrapper);
+    input.value = 'This name is way too long';
+    input.dispatchEvent(new Event('input'));
+    await flushPromises();
+    await wrapper.find('input').trigger('keydown.enter');
+    expect(wrapper.emitted('submit')).toBeUndefined();
+  });
+
+  it('打出第 16 個字時觸發錯誤樣式、錯誤文字與 SEND 按鈕 disabled', async () => {
+    const wrapper = mountCreateNewFolder();
+    const input = getInput(wrapper);
+    input.value = '123456789012345';
+    input.dispatchEvent(new Event('input'));
+    await flushPromises();
+    expect(input.classList.contains('input-error-border')).toBe(false);
+    expect(getSendButton(wrapper).disabled).toBe(false);
+
+    input.value = '1234567890123456';
+    input.dispatchEvent(new Event('input'));
+    await flushPromises();
+
+    expect(input.classList.contains('input-error-border')).toBe(true);
+    expect(wrapper.find('.folder-name-error').exists()).toBe(true);
+    expect(getSendButton(wrapper).disabled).toBe(true);
+  });
+
+  it('SEND 按鈕 disabled 時帶有 disabled 游標樣式', () => {
+    const wrapper = mountCreateNewFolder();
+    expect(getSendButton(wrapper).classList.contains('disabled:cursor-not-allowed')).toBe(true);
+  });
 });

@@ -68,7 +68,8 @@ export default {
     folderCleanupFailed: '圖片儲存失敗，且資料夾清除失敗，請至情緒板手動刪除此資料夾。',
     folderCreatedAndSaved: '資料夾已建立，圖片已儲存。',
     deleteFolderFailed: '資料夾刪除失敗，請再試一次。',
-    deleteImageFailed: '圖片刪除失敗，請再試一次。'
+    deleteImageFailed: '圖片刪除失敗，請再試一次。',
+    folderNameTooLong: '資料夾名稱不能超過 15 個字。'
   },
   userMenu: {
     signedInAs: '目前登入身分',
@@ -241,6 +242,7 @@ export default {
     startExploring: '開始探索',
     createFolderTitle: '建立新資料夾並收藏圖片',
     folderNamePlaceholder: '資料夾名稱',
+    folderNameTooLong: '資料夾名稱不能超過 15 個字。',
     send: '送出',
     goToMoodboard: '前往情緒板',
     deleteFolderTitle: '刪除{name}與已收藏圖片',
