@@ -150,7 +150,22 @@ type TourFlow =
   | 'consultation';
 ```
 
-後續若加入常駐開關，才使用上述 `LocalUserTourState` 擴充本機狀態。本期不新增 schema、不同步 Supabase，也不建立登入後的雲端導覽狀態；跨裝置同步列為未來需求，未達到實際需求前不實作。
+Phase 2 為支援 Home、ImageSpread 與 PictureDetail 跨 route 延續，先建立使用者隔離的最小本機狀態：
+
+登入後的 Welcome key 與核心狀態 key 均加上使用者 ID suffix，避免同一瀏覽器切換帳號時共用完成紀錄；既有未分流 Welcome key 會在首次讀取時搬移到當前帳號。
+
+```ts
+interface UserTourState {
+  version: 1;
+  enabled: boolean;
+  status: 'idle' | 'active' | 'paused' | 'completed';
+  step: UserTourStep | null;
+  targetImageId?: string;
+  updatedAt: string;
+}
+```
+
+點擊 Pause 先以既有 `ModalOverlay.vue` 確認；確認暫停後保留進度，只有重新開始才重置進度。完整的常駐選單、各頁獨立重播與 `completedFlows` 保留給後續階段。本期不新增 schema、不同步 Supabase，也不建立登入後的雲端導覽狀態；跨裝置同步列為未來需求，未達到實際需求前不實作。
 
 ### 5.4 Phase 1 身份分流
 
@@ -232,8 +247,8 @@ type TourFlow =
 
 | Step | Target         | 說明文案                                               | 互動規則                      | 完成條件         |
 | ---- | -------------- | ------------------------------------------------------ | ----------------------------- | ---------------- |
-| C1   | 左側懸浮縮圖   | 點擊縮圖，可以切換同一風格中的相關圖片。               | 指定縮圖顯示 focus ring       | 點擊縮圖或下一步 |
-| C2   | 主題／風格標籤 | 標籤不只用來分類，也能查看風格背景、特徵與應用方式。   | 點擊標籤開啟 Popover / Drawer | 開啟說明或下一步 |
+| C1   | 左側懸浮縮圖   | 點擊縮圖，可以切換同一風格中的相關圖片。               | 指定縮圖顯示 focus ring       | 點擊縮圖         |
+| C2   | 主題／風格標籤 | 標籤不只用來分類，也能查看風格背景、特徵與應用方式。   | 點擊標籤開啟 Popover / Drawer | 開啟說明         |
 | C3   | 收藏功能       | 將圖片存入既有資料夾，或建立新的 Moodboard 資料夾。    | 開啟收藏選單                  | 完成收藏或下一步 |
 | C4   | 顧問諮詢 CTA   | 顧問會結合這張圖片、Style DNA 與你填寫的需求提供建議。 | 顯示資料來源說明              | 下一步或進入諮詢 |
 
@@ -318,11 +333,18 @@ type TourFlow =
 ```txt
 src/components/feature/guide/
 ├─ HomeImageClickGuide.vue
+├─ HomeTourIntro.vue
+├─ UserTourActions.vue
+├─ userTourDriver.ts
+├─ userTourSteps.ts
 ├─ useHomeImageGuide.ts
+├─ useUserTour.ts
+├─ useUserTourPresenter.ts
+├─ user-tour.css
 └─ constants.ts
 ```
 
-目前導覽只有首頁圖片單步導覽，因此維持既有 `guide` feature 邊界，不額外建立全域 `TourProvider`、Store、Service 或 Portal。未來只有在第二個以上跨頁流程需要共用狀態時，才評估獨立成 `src/features/user-tour/`。
+Phase 2 已出現第二個以上的跨頁 target 流程，但規模仍可維持既有 `guide` feature 邊界；以一個本機狀態 composable、Driver adapter 與步驟設定檔共用行為，不額外建立 Pinia Store、全域 `TourProvider`、Service 或 Portal。
 
 ### 7.2 Tooltip 必要元素
 
@@ -366,7 +388,7 @@ src/
    └─ constants.ts
 ```
 
-本期架構以現有專案為準：導覽元件、頁面級 composable 與常數集中在 `src/components/feature/guide/`。不為尚未實作的跨頁流程預先建立通用設定、Store、Service 或型別層。
+本期架構以現有專案為準：導覽元件、Driver adapter、頁面級 composable 與步驟設定集中在 `src/components/feature/guide/`。不為尚未實作的 Moodboard、顧問諮詢等流程預先建立 Store、Service 或額外型別層。
 
 ### 8.2 Target 規範
 
@@ -380,8 +402,9 @@ src/
 
 ### 8.3 狀態邊界
 
-- 以頁面級 composable 管理目前導覽顯示與完成狀態。
-- 以 `localStorage` 保存常駐的 `enabled` 開關與必要的流程進度。
+- 以 `useUserTour` 管理最小狀態轉換，頁面只負責 DOM ready 與真實操作完成事件。
+- 以登入使用者 ID 隔離的 `localStorage` 保存 `enabled`、執行狀態與必要流程進度。
+- Driver.js 只處理 spotlight、popover、箭頭與定位，不直接操作 router 或 localStorage。
 - 不建立 Pinia Store，不同步 Supabase，不修改 schema。
 - 導覽完成或關閉後恢復原本互動。
 
@@ -395,9 +418,9 @@ src/
 
 ### 8.5 Driver.js 評估
 
-Phase 1 不引入 Driver.js。登入後入口採首頁原生視覺語言呈現，未登入首頁導覽也已有專用定位與互動邏輯，現階段不需要額外導覽套件。
+Phase 1 不引入 Driver.js；登入後入口仍採首頁原生視覺語言，未登入首頁導覽也保留既有專用定位與互動邏輯。
 
-只有在未來出現多個跨頁、依 target 推進的導覽流程，且現有元件無法維持定位與流程控制時，才重新評估 Driver.js。屆時需先確認其 CSS 與現有沉浸式視覺語言的整合成本。
+Phase 2 因 Home、ImageSpread、PictureDetail 已形成多頁、多 target 流程，導入 Driver.js 作為單一 spotlight 與 popover 呈現層。Popover 使用 Asterism 半透明毛玻璃樣式、Driver.js 小箭頭及既有 `Button.vue`；所有標題、說明、區段與按鈕文案由現有 i18n 中英文語系提供。跨 route 狀態、真實點擊完成條件與生命週期仍由 Vue composable 管理。
 
 ---
 
@@ -498,10 +521,14 @@ interface TourAnalyticsPayload {
 
 ### Phase 2 — 核心流程（預計 2 天）
 
-- [ ] 實作 Welcome、首頁探索、四領域延展導覽（Frontend）
-- [ ] 實作圖片詳情導覽（Frontend）
-- [ ] 處理跨 route 延續與互動鎖定（Frontend）
-- [ ] 隱藏既有首頁箭頭，避免提示衝突（Frontend）
+- [x] 導入 Driver.js，完成毛玻璃 popover、小箭頭、共用 Button 與中英文案（Frontend）
+- [x] 建立使用者隔離的最小本機狀態與 pause／resume／restart 語意（Frontend）
+- [x] 導覽期間只開放 Header 語言切換，切換後即時重繪當前步驟；其他導航維持鎖定（Frontend）
+- [x] Pause 使用既有 ModalOverlay 二次確認，互動步驟不顯示無功能的 Next（Frontend）
+- [x] 實作 Welcome、首頁探索、四領域延展導覽（Frontend）
+- [x] 實作圖片詳情縮圖、風格標籤與收藏入口導覽（Frontend）
+- [x] 處理跨 route 延續、重新整理恢復與互動鎖定（Frontend）
+- [x] 隱藏既有首頁箭頭，避免提示衝突（Frontend）
 
 ### Phase 3 — 個人化功能（預計 2 天）
 
@@ -512,7 +539,9 @@ interface TourAnalyticsPayload {
 ### Phase 4 — 本機狀態與測試（預計 1.5–2 天）
 
 - [ ] 建立常駐導覽開關並保存於 localStorage（Frontend）
-- [ ] 補 Vitest 與 Playwright 測試（Frontend）
+- [ ] 建立 UserMenu 動態選單、繼續導覽、完整重播與各頁獨立重播（Frontend）
+- [x] 補 Phase 2 狀態、Driver adapter 與核心頁面 Vitest（Frontend）
+- [ ] 補完整 Playwright 跨頁流程測試（Frontend）
 - [ ] RWD、Accessibility、Reduced motion 驗證（Frontend）
 - [ ] 評估既有事件追蹤能力；本期不新增資料表或追蹤服務（Frontend）
 
