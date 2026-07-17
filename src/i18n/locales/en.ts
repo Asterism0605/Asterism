@@ -257,6 +257,53 @@ export default {
     openFolderAria: 'Open folder',
     openImageDetailAria: 'View image detail'
   },
+  userTour: {
+    progress: '{current} / {total}',
+    actions: {
+      previous: 'Previous',
+      next: 'Next',
+      close: 'Close tour',
+      resume: 'Resume tour',
+      done: 'Done'
+    },
+    pauseConfirmation: {
+      title: 'Pause the website tour?',
+      description:
+        'After pausing, tours on other pages will not appear automatically. You can continue anytime from the tour entry in the top-right corner.',
+      continue: 'Continue tour',
+      confirm: 'Pause tour'
+    },
+    steps: {
+      homeOverview: {
+        title: 'Explore the inspiration map',
+        description: 'The homepage is an inspiration map. Every image can open a new path to explore.'
+      },
+      homeImage: {
+        title: 'Open an inspiration image',
+        description: 'Select the highlighted image to see how its style extends across everyday settings.'
+      },
+      spreadRelatedGroup: {
+        title: 'One style, across different areas of life',
+        description: 'These four mediums show how the same style appears across different areas of life.'
+      },
+      spreadRelatedImage: {
+        title: 'Explore more deeply',
+        description: 'Select the highlighted image to explore a more specific theme and similar ideas.'
+      },
+      detailThumbnail: {
+        title: 'Switch related images',
+        description: 'Select a thumbnail to view another image from the same style.'
+      },
+      detailStyleTag: {
+        title: 'Understand style tags',
+        description: 'Style tags reveal the background, visual traits, and common uses of a style.'
+      },
+      detailSave: {
+        title: 'Save to a Moodboard',
+        description: 'Open the save menu to use an existing folder or create a new Moodboard.'
+      }
+    }
+  },
   home: {
     guestHint: 'Sign up or log in to keep exploring',
     tour: {

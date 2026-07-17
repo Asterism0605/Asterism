@@ -8,6 +8,7 @@ import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
+import { useUserTour } from '@/composables/guide/useUserTour';
 import type { AuthSession } from '@/types/auth';
 import type { StyleDnaAnswer } from '@/types/style-dna';
 
@@ -134,6 +135,46 @@ describe('AppHeader', () => {
     expect(wrapper.get('header').classes()).toContain('z-[110]');
     expect(wrapper.get('[data-testid="home-tour-intro"]').classes()).toContain('z-50');
     expect(wrapper.get('header ul[role="menu"]').isVisible()).toBe(true);
+  });
+
+  it('marks only the language control as interactive during a Driver tour', () => {
+    const { wrapper } = createMountedHeader();
+
+    expect(wrapper.get('header').attributes('data-tour-header')).toBe('');
+    expect(wrapper.get('[data-tour-interactive="language"]').attributes('data-tour-interactive')).toBe(
+      'language'
+    );
+    expect(wrapper.get('header > button').attributes('data-tour-interactive')).toBeUndefined();
+  });
+
+  it('resumes a paused tour from the header entry', async () => {
+    localStorage.clear();
+    const tour = useUserTour('user-1');
+    tour.start('y2k-main-001');
+    tour.advance('spread-related-group', 'y2k-main-001');
+    tour.pause();
+
+    const pinia = createPinia();
+    const authStore = useAuthStore(pinia);
+    const session = createAuthenticatedSession();
+    authStore.session = session;
+    authStore.user = session.user;
+    setActivePinia(pinia);
+    const wrapper = mount(AppHeader, {
+      global: { plugins: [router, pinia] }
+    });
+
+    await wrapper.get('[data-testid="user-tour-resume"]').trigger('click');
+    await flushPromises();
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'spread-related-group'
+    });
+    expect(router.currentRoute.value.name).toBe('image-spread');
+    expect(router.currentRoute.value.params.imageId).toBe('y2k-main-001');
+
+    wrapper.unmount();
   });
 });
 

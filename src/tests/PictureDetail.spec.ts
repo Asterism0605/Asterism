@@ -3,12 +3,14 @@ import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import PictureDetail from '@/pages/PictureDetail.vue'
+import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue'
 import { getRelatedImages } from '@/services/image.service'
 import { addItem, createFolder } from '@/services/moodboard.service'
 import { showToast } from '@/composables/useToast'
 import { useAuthStore } from '@/stores/auth.store'
 import { useMoodboardStore } from '@/stores/moodboard.store'
 import { savePendingMoodboardAction } from '@/services/pendingMoodboardAction.service'
+import { useUserTour } from '@/composables/guide/useUserTour'
 import type { MoodboardFolder, SavedImage } from '@/types/moodboard'
 
 vi.mock('@/services/moodboard.service', () => ({
@@ -121,6 +123,12 @@ describe('PictureDetail', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    document.body.innerHTML = ''
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 1024
+    })
   })
 
   it('本地圖（attribution=Asterism）顯示 Asterism 站徽當作者頭像', async () => {
@@ -162,6 +170,97 @@ describe('PictureDetail', () => {
 
     expect((addBtn!.element as HTMLButtonElement).disabled).toBe(false)
     expect(addItem).toHaveBeenCalledOnce()
+  })
+
+  it('keeps the tour active when the thumbnail target is not mounted yet', async () => {
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-thumbnail', 'y2k-main-001')
+    const host = document.createElement('div')
+    document.body.append(host)
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-thumbnail'
+    })
+
+    wrapper.unmount()
+    host.remove()
+    rects.mockRestore()
+  })
+
+  it('skips the hidden thumbnail step on mobile and continues with style tags', async () => {
+    const originalInnerWidth = window.innerWidth
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 375
+    })
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-thumbnail', 'y2k-main-001')
+    const host = document.createElement('div')
+    document.body.append(host)
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-style-tag'
+    })
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 7')
+
+    wrapper.unmount()
+    host.remove()
+    rects.mockRestore()
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: originalInnerWidth
+    })
+  })
+
+  it('continues from the desktop thumbnail through steps 7 and 8', async () => {
+    const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(100, 100, 200, 300)
+    ] as unknown as DOMRectList)
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-thumbnail', 'y2k-main-001')
+    const visibleThumbnailTarget = document.createElement('button')
+    visibleThumbnailTarget.dataset.tour = 'detail-thumbnail'
+    const host = document.createElement('div')
+    document.body.append(visibleThumbnailTarget, host)
+    const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
+    await flushPromises()
+
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('5 / 7')
+    await wrapper.get('[data-test="image-stage-panel"]').trigger('click')
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-style-tag'
+    })
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 7')
+
+    await wrapper.get('[data-tour="detail-style-tag"] button').trigger('click')
+    wrapper.findComponent(StyleTagModal).vm.$emit('update:modelValue', false)
+    await flushPromises()
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('7 / 7')
+
+    wrapper.unmount()
+    visibleThumbnailTarget.remove()
+    host.remove()
+    rects.mockRestore()
   })
 
   it('點擊 SAVE TO FOLDER 時以目前圖片 id 呼叫 addItem', async () => {

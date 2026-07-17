@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { TOOLTIP_GAP, VIEWPORT_MARGIN, TOOLTIP_SPACE_THRESHOLD } from './constants';
+import { TOOLTIP_GAP, VIEWPORT_MARGIN, TOOLTIP_SPACE_THRESHOLD } from '@/constants/userTour';
 import { useI18n } from 'vue-i18n';
 import { MoveDownLeft } from '@lucide/vue';
 
