@@ -93,6 +93,25 @@
   }
 }
 
+/* 中文字重 */
+html:lang(zh-Hant) h1 {
+  font-weight: 100;
+}
+
+html:lang(zh-Hant) h2,
+html:lang(zh-Hant) h3 {
+  font-weight: 200;
+}
+
+html:lang(zh-Hant) p {
+  font-weight: 300;
+}
+
+/* 中文字距 */
+html:lang(zh-Hant) .zh-heading-spacing {
+  letter-spacing: 1px;
+}
+
 @layer components {
   /* ========== 字體系統 ========== */
   .text-display {

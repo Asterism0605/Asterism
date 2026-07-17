@@ -10,7 +10,7 @@ const hoveredIndex = ref<number | null>(null);
 
 <template>
   <div class="flex flex-col gap-4 p-4 bg-elevated rounded">
-    <p class="text-h3 text-text-primary">{{ $t('common.colorPalette') }}</p>
+    <h2 class="zh-heading-spacing text-h3 text-text-primary">{{ $t('common.colorPalette') }}</h2>
     <div v-if="colors.length" class="flex h-16 rounded overflow-hidden">
       <div
         v-for="(color, i) in colors"
