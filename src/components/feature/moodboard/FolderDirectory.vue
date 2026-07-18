@@ -3,10 +3,15 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { MoodboardFolder } from '@/types/moodboard';
 
-const props = defineProps<{
-  folders: MoodboardFolder[];
-  activeFolderId?: string | null;
-}>();
+const props = withDefaults(
+  defineProps<{
+    folders: MoodboardFolder[];
+    activeFolderId?: string | null;
+    // 手機沒有鍵盤 focus 操作的情境，兩段式 Tap 也不需要 focus/blur 觸發預覽。
+    focusPreview?: boolean;
+  }>(),
+  { activeFolderId: null, focusPreview: true }
+);
 
 const emit = defineEmits<{
   preview: [folderId: string];
@@ -43,6 +48,8 @@ function folderLabel(folder: MoodboardFolder): string {
         :aria-current="folder.id === activeFolderId ? 'true' : undefined"
         @pointerenter="emit('preview', folder.id)"
         @pointerleave="emit('previewEnd')"
+        @focus="focusPreview && emit('preview', folder.id)"
+        @blur="focusPreview && emit('previewEnd')"
         @click="emit('open', folder.id)"
       >
         <span class="folder-node__anchor" aria-hidden="true"></span>

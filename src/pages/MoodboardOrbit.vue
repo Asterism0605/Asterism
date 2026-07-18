@@ -890,6 +890,7 @@ onBeforeUnmount(() => {
           <FolderDirectory
             :folders="moodboardStore.folders"
             :active-folder-id="highlightedFolderId"
+            :focus-preview="false"
             @preview="previewFolderById"
             @preview-end="leaveFolder"
             @open="armOrOpenMobileFolderById"
