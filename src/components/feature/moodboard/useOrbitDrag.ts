@@ -1,4 +1,4 @@
-import { ref, type Ref } from 'vue'
+import { onBeforeUnmount, ref, type Ref } from 'vue'
 import type { MoodboardOrbitParams } from '@/types/moodboard'
 
 // 拖拉旋轉資料夾軌道，手機與桌機共用。
@@ -17,51 +17,99 @@ export function useOrbitDrag(
   let didDrag = false
   let dragStart: { x: number; y: number } | null = null
   let dragLastAng = 0
+  let dragRect: DOMRect | null = null
+  let activePointerId: number | null = null
+  let captureTarget: HTMLElement | null = null
+  let pendingAngleDelta = 0
+  let dragRaf = 0
 
   function evtPoint(e: PointerEvent) {
     const t = (e as PointerEvent & { touches?: Touch[] }).touches?.[0] ?? e
     const el = getStageEl()
     if (!el) return { x: 0, y: 0 }
-    const r = el.getBoundingClientRect()
+    const r = dragRect ?? el.getBoundingClientRect()
     return {
       x: (t.clientX - r.left) / scaleRef.value,
       y: (t.clientY - r.top) / scaleRef.value
     }
   }
 
+  function flushPendingAngle() {
+    if (pendingAngleDelta === 0) return
+    orbitPhaseRef.value += pendingAngleDelta
+    pendingAngleDelta = 0
+  }
+
+  function scheduleAngleUpdate(delta: number) {
+    pendingAngleDelta += delta
+    if (dragRaf) return
+    dragRaf = window.requestAnimationFrame(() => {
+      dragRaf = 0
+      flushPendingAngle()
+    })
+  }
+
   function onDragStart(e: PointerEvent) {
     if (!enabledRef.value) return
+    const el = getStageEl()
+    if (!el) return
+    dragRect = el.getBoundingClientRect()
     const p = evtPoint(e)
     // 只有落在資料夾附近才起拖，避免整個版面（含軌道弧線空白處）都能拖。
-    if (!canStartAt(p)) return
+    if (!canStartAt(p)) {
+      dragRect = null
+      return
+    }
     const c = getCenter()
     dragging.value = true
     didDrag = false
     dragStart = p
     dragLastAng = Math.atan2(p.y - c.cy, p.x - c.cx)
+    activePointerId = e.pointerId
+    captureTarget = e.currentTarget instanceof HTMLElement ? e.currentTarget : el
   }
 
   function onDragMove(e: PointerEvent) {
-    if (!dragging.value) return
+    if (!dragging.value || (activePointerId !== null && e.pointerId !== activePointerId)) return
     const p = evtPoint(e)
     const c = getCenter()
-    if (Math.hypot(p.x - dragStart!.x, p.y - dragStart!.y) > 6) didDrag = true
+    if (!didDrag && Math.hypot(p.x - dragStart!.x, p.y - dragStart!.y) > 6) {
+      didDrag = true
+      if (activePointerId !== null) captureTarget?.setPointerCapture?.(activePointerId)
+    }
     const ang = Math.atan2(p.y - c.cy, p.x - c.cx)
     let d = ang - dragLastAng
     if (d > Math.PI) d -= 2 * Math.PI
     if (d < -Math.PI) d += 2 * Math.PI
-    orbitPhaseRef.value += d
+    scheduleAngleUpdate(d)
     dragLastAng = ang
   }
 
-  function onDragEnd() {
+  function onDragEnd(e?: PointerEvent) {
+    if (activePointerId !== null && e && e.pointerId !== activePointerId) return
+    if (dragRaf) {
+      window.cancelAnimationFrame(dragRaf)
+      dragRaf = 0
+    }
+    flushPendingAngle()
+    if (activePointerId !== null && captureTarget?.hasPointerCapture?.(activePointerId)) {
+      captureTarget.releasePointerCapture(activePointerId)
+    }
     dragging.value = false
+    dragStart = null
+    dragRect = null
+    activePointerId = null
+    captureTarget = null
   }
 
   function consumeDidDrag(): boolean {
     if (didDrag) { didDrag = false; return true }
     return false
   }
+
+  onBeforeUnmount(() => {
+    if (dragRaf) window.cancelAnimationFrame(dragRaf)
+  })
 
   return { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag }
 }
