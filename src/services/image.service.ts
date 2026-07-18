@@ -15,6 +15,7 @@ interface RelatedImageOptions {
 }
 
 const DEFAULT_RELATED_LIMIT = 4;
+const STYLE_DNA_PRIMARY_GROUP_IMAGE_COUNT = 12;
 
 // 可變快取，預設＝打包 JSON；啟動時由 loadImages() 換成 Supabase（已 gate）資料。
 // 預設值讓未呼叫 loadImages 的情境（多數單元測試、載入前瞬間）行為與現狀一致。
@@ -305,7 +306,12 @@ export function getRelatedImages(
 }
 
 // 首頁：把不同風格（styleGroup）的圖片穿插排在一起。
-function interleaveImagesByStyleGroup(images: StyleImage[], maxConsecutive = 2): StyleImage[] {
+function interleaveImagesByStyleGroup(
+  images: StyleImage[],
+  maxConsecutive = 2,
+  initialPreviousStyleGroup?: string,
+  initialConsecutiveCount = 0
+): StyleImage[] {
   const groups = new Map<string, StyleImage[]>();
 
   for (const image of images) {
@@ -316,8 +322,8 @@ function interleaveImagesByStyleGroup(images: StyleImage[], maxConsecutive = 2):
 
   const groupQueues = [...groups.values()];
   const orderedImages: StyleImage[] = [];
-  let previousStyleGroup: string | undefined;
-  let consecutiveCount = 0;
+  let previousStyleGroup = initialPreviousStyleGroup;
+  let consecutiveCount = initialConsecutiveCount;
   let cursor = 0;
 
   while (orderedImages.length < images.length) {
@@ -352,12 +358,42 @@ function interleaveImagesByStyleGroup(images: StyleImage[], maxConsecutive = 2):
   return orderedImages;
 }
 
+// Style DNA 專屬排序：前 12 張固定為第一名 styleTag 所屬的 styleGroup，
+// 後續恢復最多連續兩張的穿插規則。這裡只保證資料順序，不宣稱實際 layout 的 vh 範圍。
+function orderStyleDnaHomeImages(images: StyleImage[], primaryStyle: string): StyleImage[] {
+  const primaryStyleGroup = images.find((image) => image.style.includes(primaryStyle))?.styleGroup;
+
+  if (!primaryStyleGroup) {
+    return interleaveImagesByStyleGroup(images);
+  }
+
+  const primaryGroupImages = images.filter((image) => image.styleGroup === primaryStyleGroup);
+  const leadingImages = primaryGroupImages.slice(0, STYLE_DNA_PRIMARY_GROUP_IMAGE_COUNT);
+  const leadingImageIds = new Set(leadingImages.map((image) => image.id));
+  const remainingImages = images.filter((image) => !leadingImageIds.has(image.id));
+
+  return [
+    ...leadingImages,
+    ...interleaveImagesByStyleGroup(
+      remainingImages,
+      2,
+      primaryStyleGroup,
+      leadingImages.length
+    )
+  ];
+}
+
 // 首頁：放團體概念照（沒有 medium 的圖），資料源為本地 style-data.json。
 export async function getHomeInspirationImages(
   options: HomeInspirationOptions = {}
 ): Promise<HomeInspirationImage[]> {
   const conceptImages = styleImages.filter((image) => !image.medium);
   const preferredImages = sortByPreferredStyles(conceptImages, options.preferredStyles);
+  const primaryStyle = options.preferredStyles?.find(Boolean);
 
-  return interleaveImagesByStyleGroup(preferredImages).map(toHomeInspirationImage);
+  const orderedImages = primaryStyle
+    ? orderStyleDnaHomeImages(preferredImages, primaryStyle)
+    : interleaveImagesByStyleGroup(preferredImages);
+
+  return orderedImages.map(toHomeInspirationImage);
 }

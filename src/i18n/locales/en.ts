@@ -257,6 +257,8 @@ export default {
     deleteImageTitle: 'Delete Image from Folder',
     deleteImageAria: 'Delete image',
     openFolderAria: 'Open folder',
+    folderSelected: 'My Folders',
+    folderEmptySuffix: '(Empty)',
     openImageDetailAria: 'View image detail'
   },
   userTour: {
