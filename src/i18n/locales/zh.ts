@@ -252,6 +252,53 @@ export default {
     openFolderAria: '開啟資料夾',
     openImageDetailAria: '查看圖片詳情'
   },
+  userTour: {
+    progress: '{current} / {total}',
+    actions: {
+      previous: '上一步',
+      next: '下一步',
+      close: '關閉導覽',
+      resume: '繼續導覽',
+      done: '完成'
+    },
+    pauseConfirmation: {
+      title: '暫停網站導覽？',
+      description:
+        '暫停後，其他頁面的導覽也不會自動顯示。你可以隨時從右上角的導覽入口繼續。',
+      continue: '繼續導覽',
+      confirm: '暫停導覽'
+    },
+    steps: {
+      homeOverview: {
+        title: '探索靈感星圖',
+        description: '首頁是一座靈感星圖，每張圖片都可以展開探索。'
+      },
+      homeImage: {
+        title: '展開一張靈感圖片',
+        description: '點擊指定圖片，查看它在不同生活領域中的風格延伸。'
+      },
+      spreadRelatedGroup: {
+        title: '同一風格，在不同生活領域的樣貌',
+        description: '這四種 Medium 展示相同風格在不同生活領域中的樣貌。'
+      },
+      spreadRelatedImage: {
+        title: '繼續深入探索',
+        description: '點擊指定延展圖片，探索更細的主題與相似內容。'
+      },
+      detailThumbnail: {
+        title: '切換相關圖片',
+        description: '點擊縮圖，可以切換同一風格中的相關圖片。'
+      },
+      detailStyleTag: {
+        title: '認識風格標籤',
+        description: '風格標籤可查看背景、視覺特徵與常見應用方式。'
+      },
+      detailSave: {
+        title: '收藏到 Moodboard',
+        description: '開啟收藏選單，將圖片存入既有資料夾或建立新的 Moodboard。'
+      }
+    }
+  },
   home: {
     guestHint: '登入或註冊以繼續探索靈感',
     tour: {
@@ -266,6 +313,28 @@ export default {
     limitDesc: '建立免費帳號，即可無限瀏覽、把喜歡的作品收藏到情緒板，並定義你的美學 DNA。',
     createAccount: '建立免費帳號',
     login: '登入'
+  },
+  imageSearch: {
+    eyebrow: '風格導航',
+    title: '風格星圖',
+    subtitle: '上傳一張圖片，看看它落在美學星圖的哪個位置。',
+    downloadHint: '首次使用需下載約 150MB 的 AI 模型，建議 Wi-Fi 環境下使用。',
+    downloading: '下載中… {progress}%',
+    finalizing: '準備中，快好了…',
+    downloadModel: '下載模型',
+    retryDownload: '重試下載',
+    chooseFile: '選擇照片',
+    chooseFileHint: '支援 JPG、PNG、WebP，最大 10MB',
+    noFileChosen: '尚未選擇檔案',
+    search: '開始搜尋',
+    searching: '搜尋中…',
+    uploadedAlt: '你上傳的圖片',
+    yourPhoto: '你的照片',
+    noMatch: '目前圖庫沒有找到夠相似的風格圖。建議上傳穿搭、室內空間、建築外觀或平面設計類的照片，換一張再試試。',
+    invalidFileType: '請上傳 JPG、PNG 或 WebP 格式的圖片。',
+    fileTooLarge: '圖片大小請勿超過 10MB。',
+    modelDownloadFailed: '模型下載失敗，請檢查網路連線後重試。',
+    searchFailed: '搜尋失敗，請稍後再試。'
   },
   playground: {
     eyebrow: '元件展示區',

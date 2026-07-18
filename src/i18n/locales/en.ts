@@ -257,6 +257,53 @@ export default {
     openFolderAria: 'Open folder',
     openImageDetailAria: 'View image detail'
   },
+  userTour: {
+    progress: '{current} / {total}',
+    actions: {
+      previous: 'Previous',
+      next: 'Next',
+      close: 'Close tour',
+      resume: 'Resume tour',
+      done: 'Done'
+    },
+    pauseConfirmation: {
+      title: 'Pause the website tour?',
+      description:
+        'After pausing, tours on other pages will not appear automatically. You can continue anytime from the tour entry in the top-right corner.',
+      continue: 'Continue tour',
+      confirm: 'Pause tour'
+    },
+    steps: {
+      homeOverview: {
+        title: 'Explore the inspiration map',
+        description: 'The homepage is an inspiration map. Every image can open a new path to explore.'
+      },
+      homeImage: {
+        title: 'Open an inspiration image',
+        description: 'Select the highlighted image to see how its style extends across everyday settings.'
+      },
+      spreadRelatedGroup: {
+        title: 'One style, across different areas of life',
+        description: 'These four mediums show how the same style appears across different areas of life.'
+      },
+      spreadRelatedImage: {
+        title: 'Explore more deeply',
+        description: 'Select the highlighted image to explore a more specific theme and similar ideas.'
+      },
+      detailThumbnail: {
+        title: 'Switch related images',
+        description: 'Select a thumbnail to view another image from the same style.'
+      },
+      detailStyleTag: {
+        title: 'Understand style tags',
+        description: 'Style tags reveal the background, visual traits, and common uses of a style.'
+      },
+      detailSave: {
+        title: 'Save to a Moodboard',
+        description: 'Open the save menu to use an existing folder or create a new Moodboard.'
+      }
+    }
+  },
   home: {
     guestHint: 'Sign up or log in to keep exploring',
     tour: {
@@ -272,6 +319,28 @@ export default {
       'Create a free account to unlock endless scrolling, save your favorite pieces to boards, and define your aesthetic DNA.',
     createAccount: 'Create Free Account',
     login: 'Log In'
+  },
+  imageSearch: {
+    eyebrow: 'Style Navigator',
+    title: 'Style Star Map',
+    subtitle: 'Upload a photo to see where it lands on our aesthetic star map.',
+    downloadHint: 'First use requires downloading a ~150MB AI model — Wi-Fi recommended.',
+    downloading: 'Downloading… {progress}%',
+    finalizing: 'Finalizing, almost there…',
+    downloadModel: 'Download Model',
+    retryDownload: 'Retry Download',
+    chooseFile: 'Choose Photo',
+    chooseFileHint: 'JPG, PNG, or WebP — up to 10MB',
+    noFileChosen: 'No file chosen',
+    search: 'Search',
+    searching: 'Searching…',
+    uploadedAlt: 'Your uploaded photo',
+    yourPhoto: 'Your Photo',
+    noMatch: 'No sufficiently similar style found. Try a photo of an outfit, interior space, building exterior, or graphic design piece instead.',
+    invalidFileType: 'Please upload a JPG, PNG, or WebP image.',
+    fileTooLarge: 'Image must be under 10MB.',
+    modelDownloadFailed: 'Model download failed. Please check your connection and try again.',
+    searchFailed: 'Search failed. Please try again later.'
   },
   playground: {
     eyebrow: 'Component Playground',

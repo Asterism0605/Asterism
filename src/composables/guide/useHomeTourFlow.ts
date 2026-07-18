@@ -2,8 +2,11 @@ import { computed, nextTick, onBeforeUnmount, ref, type Ref } from 'vue';
 import { useHomeImageGuide } from './useHomeImageGuide';
 import { useWelcomeTour } from './useWelcomeTour';
 
-export function useHomeTourFlow(isAuthenticated: Readonly<Ref<boolean>>) {
-  const welcomeTour = useWelcomeTour();
+export function useHomeTourFlow(
+  isAuthenticated: Readonly<Ref<boolean>>,
+  userId?: Readonly<Ref<string | undefined>>
+) {
+  const welcomeTour = useWelcomeTour(userId);
   const imageNetworkReady = ref(false);
   const pendingTourStart = ref(false);
   const guideTargetIndex = ref<number | null>(null);
@@ -49,6 +52,11 @@ export function useHomeTourFlow(isAuthenticated: Readonly<Ref<boolean>>) {
 
   function handleHomeTourStart(): void {
     welcomeTour.complete();
+
+    if (isAuthenticated.value) {
+      return;
+    }
+
     pendingTourStart.value = true;
 
     if (imageNetworkReady.value) {

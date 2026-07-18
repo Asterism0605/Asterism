@@ -11,6 +11,7 @@ import UserMenu from '@/layouts/UserMenu.vue';
 import { getImageById } from '@/services/image.service';
 import { setLocale, SUPPORTED_LOCALES, type AppLocale } from '@/i18n';
 import { SITE_LOGO_SRC } from '@/constants/assets.constants';
+import { useUserTour } from '@/composables/guide/useUserTour';
 
 const { locale } = useI18n();
 
@@ -35,15 +36,21 @@ onMounted(() => document.addEventListener('click', handleLangClickOutside, true)
 onUnmounted(() => document.removeEventListener('click', handleLangClickOutside, true));
 
 const siteLogoSrc = SITE_LOGO_SRC;
+const imageSearchEntryIcon = '/images/image-search-entry.webp';
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
 const styleTagModalStore = useStyleTagModalStore();
+const userTour = useUserTour(computed(() => authStore.user?.id));
+const isUserTourPaused = computed(
+  () => userTour.state.value.status === 'paused' && userTour.state.value.step !== null
+);
 
 const isPictureDetail = computed(
   () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
 );
+const isHome = computed(() => route.name === 'home');
 // PictureDetail 平常把 AppHeader 縮到 60% 寬，讓頁面自己的「返回」列並排在右側 40%；
 // 但 StyleTagModal 開著時那塊區域會被 modal 蓋住（見 StyleTagModal 的 z-index 說明），
 // 縮寬就只剩右邊空一塊黑，不好看——modal 開著時 AppHeader 改滿版，蓋滿整排。
@@ -78,10 +85,42 @@ async function handleLogout() {
   }
   router.push({ name: 'home' });
 }
+
+function resumeUserTour(): void {
+  const step = userTour.state.value.step;
+  const targetImageId = userTour.state.value.targetImageId;
+  if (!step) return;
+
+  userTour.resume();
+
+  if (step === 'home-overview' || step === 'home-image') {
+    void router.push({ name: 'home' });
+    return;
+  }
+
+  if (
+    (step === 'spread-related-group' || step === 'spread-related-image') &&
+    targetImageId
+  ) {
+    void router.push({ name: 'image-spread', params: { imageId: targetImageId } });
+    return;
+  }
+
+  if (
+    (step === 'detail-thumbnail' || step === 'detail-style-tag' || step === 'detail-save') &&
+    targetImageId
+  ) {
+    void router.push({ name: 'picture-detail', params: { imageId: targetImageId } });
+    return;
+  }
+
+  void router.push({ name: 'home' });
+}
 </script>
 
 <template>
   <header
+    data-tour-header
     :class="[
       /* z-[110]：故意高於 StyleTagModal 的 z-index:100，modal 開著時 AppHeader（logo／
          語言切換／個人選單，含下拉展開的選單本身）仍蓋在最上層可操作，方便中英對照
@@ -99,7 +138,12 @@ async function handleLogout() {
     </button>
 
     <div class="flex items-center gap-3">
-      <div ref="langMenuRef" class="relative" @keydown.esc="langMenuOpen = false">
+      <div
+        ref="langMenuRef"
+        class="relative"
+        data-tour-interactive="language"
+        @keydown.esc="langMenuOpen = false"
+      >
         <button
           type="button"
           class="group flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium tracking-wide text-text-secondary backdrop-blur-sm cursor-pointer touch-manipulation transition-[transform,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-white/20 hover:text-text-primary active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-dim/40 motion-reduce:transition-none"
@@ -148,6 +192,16 @@ async function handleLogout() {
         </Transition>
       </div>
 
+      <Button
+        v-if="isUserTourPaused"
+        variant="ghost"
+        class="min-w-[92px] text-center"
+        data-testid="user-tour-resume"
+        @click="resumeUserTour"
+      >
+        {{ $t('userTour.actions.resume') }}
+      </Button>
+
       <template v-if="!authStore.isAuthenticated">
         <Button variant="ghost" class="min-w-[80px] text-center" @click="router.push({ name: 'login' })">{{ $t('nav.login') }}</Button>
         <Button variant="primary" class="min-w-[88px] text-center" @click="router.push({ name: 'sign-up' })">{{ $t('nav.signup') }}</Button>
@@ -164,4 +218,14 @@ async function handleLogout() {
       />
     </div>
   </header>
+
+  <router-link
+    v-if="isHome"
+    :to="{ name: 'image-search' }"
+    class="fixed bottom-4 right-4 z-50 size-9 shrink-0 overflow-hidden rounded-full shadow-lg sm:hidden"
+    :aria-label="$t('imageSearch.title')"
+    :title="$t('imageSearch.title')"
+  >
+    <img :src="imageSearchEntryIcon" alt="" class="size-full" />
+  </router-link>
 </template>

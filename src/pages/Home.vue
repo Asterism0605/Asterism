@@ -9,7 +9,9 @@ import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import HomeStarLinks from '@/components/sections/HomeStarLinks';
 import HomeImageClickGuide from '@/components/feature/guide/HomeImageClickGuide.vue';
 import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
-import { useHomeTourFlow } from '@/components/feature/guide/useHomeTourFlow';
+import { useHomeTourFlow } from '@/composables/guide/useHomeTourFlow';
+import { useHomeImageGuide } from '@/composables/guide/useHomeImageGuide';
+import { usePageUserTour } from '@/composables/guide/usePageUserTour';
 import { getHomeInspirationImages } from '@/services/image.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
@@ -24,7 +26,12 @@ const isLimitModalOpen = ref(false);
 const hasTriggeredLimit = ref(false);
 const showGuestHint = ref(false);
 const inspirationImages = ref<HomeInspirationImage[]>([]);
+const coreGuideTargetIndex = ref<number | null>(null);
+const userId = computed(() => authStore.user?.id);
+const coreTour = usePageUserTour(userId);
+const { findTargetIndex } = useHomeImageGuide();
 
+const imageSearchEntryIcon = '/images/image-search-entry.webp';
 const HOME_DENSITY_PER_100VH = 3;
 const homePreferredStyles = computed(() =>
   styleDnaStore.hasCompletedQuiz ? styleDnaStore.preferredStyles : []
@@ -37,7 +44,19 @@ const {
   handleHomeTourStart,
   handleHomeTourExplore,
   handleImageNetworkReady
-} = useHomeTourFlow(isAuthenticated);
+} = useHomeTourFlow(isAuthenticated, userId);
+const isCoreHomeTourActive = computed(
+  () =>
+    coreTour.state.value.status === 'active' &&
+    (coreTour.state.value.step === 'home-overview' || coreTour.state.value.step === 'home-image')
+);
+const activeGuideTargetIndex = computed(() =>
+  isImageGuideVisible.value
+    ? guideTargetIndex.value
+    : coreTour.state.value.status === 'active' && coreTour.state.value.step === 'home-image'
+      ? coreGuideTargetIndex.value
+      : null
+);
 const containerHeight = computed(
   () => `${(inspirationImages.value.length / HOME_DENSITY_PER_100VH) * 100}vh`
 );
@@ -120,10 +139,75 @@ function openImageSpread(index: number) {
     completeGuide();
   }
 
+  if (
+    coreTour.state.value.status === 'active' &&
+    coreTour.state.value.step === 'home-image' &&
+    index === coreGuideTargetIndex.value
+  ) {
+    coreTour.advance('spread-related-group', image.id);
+    coreTour.destroy();
+  }
+
   void router.push({
     name: 'image-spread',
     params: { imageId: image.id }
   });
+}
+
+function prepareCoreTourTarget(): number | null {
+  const targetIndex = findTargetIndex();
+  coreGuideTargetIndex.value = targetIndex;
+  return targetIndex;
+}
+
+async function showCurrentHomeTourStep(): Promise<void> {
+  const step = coreTour.state.value.step;
+  if (coreTour.state.value.status !== 'active') {
+    return;
+  }
+
+  if (step !== 'home-overview' && step !== 'home-image') {
+    coreTour.pause();
+    return;
+  }
+
+  if (step === 'home-image') {
+    prepareCoreTourTarget();
+  }
+  await coreTour.showStep(step, { onPrevious: handlePreviousHomeTourStep });
+}
+
+function handlePreviousHomeTourStep(): void {
+  if (coreTour.state.value.step !== 'home-image') return;
+
+  coreTour.advance('home-overview', coreTour.state.value.targetImageId);
+  void showCurrentHomeTourStep();
+}
+
+async function startCoreTour(): Promise<void> {
+  handleHomeTourStart();
+  const targetIndex = prepareCoreTourTarget();
+  const targetImageId = targetIndex === null ? undefined : inspirationImages.value[targetIndex]?.id;
+  coreTour.start(targetImageId);
+  await coreTour.showStep('home-overview');
+}
+
+function exploreWithoutTour(): void {
+  handleHomeTourExplore();
+  coreTour.optOut();
+  coreTour.destroy();
+}
+
+function handleHomeImagesReady(): void {
+  handleImageNetworkReady();
+  if (!isAuthenticated.value) return;
+
+  if (coreGuideTargetIndex.value !== null) {
+    coreTour.refresh();
+    return;
+  }
+
+  void showCurrentHomeTourStep();
 }
 
 async function loadInspirationImages() {
@@ -145,6 +229,16 @@ onBeforeUnmount(() => {
 watch(homePreferredStyles, () => {
   void loadInspirationImages();
 });
+
+watch(
+  [() => coreTour.state.value.status, () => coreTour.state.value.step],
+  ([status, step]) => {
+    if (status !== 'active') coreGuideTargetIndex.value = null;
+    if (status === 'active' && (step === 'home-overview' || step === 'home-image')) {
+      void showCurrentHomeTourStep();
+    }
+  }
+);
 </script>
 
 <template>
@@ -156,6 +250,7 @@ watch(homePreferredStyles, () => {
 
     <section
       class="relative z-10 pt-[var(--app-header-height)]"
+      data-tour="home-overview"
       :style="{ minHeight: containerHeight }"
     >
       <div
@@ -167,10 +262,10 @@ watch(homePreferredStyles, () => {
           :height="containerHeight"
           layout="home"
           show-constellations
-          :guide-target-index="guideTargetIndex ?? undefined"
+          :guide-target-index="activeGuideTargetIndex ?? undefined"
           @click="openImageSpread"
-          @ready="handleImageNetworkReady"
-          @guide-target-ready="handleImageNetworkReady"
+          @ready="handleHomeImagesReady"
+          @guide-target-ready="handleHomeImagesReady"
         />
       </div>
 
@@ -182,7 +277,7 @@ watch(homePreferredStyles, () => {
         </h1>
 
         <div
-          v-if="!isImageGuideVisible"
+          v-if="!isImageGuideVisible && !isCoreHomeTourActive"
           class="meteor-arrows mt-4 flex translate-x-[10vw]"
           data-testid="home-meteor-arrows"
           aria-hidden="true"
@@ -201,8 +296,8 @@ watch(homePreferredStyles, () => {
       :description="$t('home.tour.description')"
       :start-label="$t('home.tour.startTour')"
       :explore-label="$t('home.tour.exploreOnMyOwn')"
-      @start="handleHomeTourStart"
-      @explore="handleHomeTourExplore"
+      @start="startCoreTour"
+      @explore="exploreWithoutTour"
     />
 
     <HomeImageClickGuide
@@ -220,6 +315,15 @@ watch(homePreferredStyles, () => {
         {{ $t('home.guestHint') }}
       </p>
     </Transition>
+
+    <router-link
+      :to="{ name: 'image-search' }"
+      class="image-search-entry hidden sm:block"
+      :aria-label="$t('imageSearch.title')"
+      :title="$t('imageSearch.title')"
+    >
+      <img :src="imageSearchEntryIcon" alt="" class="size-full" />
+    </router-link>
 
     <ModalOverlay
       v-model="isLimitModalOpen"
@@ -245,7 +349,9 @@ watch(homePreferredStyles, () => {
         <Button variant="primary" data-testid="cta-create-account" @click="startStyleDnaSignUp">
           {{ $t('home.createAccount') }}
         </Button>
-        <Button variant="secondary" data-testid="cta-login" @click="goToLogin">{{ $t('home.login') }}</Button>
+        <Button variant="secondary" data-testid="cta-login" @click="goToLogin">{{
+          $t('home.login')
+        }}</Button>
       </template>
     </ModalOverlay>
   </main>
@@ -307,6 +413,35 @@ watch(homePreferredStyles, () => {
 .guest-hint-leave-from {
   opacity: 1;
   transform: translateX(-50%);
+}
+
+.image-search-entry {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 0.4);
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.image-search-entry:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 26px rgb(0 0 0 / 0.5);
+}
+
+@media (min-width: 640px) {
+  .image-search-entry {
+    right: 32px;
+    bottom: 32px;
+    width: 52px;
+    height: 52px;
+  }
 }
 
 .meteor-arrow {
