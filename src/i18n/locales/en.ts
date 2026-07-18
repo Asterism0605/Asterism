@@ -101,6 +101,29 @@ export default {
       livingRoom: 'I need help selecting furniture that works with the scale of my living room.'
     }
   },
+  consultantBookings: {
+    youHave: 'You have',
+    upcoming: 'assigned',
+    consultations: 'consultations',
+    upcomingDates: 'Assigned consultation dates',
+    viewAll: 'View all',
+    back: 'Back',
+    viewAllAria: 'View all assigned consultations',
+    backToSelectedAria: 'Back to selected consultation',
+    emptyDescription: 'No consultations are assigned to you yet.',
+    loading: 'Loading assigned consultations…',
+    loadError: "We couldn't load your assigned consultations.",
+    retry: 'Try again',
+    contact: 'Client contact',
+    statusLabel: 'Status',
+    status: {
+      pending_payment: 'Pending payment',
+      confirmed: 'Confirmed',
+      payment_failed: 'Payment failed',
+      canceled: 'Canceled',
+      completed: 'Completed'
+    }
+  },
   consult: {
     eyebrow: 'Style DNA translation',
     title: 'Consultation Booking',

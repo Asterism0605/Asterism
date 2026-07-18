@@ -101,6 +101,29 @@ export default {
       livingRoom: '我需要協助挑選符合客廳空間尺度的家具。'
     }
   },
+  consultantBookings: {
+    youHave: '你有',
+    upcoming: '場被指派的',
+    consultations: '諮詢',
+    upcomingDates: '被指派的諮詢日期',
+    viewAll: '查看全部',
+    back: '返回',
+    viewAllAria: '查看所有被指派的諮詢預約',
+    backToSelectedAria: '返回所選諮詢預約',
+    emptyDescription: '目前沒有指派給你的預約',
+    loading: '正在載入預約清單…',
+    loadError: '無法載入預約清單。',
+    retry: '再試一次',
+    contact: '客戶聯絡資訊',
+    statusLabel: '狀態',
+    status: {
+      pending_payment: '待付款',
+      confirmed: '已確認',
+      payment_failed: '付款失敗',
+      canceled: '已取消',
+      completed: '已完成'
+    }
+  },
   consult: {
     eyebrow: 'Style DNA 轉譯',
     title: '預約諮詢',
