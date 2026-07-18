@@ -138,4 +138,18 @@ describe('auth.store', () => {
     await store.logout();
     expect(store.isConsultant).toBe(false);
   });
+
+  it('consultants 查詢出錯 → 降級為非顧問、hydrate 不 throw(後端 migration 未部署的安全網)', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    maybeSingle.mockResolvedValue({ data: null, error: { code: '42703' } });
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const store = useAuthStore();
+
+    await expect(store.hydrate()).resolves.toBeUndefined();
+
+    expect(store.isAuthenticated).toBe(true);
+    expect(store.isConsultant).toBe(false);
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
 });
