@@ -540,14 +540,15 @@ interface TourAnalyticsPayload {
 
 ### Phase 3 — 個人化功能（預計 2 天）
 
+- [x] AppHeader 常駐 Target 導覽控制入口（Frontend）
+- [x] 導覽控制支援開始、繼續、重新開始與完成後重播（Frontend）
 - [ ] 個人選單導覽（Frontend）
 - [ ] Moodboard 軌道與資料夾導覽（Frontend）
 - [ ] 顧問諮詢說明（Frontend）
 
 ### Phase 4 — 本機狀態與測試（預計 1.5–2 天）
 
-- [ ] 建立常駐導覽開關並保存於 localStorage（Frontend）
-- [ ] 建立 UserMenu 動態選單、繼續導覽、完整重播與各頁獨立重播（Frontend）
+- [ ] 建立 UserMenu 動態選單與各頁獨立重播（Frontend）
 - [x] 補 Phase 2 狀態、Driver adapter 與核心頁面 Vitest（Frontend）
 - [ ] 補完整 Playwright 跨頁流程測試（Frontend）
 - [ ] RWD、Accessibility、Reduced motion 驗證（Frontend）

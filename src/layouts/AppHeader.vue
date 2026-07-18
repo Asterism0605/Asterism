@@ -8,10 +8,13 @@ import { useStyleDnaStore } from '@/stores/style-dna.store';
 import { useStyleTagModalStore } from '@/stores/styleTagModal.store';
 import Button from '@/components/ui/Button.vue';
 import UserMenu from '@/layouts/UserMenu.vue';
+import TourControl from '@/components/feature/guide/TourControl.vue';
 import { getImageById } from '@/services/image.service';
 import { setLocale, SUPPORTED_LOCALES, type AppLocale } from '@/i18n';
 import { SITE_LOGO_SRC } from '@/constants/assets.constants';
 import { useUserTour } from '@/composables/guide/useUserTour';
+import { useWelcomeTour } from '@/composables/guide/useWelcomeTour';
+import { requestHomeTourStart } from '@/composables/guide/useHomeTourFlow';
 
 const { locale } = useI18n();
 
@@ -43,9 +46,9 @@ const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
 const styleTagModalStore = useStyleTagModalStore();
 const userTour = useUserTour(computed(() => authStore.user?.id));
-const isUserTourPaused = computed(
-  () => userTour.state.value.status === 'paused' && userTour.state.value.step !== null
-);
+const welcomeTour = useWelcomeTour(computed(() => authStore.user?.id));
+const userTourStatus = computed(() => userTour.state.value.status);
+const userTourStep = computed(() => userTour.state.value.step);
 
 const isPictureDetail = computed(
   () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
@@ -84,6 +87,28 @@ async function handleLogout() {
     console.warn('[auth] 登出失敗：', e);
   }
   router.push({ name: 'home' });
+}
+
+function startUserTour(): void {
+  if (isHome.value) {
+    requestHomeTourStart();
+    return;
+  }
+
+  welcomeTour.complete();
+  userTour.start();
+  void router.push({ name: 'home' });
+}
+
+function restartUserTour(): void {
+  if (isHome.value) {
+    requestHomeTourStart();
+    return;
+  }
+
+  welcomeTour.complete();
+  userTour.restart();
+  void router.push({ name: 'home' });
 }
 
 function resumeUserTour(): void {
@@ -192,15 +217,14 @@ function resumeUserTour(): void {
         </Transition>
       </div>
 
-      <Button
-        v-if="isUserTourPaused"
-        variant="ghost"
-        class="min-w-[92px] text-center"
-        data-testid="user-tour-resume"
-        @click="resumeUserTour"
-      >
-        {{ $t('userTour.actions.resume') }}
-      </Button>
+      <TourControl
+        v-if="authStore.isAuthenticated"
+        :status="userTourStatus"
+        :step="userTourStep"
+        @start="startUserTour"
+        @resume="resumeUserTour"
+        @restart="restartUserTour"
+      />
 
       <template v-if="!authStore.isAuthenticated">
         <Button variant="ghost" class="min-w-[80px] text-center" @click="router.push({ name: 'login' })">{{ $t('nav.login') }}</Button>

@@ -95,6 +95,7 @@ describe('AppHeader', () => {
     expect(wrapper.text()).toContain('Moodboard');
     expect(wrapper.text()).toContain('Consultation');
     expect(wrapper.text()).toContain('Log out');
+    expect(wrapper.get('[data-testid="user-tour-control-trigger"]')).toBeTruthy();
 
     const logoutButton = wrapper.findAll('button').find((button) => button.text() === 'Log out');
 
@@ -164,6 +165,7 @@ describe('AppHeader', () => {
       global: { plugins: [router, pinia] }
     });
 
+    await wrapper.get('[data-testid="user-tour-control-trigger"]').trigger('click');
     await wrapper.get('[data-testid="user-tour-resume"]').trigger('click');
     await flushPromises();
 
@@ -173,6 +175,34 @@ describe('AppHeader', () => {
     });
     expect(router.currentRoute.value.name).toBe('image-spread');
     expect(router.currentRoute.value.params.imageId).toBe('y2k-main-001');
+
+    wrapper.unmount();
+  });
+
+  it('starts the tour from the header control when it is idle', async () => {
+    localStorage.clear();
+    await router.push('/account/consultations');
+    await router.isReady();
+    const pinia = createPinia();
+    const authStore = useAuthStore(pinia);
+    const session = createAuthenticatedSession();
+    authStore.session = session;
+    authStore.user = session.user;
+    setActivePinia(pinia);
+    const wrapper = mount(AppHeader, {
+      global: { plugins: [router, pinia] }
+    });
+
+    await wrapper.get('[data-testid="user-tour-control-trigger"]').trigger('click');
+    await wrapper.get('[data-testid="user-tour-start"]').trigger('click');
+    await flushPromises();
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'home-overview'
+    });
+    expect(localStorage.getItem('asterism:tour:welcome:user-1')).toBe('handled');
+    expect(router.currentRoute.value.name).toBe('home');
 
     wrapper.unmount();
   });
