@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import rawStyleImages from '@/data/style-data.json';
 import {
   getHomeInspirationImages,
   getImageById,
@@ -25,6 +26,24 @@ function getMaxConsecutiveStyleGroupCount(styleGroups: string[]): number {
 }
 
 describe('image.service', () => {
+  it('keeps every style tag within a single style group', () => {
+    const styleGroupsByStyle = new Map<string, Set<string>>();
+
+    for (const image of rawStyleImages) {
+      for (const style of image.style) {
+        const styleGroups = styleGroupsByStyle.get(style) ?? new Set<string>();
+        styleGroups.add(image.styleGroup);
+        styleGroupsByStyle.set(style, styleGroups);
+      }
+    }
+
+    const crossGroupStyles = [...styleGroupsByStyle.entries()]
+      .filter(([, styleGroups]) => styleGroups.size > 1)
+      .map(([style, styleGroups]) => ({ style, styleGroups: [...styleGroups] }));
+
+    expect(crossGroupStyles).toEqual([]);
+  });
+
   it('finds an image by id and returns undefined for unknown ids', () => {
     expect(getImageById('y2k-main-001')?.id).toBe('y2k-main-001');
     expect(getImageById('missing-image')).toBeUndefined();
@@ -92,7 +111,7 @@ describe('image.service', () => {
     const images = await getHomeInspirationImages();
     const styleGroups = images.map((image) => image.styleGroup);
 
-    expect(images).toHaveLength(45);
+    expect(images).toHaveLength(108);
     expect(new Set(styleGroups).size).toBe(9);
     expect(images[0]).toEqual(
       expect.objectContaining({
@@ -121,21 +140,22 @@ describe('image.service', () => {
     expect(getMaxConsecutiveStyleGroupCount(styleGroups)).toBeLessThanOrEqual(2);
   });
 
-  it('prioritizes concept images that match preferred styles', async () => {
+  it('puts 12 images from the top Style DNA tag group first, then restores interleaving', async () => {
     const images = await getHomeInspirationImages({
-      preferredStyles: ['Art Deco', 'Baroque']
+      preferredStyles: ['Y2K', 'Art Deco']
     });
     const styleGroups = images.map((image) => image.styleGroup);
+    const primaryStyleGroup = 'Y2K & Internet Aesthetics';
 
-    expect(images).toHaveLength(45);
     expect(images[0]).toEqual(
       expect.objectContaining({
-        id: 'doa-main-001',
-        styleGroup: 'Decorative & Opulent Art'
+        id: 'y2k-main-001',
+        styleGroup: primaryStyleGroup
       })
     );
-    expect(new Set(styleGroups.slice(0, 18)).size).toBe(9);
-    expect(getMaxConsecutiveStyleGroupCount(styleGroups)).toBeLessThanOrEqual(2);
+    expect(styleGroups.slice(0, 12)).toEqual(Array(12).fill(primaryStyleGroup));
+    expect(styleGroups[12]).not.toBe(primaryStyleGroup);
+    expect(getMaxConsecutiveStyleGroupCount(styleGroups.slice(12))).toBeLessThanOrEqual(2);
   });
 
   describe('getMediumGroupImages', () => {
@@ -249,7 +269,7 @@ describe('image.service', () => {
         limit: 100
       });
 
-      expect(relatedImages).toHaveLength(55);
+      expect(relatedImages).toHaveLength(56);
       expect(relatedImages.every((image) => image.styleGroup === 'Y2K & Internet Aesthetics')).toBe(
         true
       );

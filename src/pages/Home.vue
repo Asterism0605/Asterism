@@ -17,7 +17,8 @@ import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { HomeInspirationImage } from '@/types/image';
 
-const scrollLimitVh = 150;
+const scrollLimitVh = 450;
+const appHeaderHeightPx = 60;
 const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
@@ -243,8 +244,8 @@ watch(
 
 <template>
   <main
-    class="home-page relative overflow-hidden bg-void text-text-primary [--app-header-height:60px]"
-    :style="{ minHeight: containerHeight }"
+    class="home-page relative overflow-hidden bg-void text-text-primary"
+    :style="{ minHeight: containerHeight, '--app-header-height': `${appHeaderHeightPx}px` }"
   >
     <div class="pointer-events-none absolute inset-0 z-0 home-page__wash" aria-hidden="true" />
 
@@ -263,6 +264,8 @@ watch(
           layout="home"
           show-constellations
           :guide-target-index="activeGuideTargetIndex ?? undefined"
+          :safe-cutoff-vh="!isAuthenticated ? scrollLimitVh : undefined"
+          :safe-cutoff-offset-px="appHeaderHeightPx"
           @click="openImageSpread"
           @ready="handleHomeImagesReady"
           @guide-target-ready="handleHomeImagesReady"

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   computeEvenYPositions,
   buildFloatingImageLayout,
+  HOME_CUTOFF_GAP,
   HOME_MIN_GAP,
   resolveOverlaps
 } from '@/components/sections/FloatingImageNetwork/layout';
@@ -166,6 +167,34 @@ describe('buildFloatingImageLayout (home)', () => {
 
     expect(resolved[0].x).toBe(150);
     expect(resolved[1].x).toBe(50);
+  });
+
+  it('keeps every home card clear of the guest horizontal cutoff', () => {
+    const width = 1440;
+    const height = 9000;
+    const viewportHeight = 1000;
+    const cutoffY = 4500 - 60;
+    const aspects = Array.from(
+      { length: 45 },
+      (_, i) => ['1122/1402', '1536/1024', '3/4', '1402/1122', '4/3'][i % 5]
+    );
+
+    const nodes = buildFloatingImageLayout(
+      45,
+      width,
+      height,
+      LAYOUT_PRESETS.home,
+      viewportHeight,
+      aspects,
+      cutoffY
+    );
+
+    const offenders = nodes.filter((node) => {
+      const rect = nodeRect(node);
+      return rect.top < cutoffY + HOME_CUTOFF_GAP && rect.bottom > cutoffY - HOME_CUTOFF_GAP;
+    });
+
+    expect(offenders).toHaveLength(0);
   });
 });
 
