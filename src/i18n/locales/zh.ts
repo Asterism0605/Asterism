@@ -75,6 +75,7 @@ export default {
     moodboard: '情緒板',
     styleDna: 'Style DNA',
     myConsultations: '我的預約',
+    consultantBookings: '被指派的諮詢',
     logout: '登出'
   },
   accountConsultations: {

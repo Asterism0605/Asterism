@@ -2,11 +2,12 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import UserMenu from '@/layouts/UserMenu.vue';
 
-function mountUserMenu(displayName = 'Ada Lovelace') {
+function mountUserMenu(displayName = 'Ada Lovelace', isConsultant = false) {
   return mount(UserMenu, {
     props: {
       displayName,
-      initials: 'AL'
+      initials: 'AL',
+      isConsultant
     }
   });
 }
@@ -58,6 +59,19 @@ describe('UserMenu', () => {
 
     expect(wrapper.find('[aria-haspopup="true"]').attributes('aria-expanded')).toBe('false');
     expect(wrapper.text()).not.toContain('Signed in as');
+  });
+
+  it('shows the consultant bookings entry only for consultants and emits on click', async () => {
+    const consultantWrapper = mountUserMenu('Demo Consultant', true);
+    await consultantWrapper.find('[aria-haspopup="true"]').trigger('click');
+
+    expect(consultantWrapper.text()).toContain('Assigned consultations');
+    await findButtonByText(consultantWrapper, 'Assigned consultations')?.trigger('click');
+    expect(consultantWrapper.emitted('consultantBookings')).toHaveLength(1);
+
+    const memberWrapper = mountUserMenu();
+    await memberWrapper.find('[aria-haspopup="true"]').trigger('click');
+    expect(memberWrapper.text()).not.toContain('Assigned consultations');
   });
 
   it('emits styleDna when the Style DNA item is clicked', async () => {

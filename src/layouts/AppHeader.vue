@@ -77,6 +77,10 @@ function goToConsultations() {
   router.push({ name: 'account-consultations' });
 }
 
+function goToConsultantBookings() {
+  router.push({ name: 'consultant-bookings' });
+}
+
 async function handleLogout() {
   try {
     await authStore.logout();
@@ -211,9 +215,11 @@ function resumeUserTour(): void {
         v-else
         :display-name="authStore.user?.displayName ?? ''"
         :initials="initials"
+        :is-consultant="authStore.isConsultant"
         @moodboard="goToMoodboard"
         @style-dna="goToStyleDna"
         @consultations="goToConsultations"
+        @consultant-bookings="goToConsultantBookings"
         @logout="handleLogout"
       />
     </div>

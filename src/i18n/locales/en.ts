@@ -75,6 +75,7 @@ export default {
     moodboard: 'Moodboard',
     styleDna: 'Style DNA',
     myConsultations: 'Consultation',
+    consultantBookings: 'Assigned consultations',
     logout: 'Log out'
   },
   accountConsultations: {
