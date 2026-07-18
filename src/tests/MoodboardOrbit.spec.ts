@@ -1486,7 +1486,7 @@ describe('MoodboardOrbit', () => {
       expect(cta.text()).toBe('Start Exploring');
     });
 
-    it('hovering an empty orbit tile on mobile previews placeholders too', async () => {
+    it('tapping an empty orbit tile on mobile previews placeholders too', async () => {
       Object.defineProperty(window, 'innerWidth', {
         value: 375,
         configurable: true,
@@ -1502,7 +1502,8 @@ describe('MoodboardOrbit', () => {
       const { wrapper } = await mountMoodboard();
       await flushPromises();
 
-      await wrapper.get('[data-testid="moodboard-folder-mobile-2"]').trigger('pointerenter');
+      // 手機沒有 hover，空資料夾的預覽/CTA 只能靠實際點擊觸發（第一次點擊即預覽，不需要開啟）。
+      await wrapper.get('[data-testid="moodboard-folder-mobile-2"]').trigger('click');
       await flushPromises();
 
       expect(

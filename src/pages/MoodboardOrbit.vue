@@ -98,6 +98,8 @@ const orbitPhase = ref(0);
 const hoverIdx = ref(-1);
 const orbitHoldFolderIndex = ref<number | null>(null);
 let orbitHoldTimer: ReturnType<typeof setTimeout> | null = null;
+// 只在 armOrOpenMobileFolder 內由實際點擊寫入，hover/pointerenter 一律不得碰它，
+// 否則手機上同一次點擊裡 pointerenter 先跑一次 preview 會讓 click 誤判成「已經點過一次」。
 const mobileArmedFolderId = ref<string | null>(null);
 const selectedFolder = ref(0);
 const selectedName = computed(() => getFolderName(selectedFolder.value));
@@ -290,8 +292,6 @@ function snapOrbitToFolder(index: number) {
 function previewFolder(index: number) {
   const folder = moodboardStore.folders[index];
   if (!folder) return;
-
-  mobileArmedFolderId.value = highlightedFolderId.value === folder.id ? folder.id : null;
 
   snapOrbitToFolder(index);
 
@@ -534,7 +534,9 @@ function goHome() {
   dragging.value = false;
   activeSphereFolderId.value = null;
   previewingEmptyFolderId.value = null;
-  mobileArmedFolderId.value = null;
+  // 回首頁後預覽會 fallback 回預設資料夾，armed 狀態要跟著同步，
+  // 這樣使用者再點一次預設資料夾時，才會維持「已在預覽中，點一次就開」的行為。
+  mobileArmedFolderId.value = highlightedFolderId.value;
   navigate('', -1);
 }
 
@@ -570,6 +572,7 @@ function armOrOpenMobileFolder(index: number) {
     return;
   }
 
+  mobileArmedFolderId.value = folder.id;
   previewFolder(index);
 }
 
@@ -588,16 +591,6 @@ function onSphereClick() {
   if (index === -1) return;
 
   openFolder(index);
-}
-
-function hoverMobileFolderAt(i: number) {
-  if (!moodboardStore.folders[i]) return;
-  mHover.value = i;
-}
-
-function leaveMobileFolder() {
-  mHover.value = -1;
-  leaveFolder();
 }
 
 let sphereHandle: SphereHandle | null = null;
@@ -687,6 +680,10 @@ onMounted(async () => {
     await moodboardStore.fetchMoodboard(profileId);
   }
 
+  // 資料載入完成後，預設高亮的資料夾本來就等同「已在預覽中」，
+  // 手機版第一次點它要能直接開啟，而不是被當成完全沒點過。
+  mobileArmedFolderId.value = highlightedFolderId.value;
+
   const initialSlug = typeof route.params.slug === 'string' ? route.params.slug : undefined;
   if (initialSlug) {
     const index = findFolderIndexBySlug(initialSlug);
@@ -774,8 +771,6 @@ onBeforeUnmount(() => {
               cursor: f.hasFolder ? 'pointer' : 'default',
               pointerEvents: f.hasFolder ? 'auto' : 'none'
             }"
-            @pointerenter="hoverMobileFolderAt(f.i)"
-            @pointerleave="leaveMobileFolder"
             @click="armOrOpenMobileFolder(f.i)"
           >
             <img
