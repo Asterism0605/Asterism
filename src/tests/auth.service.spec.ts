@@ -3,7 +3,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const auth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn() };
 const single = vi.fn();
-const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+const maybeSingle = vi.fn();
+const from = vi.fn((table: string) =>
+  table === 'consultants'
+    ? { select: () => ({ eq: () => ({ maybeSingle }) }) }
+    : { select: () => ({ eq: () => ({ single }) }) }
+);
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth, from }) }));
 
 import { register } from '@/services/auth.service';
@@ -20,6 +25,7 @@ describe('auth service and store', () => {
     setActivePinia(createPinia());
     vi.clearAllMocks();
     single.mockResolvedValue({ data: { display_name: 'New User', username: null, is_admin: false }, error: null });
+    maybeSingle.mockResolvedValue({ data: null, error: null });
   });
 
   it('register 解開 ApiResponse 的 session', async () => {
