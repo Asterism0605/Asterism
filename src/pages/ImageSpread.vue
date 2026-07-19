@@ -5,6 +5,7 @@ import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue'
 import ImageSpreadOverlay from '@/components/feature/image/ImageSpreadOverlay.vue'
 import RelatedImageCluster from '@/components/feature/image/RelatedImageCluster.vue'
 import Button from '@/components/ui/Button.vue'
+import ImageSpreadLabel from '@/components/ui/ImageSpreadLabel.vue'
 import {
   getImageById,
   getMediumGroupImages,
@@ -345,13 +346,12 @@ watch(
             loading="lazy"
             class="aspect-[4/5] w-full cursor-pointer object-cover"
           />
-          <span
+          <ImageSpreadLabel
             v-if="getRelatedImageLabel(image)"
             data-tour-medium-label
-            class="absolute bottom-2 left-2 max-w-[calc(100%-1rem)] rounded-full bg-void/78 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-text-primary"
           >
             {{ getRelatedImageLabel(image) }}
-          </span>
+          </ImageSpreadLabel>
         </ImageSpreadEntrance>
       </div>
     </section>

@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
 import Button from '@/components/ui/Button.vue';
+import ImageSpreadLabel from '@/components/ui/ImageSpreadLabel.vue';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
 import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel';
 import type { ImageSpreadNode } from '@/types/image';
@@ -81,13 +82,14 @@ const mainImageLabel = computed(() => {
           :alt="image.alt"
           class="aspect-[4/5] w-full cursor-pointer object-cover"
         />
-        <figcaption
+        <ImageSpreadLabel
           v-if="mainImageLabel"
+          as="figcaption"
+          size="large"
           data-testid="spread-main-image-label"
-          class="absolute bottom-4 left-4 rounded-full bg-void/80 px-4 py-2 text-sm font-semibold text-text-primary backdrop-blur-md"
         >
           {{ localizeTaxon(mainImageLabel) }}
-        </figcaption>
+        </ImageSpreadLabel>
       </ImageSpreadEntrance>
     </div>
 
@@ -96,7 +98,7 @@ const mainImageLabel = computed(() => {
       :delay="180"
       class="flex flex-wrap items-center justify-center gap-3 pt-1"
     >
-      <Button variant="primary" type="button" data-testid="return-home" @click="emit('return')">
+      <Button variant="secondary" type="button" data-testid="return-home" @click="emit('return')">
         <span class="inline-flex items-center gap-2">
           <ArrowLeft class="size-4" aria-hidden="true" />
           {{ $t('image.return') }}
