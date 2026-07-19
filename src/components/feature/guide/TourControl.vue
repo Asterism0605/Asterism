@@ -19,7 +19,7 @@ const emit = defineEmits<{
 const { t } = useI18n();
 const isOpen = ref(false);
 const rootRef = ref<HTMLElement | null>(null);
-const TARGET_ICON_SRC = '/images/target.png';
+const TARGET_ICON_SRC = '/images/target.webp';
 
 const STEP_PROGRESS_KEYS: Record<UserTourStep, string> = {
   'home-overview': 'userTour.control.progress.home',
@@ -68,7 +68,12 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside, 
 </script>
 
 <template>
-  <div ref="rootRef" class="relative" data-tour-control>
+  <div
+    ref="rootRef"
+    class="relative"
+    data-tour-control
+    @keydown.esc="closeMenu"
+  >
     <button
       type="button"
       data-testid="user-tour-control-trigger"
@@ -76,11 +81,10 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside, 
       :disabled="isDisabled"
       :aria-disabled="isDisabled"
       :aria-expanded="isOpen"
-      aria-haspopup="menu"
+      aria-haspopup="true"
       :aria-label="t('userTour.control.open')"
       :title="t('userTour.control.title')"
       @click.stop="toggleMenu"
-      @keydown.esc="closeMenu"
     >
       <img
         :src="TARGET_ICON_SRC"
@@ -93,7 +97,6 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside, 
       :open="isOpen"
       panel-class="w-46"
       panel-test-id="user-tour-control-menu"
-      role="menu"
     >
       <div
         data-testid="user-tour-control-header"
@@ -109,7 +112,6 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside, 
       <button
         v-if="!isPaused && !isCompleted"
         type="button"
-        role="menuitem"
         data-testid="user-tour-start"
         class="cursor-pointer flex w-full items-start px-4 py-3 text-left transition-colors hover:bg-white/6 focus-visible:bg-white/8 focus-visible:outline-none"
         @click="handleStart"
@@ -128,7 +130,6 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside, 
       <button
         v-if="isPaused"
         type="button"
-        role="menuitem"
         data-testid="user-tour-resume"
         class="cursor-pointer flex w-full items-start px-4 py-3 text-left transition-colors hover:bg-white/6 focus-visible:bg-white/8 focus-visible:outline-none"
         @click="handleResume"
@@ -147,7 +148,6 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside, 
       <div v-if="isPaused || isCompleted" class="border-t border-white/10">
         <button
           type="button"
-          role="menuitem"
           data-testid="user-tour-restart"
           class="cursor-pointer flex w-full items-center px-4 py-3 text-left text-sm text-text-secondary transition-colors hover:bg-white/6 hover:text-text-primary focus-visible:bg-white/8 focus-visible:outline-none"
           @click="handleRestart"

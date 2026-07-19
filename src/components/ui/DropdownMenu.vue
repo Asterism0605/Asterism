@@ -4,9 +4,8 @@ withDefaults(
     open: boolean;
     panelClass?: string;
     panelTestId?: string;
-    role?: string;
   }>(),
-  { panelClass: '', panelTestId: undefined, role: undefined }
+  { panelClass: '', panelTestId: undefined }
 );
 </script>
 
@@ -22,7 +21,6 @@ withDefaults(
     <div
       v-if="open"
       :data-testid="panelTestId"
-      :role="role"
       class="absolute right-0 top-[calc(100%+10px)] z-20 origin-top-right rounded-2xl border border-white/8 bg-elevated/90 backdrop-blur-xl shadow-2xl overflow-hidden"
       :class="panelClass"
     >

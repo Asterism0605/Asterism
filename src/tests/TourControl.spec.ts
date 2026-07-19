@@ -86,4 +86,18 @@ describe('TourControl', () => {
     await wrapper.vm.$nextTick();
     expect(wrapper.find('[data-testid="user-tour-control-menu"]').exists()).toBe(false);
   });
+
+  it('uses disclosure semantics instead of an incomplete menu pattern', async () => {
+    const wrapper = mountTourControl('idle');
+    const trigger = wrapper.get('[data-testid="user-tour-control-trigger"]');
+
+    expect(trigger.attributes('aria-haspopup')).toBe('true');
+
+    await trigger.trigger('click');
+
+    expect(
+      wrapper.get('[data-testid="user-tour-control-menu"]').attributes('role')
+    ).toBeUndefined();
+    expect(wrapper.get('[data-testid="user-tour-start"]').attributes('role')).toBeUndefined();
+  });
 });
