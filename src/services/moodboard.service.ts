@@ -32,6 +32,7 @@ function toSavedImage(row: MoodboardItemRow): SavedImage | null {
     title: image.title,
     styleGroup: image.style_group,
     style: image.style ?? [],
+    medium: image.medium,
     createdAt: row.created_at
   };
 }
@@ -131,6 +132,7 @@ export async function addItem(folderId: string, imageId: string): Promise<SavedI
     title: image.title,
     styleGroup: image.styleGroup,
     style: image.style,
+    medium: image.medium ?? null,
     createdAt: row.created_at
   };
 }

@@ -6,6 +6,7 @@ export interface MoodboardImageRow {
   title: string;
   style_group: string;
   style: string[] | null;
+  medium: string | null;
 }
 
 export interface MoodboardItemRow {
@@ -56,7 +57,8 @@ const MOODBOARD_FOLDER_SELECT = `
       url,
       title,
       style_group,
-      style
+      style,
+      medium
     )
   )
 `;

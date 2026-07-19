@@ -29,7 +29,8 @@ vi.mock('@/services/image.service', () => ({
     src: `/style-image/${id}.webp`,
     title: `Image ${id}`,
     styleGroup: 'minimal',
-    style: ['Minimalism']
+    style: ['Minimalism'],
+    medium: 'Interior Design'
   })
 }));
 
@@ -68,7 +69,8 @@ describe('moodboard.service', () => {
               url: '/image-1.webp',
               title: 'Image 1',
               style_group: 'minimal',
-              style: ['Minimalism']
+              style: ['Minimalism'],
+              medium: 'Interior Design'
             }
           }
         ]
@@ -83,8 +85,41 @@ describe('moodboard.service', () => {
       itemId: 'item-1',
       id: 'image-1',
       src: '/image-1.webp',
-      styleGroup: 'minimal'
+      styleGroup: 'minimal',
+      medium: 'Interior Design'
     });
+  });
+
+  it('maps a null medium through as-is', async () => {
+    fetchMoodboardFolders.mockResolvedValue([
+      {
+        id: 'folder-1',
+        profile_id: 'user-1',
+        name: 'Studio',
+        created_at: '2026-07-05T00:00:00.000Z',
+        updated_at: '2026-07-05T00:00:00.000Z',
+        moodboard_items: [
+          {
+            id: 'item-1',
+            folder_id: 'folder-1',
+            image_id: 'image-1',
+            created_at: '2026-07-05T00:00:00.000Z',
+            images: {
+              id: 'image-1',
+              url: '/image-1.webp',
+              title: 'Image 1',
+              style_group: 'minimal',
+              style: ['Minimalism'],
+              medium: null
+            }
+          }
+        ]
+      }
+    ]);
+
+    const viewModel = await getMoodboardViewModel('user-1');
+
+    expect(viewModel.folders[0].images[0].medium).toBeNull();
   });
 
   it('keeps only the newest fetched item for each image id', async () => {
@@ -214,7 +249,8 @@ describe('moodboard.service', () => {
     expect(item).toMatchObject({
       itemId: 'item-1',
       id: 'image-1',
-      src: '/style-image/image-1.webp'
+      src: '/style-image/image-1.webp',
+      medium: 'Interior Design'
     });
   });
 
@@ -248,6 +284,7 @@ describe('moodboard.service', () => {
             title: 'Image 1',
             styleGroup: 'minimal',
             style: [],
+            medium: null,
             createdAt: '2026-07-05T00:00:00.000Z'
           }
         ]

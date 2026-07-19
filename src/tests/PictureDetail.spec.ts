@@ -55,6 +55,7 @@ const testSavedImage: SavedImage = {
   title: 'Saved image',
   styleGroup: 'y2k',
   style: [],
+  medium: null,
   createdAt: '2026-07-05T00:00:00.000Z'
 }
 
