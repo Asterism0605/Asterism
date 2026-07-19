@@ -179,6 +179,68 @@ describe('AppHeader', () => {
     wrapper.unmount();
   });
 
+  it('resumes a paused detail step after routing to picture detail', async () => {
+    localStorage.clear();
+    const tour = useUserTour('user-1');
+    tour.start('y2k-main-001');
+    tour.advance('detail-thumbnail', 'y2k-main-001');
+    tour.pause();
+
+    const pinia = createPinia();
+    const authStore = useAuthStore(pinia);
+    const session = createAuthenticatedSession();
+    authStore.session = session;
+    authStore.user = session.user;
+    setActivePinia(pinia);
+    const wrapper = mount(AppHeader, {
+      global: { plugins: [router, pinia] }
+    });
+
+    await wrapper.get('[data-testid="user-tour-control-trigger"]').trigger('click');
+    await wrapper.get('[data-testid="user-tour-resume"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('picture-detail');
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-thumbnail'
+    });
+
+    wrapper.unmount();
+  });
+
+  it('resumes a paused home step after routing from picture detail', async () => {
+    await router.push('/images/y2k-main-001');
+    await router.isReady();
+    localStorage.clear();
+    const tour = useUserTour('user-1');
+    tour.start('y2k-main-001');
+    tour.advance('home-image', 'y2k-main-001');
+    tour.pause();
+
+    const pinia = createPinia();
+    const authStore = useAuthStore(pinia);
+    const session = createAuthenticatedSession();
+    authStore.session = session;
+    authStore.user = session.user;
+    setActivePinia(pinia);
+    const wrapper = mount(AppHeader, {
+      global: { plugins: [router, pinia] }
+    });
+
+    await wrapper.get('[data-testid="user-tour-control-trigger"]').trigger('click');
+    await wrapper.get('[data-testid="user-tour-resume"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('home');
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'home-image'
+    });
+
+    wrapper.unmount();
+  });
+
   it('starts the tour from the header control when it is idle', async () => {
     localStorage.clear();
     await router.push('/account/consultations');

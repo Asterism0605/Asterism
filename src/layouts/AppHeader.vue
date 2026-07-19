@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { useRoute, useRouter, type RouteLocationRaw } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { Languages, ChevronDown } from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth.store';
@@ -89,57 +89,44 @@ async function handleLogout() {
   router.push({ name: 'home' });
 }
 
-function startUserTour(): void {
+async function handleStartUserTour(): Promise<void> {
   if (isHome.value) {
     requestHomeTourStart();
     return;
   }
 
   welcomeTour.complete();
+  await router.push({ name: 'home' });
+  await nextTick();
   userTour.start();
-  void router.push({ name: 'home' });
 }
 
-function restartUserTour(): void {
-  if (isHome.value) {
-    requestHomeTourStart();
-    return;
-  }
-
-  welcomeTour.complete();
-  userTour.restart();
-  void router.push({ name: 'home' });
-}
-
-function resumeUserTour(): void {
+async function resumeUserTour(): Promise<void> {
   const step = userTour.state.value.step;
   const targetImageId = userTour.state.value.targetImageId;
   if (!step) return;
 
-  userTour.resume();
+  let targetRoute: RouteLocationRaw;
 
   if (step === 'home-overview' || step === 'home-image') {
-    void router.push({ name: 'home' });
-    return;
-  }
-
-  if (
+    targetRoute = { name: 'home' };
+  } else if (
     (step === 'spread-related-group' || step === 'spread-related-image') &&
     targetImageId
   ) {
-    void router.push({ name: 'image-spread', params: { imageId: targetImageId } });
-    return;
-  }
-
-  if (
+    targetRoute = { name: 'image-spread', params: { imageId: targetImageId } };
+  } else if (
     (step === 'detail-thumbnail' || step === 'detail-style-tag' || step === 'detail-save') &&
     targetImageId
   ) {
-    void router.push({ name: 'picture-detail', params: { imageId: targetImageId } });
-    return;
+    targetRoute = { name: 'picture-detail', params: { imageId: targetImageId } };
+  } else {
+    targetRoute = { name: 'home' };
   }
 
-  void router.push({ name: 'home' });
+  await router.push(targetRoute);
+  await nextTick();
+  userTour.resume();
 }
 </script>
 
@@ -221,9 +208,9 @@ function resumeUserTour(): void {
         v-if="authStore.isAuthenticated"
         :status="userTourStatus"
         :step="userTourStep"
-        @start="startUserTour"
+        @start="handleStartUserTour"
         @resume="resumeUserTour"
-        @restart="restartUserTour"
+        @restart="handleStartUserTour"
       />
 
       <template v-if="!authStore.isAuthenticated">
