@@ -68,7 +68,8 @@ export default {
     folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
     folderCreatedAndSaved: 'Folder created and image saved.',
     deleteFolderFailed: 'Failed to delete the folder. Please try again.',
-    deleteImageFailed: 'Failed to delete the image. Please try again.'
+    deleteImageFailed: 'Failed to delete the image. Please try again.',
+    folderNameTooLong: '@:moodboard.folderNameTooLong'
   },
   userMenu: {
     signedInAs: 'Signed in as',
@@ -246,6 +247,7 @@ export default {
     startExploring: 'Start Exploring',
     createFolderTitle: 'SAVE TO NEW FOLDER',
     folderNamePlaceholder: 'Folder name',
+    folderNameTooLong: 'Folder name must be {max} characters or fewer.',
     send: 'SEND',
     goToMoodboard: 'Go to Moodboard',
     deleteFolderTitle: 'Delete {name} and All Images',

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { CircleCheck } from '@lucide/vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import Button from '@/components/ui/Button.vue';
+import { MOODBOARD_FOLDER_NAME_MAX_LENGTH } from '@/constants/moodboard.constants';
+import { graphemeLength } from '@/utils/graphemeLength';
 
 const props = defineProps<{ modelValue: boolean; isSubmitting: boolean; isSuccess: boolean }>();
 const emit = defineEmits<{
@@ -12,6 +14,10 @@ const emit = defineEmits<{
 
 const folderName = ref('');
 
+const isNameTooLong = computed(
+  () => graphemeLength(folderName.value.trim()) > MOODBOARD_FOLDER_NAME_MAX_LENGTH
+);
+
 watch(
   () => props.modelValue,
   (isOpen) => {
@@ -20,12 +26,7 @@ watch(
 );
 
 function handleSubmit() {
-  if (
-    !folderName.value.trim() ||
-    folderName.value.trim().length > 40 ||
-    props.isSubmitting ||
-    props.isSuccess
-  )
+  if (!folderName.value.trim() || isNameTooLong.value || props.isSubmitting || props.isSuccess)
     return;
   emit('submit', folderName.value.trim());
 }
@@ -39,10 +40,9 @@ function handleSubmit() {
         <input
           v-model="folderName"
           class="overlay-input"
-          :class="{ 'pr-10': isSuccess }"
+          :class="{ 'pr-10': isSuccess, 'input-error-border': isNameTooLong }"
           type="text"
           :placeholder="$t('moodboard.folderNamePlaceholder')"
-          maxlength="40"
           :disabled="isSubmitting || isSuccess"
           @keydown.enter="handleSubmit"
         />
@@ -54,13 +54,16 @@ function handleSubmit() {
           />
         </Transition>
       </div>
+      <p v-if="isNameTooLong" class="folder-name-error">
+        {{ $t('moodboard.folderNameTooLong', { max: MOODBOARD_FOLDER_NAME_MAX_LENGTH }) }}
+      </p>
     </div>
     <div class="overlay-actions">
       <div class="overlay-submit">
         <Button
           variant="primary"
           type="button"
-          :disabled="!folderName.trim() || isSubmitting || isSuccess"
+          :disabled="!folderName.trim() || isNameTooLong || isSubmitting || isSuccess"
           @click="handleSubmit"
         >
           {{ $t('moodboard.send') }}
@@ -71,6 +74,18 @@ function handleSubmit() {
 </template>
 
 <style scoped>
+.input-error-border {
+  border: 1px solid var(--color-stellar-red) !important;
+}
+
+.folder-name-error {
+  font-family: var(--font-family-body);
+  font-size: var(--text-mono);
+  color: var(--color-stellar-red);
+  margin-top: 6px;
+  letter-spacing: 0.05em;
+}
+
 .check-enter-active {
   animation: check-in 0.2s ease forwards;
 }
