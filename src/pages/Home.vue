@@ -19,6 +19,7 @@ import type { HomeInspirationImage } from '@/types/image';
 
 const scrollLimitVh = 450;
 const appHeaderHeightPx = 60;
+const homeScrollbarHiddenClass = 'home-scrollbar-hidden';
 const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
@@ -218,12 +219,14 @@ async function loadInspirationImages() {
 }
 
 onMounted(() => {
+  document.documentElement.classList.add(homeScrollbarHiddenClass);
   handleScrollLimit();
   window.addEventListener('scroll', handleScrollLimit, { passive: true });
   void loadInspirationImages();
 });
 
 onBeforeUnmount(() => {
+  document.documentElement.classList.remove(homeScrollbarHiddenClass);
   window.removeEventListener('scroll', handleScrollLimit);
 });
 
