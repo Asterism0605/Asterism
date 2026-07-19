@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { CalendarCheck, ChevronDown, LayoutDashboard, LogOut, Sparkles } from '@lucide/vue';
+import DropdownMenu from '@/components/ui/DropdownMenu.vue';
 
 defineProps<{
   displayName: string;
@@ -77,71 +78,59 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside, true
       <ChevronDown class="size-4 shrink-0 opacity-60" :class="menuOpen ? 'rotate-180' : ''" />
     </button>
 
-    <Transition
-      enter-active-class="transition duration-150 ease-out"
-      enter-from-class="opacity-0 translate-y-1 scale-95"
-      enter-to-class="opacity-100 translate-y-0 scale-100"
-      leave-active-class="transition duration-100 ease-in"
-      leave-from-class="opacity-100 translate-y-0 scale-100"
-      leave-to-class="opacity-0 translate-y-1 scale-95"
-    >
-      <div
-        v-if="menuOpen"
-        class="absolute right-0 top-[calc(100%+10px)] w-44 origin-top-right rounded-2xl border border-white/8 bg-elevated/90 backdrop-blur-xl shadow-2xl overflow-hidden"
-      >
-        <div class="px-4 py-3 border-b border-white/8">
-          <p class="text-xs text-text-secondary truncate">{{ $t('userMenu.signedInAs') }}</p>
-          <p class="text-sm font-medium text-text-primary truncate mt-0.5">
-            {{ displayName }}
-          </p>
-        </div>
-
-        <ul class="py-1.5">
-          <li>
-            <button
-              type="button"
-              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
-              @click="handleMoodboard"
-            >
-              <LayoutDashboard class="size-4 shrink-0 opacity-60" />
-              {{ $t('userMenu.moodboard') }}
-            </button>
-          </li>
-
-          <li>
-            <button
-              type="button"
-              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
-              @click="handleStyleDna"
-            >
-              <Sparkles class="size-4 shrink-0 opacity-60" />
-              {{ $t('userMenu.styleDna') }}
-            </button>
-          </li>
-
-          <li>
-            <button
-              type="button"
-              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
-              @click="handleConsultations"
-            >
-              <CalendarCheck class="size-4 shrink-0 opacity-60" />
-              {{ $t('userMenu.myConsultations') }}
-            </button>
-          </li>
-
-          <li class="mt-1 border-t border-white/8">
-            <button
-              type="button"
-              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-stellar-red hover:bg-stellar-red/8 transition-colors duration-150 cursor-pointer text-left"
-              @click="handleLogout"
-            >
-              <LogOut class="size-4 shrink-0 opacity-60" />
-              {{ $t('userMenu.logout') }}
-            </button>
-          </li>
-        </ul>
+    <DropdownMenu :open="menuOpen" panel-class="w-44">
+      <div class="px-4 py-3 border-b border-white/8">
+        <p class="text-xs text-text-secondary truncate">{{ $t('userMenu.signedInAs') }}</p>
+        <p class="text-sm font-medium text-text-primary truncate mt-0.5">
+          {{ displayName }}
+        </p>
       </div>
-    </Transition>
+
+      <ul class="py-1.5">
+        <li>
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleMoodboard"
+          >
+            <LayoutDashboard class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.moodboard') }}
+          </button>
+        </li>
+
+        <li>
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleStyleDna"
+          >
+            <Sparkles class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.styleDna') }}
+          </button>
+        </li>
+
+        <li>
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleConsultations"
+          >
+            <CalendarCheck class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.myConsultations') }}
+          </button>
+        </li>
+
+        <li class="mt-1 border-t border-white/8">
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-stellar-red hover:bg-stellar-red/8 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleLogout"
+          >
+            <LogOut class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.logout') }}
+          </button>
+        </li>
+      </ul>
+    </DropdownMenu>
   </div>
 </template>
