@@ -109,7 +109,7 @@ describe('ImageSpread', () => {
       '/style-image/'
     )
     expect(wrapper.text()).toContain('Return')
-    expect(wrapper.text()).toContain('ADD TO MOODBOARD')
+    expect(wrapper.text()).toContain('Add to Moodboard')
     expect(wrapper.findAll('[data-testid="related-image-card"]')).toHaveLength(4)
   })
 
@@ -185,7 +185,7 @@ describe('ImageSpread', () => {
 
     const addButton = wrapper
       .findAll('button')
-      .find((button) => button.text().includes('ADD TO MOODBOARD'))
+      .find((button) => button.text().includes('Add to Moodboard'))
     await addButton!.trigger('click')
     await flushPromises()
 
@@ -373,7 +373,7 @@ describe('ImageSpread', () => {
     })
     const { wrapper } = await mountImageSpread()
 
-    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))
+    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('Add to Moodboard'))
     await addBtn!.trigger('click')
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))
     await saveBtn!.trigger('click')
@@ -384,7 +384,7 @@ describe('ImageSpread', () => {
     expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }))
   })
 
-  it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
+  it('儲存進行中時停用 Add to Moodboard，完成後重新啟用', async () => {
     let resolve!: (image: SavedImage) => void
     vi.mocked(addItem).mockImplementationOnce(
       () =>
@@ -394,7 +394,7 @@ describe('ImageSpread', () => {
     )
     const { wrapper } = await mountImageSpread()
 
-    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))
+    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('Add to Moodboard'))
     await addBtn!.trigger('click')
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))
     await saveBtn!.trigger('click')
@@ -413,7 +413,7 @@ describe('ImageSpread', () => {
   it('點擊 SAVE TO FOLDER 時以中心圖片 id 呼叫 addItem', async () => {
     const { wrapper } = await mountImageSpread()
 
-    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))
+    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('Add to Moodboard'))
     await addBtn!.trigger('click')
     const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))
     await saveBtn!.trigger('click')
@@ -451,7 +451,7 @@ describe('ImageSpread', () => {
       const findBtn = (text: string) =>
         wrapper.findAll('button').find((b) => b.text().includes(text))!
 
-      await findBtn('ADD TO MOODBOARD').trigger('click')
+      await findBtn('Add to Moodboard').trigger('click')
       await findBtn('SAVE TO NEW FOLDER').trigger('click')
       await flushPromises()
 
@@ -503,7 +503,7 @@ describe('ImageSpread', () => {
       const findBtn = (text: string) =>
         wrapper.findAll('button').find((b) => b.text().includes(text))!
 
-      await findBtn('ADD TO MOODBOARD').trigger('click')
+      await findBtn('Add to Moodboard').trigger('click')
       await findBtn('SAVE TO NEW FOLDER').trigger('click')
       await flushPromises()
 
@@ -548,7 +548,7 @@ describe('ImageSpread', () => {
       const findBtn = (text: string) =>
         wrapper.findAll('button').find((b) => b.text().includes(text))!
 
-      await findBtn('ADD TO MOODBOARD').trigger('click')
+      await findBtn('Add to Moodboard').trigger('click')
       await findBtn('SAVE TO NEW FOLDER').trigger('click')
       await flushPromises()
 
@@ -565,7 +565,7 @@ describe('ImageSpread', () => {
       vi.advanceTimersByTime(800)
       await flushPromises()
 
-      await findBtn('ADD TO MOODBOARD').trigger('click')
+      await findBtn('Add to Moodboard').trigger('click')
       await findBtn('SAVE TO NEW FOLDER').trigger('click')
       await flushPromises()
 

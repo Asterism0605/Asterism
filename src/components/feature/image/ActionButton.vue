@@ -9,6 +9,7 @@ import {
   LoaderCircle,
   User
 } from '@lucide/vue';
+import ScrambleText from '@/components/effects/ScrambleText.vue';
 import Button from '@/components/ui/Button.vue';
 
 interface FolderItem {
@@ -47,6 +48,7 @@ const emit = defineEmits<{
 const isOpen = ref(false);
 const showFolderList = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
+const moodboardScramble = ref<InstanceType<typeof ScrambleText> | null>(null);
 
 const isBusy = computed(() => props.disabled || props.justSavedFolderId !== null);
 
@@ -59,6 +61,16 @@ function toggleDropdown() {
   isOpen.value = !isOpen.value;
   showFolderList.value = false;
   if (isOpen.value) emit('opened');
+}
+
+function playMoodboardScramble() {
+  if (props.spread) moodboardScramble.value?.play();
+}
+
+function playMoodboardScrambleOnFocus(event: FocusEvent) {
+  if ((event.currentTarget as HTMLElement).matches(':focus-visible')) {
+    playMoodboardScramble();
+  }
 }
 
 function handleOutsideClick(event: MouseEvent) {
@@ -117,14 +129,21 @@ onBeforeUnmount(() => {
     </Button>
     <template v-else>
       <Button
-        variant="secondary"
-        class="w-full !px-3 !py-3 md:!px-4 md:!py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-        :class="props.spread ? 'bg-black hover:!bg-dropdown' : ''"
+        :variant="props.spread ? 'bracket' : 'secondary'"
+        class="w-full disabled:cursor-not-allowed disabled:opacity-50"
+        :class="props.spread ? 'h-10! px-4! py-0!' : 'px-3! py-3! md:px-4! md:py-4!'"
         :disabled="props.disabled"
+        @mouseenter="playMoodboardScramble"
+        @focus="playMoodboardScrambleOnFocus"
         @click="toggleDropdown()"
       >
         <span
-          class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest"
+          class="flex items-center justify-center gap-1 md:gap-2"
+          :class="
+            props.spread
+              ? 'font-title text-sm font-medium tracking-normal'
+              : 'font-mono text-xs uppercase tracking-widest md:text-sm'
+          "
         >
           <LoaderCircle
             v-if="props.disabled"
@@ -133,11 +152,35 @@ onBeforeUnmount(() => {
           />
           <Bookmark
             v-else
-            class="w-4 h-4 md:w-5.5 md:h-5.5"
+            class="w-4 h-4 md:w-4 md:h-4"
+            :class="props.spread ? 'relative -top-[2px]' : ''"
+            :stroke-width="1.5"
             :fill="props.saved ? 'currentColor' : 'none'"
             aria-hidden="true"
           />
-          {{ $t('image.addToMoodboard') }}
+          <span
+            :class="
+              props.spread
+                ? 'relative inline-block border-b border-white/80 pb-1 leading-none'
+                : ''
+            "
+          >
+            <template v-if="props.spread">
+              <span class="invisible" aria-hidden="true">{{
+                $t('image.addToMoodboardSpread')
+              }}</span>
+              <ScrambleText
+                ref="moodboardScramble"
+                class="absolute inset-0 whitespace-nowrap"
+                :text="$t('image.addToMoodboardSpread')"
+                chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+                :duration="0.7"
+                :speed="0.18"
+                :autoplay="false"
+              />
+            </template>
+            <template v-else>{{ $t('image.addToMoodboard') }}</template>
+          </span>
         </span>
       </Button>
     </template>

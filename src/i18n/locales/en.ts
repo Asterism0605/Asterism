@@ -225,6 +225,7 @@ export default {
     photoBy: 'by',
     consultStylist: 'CONSULT STYLIST',
     addToMoodboard: 'ADD TO MOODBOARD',
+    addToMoodboardSpread: 'Add to Moodboard',
     saveToFolder: 'SAVE TO FOLDER',
     similar: 'Similar',
     return: 'Return',

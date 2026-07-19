@@ -221,6 +221,7 @@ export default {
     photoBy: '',
     consultStylist: '諮詢風格顧問',
     addToMoodboard: '加入情緒板',
+    addToMoodboardSpread: '加入情緒板',
     saveToFolder: '儲存到資料夾',
     similar: '相似',
     return: '返回',
