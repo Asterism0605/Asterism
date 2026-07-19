@@ -11,9 +11,9 @@ import { useRouter, useRoute } from 'vue-router';
 import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConfirm.vue';
 import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
 import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
+import FolderDirectory from '@/components/feature/moodboard/FolderDirectory.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
-import ProfileCard from '@/components/ui/ProfileCard.vue';
 import { showToast } from '@/composables/useToast';
 import {
   NAV_H,
@@ -29,6 +29,7 @@ import {
   photos,
   mDetailBase,
   buildMoodboardOrbitImages,
+  buildPlaceholderOrbitImages,
   isFolderDimmed
 } from '@/components/feature/moodboard/config';
 import { packPhotos, ellipsePath, ellipsePathM } from '@/components/feature/moodboard/layout';
@@ -56,7 +57,10 @@ const props = defineProps({
 });
 const emit = defineEmits(['open', 'home']);
 
-const DIMMED_OPACITY = 0.4;
+const DIMMED_OPACITY = 0.7;
+const ORBIT_SNAP_ANGLE_DESKTOP = -Math.PI / 2 - Math.PI / 3;
+const ORBIT_SNAP_ANGLE_MOBILE = -Math.PI / 2;
+const ORBIT_SNAP_HOLD_MS = 2000;
 
 const router = useRouter();
 const route = useRoute();
@@ -65,6 +69,7 @@ const moodboardStore = useMoodboardStore();
 const authStore = useAuthStore();
 
 const activeSphereFolderId = ref<string | null>(null);
+const previewingEmptyFolderId = ref<string | null>(null);
 const folderNames = computed(() => moodboardStore.folders.map((folder) => folder.name));
 const sphereFolder = computed(() => {
   const activeFolder = moodboardStore.folders.find(
@@ -77,13 +82,25 @@ const sphereFolder = computed(() => {
     return !newest || folder.createdAt > newest.createdAt ? folder : newest;
   }, undefined);
 });
-const orbitImages = computed(() => buildMoodboardOrbitImages(sphereFolder.value?.images ?? []));
+const orbitImages = computed(() =>
+  previewingEmptyFolderId.value
+    ? buildPlaceholderOrbitImages()
+    : buildMoodboardOrbitImages(sphereFolder.value?.images ?? [])
+);
+const highlightedFolderId = computed(
+  () => previewingEmptyFolderId.value ?? sphereFolder.value?.id ?? null
+);
 
 /* ---- reactive state ---- */
 const scale = ref(1);
 const hasFolders = ref(true);
 const orbitPhase = ref(0);
 const hoverIdx = ref(-1);
+const orbitHoldFolderIndex = ref<number | null>(null);
+let orbitHoldTimer: ReturnType<typeof setTimeout> | null = null;
+// 只在 armOrOpenMobileFolder 內由實際點擊寫入，hover/pointerenter 一律不得碰它，
+// 否則手機上同一次點擊裡 pointerenter 先跑一次 preview 會讓 click 誤判成「已經點過一次」。
+const mobileArmedFolderId = ref<string | null>(null);
 const selectedFolder = ref(0);
 const selectedName = computed(() => getFolderName(selectedFolder.value));
 const scatter = ref<MoodboardPositionedPhoto[]>([]);
@@ -203,6 +220,7 @@ const mFolders = computed(() => {
       cy: o.cy + o.ry * Math.sin(ang),
       w,
       h,
+      active: !!folder && folder.id === highlightedFolderId.value,
       dimmed: isFolderDimmed(folder),
       hasFolder: !!folder
     };
@@ -242,7 +260,6 @@ const folderView = computed(() => {
   });
 });
 
-const showLeader = computed(() => hasFolders.value && hoverIdx.value >= 0);
 const showEmpty = computed(() => moodboardStore.status === 'idle' || moodboardStore.isEmpty);
 
 function getFolderName(index: number): string {
@@ -255,6 +272,41 @@ function hoverFolder(index: number) {
 
   hoverIdx.value = index;
   activeSphereFolderId.value = folder.id;
+  previewingEmptyFolderId.value = null;
+}
+
+function snapOrbitToFolder(index: number) {
+  const targetAngle = isMobile.value ? ORBIT_SNAP_ANGLE_MOBILE : ORBIT_SNAP_ANGLE_DESKTOP;
+  orbitPhase.value = targetAngle - (index / MAX_FOLDERS) * Math.PI * 2 + Math.PI / 2;
+
+  if (!isMobile.value) return;
+
+  orbitHoldFolderIndex.value = index;
+  if (orbitHoldTimer) clearTimeout(orbitHoldTimer);
+  orbitHoldTimer = setTimeout(() => {
+    orbitHoldFolderIndex.value = null;
+    orbitHoldTimer = null;
+  }, ORBIT_SNAP_HOLD_MS);
+}
+
+function previewFolder(index: number) {
+  const folder = moodboardStore.folders[index];
+  if (!folder) return;
+
+  snapOrbitToFolder(index);
+
+  if (!folder.images.length) {
+    hoverIdx.value = index;
+    previewingEmptyFolderId.value = folder.id;
+    return;
+  }
+  hoverFolder(index);
+}
+
+function previewFolderById(folderId: string) {
+  if (dragging.value) return;
+  const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
+  if (index !== -1) previewFolder(index);
 }
 
 function leaveFolder() {
@@ -264,6 +316,18 @@ function leaveFolder() {
 // deleteHoverIdx 獨立於 hoverFolder：空資料夾（0 張圖片）也要能 hover 顯示刪除 icon
 function onFolderMouseEnter(index: number) {
   deleteHoverIdx.value = index;
+  if (dragging.value) return;
+
+  const folder = moodboardStore.folders[index];
+  if (!folder) return;
+
+  // 軌道圖示本身只切換預覽；若在 hover 時重新指定 orbitPhase，圖示會從游標下
+  // 瞬間跳到定位點，並在拖曳時和 pointermove 互相搶控制權。
+  if (!folder.images.length) {
+    hoverIdx.value = index;
+    previewingEmptyFolderId.value = folder.id;
+    return;
+  }
   hoverFolder(index);
 }
 
@@ -419,7 +483,7 @@ function buildMobileHome() {
     gap: 12,
     xMin: 16,
     xMax: 424,
-    yMin: 200,
+    yMin: 330,
     yMax: 720
   });
   mHomePhotosRandom.value = nodes.map((d) => ({
@@ -436,7 +500,7 @@ function buildMobileHome() {
 }
 
 function openFolder(i: number) {
-  if (!moodboardStore.folders[i]) return;
+  if (!moodboardStore.folders[i]?.images.length) return;
 
   selectedFolder.value = i;
   hasFolders.value = false;
@@ -468,6 +532,11 @@ function goHome() {
   hoverIdx.value = -1;
   mHover.value = -1;
   dragging.value = false;
+  activeSphereFolderId.value = null;
+  previewingEmptyFolderId.value = null;
+  // 回首頁後預覽會 fallback 回預設資料夾，armed 狀態要跟著同步，
+  // 這樣使用者再點一次預設資料夾時，才會維持「已在預覽中，點一次就開」的行為。
+  mobileArmedFolderId.value = highlightedFolderId.value;
   navigate('', -1);
 }
 
@@ -487,6 +556,31 @@ function onFolderClick(i: number) {
   openFolder(i);
 }
 
+function openFolderById(folderId: string) {
+  const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
+  if (index !== -1) openFolder(index);
+}
+
+function armOrOpenMobileFolder(index: number) {
+  if (consumeDidDrag()) return;
+
+  const folder = moodboardStore.folders[index];
+  if (!folder) return;
+
+  if (mobileArmedFolderId.value === folder.id) {
+    openFolder(index);
+    return;
+  }
+
+  mobileArmedFolderId.value = folder.id;
+  previewFolder(index);
+}
+
+function armOrOpenMobileFolderById(folderId: string) {
+  const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
+  if (index !== -1) armOrOpenMobileFolder(index);
+}
+
 function onSphereClick() {
   if (consumeDidDrag()) return;
 
@@ -499,11 +593,6 @@ function onSphereClick() {
   openFolder(index);
 }
 
-function hoverMobileFolderAt(i: number) {
-  if (!moodboardStore.folders[i]) return;
-  mHover.value = i;
-}
-
 let sphereHandle: SphereHandle | null = null;
 let orbitRaf = 0;
 let orbitLast: number | null = null;
@@ -512,8 +601,8 @@ function orbitLoop(ts: number) {
   if (orbitLast === null) orbitLast = ts;
   const dt = Math.min(0.05, (ts - orbitLast) / 1000);
   orbitLast = ts;
-  if (hasFolders.value && !dragging.value && hoverIdx.value < 0 && mHover.value < 0)
-    orbitPhase.value += ORBIT_SPEED * dt;
+  const previewPause = orbitHoldFolderIndex.value !== null || (!isMobile.value && hoverIdx.value >= 0);
+  if (hasFolders.value && !dragging.value && !previewPause) orbitPhase.value += ORBIT_SPEED * dt;
   orbitRaf = requestAnimationFrame(orbitLoop);
 }
 
@@ -573,7 +662,12 @@ function initializeSphere() {
   );
 }
 
-watch(orbitImages, () => nextTick(initializeSphere));
+watch(orbitImages, () => {
+  nextTick(initializeSphere);
+  if (isMobile.value && hasFolders.value) {
+    buildMobileHome();
+  }
+});
 
 onMounted(async () => {
   onResize();
@@ -585,6 +679,10 @@ onMounted(async () => {
   ) {
     await moodboardStore.fetchMoodboard(profileId);
   }
+
+  // 資料載入完成後，預設高亮的資料夾本來就等同「已在預覽中」，
+  // 手機版第一次點它要能直接開啟，而不是被當成完全沒點過。
+  mobileArmedFolderId.value = highlightedFolderId.value;
 
   const initialSlug = typeof route.params.slug === 'string' ? route.params.slug : undefined;
   if (initialSlug) {
@@ -608,6 +706,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize);
   cancelAnimationFrame(orbitRaf);
+  if (orbitHoldTimer) clearTimeout(orbitHoldTimer);
   sphereHandle?.dispose();
   sphereHandle = null;
 });
@@ -666,18 +765,16 @@ onBeforeUnmount(() => {
               top: f.cy - f.h / 2 + 'px',
               width: f.w + 'px',
               height: f.h + 'px',
-              transform: mHover === f.i ? 'scale(1.06)' : 'scale(1)',
+              transform: f.active ? 'scale(1.06)' : 'scale(1)',
               transition: 'transform .22s ease',
-              zIndex: mHover === f.i ? 20 : 5,
+              zIndex: f.active ? 20 : 5,
               cursor: f.hasFolder ? 'pointer' : 'default',
               pointerEvents: f.hasFolder ? 'auto' : 'none'
             }"
-            @pointerenter="hoverMobileFolderAt(f.i)"
-            @pointerleave="mHover = -1"
-            @click="onFolderClick(f.i)"
+            @click="armOrOpenMobileFolder(f.i)"
           >
             <img
-              :src="mHover === f.i ? '/images/folder-active.png' : '/images/folder-idle.png'"
+              :src="f.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
               draggable="false"
               class="w-full h-full select-none"
               :style="{
@@ -704,72 +801,20 @@ onBeforeUnmount(() => {
               @delete="requestDeleteFolder(f.i)"
             />
           </div>
+        </div>
 
-          <!-- folder name appears only while a folder is hovered/pressed -->
-          <div
-            class="absolute"
-            :style="{
-              left: '28px',
-              top: '100px',
-              pointerEvents: 'none',
-              opacity: mHover >= 0 ? 1 : 0,
-              transform: mHover >= 0 ? 'translateY(0)' : 'translateY(8px)',
-              transition: 'opacity .3s ease, transform .3s ease'
-            }"
+        <div
+          v-if="previewingEmptyFolderId"
+          class="absolute flex items-center justify-center"
+          style="left: 16px; top: 330px; width: 408px; height: 390px; pointer-events: none; z-index: 35"
+        >
+          <RouterLink
+            data-testid="moodboard-empty-folder-preview-cta-mobile"
+            to="/"
+            class="pointer-events-auto inline-flex rounded-full bg-[#d96643] px-7 py-3 font-semibold text-white transition hover:bg-[#e67550] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
-            <div
-              class="absolute"
-              style="
-                left: -26px;
-                top: -22px;
-                width: 240px;
-                height: 118px;
-                border-radius: 34px;
-                background: radial-gradient(
-                  58% 56% at 30% 46%,
-                  rgba(9, 9, 11, 0.72),
-                  rgba(9, 9, 11, 0)
-                );
-                filter: blur(5px);
-              "
-            ></div>
-            <div
-              class="relative text-white"
-              style="
-                font-size: 21px;
-                font-weight: 400;
-                letter-spacing: 0.4px;
-                text-shadow:
-                  0 2px 18px rgba(0, 0, 0, 0.7),
-                  0 0 14px rgba(255, 255, 255, 0.14);
-              "
-            >
-              {{ mHover >= 0 ? getFolderName(mHover) : '' }}
-            </div>
-            <div class="relative flex items-center" style="gap: 8px; margin-top: 14px">
-              <span
-                style="
-                  width: 7px;
-                  height: 7px;
-                  border-radius: 50%;
-                  background: #eaecf0;
-                  box-shadow: 0 0 8px rgba(234, 236, 240, 0.7);
-                  flex: 0 0 auto;
-                "
-              ></span>
-              <span
-                style="
-                  height: 1.5px;
-                  width: 138px;
-                  background: linear-gradient(
-                    90deg,
-                    rgba(234, 236, 240, 0.95),
-                    rgba(234, 236, 240, 0.28)
-                  );
-                "
-              ></span>
-            </div>
-          </div>
+            {{ $t('moodboard.startExploring') }}
+          </RouterLink>
         </div>
 
         <!-- photos (peek on home, randomised + fade-in on detail) -->
@@ -799,7 +844,9 @@ onBeforeUnmount(() => {
               class="moodboard-photo-link"
               data-testid="moodboard-mobile-photo"
               :disabled="hasFolders ? !sphereFolder || p.placeholder : !p.imageId"
-              :aria-label="hasFolders ? $t('moodboard.openFolderAria') : $t('moodboard.openImageDetailAria')"
+              :aria-label="
+                hasFolders ? $t('moodboard.openFolderAria') : $t('moodboard.openImageDetailAria')
+              "
               @click="hasFolders ? onSphereClick() : p.imageId && goToImage(p.imageId)"
             >
               <img
@@ -835,13 +882,18 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <!-- header: asterisk logo + profile (shared ProfileCard, sm size to fit compact header) -->
-        <div v-if="authStore.isAuthenticated" class="absolute" style="left: 20px; top: 28px">
-          <ProfileCard
-            avatar-size="sm"
-            class="p-0!"
-            :name="authStore.user?.displayName ?? ''"
-            :subtitle="authStore.user?.email ?? ''"
+        <div
+          v-if="hasFolders && moodboardStore.folders.length > 0"
+          class="absolute"
+          style="left: 8px; top: 20px; right: 20px"
+        >
+          <FolderDirectory
+            :folders="moodboardStore.folders"
+            :active-folder-id="highlightedFolderId"
+            :focus-preview="false"
+            @preview="previewFolderById"
+            @preview-end="leaveFolder"
+            @open="armOrOpenMobileFolderById"
           />
         </div>
 
@@ -912,6 +964,7 @@ onBeforeUnmount(() => {
       <div
         v-else
         ref="deskStage"
+        data-testid="moodboard-stage-desktop"
         class="relative"
         :style="stageStyle"
         @pointerdown="onDragStart"
@@ -933,6 +986,22 @@ onBeforeUnmount(() => {
           <path :d="innerPath" stroke="rgba(220,222,228,0.32)" stroke-width="1" fill="none" />
         </svg>
 
+        <i
+          v-if="hasFolders"
+          class="moodboard-corner-orbit moodboard-corner-orbit--one"
+          aria-hidden="true"
+        ></i>
+        <i
+          v-if="hasFolders"
+          class="moodboard-corner-orbit moodboard-corner-orbit--two"
+          aria-hidden="true"
+        ></i>
+        <i
+          v-if="hasFolders && moodboardStore.folders.length > 0"
+          class="folder-directory-spine"
+          aria-hidden="true"
+        ></i>
+
         <!-- ===== STATE A : HAS FOLDERS (orbit + photo sphere) ===== -->
         <div
           v-show="hasFolders"
@@ -940,6 +1009,20 @@ onBeforeUnmount(() => {
           :style="{ cursor: dragging ? 'grabbing' : 'default', touchAction: 'none' }"
         >
           <canvas ref="sphereCanvas" class="absolute" :style="sphereStyle"></canvas>
+
+          <div
+            v-if="previewingEmptyFolderId"
+            class="absolute flex items-center justify-center"
+            :style="{ ...sphereStyle, pointerEvents: 'none', zIndex: 35 }"
+          >
+            <RouterLink
+              data-testid="moodboard-empty-folder-preview-cta"
+              to="/"
+              class="pointer-events-auto inline-flex rounded-full bg-[#d96643] px-7 py-3 font-semibold text-white transition hover:bg-[#e67550] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              {{ $t('moodboard.startExploring') }}
+            </RouterLink>
+          </div>
 
           <!-- folder images orbit the ellipse; hovering swaps to the active image + pauses the orbit -->
           <div
@@ -1129,80 +1212,18 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <!-- ===== PROFILE (teammate's ProfileCard component, sm size — 組長回饋原尺寸太大，
-             介於改動前的 scale(0.5) 跟改動後全尺寸之間) ===== -->
-        <div v-if="authStore.isAuthenticated" class="absolute" style="left: 100px; top: 150px">
-          <ProfileCard
-            avatar-size="sm"
-            :name="authStore.user?.displayName ?? ''"
-            :subtitle="authStore.user?.email ?? ''"
-          />
-        </div>
-
-        <!-- hover title block: dark halo + glowing title + underline with a dot at its left -->
         <div
+          v-if="hasFolders && moodboardStore.folders.length > 0"
           class="absolute"
-          :style="{
-            left: '150px',
-            top: '300px',
-            pointerEvents: 'none',
-            opacity: showLeader ? 1 : 0,
-            transform: showLeader ? 'translateY(0)' : 'translateY(8px)',
-            transition: showLeader ? 'opacity .32s ease, transform .32s ease' : 'none'
-          }"
+          style="left: 100px; top: 30px; z-index: 5"
         >
-          <div
-            class="absolute"
-            style="
-              left: -34px;
-              top: -26px;
-              width: 330px;
-              height: 150px;
-              border-radius: 40px;
-              background: radial-gradient(
-                58% 56% at 32% 46%,
-                rgba(9, 9, 11, 0.72),
-                rgba(9, 9, 11, 0)
-              );
-              filter: blur(5px);
-            "
-          ></div>
-          <div
-            class="relative text-white"
-            style="
-              font-size: 16px;
-              font-weight: 400;
-              letter-spacing: 0.6px;
-              text-shadow:
-                0 2px 22px rgba(0, 0, 0, 0.7),
-                0 0 18px rgba(255, 255, 255, 0.14);
-            "
-          >
-            {{ getFolderName(hoverIdx) }}
-          </div>
-          <div class="relative flex items-center" style="gap: 10px; margin-top: 20px">
-            <span
-              style="
-                width: 9px;
-                height: 9px;
-                border-radius: 50%;
-                background: #eaecf0;
-                box-shadow: 0 0 10px rgba(234, 236, 240, 0.7);
-                flex: 0 0 auto;
-              "
-            ></span>
-            <span
-              style="
-                height: 1.5px;
-                width: 188px;
-                background: linear-gradient(
-                  90deg,
-                  rgba(234, 236, 240, 0.95),
-                  rgba(234, 236, 240, 0.28)
-                );
-              "
-            ></span>
-          </div>
+          <FolderDirectory
+            :folders="moodboardStore.folders"
+            :active-folder-id="highlightedFolderId"
+            @preview="previewFolderById"
+            @preview-end="leaveFolder"
+            @open="openFolderById"
+          />
         </div>
       </div>
     </template>
@@ -1222,6 +1243,47 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.moodboard-corner-orbit {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: cornerOrbitFloat 6.4s ease-in-out infinite;
+}
+.moodboard-corner-orbit--one {
+  left: -370px;
+  top: -590px;
+  width: 780px;
+  height: 706px;
+  border: 1px solid rgba(251, 251, 251, 0.418);
+}
+.moodboard-corner-orbit--two {
+  left: -430px;
+  top: -410px;
+  width: 730px;
+  height: 560px;
+  border: 1.3px solid rgba(248, 246, 246, 0.842);
+}
+.folder-directory-spine {
+  position: absolute;
+  left: 105px;
+  top: 0;
+  height: 1024px;
+  width: 1.8px;
+  background: rgba(240, 237, 230, 0.879);
+  pointer-events: none;
+  z-index: 1;
+  animation: cornerOrbitFloat 6.4s ease-in-out infinite;
+}
+@keyframes cornerOrbitFloat {
+  0%,
+  100% {
+    translate: 0 -12px;
+  }
+  50% {
+    translate: 0 8px;
+  }
+}
 @keyframes floatY {
   0%,
   100% {

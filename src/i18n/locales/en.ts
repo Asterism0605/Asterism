@@ -279,10 +279,28 @@ export default {
     deleteImageTitle: 'Delete Image from Folder',
     deleteImageAria: 'Delete image',
     openFolderAria: 'Open folder',
+    folderSelected: 'My Folders',
+    folderEmptySuffix: '(Empty)',
     openImageDetailAria: 'View image detail'
   },
   userTour: {
     progress: '{current} / {total}',
+    control: {
+      open: 'Open guided tour menu',
+      title: 'Guided tour',
+      start: 'Start tour',
+      startDescription: 'Start from the beginning and discover Asterism.',
+      resume: 'Resume tour',
+      resumeDescription: 'Continue where you left off.',
+      restart: 'Restart tour',
+      replay: 'Replay tour',
+      lastProgress: 'Last progress: {progress}',
+      progress: {
+        home: 'Homepage exploration',
+        spread: 'Image exploration',
+        detail: 'Image detail'
+      }
+    },
     actions: {
       previous: 'Previous',
       next: 'Next',

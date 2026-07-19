@@ -36,7 +36,8 @@ const router = createRouter({
     {
       path: '/discover-dna',
       name: 'discover-dna',
-      component: DiscoverDna
+      component: DiscoverDna,
+      meta: { requiresAuth: true }
     },
     {
       path: '/login',
@@ -94,17 +95,20 @@ const router = createRouter({
     {
       path: '/style-dna',
       name: 'style-dna',
-      component: StyleDna
+      component: StyleDna,
+      meta: { requiresAuth: true }
     },
     {
       path: '/style-dna/result',
       name: 'style-dna-result',
-      component: StyleDnaResult
+      component: StyleDnaResult,
+      meta: { requiresAuth: true }
     },
     {
       path: '/consultant',
       name: 'consultant',
-      component: StyleConsultant
+      component: StyleConsultant,
+      meta: { requiresAuth: true }
     },
     {
       path: '/consultant/bookings',

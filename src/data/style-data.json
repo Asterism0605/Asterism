@@ -12,10 +12,10 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#0A0D1B",
-      "#172040",
-      "#26356F"
-    ],
+        "#0A0D1B",
+        "#172040",
+        "#26356F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -31,10 +31,10 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#03121F",
-      "#1A394B",
-      "#BACBDE"
-    ],
+        "#03121F",
+        "#1A394B",
+        "#BACBDE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -50,10 +50,10 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#101431",
-      "#143188",
-      "#C6BBCB"
-    ],
+        "#101431",
+        "#143188",
+        "#C6BBCB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -69,10 +69,10 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#03193C",
-      "#163C70",
-      "#6E7CB5"
-    ],
+        "#03193C",
+        "#163C70",
+        "#6E7CB5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -88,10 +88,10 @@
       "Neo-Tokyo"
     ],
     "colorPalette": [
-      "#171921",
-      "#444D6E",
-      "#767DA6"
-    ],
+        "#171921",
+        "#444D6E",
+        "#767DA6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -107,10 +107,10 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#0D0B13",
-      "#252644",
-      "#4E4578"
-    ],
+        "#0D0B13",
+        "#252644",
+        "#4E4578"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -127,10 +127,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#08090B",
-      "#202225",
-      "#32343A"
-    ],
+        "#08090B",
+        "#202225",
+        "#32343A"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -147,10 +147,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#171522",
-      "#403852",
-      "#74616F"
-    ],
+        "#171522",
+        "#403852",
+        "#74616F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -167,10 +167,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#080A13",
-      "#12192B",
-      "#1D2954"
-    ],
+        "#080A13",
+        "#12192B",
+        "#1D2954"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -186,10 +186,10 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#080D1C",
-      "#202C49",
-      "#545676"
-    ],
+        "#080D1C",
+        "#202C49",
+        "#545676"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -206,10 +206,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#1F2027",
-      "#3A3D46",
-      "#666974"
-    ],
+        "#1F2027",
+        "#3A3D46",
+        "#666974"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -226,10 +226,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#101217",
-      "#575960",
-      "#6B6D75"
-    ],
+        "#101217",
+        "#575960",
+        "#6B6D75"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -246,10 +246,10 @@
     "medium": "Outfit",
     "subMedium": "Dress Focus",
     "colorPalette": [
-      "#989EA9",
-      "#BAC0CB",
-      "#D8DEE7"
-    ],
+        "#989EA9",
+        "#BAC0CB",
+        "#D8DEE7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -266,10 +266,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#262E48",
-      "#434A62",
-      "#606784"
-    ],
+        "#262E48",
+        "#434A62",
+        "#606784"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -285,10 +285,10 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#0A0A13",
-      "#1F1D2C",
-      "#39374B"
-    ],
+        "#0A0A13",
+        "#1F1D2C",
+        "#39374B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -305,10 +305,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#35383D",
-      "#5B646C",
-      "#B8A2B6"
-    ],
+        "#35383D",
+        "#5B646C",
+        "#B8A2B6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -325,10 +325,10 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#272524",
-      "#B3AEA7",
-      "#C5C0BB"
-    ],
+        "#272524",
+        "#B3AEA7",
+        "#C5C0BB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -345,10 +345,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#3A3D44",
-      "#5A555B",
-      "#827778"
-    ],
+        "#3A3D44",
+        "#5A555B",
+        "#827778"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -365,10 +365,10 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#8D8A89",
-      "#A6A4A2",
-      "#C1BFBE"
-    ],
+        "#8D8A89",
+        "#A6A4A2",
+        "#C1BFBE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -384,10 +384,10 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#19112B",
-      "#22305C",
-      "#0E5A98"
-    ],
+        "#19112B",
+        "#22305C",
+        "#0E5A98"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -404,10 +404,10 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#11141B",
-      "#5E6679",
-      "#8691A8"
-    ],
+        "#11141B",
+        "#5E6679",
+        "#8691A8"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -424,10 +424,10 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#0B123E",
-      "#30376F",
-      "#6669C7"
-    ],
+        "#0B123E",
+        "#30376F",
+        "#6669C7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -444,10 +444,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#0C163C",
-      "#384CA8",
-      "#576CCB"
-    ],
+        "#0C163C",
+        "#384CA8",
+        "#576CCB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -464,10 +464,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#120C10",
-      "#352228",
-      "#612E30"
-    ],
+        "#120C10",
+        "#352228",
+        "#612E30"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -483,10 +483,10 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#AEA1AE",
-      "#88B0E0",
-      "#CAD1E6"
-    ],
+        "#AEA1AE",
+        "#88B0E0",
+        "#CAD1E6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -502,10 +502,10 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#BDA9AF",
-      "#D0C7D1",
-      "#ECE7F2"
-    ],
+        "#BDA9AF",
+        "#D0C7D1",
+        "#ECE7F2"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -521,10 +521,10 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#181F32",
-      "#D4BABB",
-      "#CED6F3"
-    ],
+        "#181F32",
+        "#D4BABB",
+        "#CED6F3"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -540,10 +540,10 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#A4C7F4",
-      "#C6CDE9",
-      "#DAE5FB"
-    ],
+        "#A4C7F4",
+        "#C6CDE9",
+        "#DAE5FB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -559,10 +559,10 @@
       "Bubblegum Futurism"
     ],
     "colorPalette": [
-      "#8EA1B5",
-      "#CDBCBB",
-      "#C9DEEB"
-    ],
+        "#8EA1B5",
+        "#CDBCBB",
+        "#C9DEEB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -578,10 +578,10 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#7E97D5",
-      "#A8B2DD",
-      "#CDD5F0"
-    ],
+        "#7E97D5",
+        "#A8B2DD",
+        "#CDD5F0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -598,10 +598,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#332B3F",
-      "#9D95AF",
-      "#C5BFCB"
-    ],
+        "#332B3F",
+        "#9D95AF",
+        "#C5BFCB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -618,10 +618,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#A1ADD8",
-      "#C4CCE5",
-      "#E6E7ED"
-    ],
+        "#A1ADD8",
+        "#C4CCE5",
+        "#E6E7ED"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -638,10 +638,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#B8B9CC",
-      "#CECBE0",
-      "#E5E1EF"
-    ],
+        "#B8B9CC",
+        "#CECBE0",
+        "#E5E1EF"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -658,10 +658,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#A78BAD",
-      "#BFABC6",
-      "#E0CFE0"
-    ],
+        "#A78BAD",
+        "#BFABC6",
+        "#E0CFE0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -677,10 +677,10 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#5A85BA",
-      "#85A8D3",
-      "#B8C7E4"
-    ],
+        "#5A85BA",
+        "#85A8D3",
+        "#B8C7E4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -697,10 +697,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#767681",
-      "#BAB4CC",
-      "#E1E3EB"
-    ],
+        "#767681",
+        "#BAB4CC",
+        "#E1E3EB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -717,10 +717,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#B1A8D0",
-      "#CBC6E6",
-      "#F4F2F5"
-    ],
+        "#B1A8D0",
+        "#CBC6E6",
+        "#F4F2F5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -737,10 +737,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#B4A7D5",
-      "#CCC0E5",
-      "#F8F8F8"
-    ],
+        "#B4A7D5",
+        "#CCC0E5",
+        "#F8F8F8"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -756,10 +756,10 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#8E8EBD",
-      "#A9AAD2",
-      "#90C1E9"
-    ],
+        "#8E8EBD",
+        "#A9AAD2",
+        "#90C1E9"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -776,10 +776,10 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#A898BB",
-      "#D2C6E1",
-      "#F6F4F4"
-    ],
+        "#A898BB",
+        "#D2C6E1",
+        "#F6F4F4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -796,10 +796,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#857DA7",
-      "#BBA3C6",
-      "#EDCDDD"
-    ],
+        "#857DA7",
+        "#BBA3C6",
+        "#EDCDDD"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -816,10 +816,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#D1B8D6",
-      "#E6DDEC",
-      "#F6F6F6"
-    ],
+        "#D1B8D6",
+        "#E6DDEC",
+        "#F6F6F6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -836,10 +836,10 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#C1ACCD",
-      "#D8C9DF",
-      "#E7E5E6"
-    ],
+        "#C1ACCD",
+        "#D8C9DF",
+        "#E7E5E6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -854,10 +854,10 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#689BCF",
-      "#B1B4DA",
-      "#E5DBED"
-    ],
+        "#689BCF",
+        "#B1B4DA",
+        "#E5DBED"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -873,10 +873,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#7DA9D4",
-      "#CBC5D3",
-      "#EEE7EB"
-    ],
+        "#7DA9D4",
+        "#CBC5D3",
+        "#EEE7EB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -892,10 +892,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#737286",
-      "#B9B5C8",
-      "#D6D2E0"
-    ],
+        "#737286",
+        "#B9B5C8",
+        "#D6D2E0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -911,10 +911,10 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#C6A4AD",
-      "#AEAACC",
-      "#D7B9C3"
-    ],
+        "#C6A4AD",
+        "#AEAACC",
+        "#D7B9C3"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -930,10 +930,10 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#8A807C",
-      "#A6999C",
-      "#E9DFEF"
-    ],
+        "#8A807C",
+        "#A6999C",
+        "#E9DFEF"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -948,10 +948,10 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#0B0D0F",
-      "#3E2D21",
-      "#A77D57"
-    ],
+        "#0B0D0F",
+        "#3E2D21",
+        "#A77D57"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -966,10 +966,10 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#19110A",
-      "#B9926F",
-      "#CFB39C"
-    ],
+        "#19110A",
+        "#B9926F",
+        "#CFB39C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -984,10 +984,10 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#150D09",
-      "#402D20",
-      "#6B5241"
-    ],
+        "#150D09",
+        "#402D20",
+        "#6B5241"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1002,10 +1002,10 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#503621",
-      "#6D5139",
-      "#8D6F56"
-    ],
+        "#503621",
+        "#6D5139",
+        "#8D6F56"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1020,10 +1020,10 @@
       "Maximalism"
     ],
     "colorPalette": [
-      "#19150D",
-      "#896036",
-      "#CCAC91"
-    ],
+        "#19150D",
+        "#896036",
+        "#CCAC91"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1038,10 +1038,10 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#A89E94",
-      "#C5B9B0",
-      "#D5CDC8"
-    ],
+        "#A89E94",
+        "#C5B9B0",
+        "#D5CDC8"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1057,10 +1057,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#785B32",
-      "#A88A61",
-      "#EAE0D5"
-    ],
+        "#785B32",
+        "#A88A61",
+        "#EAE0D5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1076,10 +1076,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#292621",
-      "#B9AA9A",
-      "#DBD0C5"
-    ],
+        "#292621",
+        "#B9AA9A",
+        "#DBD0C5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1095,10 +1095,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#B59976",
-      "#D8C5AE",
-      "#EDE0D1"
-    ],
+        "#B59976",
+        "#D8C5AE",
+        "#EDE0D1"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1114,10 +1114,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#BCAD9F",
-      "#D3C7BC",
-      "#E9E2DB"
-    ],
+        "#BCAD9F",
+        "#D3C7BC",
+        "#E9E2DB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1132,10 +1132,10 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#150E07",
-      "#39250E",
-      "#654B30"
-    ],
+        "#150E07",
+        "#39250E",
+        "#654B30"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1151,10 +1151,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#0F0C09",
-      "#BFAA94",
-      "#D6C5B5"
-    ],
+        "#0F0C09",
+        "#BFAA94",
+        "#D6C5B5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1170,10 +1170,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#120D08",
-      "#3B2D1F",
-      "#604D39"
-    ],
+        "#120D08",
+        "#3B2D1F",
+        "#604D39"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1189,10 +1189,10 @@
     "medium": "Outfit",
     "subMedium": "Dress Focus",
     "colorPalette": [
-      "#947A5B",
-      "#BBA288",
-      "#CFBCAA"
-    ],
+        "#947A5B",
+        "#BBA288",
+        "#CFBCAA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1208,10 +1208,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#130E08",
-      "#372817",
-      "#E3CFB4"
-    ],
+        "#130E08",
+        "#372817",
+        "#E3CFB4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1226,10 +1226,10 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#AC9981",
-      "#C9B8A6",
-      "#DFD4C8"
-    ],
+        "#AC9981",
+        "#C9B8A6",
+        "#DFD4C8"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1245,10 +1245,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#9D8265",
-      "#AF967E",
-      "#BDAA96"
-    ],
+        "#9D8265",
+        "#AF967E",
+        "#BDAA96"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1264,10 +1264,10 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#8F714B",
-      "#AF997C",
-      "#C5B8A8"
-    ],
+        "#8F714B",
+        "#AF997C",
+        "#C5B8A8"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1283,10 +1283,10 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#7D6F59",
-      "#A29483",
-      "#C6BBB1"
-    ],
+        "#7D6F59",
+        "#A29483",
+        "#C6BBB1"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1302,10 +1302,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#9D8C71",
-      "#B5A690",
-      "#EAE2D5"
-    ],
+        "#9D8C71",
+        "#B5A690",
+        "#EAE2D5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1320,10 +1320,10 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#7D644A",
-      "#B39475",
-      "#D4C0AB"
-    ],
+        "#7D644A",
+        "#B39475",
+        "#D4C0AB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1339,10 +1339,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#664A26",
-      "#8D7254",
-      "#B4987D"
-    ],
+        "#664A26",
+        "#8D7254",
+        "#B4987D"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1358,10 +1358,10 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#866441",
-      "#A68464",
-      "#C4AC95"
-    ],
+        "#866441",
+        "#A68464",
+        "#C4AC95"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1377,10 +1377,10 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#927C63",
-      "#B5A18A",
-      "#EEEBE8"
-    ],
+        "#927C63",
+        "#B5A18A",
+        "#EEEBE8"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1396,10 +1396,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#9D8878",
-      "#BBACA4",
-      "#D4CFCF"
-    ],
+        "#9D8878",
+        "#BBACA4",
+        "#D4CFCF"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1414,10 +1414,10 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#131B1E",
-      "#71716B",
-      "#D0CBC4"
-    ],
+        "#131B1E",
+        "#71716B",
+        "#D0CBC4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1432,10 +1432,10 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#1B2120",
-      "#D1BFB0",
-      "#E5DED6"
-    ],
+        "#1B2120",
+        "#D1BFB0",
+        "#E5DED6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1450,10 +1450,10 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#423E43",
-      "#AFA098",
-      "#D5D5D3"
-    ],
+        "#423E43",
+        "#AFA098",
+        "#D5D5D3"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1468,10 +1468,10 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#CABFB6",
-      "#DFD7D1",
-      "#F2EFEC"
-    ],
+        "#CABFB6",
+        "#DFD7D1",
+        "#F2EFEC"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1486,10 +1486,10 @@
       "Modernism"
     ],
     "colorPalette": [
-      "#755F51",
-      "#A28877",
-      "#B9A699"
-    ],
+        "#755F51",
+        "#A28877",
+        "#B9A699"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1504,10 +1504,10 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#ABA296",
-      "#C6BEB6",
-      "#E4E0DC"
-    ],
+        "#ABA296",
+        "#C6BEB6",
+        "#E4E0DC"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1523,10 +1523,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#B1A9A0",
-      "#D0CAC7",
-      "#E6E2E0"
-    ],
+        "#B1A9A0",
+        "#D0CAC7",
+        "#E6E2E0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1542,10 +1542,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#A79E93",
-      "#CBC3BB",
-      "#DED8D3"
-    ],
+        "#A79E93",
+        "#CBC3BB",
+        "#DED8D3"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1561,10 +1561,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#B9B0A3",
-      "#CCC5BD",
-      "#E2DEDA"
-    ],
+        "#B9B0A3",
+        "#CCC5BD",
+        "#E2DEDA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1580,10 +1580,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#665B50",
-      "#C0B8AF",
-      "#DFD8D0"
-    ],
+        "#665B50",
+        "#C0B8AF",
+        "#DFD8D0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1598,10 +1598,10 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#BAB1A6",
-      "#CCC4BA",
-      "#E0D6C9"
-    ],
+        "#BAB1A6",
+        "#CCC4BA",
+        "#E0D6C9"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1617,10 +1617,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#988A7C",
-      "#D2C6B9",
-      "#E6E0D7"
-    ],
+        "#988A7C",
+        "#D2C6B9",
+        "#E6E0D7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1636,10 +1636,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#484645",
-      "#88827D",
-      "#E4DDD6"
-    ],
+        "#484645",
+        "#88827D",
+        "#E4DDD6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1655,10 +1655,10 @@
     "medium": "Outfit",
     "subMedium": "Dress Focus",
     "colorPalette": [
-      "#A29486",
-      "#B4AA9F",
-      "#CDC1B4"
-    ],
+        "#A29486",
+        "#B4AA9F",
+        "#CDC1B4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1674,10 +1674,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#7E7265",
-      "#988878",
-      "#C3B6A7"
-    ],
+        "#7E7265",
+        "#988878",
+        "#C3B6A7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1693,10 +1693,10 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#A4988B",
-      "#BCB2A7",
-      "#D3CDC7"
-    ],
+        "#A4988B",
+        "#BCB2A7",
+        "#D3CDC7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1713,10 +1713,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#97816A",
-      "#B8A591",
-      "#CDBDAD"
-    ],
+        "#97816A",
+        "#B8A591",
+        "#CDBDAD"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1733,10 +1733,10 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#937F6A",
-      "#AD9C8B",
-      "#C7BCB1"
-    ],
+        "#937F6A",
+        "#AD9C8B",
+        "#C7BCB1"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1753,10 +1753,10 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#B7AEA5",
-      "#D1CBC5",
-      "#EFEDEA"
-    ],
+        "#B7AEA5",
+        "#D1CBC5",
+        "#EFEDEA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1773,10 +1773,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#2C1706",
-      "#432A11",
-      "#6E4B29"
-    ],
+        "#2C1706",
+        "#432A11",
+        "#6E4B29"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1791,10 +1791,10 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#3A3A35",
-      "#B2B0AE",
-      "#D5D3D2"
-    ],
+        "#3A3A35",
+        "#B2B0AE",
+        "#D5D3D2"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1810,10 +1810,10 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#6C5C4C",
-      "#8A7B6B",
-      "#ABA195"
-    ],
+        "#6C5C4C",
+        "#8A7B6B",
+        "#ABA195"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1829,10 +1829,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#252015",
-      "#7E7C7C",
-      "#DBDEE5"
-    ],
+        "#252015",
+        "#7E7C7C",
+        "#DBDEE5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1848,10 +1848,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#1F150B",
-      "#5B3B20",
-      "#645A55"
-    ],
+        "#1F150B",
+        "#5B3B20",
+        "#645A55"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1867,10 +1867,10 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#1A1B1C",
-      "#6C6751",
-      "#DAD9D7"
-    ],
+        "#1A1B1C",
+        "#6C6751",
+        "#DAD9D7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1885,10 +1885,10 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#756951",
-      "#9F8E7A",
-      "#BAAD9D"
-    ],
+        "#756951",
+        "#9F8E7A",
+        "#BAAD9D"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1903,10 +1903,10 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#A28D74",
-      "#C6B29D",
-      "#E3D9CA"
-    ],
+        "#A28D74",
+        "#C6B29D",
+        "#E3D9CA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1921,10 +1921,10 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#584435",
-      "#796759",
-      "#988A80"
-    ],
+        "#584435",
+        "#796759",
+        "#988A80"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1939,10 +1939,10 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#362413",
-      "#664E35",
-      "#8C7358"
-    ],
+        "#362413",
+        "#664E35",
+        "#8C7358"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1957,10 +1957,10 @@
       "Organic Modern"
     ],
     "colorPalette": [
-      "#21180F",
-      "#624C32",
-      "#B3A087"
-    ],
+        "#21180F",
+        "#624C32",
+        "#B3A087"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1975,10 +1975,10 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#7A6C5A",
-      "#A29384",
-      "#C2B7AA"
-    ],
+        "#7A6C5A",
+        "#A29384",
+        "#C2B7AA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -1994,10 +1994,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#A59B91",
-      "#C9C0B7",
-      "#DCD5CE"
-    ],
+        "#A59B91",
+        "#C9C0B7",
+        "#DCD5CE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2013,10 +2013,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#C5B8AA",
-      "#DBD1C9",
-      "#E9E4DE"
-    ],
+        "#C5B8AA",
+        "#DBD1C9",
+        "#E9E4DE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2032,10 +2032,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#251B11",
-      "#43382B",
-      "#6F6152"
-    ],
+        "#251B11",
+        "#43382B",
+        "#6F6152"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2051,10 +2051,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#7A6D61",
-      "#9A8E84",
-      "#D2CDCA"
-    ],
+        "#7A6D61",
+        "#9A8E84",
+        "#D2CDCA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2069,10 +2069,10 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#352210",
-      "#5F4E3A",
-      "#B1A08C"
-    ],
+        "#352210",
+        "#5F4E3A",
+        "#B1A08C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2088,10 +2088,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#948772",
-      "#A59A87",
-      "#E3DDD4"
-    ],
+        "#948772",
+        "#A59A87",
+        "#E3DDD4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2107,10 +2107,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#5D3613",
-      "#A6917B",
-      "#BDA993"
-    ],
+        "#5D3613",
+        "#A6917B",
+        "#BDA993"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2126,10 +2126,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#856E4F",
-      "#9C8D79",
-      "#B0A597"
-    ],
+        "#856E4F",
+        "#9C8D79",
+        "#B0A597"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2145,10 +2145,10 @@
     "medium": "Outfit",
     "subMedium": "Dress Focus",
     "colorPalette": [
-      "#7B6B55",
-      "#9B8F81",
-      "#B1A69A"
-    ],
+        "#7B6B55",
+        "#9B8F81",
+        "#B1A69A"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2164,10 +2164,10 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#604931",
-      "#7F6A55",
-      "#A5917D"
-    ],
+        "#604931",
+        "#7F6A55",
+        "#A5917D"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2184,10 +2184,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#836F58",
-      "#9D8B78",
-      "#B7A898"
-    ],
+        "#836F58",
+        "#9D8B78",
+        "#B7A898"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2204,10 +2204,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#261304",
-      "#432B13",
-      "#63482F"
-    ],
+        "#261304",
+        "#432B13",
+        "#63482F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2224,10 +2224,10 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#351C09",
-      "#5E4328",
-      "#82664A"
-    ],
+        "#351C09",
+        "#5E4328",
+        "#82664A"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2244,10 +2244,10 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#867259",
-      "#A89883",
-      "#C4B5A6"
-    ],
+        "#867259",
+        "#A89883",
+        "#C4B5A6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2262,10 +2262,10 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#3A2812",
-      "#64543E",
-      "#B8AA9E"
-    ],
+        "#3A2812",
+        "#64543E",
+        "#B8AA9E"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2281,10 +2281,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#352717",
-      "#645140",
-      "#8B7D71"
-    ],
+        "#352717",
+        "#645140",
+        "#8B7D71"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2300,10 +2300,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#1C1708",
-      "#3D351D",
-      "#5E513B"
-    ],
+        "#1C1708",
+        "#3D351D",
+        "#5E513B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2319,10 +2319,10 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#4E3B27",
-      "#6B5744",
-      "#8D7B6A"
-    ],
+        "#4E3B27",
+        "#6B5744",
+        "#8D7B6A"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2338,10 +2338,10 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#3E2D16",
-      "#61543E",
-      "#867563"
-    ],
+        "#3E2D16",
+        "#61543E",
+        "#867563"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2356,10 +2356,10 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#7E654A",
-      "#A58B6F",
-      "#C1A88F"
-    ],
+        "#7E654A",
+        "#A58B6F",
+        "#C1A88F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2374,10 +2374,10 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#BA9D82",
-      "#D5BDA6",
-      "#E8D9C8"
-    ],
+        "#BA9D82",
+        "#D5BDA6",
+        "#E8D9C8"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2392,10 +2392,10 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#8D795E",
-      "#B69D87",
-      "#D1C1B3"
-    ],
+        "#8D795E",
+        "#B69D87",
+        "#D1C1B3"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2410,10 +2410,10 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#B09B80",
-      "#C9B8A4",
-      "#E2DCD6"
-    ],
+        "#B09B80",
+        "#C9B8A4",
+        "#E2DCD6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2428,10 +2428,10 @@
       "Vintage Floral"
     ],
     "colorPalette": [
-      "#2D2011",
-      "#AF8B6A",
-      "#CEB092"
-    ],
+        "#2D2011",
+        "#AF8B6A",
+        "#CEB092"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2446,10 +2446,10 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#836F57",
-      "#AA9786",
-      "#CEBCAE"
-    ],
+        "#836F57",
+        "#AA9786",
+        "#CEBCAE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2465,10 +2465,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#CDBA9F",
-      "#DED1C2",
-      "#F0E7DD"
-    ],
+        "#CDBA9F",
+        "#DED1C2",
+        "#F0E7DD"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2484,10 +2484,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#83786B",
-      "#C2B8AE",
-      "#D3CCC6"
-    ],
+        "#83786B",
+        "#C2B8AE",
+        "#D3CCC6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2503,10 +2503,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#33240A",
-      "#887960",
-      "#B09D89"
-    ],
+        "#33240A",
+        "#887960",
+        "#B09D89"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2522,10 +2522,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#977A63",
-      "#B49E8B",
-      "#CAB9AD"
-    ],
+        "#977A63",
+        "#B49E8B",
+        "#CAB9AD"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2540,10 +2540,10 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#5F5845",
-      "#8E7E6C",
-      "#B7A799"
-    ],
+        "#5F5845",
+        "#8E7E6C",
+        "#B7A799"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2559,10 +2559,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#352D17",
-      "#A08569",
-      "#C2A890"
-    ],
+        "#352D17",
+        "#A08569",
+        "#C2A890"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2578,10 +2578,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#8D7A64",
-      "#A4917E",
-      "#BDAD9F"
-    ],
+        "#8D7A64",
+        "#A4917E",
+        "#BDAD9F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2597,10 +2597,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#8E7559",
-      "#B19B86",
-      "#D0C4B7"
-    ],
+        "#8E7559",
+        "#B19B86",
+        "#D0C4B7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2616,10 +2616,10 @@
     "medium": "Outfit",
     "subMedium": "Dress Focus",
     "colorPalette": [
-      "#947D68",
-      "#A5927E",
-      "#C3B19F"
-    ],
+        "#947D68",
+        "#A5927E",
+        "#C3B19F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2634,10 +2634,10 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#281408",
-      "#78624C",
-      "#A08B78"
-    ],
+        "#281408",
+        "#78624C",
+        "#A08B78"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2653,10 +2653,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#907B62",
-      "#AC9479",
-      "#E3C49C"
-    ],
+        "#907B62",
+        "#AC9479",
+        "#E3C49C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2672,10 +2672,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#6B5A3C",
-      "#7B7159",
-      "#8E866F"
-    ],
+        "#6B5A3C",
+        "#7B7159",
+        "#8E866F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2691,10 +2691,10 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#B49B83",
-      "#C5B5A7",
-      "#D5CABF"
-    ],
+        "#B49B83",
+        "#C5B5A7",
+        "#D5CABF"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2710,10 +2710,10 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#412709",
-      "#6B573A",
-      "#8D7E68"
-    ],
+        "#412709",
+        "#6B573A",
+        "#8D7E68"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2728,10 +2728,10 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#2D2B0D",
-      "#5C5333",
-      "#897C5F"
-    ],
+        "#2D2B0D",
+        "#5C5333",
+        "#897C5F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2747,10 +2747,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#655342",
-      "#8C7767",
-      "#B59D8D"
-    ],
+        "#655342",
+        "#8C7767",
+        "#B59D8D"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2766,10 +2766,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#33290C",
-      "#5B4C29",
-      "#7D6E4F"
-    ],
+        "#33290C",
+        "#5B4C29",
+        "#7D6E4F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2785,10 +2785,10 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#816C55",
-      "#A1927F",
-      "#B8AB9C"
-    ],
+        "#816C55",
+        "#A1927F",
+        "#B8AB9C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2804,10 +2804,10 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#6A5B47",
-      "#867B6A",
-      "#ADA99B"
-    ],
+        "#6A5B47",
+        "#867B6A",
+        "#ADA99B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2822,10 +2822,10 @@
       "Americana"
     ],
     "colorPalette": [
-      "#162120",
-      "#43382F",
-      "#765C48"
-    ],
+        "#162120",
+        "#43382F",
+        "#765C48"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2840,10 +2840,10 @@
       "Americana"
     ],
     "colorPalette": [
-      "#884B1B",
-      "#B77842",
-      "#DCA05F"
-    ],
+        "#884B1B",
+        "#B77842",
+        "#DCA05F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2858,10 +2858,10 @@
       "Americana"
     ],
     "colorPalette": [
-      "#48372B",
-      "#83523A",
-      "#DDB58E"
-    ],
+        "#48372B",
+        "#83523A",
+        "#DDB58E"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2876,10 +2876,10 @@
       "Americana"
     ],
     "colorPalette": [
-      "#282627",
-      "#5A4133",
-      "#936B47"
-    ],
+        "#282627",
+        "#5A4133",
+        "#936B47"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2894,10 +2894,10 @@
       "Americana"
     ],
     "colorPalette": [
-      "#102037",
-      "#914A40",
-      "#D3BDA4"
-    ],
+        "#102037",
+        "#914A40",
+        "#D3BDA4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2912,10 +2912,10 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#2E271A",
-      "#5B4D37",
-      "#DCD2C5"
-    ],
+        "#2E271A",
+        "#5B4D37",
+        "#DCD2C5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2931,10 +2931,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#664828",
-      "#927656",
-      "#AA9579"
-    ],
+        "#664828",
+        "#927656",
+        "#AA9579"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2950,10 +2950,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#C46A29",
-      "#CDB799",
-      "#DED0BD"
-    ],
+        "#C46A29",
+        "#CDB799",
+        "#DED0BD"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2969,10 +2969,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#53371A",
-      "#83623A",
-      "#AC8A63"
-    ],
+        "#53371A",
+        "#83623A",
+        "#AC8A63"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -2988,10 +2988,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#594C3A",
-      "#7E715E",
-      "#BEB1A1"
-    ],
+        "#594C3A",
+        "#7E715E",
+        "#BEB1A1"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3006,10 +3006,10 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#703E22",
-      "#8B674D",
-      "#D3BFA4"
-    ],
+        "#703E22",
+        "#8B674D",
+        "#D3BFA4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3025,10 +3025,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#382616",
-      "#55615F",
-      "#AC987D"
-    ],
+        "#382616",
+        "#55615F",
+        "#AC987D"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3044,10 +3044,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#4C2A12",
-      "#B69979",
-      "#D6BFA5"
-    ],
+        "#4C2A12",
+        "#B69979",
+        "#D6BFA5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3063,10 +3063,10 @@
     "medium": "Outfit",
     "subMedium": "Dress Focus",
     "colorPalette": [
-      "#C2B19C",
-      "#CFC4B6",
-      "#E0E1DE"
-    ],
+        "#C2B19C",
+        "#CFC4B6",
+        "#E0E1DE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3082,10 +3082,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#88583D",
-      "#CCB191",
-      "#E4CFB6"
-    ],
+        "#88583D",
+        "#CCB191",
+        "#E4CFB6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3100,10 +3100,10 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#1D120A",
-      "#4B2E15",
-      "#6D5131"
-    ],
+        "#1D120A",
+        "#4B2E15",
+        "#6D5131"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3119,10 +3119,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#210C04",
-      "#6D492D",
-      "#976741"
-    ],
+        "#210C04",
+        "#6D492D",
+        "#976741"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3138,10 +3138,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#2A1B06",
-      "#4D3A19",
-      "#A1855A"
-    ],
+        "#2A1B06",
+        "#4D3A19",
+        "#A1855A"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3157,10 +3157,10 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#21170C",
-      "#493019",
-      "#6E5135"
-    ],
+        "#21170C",
+        "#493019",
+        "#6E5135"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3176,10 +3176,10 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#573C20",
-      "#7A6246",
-      "#A79070"
-    ],
+        "#573C20",
+        "#7A6246",
+        "#A79070"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3194,10 +3194,10 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#4A3E2D",
-      "#927B63",
-      "#BBC4C7"
-    ],
+        "#4A3E2D",
+        "#927B63",
+        "#BBC4C7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3213,10 +3213,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#3B3832",
-      "#766D62",
-      "#EBDECC"
-    ],
+        "#3B3832",
+        "#766D62",
+        "#EBDECC"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3232,10 +3232,10 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#261D13",
-      "#463623",
-      "#63523B"
-    ],
+        "#261D13",
+        "#463623",
+        "#63523B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3251,10 +3251,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#261709",
-      "#633E21",
-      "#866349"
-    ],
+        "#261709",
+        "#633E21",
+        "#866349"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3270,10 +3270,10 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#534739",
-      "#948B7D",
-      "#B4BDC7"
-    ],
+        "#534739",
+        "#948B7D",
+        "#B4BDC7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3288,10 +3288,10 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#0F1013",
-      "#2D2F31",
-      "#8B8988"
-    ],
+        "#0F1013",
+        "#2D2F31",
+        "#8B8988"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3306,10 +3306,10 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#13171E",
-      "#706D71",
-      "#BCB4B5"
-    ],
+        "#13171E",
+        "#706D71",
+        "#BCB4B5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3324,10 +3324,10 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#0E151E",
-      "#40454A",
-      "#BCB9BA"
-    ],
+        "#0E151E",
+        "#40454A",
+        "#BCB9BA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3342,10 +3342,10 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#191B1E",
-      "#383C40",
-      "#5D6165"
-    ],
+        "#191B1E",
+        "#383C40",
+        "#5D6165"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3360,10 +3360,10 @@
       "Avant-Garde"
     ],
     "colorPalette": [
-      "#898179",
-      "#A6A19B",
-      "#C1BDBA"
-    ],
+        "#898179",
+        "#A6A19B",
+        "#C1BDBA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3379,10 +3379,10 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#302F30",
-      "#A9A7A5",
-      "#CDCAC7"
-    ],
+        "#302F30",
+        "#A9A7A5",
+        "#CDCAC7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3399,10 +3399,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#535355",
-      "#7B7979",
-      "#D5D3D1"
-    ],
+        "#535355",
+        "#7B7979",
+        "#D5D3D1"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3419,10 +3419,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#393734",
-      "#878484",
-      "#B0ACAC"
-    ],
+        "#393734",
+        "#878484",
+        "#B0ACAC"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3439,10 +3439,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#1B1915",
-      "#5B554D",
-      "#C0B6AC"
-    ],
+        "#1B1915",
+        "#5B554D",
+        "#C0B6AC"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3459,10 +3459,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#161210",
-      "#56362F",
-      "#CDC8C3"
-    ],
+        "#161210",
+        "#56362F",
+        "#CDC8C3"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3477,10 +3477,10 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#141313",
-      "#8B857E",
-      "#C2BEBA"
-    ],
+        "#141313",
+        "#8B857E",
+        "#C2BEBA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3496,10 +3496,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#867C72",
-      "#B3AAA1",
-      "#D5CEC7"
-    ],
+        "#867C72",
+        "#B3AAA1",
+        "#D5CEC7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3515,10 +3515,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#110F0F",
-      "#2F2B29",
-      "#7E7B77"
-    ],
+        "#110F0F",
+        "#2F2B29",
+        "#7E7B77"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3534,10 +3534,10 @@
     "medium": "Outfit",
     "subMedium": "Dress Focus",
     "colorPalette": [
-      "#383735",
-      "#4C4A48",
-      "#ACABAD"
-    ],
+        "#383735",
+        "#4C4A48",
+        "#ACABAD"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3553,10 +3553,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#7E7870",
-      "#918C87",
-      "#C7C1BC"
-    ],
+        "#7E7870",
+        "#918C87",
+        "#C7C1BC"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3571,10 +3571,10 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#211D18",
-      "#4B433A",
-      "#796D5F"
-    ],
+        "#211D18",
+        "#4B433A",
+        "#796D5F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3590,10 +3590,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#2A241C",
-      "#907C69",
-      "#AE9E8F"
-    ],
+        "#2A241C",
+        "#907C69",
+        "#AE9E8F"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3609,10 +3609,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#8A7F77",
-      "#ACA39C",
-      "#D7D3D0"
-    ],
+        "#8A7F77",
+        "#ACA39C",
+        "#D7D3D0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3628,10 +3628,10 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#54483C",
-      "#7D7165",
-      "#A89D92"
-    ],
+        "#54483C",
+        "#7D7165",
+        "#A89D92"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3647,10 +3647,10 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#2F2A25",
-      "#695147",
-      "#B2A69B"
-    ],
+        "#2F2A25",
+        "#695147",
+        "#B2A69B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3665,10 +3665,10 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#807F80",
-      "#A2A3A6",
-      "#C3C7CE"
-    ],
+        "#807F80",
+        "#A2A3A6",
+        "#C3C7CE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3684,10 +3684,10 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#323336",
-      "#525355",
-      "#9EA2AA"
-    ],
+        "#323336",
+        "#525355",
+        "#9EA2AA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3703,10 +3703,10 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#19130C",
-      "#3F3224",
-      "#6C6054"
-    ],
+        "#19130C",
+        "#3F3224",
+        "#6C6054"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3722,10 +3722,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#847B74",
-      "#9FA2A6",
-      "#D0D7E0"
-    ],
+        "#847B74",
+        "#9FA2A6",
+        "#D0D7E0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3741,10 +3741,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#201C17",
-      "#7E7D7B",
-      "#D0D4DA"
-    ],
+        "#201C17",
+        "#7E7D7B",
+        "#D0D4DA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3760,10 +3760,10 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#0E1116",
-      "#2D363B",
-      "#B1B9B8"
-    ],
+        "#0E1116",
+        "#2D363B",
+        "#B1B9B8"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3779,10 +3779,10 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#0F1E1C",
-      "#B7B5B0",
-      "#E2E5E4"
-    ],
+        "#0F1E1C",
+        "#B7B5B0",
+        "#E2E5E4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3798,10 +3798,10 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#17151B",
-      "#34333F",
-      "#A5989D"
-    ],
+        "#17151B",
+        "#34333F",
+        "#A5989D"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3817,10 +3817,10 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#2B3239",
-      "#7A7C86",
-      "#B9CAE1"
-    ],
+        "#2B3239",
+        "#7A7C86",
+        "#B9CAE1"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3836,10 +3836,10 @@
       "Skate Culture"
     ],
     "colorPalette": [
-      "#0C131A",
-      "#B29991",
-      "#D5CECE"
-    ],
+        "#0C131A",
+        "#B29991",
+        "#D5CECE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3854,10 +3854,10 @@
     ],
     "medium": "Graphic Design",
     "colorPalette": [
-      "#1B1B16",
-      "#B3866A",
-      "#CBC4C0"
-    ],
+        "#1B1B16",
+        "#B3866A",
+        "#CBC4C0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3873,10 +3873,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#DDFF19",
-      "#000000",
-      "#5D5E54"
-    ],
+        "#DDFF19",
+        "#000000",
+        "#5D5E54"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3892,10 +3892,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#383A3B",
-      "#9E9A96",
-      "#C8C9CB"
-    ],
+        "#383A3B",
+        "#9E9A96",
+        "#C8C9CB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3911,10 +3911,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#151513",
-      "#3A3632",
-      "#706760"
-    ],
+        "#151513",
+        "#3A3632",
+        "#706760"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3930,10 +3930,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#4A453E",
-      "#A59E97",
-      "#D6D1CE"
-    ],
+        "#4A453E",
+        "#A59E97",
+        "#D6D1CE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3949,10 +3949,10 @@
     ],
     "medium": "Outfit",
     "colorPalette": [
-      "#151713",
-      "#3F3E37",
-      "#61615C"
-    ],
+        "#151713",
+        "#3F3E37",
+        "#61615C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3969,10 +3969,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#222222",
-      "#3B3B3A",
-      "#515151"
-    ],
+        "#222222",
+        "#3B3B3A",
+        "#515151"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -3989,10 +3989,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#747270",
-      "#A39E9B",
-      "#C1BDB7"
-    ],
+        "#747270",
+        "#A39E9B",
+        "#C1BDB7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4009,10 +4009,10 @@
     "medium": "Outfit",
     "subMedium": "Dress Focus",
     "colorPalette": [
-      "#AAA6A0",
-      "#CBC9C6",
-      "#E6E6E5"
-    ],
+        "#AAA6A0",
+        "#CBC9C6",
+        "#E6E6E5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4029,10 +4029,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#232225",
-      "#545254",
-      "#F6F6F6"
-    ],
+        "#232225",
+        "#545254",
+        "#F6F6F6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4048,10 +4048,10 @@
     ],
     "medium": "Interior Design",
     "colorPalette": [
-      "#4C4132",
-      "#786551",
-      "#96867A"
-    ],
+        "#4C4132",
+        "#786551",
+        "#96867A"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4068,10 +4068,10 @@
     "medium": "Interior Design",
     "subMedium": "Table",
     "colorPalette": [
-      "#4F4943",
-      "#6F6962",
-      "#89837D"
-    ],
+        "#4F4943",
+        "#6F6962",
+        "#89837D"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4088,10 +4088,10 @@
     "medium": "Interior Design",
     "subMedium": "Chair",
     "colorPalette": [
-      "#45403B",
-      "#6E6963",
-      "#908D8B"
-    ],
+        "#45403B",
+        "#6E6963",
+        "#908D8B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4107,10 +4107,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#17120D",
-      "#362E26",
-      "#574C41"
-    ],
+        "#17120D",
+        "#362E26",
+        "#574C41"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4126,10 +4126,10 @@
     "medium": "Interior Design",
     "subMedium": "Wall Paint",
     "colorPalette": [
-      "#1A1510",
-      "#393028",
-      "#5F4C3C"
-    ],
+        "#1A1510",
+        "#393028",
+        "#5F4C3C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4144,10 +4144,10 @@
     ],
     "medium": "Architecture",
     "colorPalette": [
-      "#1F1911",
-      "#6A625F",
-      "#CCD3DE"
-    ],
+        "#1F1911",
+        "#6A625F",
+        "#CCD3DE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4163,10 +4163,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#232319",
-      "#878582",
-      "#BED5E9"
-    ],
+        "#232319",
+        "#878582",
+        "#BED5E9"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4182,10 +4182,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#181310",
-      "#2E2B2B",
-      "#666062"
-    ],
+        "#181310",
+        "#2E2B2B",
+        "#666062"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4201,10 +4201,10 @@
     "medium": "Architecture",
     "subMedium": "Staircase",
     "colorPalette": [
-      "#1E1B15",
-      "#46433A",
-      "#66645C"
-    ],
+        "#1E1B15",
+        "#46433A",
+        "#66645C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4220,10 +4220,10 @@
     "medium": "Architecture",
     "subMedium": "Window",
     "colorPalette": [
-      "#191715",
-      "#38383A",
-      "#D3CBC5"
-    ],
+        "#191715",
+        "#38383A",
+        "#D3CBC5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4241,10 +4241,10 @@
     "medium": "Outfit",
     "subMedium": "Full Look",
     "colorPalette": [
-      "#D9DDF1",
-      "#F4A7D8",
-      "#9BE6F5"
-    ],
+        "#D9DDF1",
+        "#F4A7D8",
+        "#9BE6F5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4261,10 +4261,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#B9EAF2",
-      "#F2B3DE",
-      "#D8E0ED"
-    ],
+        "#B9EAF2",
+        "#F2B3DE",
+        "#D8E0ED"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4281,10 +4281,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#D9E5F0",
-      "#F1B7D9",
-      "#A8DDF0"
-    ],
+        "#D9E5F0",
+        "#F1B7D9",
+        "#A8DDF0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4301,10 +4301,10 @@
     "medium": "Outfit",
     "subMedium": "Full Look",
     "colorPalette": [
-      "#F5B7D9",
-      "#D9D1EE",
-      "#E9EFF6"
-    ],
+        "#F5B7D9",
+        "#D9D1EE",
+        "#E9EFF6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4321,10 +4321,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#E6E8F2",
-      "#AEB2C1",
-      "#4D5261"
-    ],
+        "#E6E8F2",
+        "#AEB2C1",
+        "#4D5261"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4341,10 +4341,10 @@
     "medium": "Interior Design",
     "subMedium": "Living & Dining Space",
     "colorPalette": [
-      "#F4C6D5",
-      "#A5D8C6",
-      "#D487B5"
-    ],
+        "#F4C6D5",
+        "#A5D8C6",
+        "#D487B5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4361,10 +4361,10 @@
     "medium": "Interior Design",
     "subMedium": "Living & Dining Space",
     "colorPalette": [
-      "#EAF0E8",
-      "#A9D9D3",
-      "#BACCC2"
-    ],
+        "#EAF0E8",
+        "#A9D9D3",
+        "#BACCC2"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4381,10 +4381,10 @@
     "medium": "Interior Design",
     "subMedium": "Bedroom",
     "colorPalette": [
-      "#C77D93",
-      "#E4B7AF",
-      "#964D75"
-    ],
+        "#C77D93",
+        "#E4B7AF",
+        "#964D75"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4401,10 +4401,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#E8F2F0",
-      "#99DDE1",
-      "#B4BCC5"
-    ],
+        "#E8F2F0",
+        "#99DDE1",
+        "#B4BCC5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4421,10 +4421,10 @@
     "medium": "Interior Design",
     "subMedium": "Decor Detail",
     "colorPalette": [
-      "#E8B5B4",
-      "#D57283",
-      "#A87168"
-    ],
+        "#E8B5B4",
+        "#D57283",
+        "#A87168"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4441,10 +4441,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#F0F4F6",
-      "#2AA7D1",
-      "#79B6DE"
-    ],
+        "#F0F4F6",
+        "#2AA7D1",
+        "#79B6DE"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4461,10 +4461,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#D5C1D0",
-      "#ED9CB7",
-      "#8998C5"
-    ],
+        "#D5C1D0",
+        "#ED9CB7",
+        "#8998C5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4481,10 +4481,10 @@
     "medium": "Architecture",
     "subMedium": "Passage",
     "colorPalette": [
-      "#D9E9EF",
-      "#F0B9D6",
-      "#7BC6E2"
-    ],
+        "#D9E9EF",
+        "#F0B9D6",
+        "#7BC6E2"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4501,10 +4501,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#F2F1E9",
-      "#97D7E7",
-      "#D6B0B6"
-    ],
+        "#F2F1E9",
+        "#97D7E7",
+        "#D6B0B6"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4521,10 +4521,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#EEF5F4",
-      "#8BCFE4",
-      "#769B73"
-    ],
+        "#EEF5F4",
+        "#8BCFE4",
+        "#769B73"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4541,10 +4541,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#10131D",
-      "#2548CC",
-      "#C32B9A"
-    ],
+        "#10131D",
+        "#2548CC",
+        "#C32B9A"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4561,10 +4561,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#101123",
-      "#0067DD",
-      "#D51DAB"
-    ],
+        "#101123",
+        "#0067DD",
+        "#D51DAB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4581,10 +4581,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#10131B",
-      "#313447",
-      "#4D47E8"
-    ],
+        "#10131B",
+        "#313447",
+        "#4D47E8"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4601,10 +4601,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#0B0E17",
-      "#2622B9",
-      "#2D98D5"
-    ],
+        "#0B0E17",
+        "#2622B9",
+        "#2D98D5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4621,10 +4621,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#0D1120",
-      "#2A2D82",
-      "#8653B5"
-    ],
+        "#0D1120",
+        "#2A2D82",
+        "#8653B5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4642,10 +4642,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#121315",
-      "#B71937",
-      "#E9E4DF"
-    ],
+        "#121315",
+        "#B71937",
+        "#E9E4DF"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4662,10 +4662,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#141218",
-      "#2827BF",
-      "#E423C5"
-    ],
+        "#141218",
+        "#2827BF",
+        "#E423C5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4682,10 +4682,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#18191C",
-      "#F1F0EC",
-      "#48BACB"
-    ],
+        "#18191C",
+        "#F1F0EC",
+        "#48BACB"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4702,10 +4702,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#08090B",
-      "#C71724",
-      "#C0C0BD"
-    ],
+        "#08090B",
+        "#C71724",
+        "#C0C0BD"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4722,10 +4722,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#111114",
-      "#E3E0D9",
-      "#D10E24"
-    ],
+        "#111114",
+        "#E3E0D9",
+        "#D10E24"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4742,10 +4742,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#E5E8E5",
-      "#7BA7D7",
-      "#ECADD0"
-    ],
+        "#E5E8E5",
+        "#7BA7D7",
+        "#ECADD0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4762,10 +4762,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#F1D6DF",
-      "#8EC4E8",
-      "#D674AA"
-    ],
+        "#F1D6DF",
+        "#8EC4E8",
+        "#D674AA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4782,10 +4782,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#EDF5F6",
-      "#6BD2E2",
-      "#B4DA48"
-    ],
+        "#EDF5F6",
+        "#6BD2E2",
+        "#B4DA48"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4802,10 +4802,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#DD91D2",
-      "#8AD7E7",
-      "#B9C0F1"
-    ],
+        "#DD91D2",
+        "#8AD7E7",
+        "#B9C0F1"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4822,10 +4822,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#E7EFF4",
-      "#ABCBE9",
-      "#EC9EB9"
-    ],
+        "#E7EFF4",
+        "#ABCBE9",
+        "#EC9EB9"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4842,10 +4842,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#B49AD8",
-      "#E49CCD",
-      "#B7D0ED"
-    ],
+        "#B49AD8",
+        "#E49CCD",
+        "#B7D0ED"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4862,10 +4862,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#BE8FDA",
-      "#E697C9",
-      "#D1C9E7"
-    ],
+        "#BE8FDA",
+        "#E697C9",
+        "#D1C9E7"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4882,10 +4882,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#B8A7DD",
-      "#E4A0CA",
-      "#B6C5ED"
-    ],
+        "#B8A7DD",
+        "#E4A0CA",
+        "#B6C5ED"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4902,10 +4902,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#A286D1",
-      "#EEA4D0",
-      "#DCD0F0"
-    ],
+        "#A286D1",
+        "#EEA4D0",
+        "#DCD0F0"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4922,10 +4922,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#E5D8F1",
-      "#A6B4E4",
-      "#E399C1"
-    ],
+        "#E5D8F1",
+        "#A6B4E4",
+        "#E399C1"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4942,10 +4942,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#F1D6E5",
-      "#F29AB7",
-      "#A5C5EF"
-    ],
+        "#F1D6E5",
+        "#F29AB7",
+        "#A5C5EF"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4962,10 +4962,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#E7B7C8",
-      "#EE8CA9",
-      "#E7E4E5"
-    ],
+        "#E7B7C8",
+        "#EE8CA9",
+        "#E7E4E5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -4982,10 +4982,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#F1E8E8",
-      "#EDAAC3",
-      "#D6C1EC"
-    ],
+        "#F1E8E8",
+        "#EDAAC3",
+        "#D6C1EC"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5002,10 +5002,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#7252B1",
-      "#C98CE1",
-      "#F0A3C1"
-    ],
+        "#7252B1",
+        "#C98CE1",
+        "#F0A3C1"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5022,10 +5022,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#C9DBF0",
-      "#86B9E5",
-      "#E990B4"
-    ],
+        "#C9DBF0",
+        "#86B9E5",
+        "#E990B4"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5042,10 +5042,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#E9DDC5",
-      "#A97B78",
-      "#748253"
-    ],
+        "#E9DDC5",
+        "#A97B78",
+        "#748253"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5062,10 +5062,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#F0E1D2",
-      "#B78983",
-      "#829270"
-    ],
+        "#F0E1D2",
+        "#B78983",
+        "#829270"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5082,10 +5082,10 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#D9CEB4",
-      "#897961",
-      "#6E6C51"
-    ],
+        "#D9CEB4",
+        "#897961",
+        "#6E6C51"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5102,10 +5102,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#E5DBCB",
-      "#A98A80",
-      "#82907C"
-    ],
+        "#E5DBCB",
+        "#A98A80",
+        "#82907C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5122,10 +5122,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#D3C4B1",
-      "#61707A",
-      "#A65C5B"
-    ],
+        "#D3C4B1",
+        "#61707A",
+        "#A65C5B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5142,10 +5142,10 @@
     "medium": "Graphic Design",
     "subMedium": "Poster Design",
     "colorPalette": [
-      "#E7DCC7",
-      "#9D7470",
-      "#A3A07C"
-    ],
+        "#E7DCC7",
+        "#9D7470",
+        "#A3A07C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5162,10 +5162,10 @@
     "medium": "Graphic Design",
     "subMedium": "Brand Identity",
     "colorPalette": [
-      "#D8CABE",
-      "#7B3B40",
-      "#8B8D9B"
-    ],
+        "#D8CABE",
+        "#7B3B40",
+        "#8B8D9B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5182,10 +5182,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#E9DDC1",
-      "#B88986",
-      "#79865C"
-    ],
+        "#E9DDC1",
+        "#B88986",
+        "#79865C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5201,10 +5201,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#AEBBC8",
-      "#D8D1C8",
-      "#5A4A3E"
-    ],
+        "#AEBBC8",
+        "#D8D1C8",
+        "#5A4A3E"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5220,10 +5220,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#D8D6D2",
-      "#77777A",
-      "#342E29"
-    ],
+        "#D8D6D2",
+        "#77777A",
+        "#342E29"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5240,10 +5240,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#AFC6D7",
-      "#D8D1C5",
-      "#4D493B"
-    ],
+        "#AFC6D7",
+        "#D8D1C5",
+        "#4D493B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5260,10 +5260,10 @@
     "medium": "Architecture",
     "subMedium": "Passage",
     "colorPalette": [
-      "#EEEAE0",
-      "#C8B69D",
-      "#8D806E"
-    ],
+        "#EEEAE0",
+        "#C8B69D",
+        "#8D806E"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5279,10 +5279,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#285B8F",
-      "#55504B",
-      "#D6A15C"
-    ],
+        "#285B8F",
+        "#55504B",
+        "#D6A15C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5300,10 +5300,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#151719",
-      "#555452",
-      "#70432B"
-    ],
+        "#151719",
+        "#555452",
+        "#70432B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5320,10 +5320,10 @@
     "medium": "Interior Design",
     "subMedium": "Decor Detail",
     "colorPalette": [
-      "#111111",
-      "#9B9993",
-      "#A70F24"
-    ],
+        "#111111",
+        "#9B9993",
+        "#A70F24"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5340,10 +5340,10 @@
     "medium": "Interior Design",
     "subMedium": "Bedroom",
     "colorPalette": [
-      "#292622",
-      "#5D554B",
-      "#9A9286"
-    ],
+        "#292622",
+        "#5D554B",
+        "#9A9286"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5360,10 +5360,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#0B0B0B",
-      "#4A413B",
-      "#D9C4AC"
-    ],
+        "#0B0B0B",
+        "#4A413B",
+        "#D9C4AC"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5380,10 +5380,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#121316",
-      "#414247",
-      "#8A4028"
-    ],
+        "#121316",
+        "#414247",
+        "#8A4028"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5400,10 +5400,10 @@
     "medium": "Interior Design",
     "subMedium": "Living & Dining Space",
     "colorPalette": [
-      "#252421",
-      "#77716A",
-      "#B4ADA3"
-    ],
+        "#252421",
+        "#77716A",
+        "#B4ADA3"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5420,10 +5420,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#1B1A1B",
-      "#686765",
-      "#8A5940"
-    ],
+        "#1B1A1B",
+        "#686765",
+        "#8A5940"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5440,10 +5440,10 @@
     "medium": "Interior Design",
     "subMedium": "Bedroom",
     "colorPalette": [
-      "#111112",
-      "#66625D",
-      "#B30E2B"
-    ],
+        "#111112",
+        "#66625D",
+        "#B30E2B"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5460,10 +5460,10 @@
     "medium": "Interior Design",
     "subMedium": "Living & Dining Space",
     "colorPalette": [
-      "#171717",
-      "#B4B2AD",
-      "#A30E26"
-    ],
+        "#171717",
+        "#B4B2AD",
+        "#A30E26"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5480,10 +5480,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#171513",
-      "#5F5A55",
-      "#E2D2BC"
-    ],
+        "#171513",
+        "#5F5A55",
+        "#E2D2BC"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5501,10 +5501,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#16171A",
-      "#777778",
-      "#CBC9C5"
-    ],
+        "#16171A",
+        "#777778",
+        "#CBC9C5"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5521,10 +5521,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#17181B",
-      "#77777A",
-      "#B51F2E"
-    ],
+        "#17181B",
+        "#77777A",
+        "#B51F2E"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5541,10 +5541,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#202226",
-      "#92918E",
-      "#8C2830"
-    ],
+        "#202226",
+        "#92918E",
+        "#8C2830"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5561,10 +5561,10 @@
     "medium": "Architecture",
     "subMedium": "Passage",
     "colorPalette": [
-      "#171614",
-      "#4D4944",
-      "#A29C92"
-    ],
+        "#171614",
+        "#4D4944",
+        "#A29C92"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5581,10 +5581,10 @@
     "medium": "Outfit",
     "subMedium": "Accessory Focus",
     "colorPalette": [
-      "#171719",
-      "#5D5D5B",
-      "#ADADAA"
-    ],
+        "#171719",
+        "#5D5D5B",
+        "#ADADAA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5601,10 +5601,10 @@
     "medium": "Outfit",
     "subMedium": "Full Look",
     "colorPalette": [
-      "#17191B",
-      "#6C6B66",
-      "#C7C3B9"
-    ],
+        "#17191B",
+        "#6C6B66",
+        "#C7C3B9"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5621,10 +5621,10 @@
     "medium": "Outfit",
     "subMedium": "Top Focus",
     "colorPalette": [
-      "#171719",
-      "#5A595A",
-      "#9A4B32"
-    ],
+        "#171719",
+        "#5A595A",
+        "#9A4B32"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5641,10 +5641,10 @@
     "medium": "Interior Design",
     "subMedium": "Living & Dining Space",
     "colorPalette": [
-      "#151515",
-      "#77736C",
-      "#C7C3BA"
-    ],
+        "#151515",
+        "#77736C",
+        "#C7C3BA"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5661,10 +5661,10 @@
     "medium": "Interior Design",
     "subMedium": "Living & Dining Space",
     "colorPalette": [
-      "#28231F",
-      "#71685E",
-      "#B6AA9C"
-    ],
+        "#28231F",
+        "#71685E",
+        "#B6AA9C"
+      ],
     "attribution": "Asterism"
   },
   {
@@ -5682,10 +5682,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#AED4EB",
-      "#B3C7D2",
-      "#D2E5EF"
-    ]
+        "#AED4EB",
+        "#B3C7D2",
+        "#D2E5EF"
+      ]
   },
   {
     "id": "y2k-architecture-buildingexterior-002",
@@ -5702,10 +5702,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#02AECB",
-      "#EDF1F2",
-      "#D1E6EC"
-    ]
+        "#02AECB",
+        "#EDF1F2",
+        "#D1E6EC"
+      ]
   },
   {
     "id": "y2k-architecture-entrance-201",
@@ -5722,10 +5722,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#6A7790",
-      "#556D8A",
-      "#2C2D34"
-    ]
+        "#6A7790",
+        "#556D8A",
+        "#2C2D34"
+      ]
   },
   {
     "id": "y2k-architecture-facade-201",
@@ -5742,10 +5742,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#FBEAD4",
-      "#D2CBD0",
-      "#EBD6CC"
-    ]
+        "#FBEAD4",
+        "#D2CBD0",
+        "#EBD6CC"
+      ]
   },
   {
     "id": "y2k-architecture-passage-001",
@@ -5762,10 +5762,10 @@
     "medium": "Architecture",
     "subMedium": "Passage",
     "colorPalette": [
-      "#CEAEB8",
-      "#CCC8D2",
-      "#D1B9C7"
-    ]
+        "#CEAEB8",
+        "#CCC8D2",
+        "#D1B9C7"
+      ]
   },
   {
     "id": "y2k-graphic-packagingdesign-001",
@@ -5782,10 +5782,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#CDD0D2",
-      "#D7E7E7",
-      "#B7CDCC"
-    ]
+        "#CDD0D2",
+        "#D7E7E7",
+        "#B7CDCC"
+      ]
   },
   {
     "id": "y2k-interior-bedroom-001",
@@ -5802,10 +5802,10 @@
     "medium": "Interior Design",
     "subMedium": "Bedroom",
     "colorPalette": [
-      "#91938D",
-      "#ADADAF",
-      "#AC948E"
-    ]
+        "#91938D",
+        "#ADADAF",
+        "#AC948E"
+      ]
   },
   {
     "id": "y2k-interior-lighting-001",
@@ -5822,10 +5822,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#EEEBED",
-      "#8EB0C7",
-      "#D3CED5"
-    ]
+        "#EEEBED",
+        "#8EB0C7",
+        "#D3CED5"
+      ]
   },
   {
     "id": "y2k-interior-livingdining-001",
@@ -5842,10 +5842,10 @@
     "medium": "Interior Design",
     "subMedium": "Living & Dining Space",
     "colorPalette": [
-      "#B2AFAE",
-      "#CFCBCD",
-      "#C6B7B5"
-    ]
+        "#B2AFAE",
+        "#CFCBCD",
+        "#C6B7B5"
+      ]
   },
   {
     "id": "y2k-interior-livingdining-002",
@@ -5862,10 +5862,10 @@
     "medium": "Interior Design",
     "subMedium": "Living & Dining Space",
     "colorPalette": [
-      "#B3958A",
-      "#91756D",
-      "#AE566A"
-    ]
+        "#B3958A",
+        "#91756D",
+        "#AE566A"
+      ]
   },
   {
     "id": "street-architecture-buildingexterior-001",
@@ -5882,10 +5882,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#B0CDE6",
-      "#94B8DA",
-      "#6D7173"
-    ]
+        "#B0CDE6",
+        "#94B8DA",
+        "#6D7173"
+      ]
   },
   {
     "id": "street-architecture-facade-001",
@@ -5902,10 +5902,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#4F5050",
-      "#FAF3E9",
-      "#2D3031"
-    ]
+        "#4F5050",
+        "#FAF3E9",
+        "#2D3031"
+      ]
   },
   {
     "id": "street-graphic-packagingdesign-001",
@@ -5922,10 +5922,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#EAECED",
-      "#D1B295",
-      "#D9C5AF"
-    ]
+        "#EAECED",
+        "#D1B295",
+        "#D9C5AF"
+      ]
   },
   {
     "id": "street-graphic-packagingdesign-002",
@@ -5942,10 +5942,10 @@
     "medium": "Graphic Design",
     "subMedium": "Packaging Design",
     "colorPalette": [
-      "#2B2C2F",
-      "#4B4E51",
-      "#D2B08C"
-    ]
+        "#2B2C2F",
+        "#4B4E51",
+        "#D2B08C"
+      ]
   },
   {
     "id": "street-interior-lighting-001",
@@ -5962,10 +5962,10 @@
     "medium": "Interior Design",
     "subMedium": "Lighting",
     "colorPalette": [
-      "#4B5152",
-      "#111416",
-      "#6D7072"
-    ]
+        "#4B5152",
+        "#111416",
+        "#6D7072"
+      ]
   },
   {
     "id": "street-outfit-bottom-001",
@@ -5982,10 +5982,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#8D8675",
-      "#90958A",
-      "#B2A794"
-    ]
+        "#8D8675",
+        "#90958A",
+        "#B2A794"
+      ]
   },
   {
     "id": "street-outfit-bottom-002",
@@ -6002,10 +6002,10 @@
     "medium": "Outfit",
     "subMedium": "Bottom Focus",
     "colorPalette": [
-      "#EFECE7",
-      "#D8D3CC",
-      "#101010"
-    ]
+        "#EFECE7",
+        "#D8D3CC",
+        "#101010"
+      ]
   },
   {
     "id": "msm-architecture-entrance-201",
@@ -6022,10 +6022,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#EAE8E7",
-      "#969189",
-      "#B8B1A8"
-    ]
+        "#EAE8E7",
+        "#969189",
+        "#B8B1A8"
+      ]
   },
   {
     "id": "msm-architecture-entrance-002",
@@ -6042,10 +6042,10 @@
     "medium": "Architecture",
     "subMedium": "Entrance",
     "colorPalette": [
-      "#EFEBE7",
-      "#11130F",
-      "#31332A"
-    ]
+        "#EFEBE7",
+        "#11130F",
+        "#31332A"
+      ]
   },
   {
     "id": "future-architecture-passage-001",
@@ -6062,10 +6062,10 @@
     "medium": "Architecture",
     "subMedium": "Passage",
     "colorPalette": [
-      "#0B1011",
-      "#2F2C31",
-      "#4E4752"
-    ]
+        "#0B1011",
+        "#2F2C31",
+        "#4E4752"
+      ]
   },
   {
     "id": "decorate-architecture-buildingexterior-001",
@@ -6082,10 +6082,10 @@
     "medium": "Architecture",
     "subMedium": "Building Exterior",
     "colorPalette": [
-      "#3078B1",
-      "#312D2B",
-      "#4C94C9"
-    ]
+        "#3078B1",
+        "#312D2B",
+        "#4C94C9"
+      ]
   },
   {
     "id": "decorate-architecture-facade-001",
@@ -6102,10 +6102,10 @@
     "medium": "Architecture",
     "subMedium": "Facade",
     "colorPalette": [
-      "#92AFCD",
-      "#0E1313",
-      "#53504B"
-    ]
+        "#92AFCD",
+        "#0E1313",
+        "#53504B"
+      ]
   },
   {
     "id": "decorate-graphic-editorialdesign-001",
@@ -6122,9 +6122,1219 @@
     "medium": "Graphic Design",
     "subMedium": "Editorial Design",
     "colorPalette": [
-      "#0B0C09",
-      "#2A160D",
-      "#312516"
-    ]
+        "#0B0C09",
+        "#2A160D",
+        "#312516"
+      ]
+  },
+  {
+    "id": "ftdp-concept-001",
+    "url": "/style-image/ftdp-concept-001.webp",
+    "title": "霓虹東京未來城市",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#050912",
+        "#12365F",
+        "#D414A9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-002",
+    "url": "/style-image/ftdp-concept-002.webp",
+    "title": "雨夜高樓霓虹街谷",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#07101A",
+        "#244C63",
+        "#C015A8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-003",
+    "url": "/style-image/ftdp-concept-003.webp",
+    "title": "垂直都市藍光天井",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#050B12",
+        "#1C415B",
+        "#5D9FCB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-004",
+    "url": "/style-image/ftdp-concept-004.webp",
+    "title": "紫藍雨巷數位街景",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Glitch Art",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#040713",
+        "#132E58",
+        "#B916C9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-005",
+    "url": "/style-image/ftdp-concept-005.webp",
+    "title": "巨構塔樓科技中庭",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#060D12",
+        "#173D4E",
+        "#6BB4C6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-006",
+    "url": "/style-image/ftdp-concept-006.webp",
+    "title": "高速資料流城市光軌",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#050715",
+        "#154DAA",
+        "#E21DB7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-007",
+    "url": "/style-image/ftdp-concept-007.webp",
+    "title": "冷光高架未來都會",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#070C12",
+        "#1A3C50",
+        "#7AB7CF"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-001",
+    "url": "/style-image/y2k-concept-001.webp",
+    "title": "銀色鉻感流線裝置",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#E8F5FF",
+        "#94B9D8",
+        "#A1A7B9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-002",
+    "url": "/style-image/y2k-concept-002.webp",
+    "title": "透明玻璃水岸未來城",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#DDF7FF",
+        "#7CC9E7",
+        "#B6DDE4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-003",
+    "url": "/style-image/y2k-concept-003.webp",
+    "title": "粉藍未來室內中庭",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#F1D7F1",
+        "#A9D6F4",
+        "#D49BCB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-004",
+    "url": "/style-image/y2k-concept-004.webp",
+    "title": "水晶透明科技庭園",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#EAF9FF",
+        "#7BC5E9",
+        "#B5E7E4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-005",
+    "url": "/style-image/y2k-concept-005.webp",
+    "title": "虹彩果凍玻璃材質",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "colorPalette": [
+        "#F5D5F1",
+        "#B9D6F9",
+        "#D3B3E6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-006",
+    "url": "/style-image/y2k-concept-006.webp",
+    "title": "綠藍泡泡未來介面",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Bubblegum Futurism",
+      "Chrome Design"
+    ],
+    "colorPalette": [
+        "#DDFBFF",
+        "#82E7D4",
+        "#A6E968"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-007",
+    "url": "/style-image/y2k-concept-007.webp",
+    "title": "紫藍透明數位配件",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#D9D7FF",
+        "#A5A7F3",
+        "#B987E9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-001",
+    "url": "/style-image/doa-concept-001.webp",
+    "title": "黑金巴洛克階梯大廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#080604",
+        "#3A2417",
+        "#B48A55"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-002",
+    "url": "/style-image/doa-concept-002.webp",
+    "title": "金白洛可可旋梯大廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#F2E6D4",
+        "#C9A66D",
+        "#80684A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-003",
+    "url": "/style-image/doa-concept-003.webp",
+    "title": "金飾弧形宮廷客廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#EFE0C8",
+        "#B6915E",
+        "#274036"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-004",
+    "url": "/style-image/doa-concept-004.webp",
+    "title": "洛可可鏡廳梳妝室",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#EBD5BE",
+        "#B88A61",
+        "#6C3F2D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-005",
+    "url": "/style-image/doa-concept-005.webp",
+    "title": "金色穹頂巴洛克天井",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#21130D",
+        "#8A5427",
+        "#E0B66F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-006",
+    "url": "/style-image/doa-concept-006.webp",
+    "title": "粉金洛可可天花壁飾",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Art Deco",
+      "Maximalism"
+    ],
+    "colorPalette": [
+        "#EAD7C8",
+        "#C9A074",
+        "#DAB0A0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-007",
+    "url": "/style-image/doa-concept-007.webp",
+    "title": "粉金洛可可浮雕天頂",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Art Deco",
+      "Maximalism"
+    ],
+    "colorPalette": [
+        "#E9D2C1",
+        "#C49460",
+        "#F0B8A7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-001",
+    "url": "/style-image/msm-concept-001.webp",
+    "title": "光影極簡挑高入口",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Scandinavian"
+    ],
+    "colorPalette": [
+        "#E7E2D8",
+        "#B9B2A5",
+        "#4C493F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-002",
+    "url": "/style-image/msm-concept-002.webp",
+    "title": "木石材質極簡細節",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+        "#D8D1C4",
+        "#B9AD9B",
+        "#5B554C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-003",
+    "url": "/style-image/msm-concept-003.webp",
+    "title": "柔光石材極簡階梯",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+        "#E8E0D3",
+        "#C6BCA8",
+        "#817768"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-004",
+    "url": "/style-image/msm-concept-004.webp",
+    "title": "曲面石台",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Scandinavian"
+    ],
+    "colorPalette": [
+        "#E6E1D7",
+        "#C7BDAF",
+        "#6C665E"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-005",
+    "url": "/style-image/msm-concept-005.webp",
+    "title": "靜謐光井極簡室內",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Scandinavian"
+    ],
+    "colorPalette": [
+        "#EDE8DE",
+        "#C8C0B4",
+        "#6E675E"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-006",
+    "url": "/style-image/msm-concept-006.webp",
+    "title": "木格柵極簡工作角落",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Swiss Design"
+    ],
+    "colorPalette": [
+        "#ECE6DB",
+        "#B8A994",
+        "#4F4940"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-007",
+    "url": "/style-image/msm-concept-007.webp",
+    "title": "灰階極簡玻璃牆面",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design",
+      "Quiet Luxury"
+    ],
+    "colorPalette": [
+        "#E4E2DC",
+        "#A5A49E",
+        "#474842"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-001",
+    "url": "/style-image/eoh-concept-001.webp",
+    "title": "日光有機曲線庭院",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+        "#CFC1A8",
+        "#8E7050",
+        "#566043"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-002",
+    "url": "/style-image/eoh-concept-002.webp",
+    "title": "原土肌理靜物光影",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "colorPalette": [
+        "#C7B09A",
+        "#815F43",
+        "#51483D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-003",
+    "url": "/style-image/eoh-concept-003.webp",
+    "title": "侘寂陶器自然角落",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+        "#D3C5AC",
+        "#87715A",
+        "#4C453C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-004",
+    "url": "/style-image/eoh-concept-004.webp",
+    "title": "綠意木構水岸空間",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Japandi",
+      "Organic Modern",
+      "Wabi-Sabi"
+    ],
+    "colorPalette": [
+        "#B9B089",
+        "#665844",
+        "#49513A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-005",
+    "url": "/style-image/eoh-concept-005.webp",
+    "title": "曲面石材靜謐空間",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Japandi",
+      "Organic Modern",
+      "Wabi-Sabi"
+    ],
+    "colorPalette": [
+        "#D9CCB4",
+        "#9B8265",
+        "#605346"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-006",
+    "url": "/style-image/eoh-concept-006.webp",
+    "title": "晨光石膏圓弧角落",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "colorPalette": [
+        "#D6C6AE",
+        "#A58C70",
+        "#574F42"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-007",
+    "url": "/style-image/eoh-concept-007.webp",
+    "title": "石灰牆侘寂壁龕",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "colorPalette": [
+        "#918C82",
+        "#5C5A54",
+        "#242424"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-001",
+    "url": "/style-image/rpl-concept-001.webp",
+    "title": "花園午後復古餐桌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "colorPalette": [
+        "#D9D1B5",
+        "#82906A",
+        "#A7785A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-002",
+    "url": "/style-image/rpl-concept-002.webp",
+    "title": "粉花復古茶室",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Vintage Floral",
+      "Grandmillennial",
+      "Cottagecore",
+      "Romanticism"
+    ],
+    "colorPalette": [
+        "#D9C6B4",
+        "#B98182",
+        "#6E6A58"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-003",
+    "url": "/style-image/rpl-concept-003.webp",
+    "title": "褪色花牆柔光一隅",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Vintage Floral",
+      "Romanticism",
+      "Cottagecore"
+    ],
+    "colorPalette": [
+        "#D5CEBC",
+        "#9C8A9A",
+        "#B87969"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-004",
+    "url": "/style-image/rpl-concept-004.webp",
+    "title": "玫瑰花影復古梳妝室",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Vintage Floral",
+      "Grandmillennial",
+      "Cottagecore"
+    ],
+    "colorPalette": [
+        "#C8B29C",
+        "#A66F62",
+        "#6B5543"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-005",
+    "url": "/style-image/rpl-concept-005.webp",
+    "title": "藤蔓花窗閱讀角",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "colorPalette": [
+        "#C7B58C",
+        "#798158",
+        "#996B52"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-006",
+    "url": "/style-image/rpl-concept-006.webp",
+    "title": "花卉信箋復古書桌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Vintage Floral",
+      "Grandmillennial",
+      "Cottagecore",
+      "Romanticism"
+    ],
+    "colorPalette": [
+        "#D4C4A5",
+        "#A7756A",
+        "#6E8062"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-007",
+    "url": "/style-image/rpl-concept-007.webp",
+    "title": "燭光花園寫作桌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "colorPalette": [
+        "#BCA779",
+        "#7A6A42",
+        "#A56B59"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-001",
+    "url": "/style-image/eag-concept-001.webp",
+    "title": "紅黑混凝土反設計空間",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#222426",
+        "#797775",
+        "#9D241D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-002",
+    "url": "/style-image/eag-concept-002.webp",
+    "title": "幾何混凝土前衛構築",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde",
+      "Anti-Design"
+    ],
+    "colorPalette": [
+        "#242426",
+        "#7C7A74",
+        "#C1C0BB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-003",
+    "url": "/style-image/eag-concept-003.webp",
+    "title": "紅黑實驗幾何視覺",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Experimental Typography",
+      "Anti-Design",
+      "Avant-Garde",
+      "Deconstructivism"
+    ],
+    "colorPalette": [
+        "#171717",
+        "#E5E0D5",
+        "#D4432B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-004",
+    "url": "/style-image/eag-concept-004.webp",
+    "title": "黑白解構混凝土巨構",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde",
+      "Anti-Design"
+    ],
+    "colorPalette": [
+        "#17191A",
+        "#777672",
+        "#8D2F29"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-005",
+    "url": "/style-image/eag-concept-005.webp",
+    "title": "黑紅解構字體拼貼",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Experimental Typography",
+      "Deconstructivism",
+      "Anti-Design",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#1D1D1D",
+        "#D7D2C8",
+        "#A32A23"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-006",
+    "url": "/style-image/eag-concept-006.webp",
+    "title": "藍黑實驗字體構成",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Experimental Typography",
+      "Anti-Design",
+      "Avant-Garde",
+      "Deconstructivism"
+    ],
+    "colorPalette": [
+        "#191A1A",
+        "#DFDDD5",
+        "#2B4F9B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-007",
+    "url": "/style-image/eag-concept-007.webp",
+    "title": "巨構混凝土光影走廊",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#202123",
+        "#777672",
+        "#C9C5BA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-001",
+    "url": "/style-image/syc-concept-001.webp",
+    "title": "貼紙塗鴉水泥階梯",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#5E5C58",
+        "#272727",
+        "#C34D2C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-002",
+    "url": "/style-image/syc-concept-002.webp",
+    "title": "暗色機能街頭穿搭",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "colorPalette": [
+        "#242729",
+        "#5F655E",
+        "#0E1011"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-003",
+    "url": "/style-image/syc-concept-003.webp",
+    "title": "螢光單車街頭裝備",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#1E2224",
+        "#9BCF2B",
+        "#455A75"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-004",
+    "url": "/style-image/syc-concept-004.webp",
+    "title": "滑板場塗鴉牆面",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Skate Culture",
+      "Graffiti",
+      "Urban Contemporary"
+    ],
+    "colorPalette": [
+        "#242322",
+        "#88827A",
+        "#5B7999"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-005",
+    "url": "/style-image/syc-concept-005.webp",
+    "title": "地下街頭塗鴉中庭",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Urban Contemporary",
+      "Streetwear",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#252728",
+        "#B73E25",
+        "#817564"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-006",
+    "url": "/style-image/syc-concept-006.webp",
+    "title": "塗鴉水泥滑板場",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "colorPalette": [
+        "#292827",
+        "#8E8371",
+        "#AF3F27"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-007",
+    "url": "/style-image/syc-concept-007.webp",
+    "title": "雨後城市滑板廣場",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Skate Culture",
+      "Urban Contemporary",
+      "Streetwear"
+    ],
+    "colorPalette": [
+        "#242527",
+        "#A82820",
+        "#77808B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-001",
+    "url": "/style-image/retro-concept-001.webp",
+    "title": "胡桃木幾何復古客廳",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Mid-Century Modern",
+      "Retro",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#5A2F19",
+        "#C69A4A",
+        "#62643A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-002",
+    "url": "/style-image/retro-concept-002.webp",
+    "title": "幾何織物材質拼貼",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#6E351F",
+        "#C69A4C",
+        "#284844"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-003",
+    "url": "/style-image/retro-concept-003.webp",
+    "title": "綠色轉盤電話靜物",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern"
+    ],
+    "colorPalette": [
+        "#264A3C",
+        "#B47B32",
+        "#6A321D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-004",
+    "url": "/style-image/retro-concept-004.webp",
+    "title": "暖光玻璃磚石材角落",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Mid-Century Modern",
+      "Retro",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#5B321D",
+        "#B4773A",
+        "#C4A276"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-005",
+    "url": "/style-image/retro-concept-005.webp",
+    "title": "藍綠色塊水磨石吧台",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#33585A",
+        "#9D4D32",
+        "#5B321F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-006",
+    "url": "/style-image/retro-concept-006.webp",
+    "title": "暖陽壁爐中世紀客廳",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Mid-Century Modern",
+      "Retro",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#6A351F",
+        "#D2B98D",
+        "#5C6135"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-007",
+    "url": "/style-image/retro-concept-007.webp",
+    "title": "柚木家具復古客廳",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Mid-Century Modern",
+      "Vintage",
+      "Retro"
+    ],
+    "colorPalette": [
+        "#6D351E",
+        "#A9692D",
+        "#55502C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-design-living-dining-space-501",
+    "url": "/style-image/y2k-interior-design-living-dining-space-501.webp",
+    "title": "Y2K粉彩客餐廳空間",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#D4C5C2",
+      "#B0B8C8",
+      "#D8A8B8"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "street-interior-bedroom-501",
+    "url": "/style-image/street-interior-design-bedroom-501.webp",
+    "title": "街頭風格臥室空間",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#1A1C1E",
+      "#5C5E60",
+      "#C8A882"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rom-interior-design-lighting-501",
+    "url": "/style-image/rom-interior-design-lighting-501.webp",
+    "title": "浪漫風格燈光設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#2C1810",
+      "#D4A574",
+      "#F5E6D3"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-outfit-accessory-focus-501",
+    "url": "/style-image/msm-outfit-accessory-focus-501.webp",
+    "title": "極簡風格配件細節",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+      "#F0EDE8",
+      "#2F2F2F",
+      "#9C8B72"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "experimental-architecture-entrance-501",
+    "url": "/style-image/experimental-architecture-entrance-501.webp",
+    "title": "實驗性建築入口空間",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#0B0E1A",
+      "#3D7EBF",
+      "#D6DCE4"
+    ],
+    "attribution": "Asterism"
   }
 ]

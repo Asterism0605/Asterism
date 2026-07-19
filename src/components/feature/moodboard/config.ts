@@ -26,7 +26,7 @@ export const MH = 956;
 
 export const M_HOME_ORBIT: MoodboardOrbitParams = {
   cx: 220,
-  cy: 770,
+  cy: 820,
   rx: 597,
   ry: 597,
   node: { x: 470, y: 230 }
@@ -84,6 +84,14 @@ export interface MoodboardOrbitImage {
   isPlaceholder: boolean;
 }
 
+function buildPlaceholders(count: number): MoodboardOrbitImage[] {
+  return Array.from({ length: count }, (_, index) => ({
+    id: `placeholder-${index}`,
+    src: photos[index % photos.length].src,
+    isPlaceholder: true
+  }));
+}
+
 export function buildMoodboardOrbitImages(savedImages: SavedImage[]): MoodboardOrbitImage[] {
   if (savedImages.length === 0) {
     return [];
@@ -105,13 +113,11 @@ export function buildMoodboardOrbitImages(savedImages: SavedImage[]): MoodboardO
     return realImages;
   }
 
-  const placeholders = Array.from({ length: 20 - uniqueImages.length }, (_, index) => ({
-    id: `placeholder-${index}`,
-    src: photos[index % photos.length].src,
-    isPlaceholder: true
-  }));
+  return [...realImages, ...buildPlaceholders(20 - uniqueImages.length)];
+}
 
-  return [...realImages, ...placeholders];
+export function buildPlaceholderOrbitImages(count = 20): MoodboardOrbitImage[] {
+  return buildPlaceholders(count);
 }
 
 export function isFolderDimmed(folder?: MoodboardFolder): boolean {

@@ -5,6 +5,7 @@ import { createMemoryHistory, createRouter } from 'vue-router';
 import Home from '@/pages/Home.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
+import { requestHomeTourStart } from '@/composables/guide/useHomeTourFlow';
 import type { AuthSession } from '@/types/auth';
 import type { HomeInspirationImage } from '@/types/image';
 import rawStyleImages from '@/data/style-data.json';
@@ -20,7 +21,7 @@ vi.mock('@/api/image.api', () => ({
 }));
 
 const floatingImageNetworkStub = {
-  props: ['images', 'height'],
+  props: ['images', 'height', 'safeCutoffVh', 'safeCutoffOffsetPx'],
   template: '<button data-test="floating-image-network" @click="$emit(\'click\', 0)" />'
 };
 
@@ -465,6 +466,54 @@ describe('Home', () => {
     wrapper.unmount();
   });
 
+  it('starts the core tour through the shared home start request', async () => {
+    const router = createTestRouter();
+    const authStore = useAuthStore();
+    const session: AuthSession = {
+      accessToken: 'test-token',
+      expiresAt: '2099-01-01T00:00:00.000Z',
+      user: {
+        id: 'user-1',
+        email: 'user@example.com',
+        displayName: 'Ada Lovelace',
+        isAdmin: false,
+        createdAt: '2026-01-01T00:00:00.000Z'
+      }
+    };
+    authStore.session = session;
+    authStore.user = session.user;
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: guideFloatingImageNetworkStub,
+          HomeImageClickGuide: homeImageClickGuideStub,
+          HomeTourIntro: homeTourIntroStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await flushPromises();
+    const floatingNetwork = wrapper.findComponent(guideFloatingImageNetworkStub);
+    floatingNetwork.vm.$emit('ready');
+    await flushPromises();
+
+    requestHomeTourStart();
+    await flushPromises();
+
+    expect(localStorage.getItem('asterism:tour:welcome:user-1')).toBe('handled');
+    expect(localStorage.getItem('asterism:tour:core:user-1')).toContain('home-overview');
+    expect(wrapper.find('[data-test="home-tour-intro"]').exists()).toBe(false);
+
+    wrapper.unmount();
+  });
+
   it('returns to free exploration without starting the image guide', async () => {
     const router = createTestRouter();
     const authStore = useAuthStore();
@@ -525,8 +574,8 @@ describe('Home', () => {
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 
-    expect(floatingNetwork.props('height')).toBe('1500vh');
-    expect(images).toHaveLength(45);
+    expect(floatingNetwork.props('height')).toBe(`${(images.length / 3) * 100}vh`);
+    expect(images).toHaveLength(108);
     const styleGroups = images.map((image) => image.styleGroup);
     expect(new Set(styleGroups).size).toBe(9);
     expect(new Set(styleGroups.slice(0, 18)).size).toBe(9);
@@ -535,7 +584,7 @@ describe('Home', () => {
       acc[image.styleGroup] = (acc[image.styleGroup] ?? 0) + 1;
       return acc;
     }, {});
-    expect(Object.values(perGroup).every((count) => count === 5)).toBe(true);
+    expect(Object.values(perGroup).every((count) => count === 12)).toBe(true);
   });
 
   it('passes Style DNA preferred styles to the home inspiration image service', async () => {
@@ -563,21 +612,23 @@ describe('Home', () => {
     const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
     const images = floatingNetwork.props('images') as HomeInspirationImage[];
 
-    expect(floatingNetwork.props('height')).toBe('1500vh');
     expect(images[0]).toEqual(
       expect.objectContaining({
         id: 'doa-main-001',
         styleGroup: 'Decorative & Opulent Art'
       })
     );
-    expect(images).toHaveLength(45);
+    expect(
+      images.slice(0, 12).every((image) => image.styleGroup === 'Decorative & Opulent Art')
+    ).toBe(true);
+    expect(floatingNetwork.props('height')).toBe(`${(images.length / 3) * 100}vh`);
   });
 
-  it('opens the limit modal for guests when viewport bottom reaches 150vh', async () => {
+  it('opens the limit modal for guests when viewport bottom reaches 450vh', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const viewport = mockViewport(501);
+    const viewport = mockViewport(3501);
 
     const wrapper = mount(Home, {
       attachTo: document.body,
@@ -594,6 +645,9 @@ describe('Home', () => {
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
+    const floatingNetwork = wrapper.findComponent(floatingImageNetworkStub);
+    expect(floatingNetwork.props('safeCutoffVh')).toBe(450);
+    expect(floatingNetwork.props('safeCutoffOffsetPx')).toBe(60);
     expect(wrapper.text()).toContain('Your daily inspiration limit has been reached.');
     expect(viewport.scrollTo).not.toHaveBeenCalled();
 
@@ -604,7 +658,7 @@ describe('Home', () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const viewport = mockViewport(501);
+    const viewport = mockViewport(3501);
 
     const wrapper = mount(Home, {
       attachTo: document.body,
@@ -627,16 +681,16 @@ describe('Home', () => {
     // 關閉後：不再彈窗、改顯示 header 區淡提示，並夾在限制處（非回頂）。
     expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
     expect(wrapper.text()).toContain('Sign up or log in to keep exploring');
-    expect(viewport.getScrollY()).toBe(500);
+    expect(viewport.getScrollY()).toBe(3500);
 
     // 再次捲過限制：維持不彈窗、提示仍在、繼續夾在限制處。
-    viewport.setScrollY(900);
+    viewport.setScrollY(3900);
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
     expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
     expect(wrapper.text()).toContain('Sign up or log in to keep exploring');
-    expect(viewport.getScrollY()).toBe(500);
+    expect(viewport.getScrollY()).toBe(3500);
 
     wrapper.unmount();
   });
@@ -645,7 +699,7 @@ describe('Home', () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const viewport = mockViewport(501);
+    const viewport = mockViewport(3501);
 
     const wrapper = mount(Home, {
       attachTo: document.body,
@@ -664,10 +718,10 @@ describe('Home', () => {
     await wrapper.vm.$nextTick();
 
     expect(viewport.scrollTo).toHaveBeenCalledWith({
-      top: 500,
+      top: 3500,
       behavior: 'auto'
     });
-    expect(viewport.getScrollY()).toBe(500);
+    expect(viewport.getScrollY()).toBe(3500);
 
     wrapper.unmount();
   });
@@ -676,7 +730,7 @@ describe('Home', () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const firstViewport = mockViewport(501);
+    const firstViewport = mockViewport(3501);
 
     const firstWrapper = mount(Home, {
       attachTo: document.body,
@@ -694,11 +748,11 @@ describe('Home', () => {
     await firstWrapper.find('.overlay-backdrop').trigger('click');
     await firstWrapper.vm.$nextTick();
     expect(firstWrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
-    expect(firstViewport.getScrollY()).toBe(500);
+    expect(firstViewport.getScrollY()).toBe(3500);
     firstWrapper.unmount();
     firstViewport.scrollTo.mockRestore();
 
-    const secondViewport = mockViewport(501);
+    const secondViewport = mockViewport(3501);
     const secondWrapper = mount(Home, {
       attachTo: document.body,
       global: {
@@ -719,11 +773,11 @@ describe('Home', () => {
     secondWrapper.unmount();
   });
 
-  it('does not open the limit modal for authenticated users when viewport bottom reaches 150vh', async () => {
+  it('does not open the limit modal for authenticated users when viewport bottom reaches 450vh', async () => {
     const router = createTestRouter();
     router.push('/');
     await router.isReady();
-    const viewport = mockViewport(501);
+    const viewport = mockViewport(3501);
     const authStore = useAuthStore();
     const session: AuthSession = {
       accessToken: 'test-token',
@@ -756,6 +810,7 @@ describe('Home', () => {
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
 
+    expect(wrapper.findComponent(floatingImageNetworkStub).props('safeCutoffVh')).toBeUndefined();
     expect(wrapper.text()).not.toContain('Your daily inspiration limit has been reached.');
     expect(viewport.scrollTo).not.toHaveBeenCalled();
 
@@ -780,7 +835,7 @@ describe('Home', () => {
       }
     });
 
-    mockViewport(501);
+    mockViewport(3501);
     await openLimitModal(wrapper);
     await wrapper.find('[data-testid="cta-create-account"]').trigger('click');
 

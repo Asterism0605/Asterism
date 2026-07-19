@@ -274,10 +274,28 @@ export default {
     deleteImageTitle: '從資料夾中刪除圖片',
     deleteImageAria: '刪除圖片',
     openFolderAria: '開啟資料夾',
+    folderSelected: '我的資料夾',
+    folderEmptySuffix: '(空)',
     openImageDetailAria: '查看圖片詳情'
   },
   userTour: {
     progress: '{current} / {total}',
+    control: {
+      open: '開啟探索導覽選單',
+      title: '探索導覽',
+      start: '開始導覽',
+      startDescription: '從頭開始，帶你認識 Asterism。',
+      resume: '繼續導覽',
+      resumeDescription: '從上次進度繼續探索。',
+      restart: '重新開始導覽',
+      replay: '重新觀看導覽',
+      lastProgress: '上次進度：{progress}',
+      progress: {
+        home: '首頁探索',
+        spread: '圖片延展',
+        detail: '圖片詳情'
+      }
+    },
     actions: {
       previous: '上一步',
       next: '下一步',

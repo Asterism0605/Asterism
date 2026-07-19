@@ -9,7 +9,10 @@ import FloatingImageNetwork from '@/components/sections/FloatingImageNetwork';
 import HomeStarLinks from '@/components/sections/HomeStarLinks';
 import HomeImageClickGuide from '@/components/feature/guide/HomeImageClickGuide.vue';
 import HomeTourIntro from '@/components/feature/guide/HomeTourIntro.vue';
-import { useHomeTourFlow } from '@/composables/guide/useHomeTourFlow';
+import {
+  HOME_TOUR_START_EVENT,
+  useHomeTourFlow
+} from '@/composables/guide/useHomeTourFlow';
 import { useHomeImageGuide } from '@/composables/guide/useHomeImageGuide';
 import { usePageUserTour } from '@/composables/guide/usePageUserTour';
 import { getHomeInspirationImages } from '@/services/image.service';
@@ -17,7 +20,8 @@ import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 import type { HomeInspirationImage } from '@/types/image';
 
-const scrollLimitVh = 150;
+const scrollLimitVh = 450;
+const appHeaderHeightPx = 60;
 const router = useRouter();
 const authStore = useAuthStore();
 const styleDnaStore = useStyleDnaStore();
@@ -216,14 +220,20 @@ async function loadInspirationImages() {
   });
 }
 
+function handleHomeTourStartRequest(): void {
+  void startCoreTour();
+}
+
 onMounted(() => {
   handleScrollLimit();
   window.addEventListener('scroll', handleScrollLimit, { passive: true });
+  window.addEventListener(HOME_TOUR_START_EVENT, handleHomeTourStartRequest);
   void loadInspirationImages();
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScrollLimit);
+  window.removeEventListener(HOME_TOUR_START_EVENT, handleHomeTourStartRequest);
 });
 
 watch(homePreferredStyles, () => {
@@ -243,8 +253,8 @@ watch(
 
 <template>
   <main
-    class="home-page relative overflow-hidden bg-void text-text-primary [--app-header-height:60px]"
-    :style="{ minHeight: containerHeight }"
+    class="home-page relative overflow-hidden bg-void text-text-primary"
+    :style="{ minHeight: containerHeight, '--app-header-height': `${appHeaderHeightPx}px` }"
   >
     <div class="pointer-events-none absolute inset-0 z-0 home-page__wash" aria-hidden="true" />
 
@@ -263,6 +273,8 @@ watch(
           layout="home"
           show-constellations
           :guide-target-index="activeGuideTargetIndex ?? undefined"
+          :safe-cutoff-vh="!isAuthenticated ? scrollLimitVh : undefined"
+          :safe-cutoff-offset-px="appHeaderHeightPx"
           @click="openImageSpread"
           @ready="handleHomeImagesReady"
           @guide-target-ready="handleHomeImagesReady"
