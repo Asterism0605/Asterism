@@ -135,7 +135,7 @@ export function useSaveToMoodboard() {
         raw === 'You have reached the maximum of 10 folders.'
           ? t('toast.folderLimit')
           : raw === `Folder name must be ${MOODBOARD_FOLDER_NAME_MAX_LENGTH} characters or fewer.`
-            ? t('toast.folderNameTooLong')
+            ? t('toast.folderNameTooLong', { max: MOODBOARD_FOLDER_NAME_MAX_LENGTH })
             : t('toast.saveFailed');
       showToast({ type: 'error', message });
       return false;

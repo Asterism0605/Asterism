@@ -69,7 +69,7 @@ export default {
     folderCreatedAndSaved: 'Folder created and image saved.',
     deleteFolderFailed: 'Failed to delete the folder. Please try again.',
     deleteImageFailed: 'Failed to delete the image. Please try again.',
-    folderNameTooLong: 'Folder name must be 15 characters or fewer.'
+    folderNameTooLong: '@:moodboard.folderNameTooLong'
   },
   userMenu: {
     signedInAs: 'Signed in as',
@@ -247,7 +247,7 @@ export default {
     startExploring: 'Start Exploring',
     createFolderTitle: 'SAVE TO NEW FOLDER',
     folderNamePlaceholder: 'Folder name',
-    folderNameTooLong: 'Folder name must be 15 characters or fewer.',
+    folderNameTooLong: 'Folder name must be {max} characters or fewer.',
     send: 'SEND',
     goToMoodboard: 'Go to Moodboard',
     deleteFolderTitle: 'Delete {name} and All Images',

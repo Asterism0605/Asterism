@@ -9,7 +9,7 @@ withDefaults(
 
 <template>
   <button
-    class="cursor-pointer text-sm font-semibold rounded-full transition-all duration-200 px-4 sm:px-5 py-1.5 sm:py-2"
+    class="cursor-pointer text-sm font-semibold rounded-full transition-all duration-200 px-4 sm:px-5 py-1.5 sm:py-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50 disabled:active:scale-100"
     :class="[
       variant === 'primary'
         ? 'bg-stellar-red text-text-primary hover:opacity-90 active:scale-[0.985]'

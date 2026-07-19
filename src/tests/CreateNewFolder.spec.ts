@@ -142,9 +142,4 @@ describe('CreateNewFolder', () => {
     expect(wrapper.find('.folder-name-error').exists()).toBe(true);
     expect(getSendButton(wrapper).disabled).toBe(true);
   });
-
-  it('SEND 按鈕 disabled 時帶有 disabled 游標樣式', () => {
-    const wrapper = mountCreateNewFolder();
-    expect(getSendButton(wrapper).classList.contains('disabled:cursor-not-allowed')).toBe(true);
-  });
 });

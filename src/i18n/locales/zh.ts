@@ -69,7 +69,7 @@ export default {
     folderCreatedAndSaved: '資料夾已建立，圖片已儲存。',
     deleteFolderFailed: '資料夾刪除失敗，請再試一次。',
     deleteImageFailed: '圖片刪除失敗，請再試一次。',
-    folderNameTooLong: '資料夾名稱不能超過 15 個字。'
+    folderNameTooLong: '@:moodboard.folderNameTooLong'
   },
   userMenu: {
     signedInAs: '目前登入身分',
@@ -242,7 +242,7 @@ export default {
     startExploring: '開始探索',
     createFolderTitle: '建立新資料夾並收藏圖片',
     folderNamePlaceholder: '資料夾名稱',
-    folderNameTooLong: '資料夾名稱不能超過 15 個字。',
+    folderNameTooLong: '資料夾名稱不能超過 {max} 個字。',
     send: '送出',
     goToMoodboard: '前往情緒板',
     deleteFolderTitle: '刪除{name}與已收藏圖片',

@@ -54,7 +54,7 @@ function handleSubmit() {
         </Transition>
       </div>
       <p v-if="isNameTooLong" class="folder-name-error">
-        {{ $t('moodboard.folderNameTooLong') }}
+        {{ $t('moodboard.folderNameTooLong', { max: MOODBOARD_FOLDER_NAME_MAX_LENGTH }) }}
       </p>
     </div>
     <div class="overlay-actions">
@@ -62,7 +62,6 @@ function handleSubmit() {
         <Button
           variant="primary"
           type="button"
-          class="disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50 disabled:active:scale-100"
           :disabled="!folderName.trim() || isNameTooLong || isSubmitting || isSuccess"
           @click="handleSubmit"
         >
