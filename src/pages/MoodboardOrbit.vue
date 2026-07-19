@@ -12,6 +12,7 @@ import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConf
 import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
 import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
 import FolderDirectory from '@/components/feature/moodboard/FolderDirectory.vue';
+import FolderFilterPanel from '@/components/feature/moodboard/FolderFilterPanel.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
 import { showToast } from '@/composables/useToast';
@@ -45,6 +46,7 @@ import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
 import { useDeleteMoodboardImage } from '@/composables/useDeleteMoodboardImage';
+import { useFolderImageFilters } from '@/composables/useFolderImageFilters';
 import { deleteFolder } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
@@ -129,6 +131,10 @@ const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDele
       deleteImageHoverIdx.value = null;
     }
   });
+
+const folderFilters = useFolderImageFilters(
+  () => moodboardStore.folders[selectedFolder.value]?.images ?? []
+);
 
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
@@ -397,9 +403,7 @@ function onImgError(e: Event) {
 function buildDetail() {
   const o = HO;
   const floor = deskVisibleH.value;
-  const list = toPhotos(
-    moodboardStore.folders[selectedFolder.value]?.images.slice(0, DETAIL_CAP) ?? []
-  );
+  const list = toPhotos(folderFilters.displayedImages.value);
   const nodes = packPhotos(list, {
     idPrefix: 's',
     cx: o.cx,
@@ -504,6 +508,7 @@ function openFolder(i: number) {
 
   selectedFolder.value = i;
   hasFolders.value = false;
+  folderFilters.reset();
   if (isMobile.value) buildMobileDetail();
   else buildDetail();
   navigate(slugFor(i), i);
@@ -667,6 +672,12 @@ watch(orbitImages, () => {
   if (isMobile.value && hasFolders.value) {
     buildMobileHome();
   }
+});
+
+// 篩選條件變動時重新排版資料夾詳情頁的圖片（目前只接了桌機版，手機版待接上）。
+watch(folderFilters.filteredImages, () => {
+  if (hasFolders.value || isMobile.value) return;
+  buildDetail();
 });
 
 onMounted(async () => {
@@ -1210,6 +1221,17 @@ onBeforeUnmount(() => {
               {{ selectedName }}
             </div>
           </div>
+
+          <FolderFilterPanel
+            :style-options="folderFilters.availableStyleGroups.value"
+            :medium-options="folderFilters.availableMediums.value"
+            :selected-style-groups="folderFilters.selectedStyleGroups.value"
+            :selected-mediums="folderFilters.selectedMediums.value"
+            :has-active-filters="folderFilters.hasActiveFilters.value"
+            @toggle-style="folderFilters.toggleStyleGroup"
+            @toggle-medium="folderFilters.toggleMedium"
+            @reset="folderFilters.reset"
+          />
         </div>
 
         <div
