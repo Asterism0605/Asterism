@@ -30,6 +30,7 @@ const buttonStyle = computed<CSSProperties>(() => ({
     class="delete-icon-button"
     :style="buttonStyle"
     :aria-label="props.ariaLabel ?? $t('moodboard.deleteFolderAria')"
+    @pointerdown.stop
     @click.stop="emit('delete')"
   >
     <CircleX :size="iconSize" aria-hidden="true" />
