@@ -142,4 +142,26 @@ describe('CreateNewFolder', () => {
     expect(wrapper.find('.folder-name-error').exists()).toBe(true);
     expect(getSendButton(wrapper).disabled).toBe(true);
   });
+
+  it('15 個 emoji（UTF-16 length 30）不應被誤判為超過 15 字', async () => {
+    const wrapper = mountCreateNewFolder();
+    const input = getInput(wrapper);
+    input.value = '😀'.repeat(15);
+    input.dispatchEvent(new Event('input'));
+    await flushPromises();
+
+    expect(input.classList.contains('input-error-border')).toBe(false);
+    expect(getSendButton(wrapper).disabled).toBe(false);
+  });
+
+  it('16 個 emoji 才判定為超過 15 字', async () => {
+    const wrapper = mountCreateNewFolder();
+    const input = getInput(wrapper);
+    input.value = '😀'.repeat(16);
+    input.dispatchEvent(new Event('input'));
+    await flushPromises();
+
+    expect(input.classList.contains('input-error-border')).toBe(true);
+    expect(getSendButton(wrapper).disabled).toBe(true);
+  });
 });

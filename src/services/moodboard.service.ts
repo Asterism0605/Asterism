@@ -9,6 +9,7 @@ import {
 } from '@/api/moodboard.api';
 import { getImageById } from '@/services/image.service';
 import { MOODBOARD_FOLDER_NAME_MAX_LENGTH } from '@/constants/moodboard.constants';
+import { graphemeLength } from '@/utils/graphemeLength';
 import type {
   MoodboardFolder,
   MoodboardViewModel,
@@ -75,7 +76,7 @@ export async function createFolder(
 ): Promise<MoodboardFolder> {
   const normalizedName = name.trim();
 
-  if (normalizedName.length > MOODBOARD_FOLDER_NAME_MAX_LENGTH) {
+  if (graphemeLength(normalizedName) > MOODBOARD_FOLDER_NAME_MAX_LENGTH) {
     throw new Error(`Folder name must be ${MOODBOARD_FOLDER_NAME_MAX_LENGTH} characters or fewer.`);
   }
 

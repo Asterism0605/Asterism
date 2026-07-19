@@ -4,6 +4,7 @@ import { CircleCheck } from '@lucide/vue';
 import ModalOverlay from '@/components/overlay/ModalOverlay.vue';
 import Button from '@/components/ui/Button.vue';
 import { MOODBOARD_FOLDER_NAME_MAX_LENGTH } from '@/constants/moodboard.constants';
+import { graphemeLength } from '@/utils/graphemeLength';
 
 const props = defineProps<{ modelValue: boolean; isSubmitting: boolean; isSuccess: boolean }>();
 const emit = defineEmits<{
@@ -14,7 +15,7 @@ const emit = defineEmits<{
 const folderName = ref('');
 
 const isNameTooLong = computed(
-  () => folderName.value.trim().length > MOODBOARD_FOLDER_NAME_MAX_LENGTH
+  () => graphemeLength(folderName.value.trim()) > MOODBOARD_FOLDER_NAME_MAX_LENGTH
 );
 
 watch(
