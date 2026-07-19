@@ -2,7 +2,7 @@
 export default {
   nav: {
     login: 'Log in',
-    signup: 'Sign Up'
+    signup: 'Sign up'
   },
   auth: {
     loginTitle: 'Login',

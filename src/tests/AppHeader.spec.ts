@@ -73,7 +73,7 @@ describe('AppHeader', () => {
     const { wrapper } = createMountedHeader();
 
     expect(wrapper.text()).toContain('Log in');
-    expect(wrapper.text()).toContain('Sign Up');
+    expect(wrapper.text()).toContain('Sign up');
     expect(wrapper.text()).not.toContain('Signed in as');
   });
 
