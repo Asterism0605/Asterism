@@ -171,8 +171,8 @@ html:lang(zh-Hant) .zh-heading-spacing {
       rgba(255, 255, 255, 0.02) 60%,
       rgba(255, 255, 255, 0) 100%
     );
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(21px);
+    backdrop-filter: blur(21px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow:
       inset 1px 1px 1px rgba(255, 255, 255, 0.2),
@@ -203,8 +203,8 @@ html:lang(zh-Hant) .zh-heading-spacing {
     background:
       radial-gradient(circle at center, rgb(240 237 230 / 0.12), transparent 38%),
       linear-gradient(180deg, rgb(6 6 8 / 0.84), rgb(6 6 8 / 0.94));
-    backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
   }
 
   .overlay-panel {

@@ -16,6 +16,8 @@ import { LAYOUT_PRESETS, type LayoutPreset, type NodePosition } from './config';
 
 // home 卡片之間保證的最小視覺間距（px）。不只「不重疊」，而是一定留出空隙。
 export const HOME_MIN_GAP = 24;
+// 訪客瀏覽限制線上下保留的空白，避免浮動動畫（±6px）或視覺陰影貼到截點。
+export const HOME_CUTOFF_GAP = 32;
 
 export function resolveConfiguredHeight(rawHeight: string | undefined) {
   const resolvedHeight = rawHeight ?? '600px';
@@ -428,7 +430,8 @@ export function buildFloatingImageLayout(
   height: number,
   preset: LayoutPreset,
   viewportHeight: number = height,
-  aspects?: (string | undefined)[]
+  aspects?: (string | undefined)[],
+  horizontalCutoffY?: number
 ) {
   const nodes = buildLayoutNodes(count, width, height, preset, viewportHeight, aspects);
 
@@ -458,6 +461,21 @@ export function buildFloatingImageLayout(
 
   // home：把標題避讓區當不可移動障礙物，跟卡片去重疊一起鬆弛解，最後 clamp 進邊界。
   const obstacles = getActiveAvoidRects(preset.avoidAreas, width, height, viewportHeight);
+  if (
+    horizontalCutoffY !== undefined &&
+    Number.isFinite(horizontalCutoffY) &&
+    horizontalCutoffY > 0 &&
+    horizontalCutoffY < height
+  ) {
+    // 把訪客限制線做成橫跨整個容器的窄障礙帶。resolveOverlaps 會依圖片中心
+    // 將跨線卡片完整推到上方或下方，真實圖片比例載入後也會再次套用。
+    obstacles.push({
+      left: 0,
+      right: width,
+      top: horizontalCutoffY - HOME_CUTOFF_GAP,
+      bottom: horizontalCutoffY + HOME_CUTOFF_GAP
+    });
+  }
   const pinnedIndices = new Set<number>();
   if (preset.homeHeroAnchor && clampedNodes[preset.homeHeroAnchor.index]) {
     // 標題右側錨點圖要維持在安全區，其他圖片可以避讓它。
@@ -485,7 +503,8 @@ export function reflowFloatingImageLayout(
   height: number,
   preset: LayoutPreset,
   viewportHeight: number = height,
-  aspects?: (string | undefined)[]
+  aspects?: (string | undefined)[],
+  horizontalCutoffY?: number
 ) {
   const nodes = positions.map((position, index) => ({
     ...position,
@@ -504,6 +523,19 @@ export function reflowFloatingImageLayout(
   }
 
   const obstacles = getActiveAvoidRects(preset.avoidAreas, width, height, viewportHeight);
+  if (
+    horizontalCutoffY !== undefined &&
+    Number.isFinite(horizontalCutoffY) &&
+    horizontalCutoffY > 0 &&
+    horizontalCutoffY < height
+  ) {
+    obstacles.push({
+      left: 0,
+      right: width,
+      top: horizontalCutoffY - HOME_CUTOFF_GAP,
+      bottom: horizontalCutoffY + HOME_CUTOFF_GAP
+    });
+  }
   const pinnedIndices = new Set<number>();
   if (preset.homeHeroAnchor && nodes[preset.homeHeroAnchor.index]) {
     pinnedIndices.add(preset.homeHeroAnchor.index);

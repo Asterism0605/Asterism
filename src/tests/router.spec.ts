@@ -34,13 +34,27 @@ describe('router', () => {
   })
 
   it('protects account routes with the existing auth guard', () => {
-    const moodboardRoute = router.getRoutes().find((route) => route.name === 'moodboard')
-    const consultationsRoute = router
-      .getRoutes()
-      .find((route) => route.name === 'account-consultations')
+    const protectedNames = [
+      'moodboard',
+      'account-consultations',
+      'discover-dna',
+      'style-dna',
+      'style-dna-result',
+      'consultant'
+    ]
 
-    expect(moodboardRoute?.meta.requiresAuth).toBe(true)
-    expect(consultationsRoute?.meta.requiresAuth).toBe(true)
+    for (const name of protectedNames) {
+      const route = router.getRoutes().find((r) => r.name === name)
+      expect(route?.meta.requiresAuth, `${name} should require auth`).toBe(true)
+    }
+  })
+
+  it('redirects guests to login with a next param on protected routes', async () => {
+    await router.push('/style-dna')
+    await router.isReady()
+
+    expect(router.currentRoute.value.name).toBe('login')
+    expect(router.currentRoute.value.query.next).toBe('/style-dna')
   })
 
   it('keeps one image detail path and falls back only when the image id is missing', async () => {
