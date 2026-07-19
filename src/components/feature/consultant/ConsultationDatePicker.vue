@@ -251,7 +251,7 @@ defineExpose({ resetMonth });
 .recommendation-panel__field > span {
   color: #f0ede6d6;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .recommendation-panel__date-picker {
@@ -270,7 +270,7 @@ defineExpose({ resetMonth });
   background-color: #ffffff12;
   color: var(--color-text-primary);
   font-size: var(--text-caption);
-  font-weight: 500;
+  font-weight: 400;
   text-align: left;
   outline: none;
   transition:
@@ -315,7 +315,7 @@ defineExpose({ resetMonth });
 .recommendation-panel__calendar-header p {
   color: var(--color-text-primary);
   font-size: 0.88rem;
-  font-weight: 700;
+  font-weight: 400;
   min-width: 0;
   overflow: hidden;
   text-align: center;
@@ -372,7 +372,7 @@ defineExpose({ resetMonth });
   border-radius: 8px;
   color: #f0ede6c7;
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 400;
   transition:
     background-color 180ms ease,
     color 180ms ease,

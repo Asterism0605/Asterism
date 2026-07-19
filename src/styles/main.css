@@ -138,7 +138,7 @@ html:lang(zh-Hant) .zh-heading-spacing {
   .text-h3 {
     font-size: var(--text-h3);
     font-family: var(--font-family-title);
-    font-weight: 500;
+    font-weight: 300;
     line-height: var(--leading-tight);
   }
 

@@ -70,7 +70,7 @@ const siteLogoSrc = SITE_LOGO_SRC;
     </button>
 
     <div class="flex items-center justify-between gap-4">
-      <h1 class="text-h1 font-[300] text-text-primary leading-tight">{{ $t('image.info') }}</h1>
+      <h1 class="text-h1 font-[100] text-text-primary leading-tight">{{ $t('image.info') }}</h1>
       <a
         v-if="sourceUrl"
         :href="sourceUrl"
