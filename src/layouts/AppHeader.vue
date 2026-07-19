@@ -49,6 +49,8 @@ const userTour = useUserTour(computed(() => authStore.user?.id));
 const welcomeTour = useWelcomeTour(computed(() => authStore.user?.id));
 const userTourStatus = computed(() => userTour.state.value.status);
 const userTourStep = computed(() => userTour.state.value.step);
+const userTourChapter = computed(() => userTour.state.value.currentChapter);
+const isUserTourTransition = computed(() => userTourStatus.value === 'transition');
 
 const isPictureDetail = computed(
   () => route.name === 'picture-detail' && !!getImageById(route.params.imageId as string)
@@ -104,6 +106,10 @@ async function handleStartUserTour(): Promise<void> {
 async function resumeUserTour(): Promise<void> {
   const step = userTour.state.value.step;
   const targetImageId = userTour.state.value.targetImageId;
+  if (!step && userTour.state.value.currentChapter === 'moodboard') {
+    await router.push({ name: 'moodboard' });
+    return;
+  }
   if (!step) return;
 
   let targetRoute: RouteLocationRaw;
@@ -116,7 +122,10 @@ async function resumeUserTour(): Promise<void> {
   ) {
     targetRoute = { name: 'image-spread', params: { imageId: targetImageId } };
   } else if (
-    (step === 'detail-thumbnail' || step === 'detail-style-tag' || step === 'detail-save') &&
+    (step === 'detail-thumbnail' ||
+      step === 'detail-style-tag' ||
+      step === 'detail-consult' ||
+      step === 'detail-save') &&
     targetImageId
   ) {
     targetRoute = { name: 'picture-detail', params: { imageId: targetImageId } };
@@ -137,12 +146,15 @@ async function resumeUserTour(): Promise<void> {
       /* z-[110]：故意高於 StyleTagModal 的 z-index:100，modal 開著時 AppHeader（logo／
          語言切換／個人選單，含下拉展開的選單本身）仍蓋在最上層可操作，方便中英對照
          review（una-hsieh review 意見）。全站其餘覆蓋層都在 z-60 以下，不受影響。 */
-      'fixed top-0 z-[110] flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl',
-      useNarrowWidth ? 'max-md:hidden md:w-3/5' : 'w-full'
+      'fixed top-0 flex items-center justify-between px-8 py-4 border-b border-white/5 bg-deep/80 backdrop-blur-xl',
+      isUserTourTransition ? 'z-[210]' : 'z-[110]',
+      isUserTourTransition ? 'w-full' : useNarrowWidth ? 'max-md:hidden md:w-3/5' : 'w-full'
     ]"
   >
     <button
       type="button"
+      :disabled="isUserTourTransition"
+      :aria-disabled="isUserTourTransition"
       class="flex items-center gap-2 cursor-pointer transition-opacity duration-200 hover:opacity-75"
       @click="router.push({ name: 'home' })"
     >
@@ -208,6 +220,7 @@ async function resumeUserTour(): Promise<void> {
         v-if="authStore.isAuthenticated"
         :status="userTourStatus"
         :step="userTourStep"
+        :chapter="userTourChapter"
         @start="handleStartUserTour"
         @resume="resumeUserTour"
         @restart="handleStartUserTour"
@@ -222,6 +235,7 @@ async function resumeUserTour(): Promise<void> {
         v-else
         :display-name="authStore.user?.displayName ?? ''"
         :initials="initials"
+        :disabled="isUserTourTransition"
         @moodboard="goToMoodboard"
         @style-dna="goToStyleDna"
         @consultations="goToConsultations"
