@@ -33,10 +33,10 @@ describe('TourTransition', () => {
 
     await nextTick();
 
-    expect(wrapper.get('[data-testid="tour-transition"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="tour-transition"]').exists()).toBe(true);
     expect(wrapper.get('[data-testid="tour-transition"]').text()).toContain('Exploration complete');
     expect(wrapper.get('[data-testid="tour-transition-backdrop"]').classes()).toContain('fixed');
-    expect(wrapper.get('[data-testid="tour-transition-complete-icon"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="tour-transition-complete-icon"]').exists()).toBe(true);
     expect(wrapper.get('h1').classes()).toContain('text-h1');
     expect(wrapper.get('h1').classes()).not.toContain('text-display');
     expect(wrapper.findAll('button')).toHaveLength(2);
