@@ -3,6 +3,8 @@ export interface UserProfile {
   email: string;
   displayName: string;
   isAdmin: boolean;
+  /** 有值 = 此帳號是顧問(consultants.profile_id 連結),由 DB 端指定。 */
+  consultantId?: string | null;
   createdAt: string;
 }
 

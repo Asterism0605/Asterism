@@ -6,7 +6,12 @@ import SignUp from '@/pages/SignUp.vue';
 
 const supaAuth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn(), resend: vi.fn() };
 const single = vi.fn();
-const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+const maybeSingle = vi.fn();
+const from = vi.fn((table: string) =>
+  table === 'consultants'
+    ? { select: () => ({ eq: () => ({ maybeSingle }) }) }
+    : { select: () => ({ eq: () => ({ single }) }) }
+);
 const reconcileWithServer = vi.fn().mockResolvedValue(undefined);
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth: supaAuth, from }) }));
 vi.mock('@/stores/style-dna.store', () => ({
@@ -61,6 +66,7 @@ describe('SignUp', () => {
     reconcileWithServer.mockReset();
     reconcileWithServer.mockResolvedValue(undefined);
     single.mockResolvedValue({ data: { display_name: 'New User', username: null, is_admin: false }, error: null });
+    maybeSingle.mockResolvedValue({ data: null, error: null });
     supaAuth.signUp.mockResolvedValue({ data: { session: fakeSession }, error: null });
     supaAuth.signInWithPassword.mockResolvedValue({ data: { session: fakeSession }, error: null });
   });

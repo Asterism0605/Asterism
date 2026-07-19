@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { CalendarCheck, ChevronDown, LayoutDashboard, LogOut, Sparkles } from '@lucide/vue';
+import { CalendarCheck, ChevronDown, ClipboardList, LayoutDashboard, LogOut, Sparkles } from '@lucide/vue';
 import DropdownMenu from '@/components/ui/DropdownMenu.vue';
 
-defineProps<{
-  displayName: string;
-  initials: string;
-}>();
+withDefaults(
+  defineProps<{
+    displayName: string;
+    initials: string;
+    /** 顧問帳號才顯示「被指派的諮詢」入口(#208)。 */
+    isConsultant?: boolean;
+  }>(),
+  { isConsultant: false }
+);
 
 const emit = defineEmits<{
   moodboard: [];
   consultations: [];
+  consultantBookings: [];
   styleDna: [];
   logout: [];
 }>();
@@ -45,6 +51,11 @@ function handleStyleDna() {
 function handleConsultations() {
   closeMenu();
   emit('consultations');
+}
+
+function handleConsultantBookings() {
+  closeMenu();
+  emit('consultantBookings');
 }
 
 function handleLogout() {
@@ -117,6 +128,17 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside, true
           >
             <CalendarCheck class="size-4 shrink-0 opacity-60" />
             {{ $t('userMenu.myConsultations') }}
+          </button>
+        </li>
+
+        <li v-if="isConsultant">
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleConsultantBookings"
+          >
+            <ClipboardList class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.consultantBookings') }}
           </button>
         </li>
 

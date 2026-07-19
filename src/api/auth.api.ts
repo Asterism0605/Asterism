@@ -41,14 +41,32 @@ async function fetchProfile(userId: string): Promise<{ displayName: string | nul
   return { displayName: row?.display_name ?? null, isAdmin: row?.is_admin ?? false };
 }
 
+// 顧問身分:consultants.profile_id = 本人(RLS consultants_select_own)。查不到或出錯都降級為非顧問。
+async function fetchConsultantId(userId: string): Promise<string | null> {
+  const { data, error } = await getSupabase()
+    .from('consultants')
+    .select('id')
+    .eq('profile_id', userId)
+    .maybeSingle();
+  if (error) {
+    console.warn('[auth] fetchConsultantId 失敗，降級為非顧問：', error.code);
+    return null;
+  }
+  return (data as { id: string } | null)?.id ?? null;
+}
+
 async function toAuthSession(session: Session, fallbackDisplayName: string): Promise<AuthSession> {
-  const profile = await fetchProfile(session.user.id);
+  const [profile, consultantId] = await Promise.all([
+    fetchProfile(session.user.id),
+    fetchConsultantId(session.user.id)
+  ]);
   const email = session.user.email ?? '';
   const user: UserProfile = {
     id: session.user.id,
     email,
     displayName: profile.displayName || fallbackDisplayName || email.split('@')[0] || 'Asterism User',
     isAdmin: profile.isAdmin,
+    consultantId,
     createdAt: session.user.created_at ?? new Date().toISOString()
   };
   // session.expires_at 缺漏時退回「現在 +1 小時」，避免產生 1970 的誤導時間戳。

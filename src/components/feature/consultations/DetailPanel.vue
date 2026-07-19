@@ -1,16 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
-import type { AccountConsultation } from '@/types/account-consultation';
+import type { AccountConsultation, ConsultantBookingItem } from '@/types/account-consultation';
 import { formatConsultationDisplayValue } from '@/utils/consultation-display';
 import ConsultationList from './ConsultationList.vue';
 
-defineProps<{
-  reservation: AccountConsultation;
-  reservations: AccountConsultation[];
-  showAll: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    reservation: ConsultantBookingItem;
+    reservations: AccountConsultation[];
+    showAll: boolean;
+    /** consultant:多渲染客戶聯絡資訊與狀態標籤,i18n 走 consultantBookings。 */
+    variant?: 'account' | 'consultant';
+  }>(),
+  { variant: 'account' }
+);
+
+const scope = computed(() =>
+  props.variant === 'consultant' ? 'consultantBookings' : 'accountConsultations'
+);
 
 const emit = defineEmits<{
   toggleView: [];
@@ -36,19 +45,19 @@ defineExpose({ playDateAnimation });
 </script>
 
 <template>
-  <article class="details-panel glass-panel" aria-live="polite">
+  <article
+    class="details-panel glass-panel"
+    :class="{ 'details-panel--consultant': variant === 'consultant' }"
+    aria-live="polite"
+  >
     <button
       class="view-all"
       type="button"
-      :aria-label="
-        showAll
-          ? t('accountConsultations.backToSelectedAria')
-          : t('accountConsultations.viewAllAria')
-      "
+      :aria-label="showAll ? t(`${scope}.backToSelectedAria`) : t(`${scope}.viewAllAria`)"
       :aria-expanded="showAll"
       @click="emit('toggleView')"
     >
-      {{ showAll ? t('accountConsultations.back') : t('accountConsultations.viewAll') }}
+      {{ showAll ? t(`${scope}.back`) : t(`${scope}.viewAll`) }}
       <span aria-hidden="true">{{ showAll ? '↙' : '↗' }}</span>
     </button>
 
@@ -83,6 +92,20 @@ defineExpose({ playDateAnimation });
           <dt>{{ t('consult.notes') }}</dt>
           <dd class="consultation-details__notes">{{ displayValue(reservation.notes) }}</dd>
         </div>
+        <template v-if="variant === 'consultant'">
+          <div>
+            <dt>{{ t('consultantBookings.contact') }}</dt>
+            <dd>
+              <span v-if="reservation.contactName">{{ reservation.contactName }}<br /></span>
+              <span>{{ reservation.contactEmail }}</span>
+              <span v-if="reservation.contactPhone"><br />{{ reservation.contactPhone }}</span>
+            </dd>
+          </div>
+          <div>
+            <dt>{{ t('consultantBookings.statusLabel') }}</dt>
+            <dd>{{ t(`consultantBookings.status.${reservation.status}`) }}</dd>
+          </div>
+        </template>
       </dl>
     </template>
 
@@ -185,6 +208,11 @@ defineExpose({ playDateAnimation });
   white-space: pre-wrap;
 }
 
+.details-panel--consultant {
+  height: auto;
+  min-height: 500px;
+}
+
 @media (max-width: 768px) {
   .details-panel {
     left: 8%;
@@ -193,6 +221,11 @@ defineExpose({ playDateAnimation });
     width: 82%;
     height: auto;
     min-height: 0;
+    /* 螢幕高度不足時卡片自己可捲動:外層 100svh + overflow hidden(軌道動畫固定版面),
+       max-height 扣掉 top 32% 與底部安全間距,避免備註/聯絡資訊/狀態被截斷 */
+    max-height: calc(100svh - 32% - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 32px 9vw 38px;
     transform: none;
   }
