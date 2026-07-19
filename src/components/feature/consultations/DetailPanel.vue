@@ -221,6 +221,11 @@ defineExpose({ playDateAnimation });
     width: 82%;
     height: auto;
     min-height: 0;
+    /* 螢幕高度不足時卡片自己可捲動:外層 100svh + overflow hidden(軌道動畫固定版面),
+       max-height 扣掉 top 32% 與底部安全間距,避免備註/聯絡資訊/狀態被截斷 */
+    max-height: calc(100svh - 32% - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 32px 9vw 38px;
     transform: none;
   }
