@@ -27,6 +27,10 @@ export interface UserTourState {
 
 const STORAGE_PREFIX = 'asterism:tour:core';
 const USER_TOUR_STATE_EVENT = 'asterism:user-tour-state-change';
+interface UserTourStateChange {
+  userId: string;
+  state: UserTourState;
+}
 const STATUSES: ReadonlySet<UserTourStatus> = new Set([
   'idle',
   'active',
@@ -131,10 +135,15 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
   const currentInstance = getCurrentInstance();
   const handleExternalStateChange = (event: Event) => {
     const currentUserId = toValue(userId);
-    const detail = (event as CustomEvent<{ userId?: string }>).detail;
+    const detail = (event as CustomEvent<Partial<UserTourStateChange>>).detail;
 
-    if (currentUserId && detail?.userId === currentUserId) {
-      state.value = readState(currentUserId);
+    if (
+      currentUserId &&
+      detail?.userId === currentUserId &&
+      detail.state &&
+      isUserTourState(detail.state)
+    ) {
+      state.value = normalizeState(detail.state);
     }
   };
 
@@ -159,7 +168,9 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
 
     if (currentInstance) {
       window.dispatchEvent(
-        new CustomEvent(USER_TOUR_STATE_EVENT, { detail: { userId: currentUserId } })
+        new CustomEvent<UserTourStateChange>(USER_TOUR_STATE_EVENT, {
+          detail: { userId: currentUserId, state: next }
+        })
       );
     }
   }
@@ -207,6 +218,7 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
     });
   }
 
+  // Chapter 1 currently uses this as the handoff into the Moodboard transition.
   function completeChapter(chapter: UserTourChapter): void {
     const completedChapters = state.value.completedChapters.includes(chapter)
       ? state.value.completedChapters

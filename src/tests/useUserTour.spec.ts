@@ -1,12 +1,25 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { defineComponent } from 'vue';
+import { mount } from '@vue/test-utils';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   getUserTourStorageKey,
   useUserTour
 } from '@/composables/guide/useUserTour';
 
+const UserTourHarness = defineComponent({
+  props: {
+    userId: { type: String, required: true }
+  },
+  setup(props) {
+    return useUserTour(() => props.userId);
+  },
+  template: '<div />'
+});
+
 describe('useUserTour', () => {
   beforeEach(() => {
     localStorage.clear();
+    vi.restoreAllMocks();
   });
 
   it('persists a paused step per authenticated user and resumes it', () => {
@@ -92,5 +105,71 @@ describe('useUserTour', () => {
       step: null,
       completedChapters: ['exploration']
     });
+  });
+
+  it('syncs a completed chapter to every same-user instance when persistence fails', async () => {
+    const first = mount(UserTourHarness, { props: { userId: 'user-1' } });
+    const second = mount(UserTourHarness, { props: { userId: 'user-1' } });
+    first.vm.start('image-42');
+    first.vm.advance('detail-save', 'image-42');
+    vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      throw new Error('Storage unavailable');
+    });
+
+    first.vm.completeChapter('exploration');
+    await second.vm.$nextTick();
+
+    expect(first.vm.state).toMatchObject({
+      status: 'transition',
+      currentChapter: 'exploration',
+      completedChapters: ['exploration']
+    });
+    expect(second.vm.state).toMatchObject({
+      status: 'transition',
+      currentChapter: 'exploration',
+      completedChapters: ['exploration']
+    });
+
+    first.unmount();
+    second.unmount();
+  });
+
+  it('syncs Moodboard chapter entry to every same-user instance when persistence fails', async () => {
+    const first = mount(UserTourHarness, { props: { userId: 'user-1' } });
+    const second = mount(UserTourHarness, { props: { userId: 'user-1' } });
+    vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      throw new Error('Storage unavailable');
+    });
+
+    first.vm.enterChapter('moodboard');
+    await second.vm.$nextTick();
+
+    expect(first.vm.state).toMatchObject({
+      status: 'paused',
+      currentChapter: 'moodboard',
+      step: null
+    });
+    expect(second.vm.state).toMatchObject({
+      status: 'paused',
+      currentChapter: 'moodboard',
+      step: null
+    });
+
+    first.unmount();
+    second.unmount();
+  });
+
+  it('does not apply a user tour state event to a different user', async () => {
+    const first = mount(UserTourHarness, { props: { userId: 'user-1' } });
+    const second = mount(UserTourHarness, { props: { userId: 'user-2' } });
+
+    first.vm.start('image-42');
+    await second.vm.$nextTick();
+
+    expect(first.vm.state.status).toBe('active');
+    expect(second.vm.state.status).toBe('idle');
+
+    first.unmount();
+    second.unmount();
   });
 });
