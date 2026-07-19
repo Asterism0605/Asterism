@@ -271,7 +271,8 @@ export default {
       progress: {
         home: '首頁探索',
         spread: '圖片延展',
-        detail: '圖片詳情'
+        detail: '圖片詳情',
+        moodboard: 'Moodboard'
       }
     },
     actions: {
@@ -313,10 +314,21 @@ export default {
         title: '認識風格標籤',
         description: '風格標籤可查看背景、視覺特徵與常見應用方式。'
       },
+      detailConsult: {
+        title: '將靈感帶進現實',
+        description: '除了收藏，你也可以針對喜歡的風格預約專業顧問，取得更具體的建議。'
+      },
       detailSave: {
         title: '收藏到 Moodboard',
         description: '開啟收藏選單，將圖片存入既有資料夾或建立新的 Moodboard。'
       }
+    },
+    transition: {
+      title: '探索完成',
+      description: '你已經知道如何探索圖片、查看風格、收藏靈感，以及取得進一步的專業協助。',
+      nextDescription: '接下來，看看剛才收藏的靈感如何在 Moodboard 中整理成自己的美學脈絡。',
+      proceed: '前往 Moodboard',
+      later: '稍後再繼續'
     }
   },
   home: {

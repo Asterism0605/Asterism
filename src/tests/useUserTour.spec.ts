@@ -68,4 +68,29 @@ describe('useUserTour', () => {
     });
     expect(localStorage.getItem(key)).toBeNull();
   });
+
+  it('marks an exploration chapter as a transition without completing the whole tour', () => {
+    const tour = useUserTour('user-a');
+
+    tour.start('image-42');
+    tour.advance('detail-save', 'image-42');
+    tour.pause();
+    tour.completeChapter('exploration');
+
+    expect(tour.state.value).toMatchObject({
+      status: 'transition',
+      currentChapter: 'exploration',
+      step: null,
+      completedChapters: ['exploration']
+    });
+
+    tour.enterChapter('moodboard');
+
+    expect(tour.state.value).toMatchObject({
+      status: 'paused',
+      currentChapter: 'moodboard',
+      step: null,
+      completedChapters: ['exploration']
+    });
+  });
 });
