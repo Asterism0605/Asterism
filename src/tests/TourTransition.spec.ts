@@ -77,4 +77,43 @@ describe('TourTransition', () => {
       'Nexttranslatedline'
     );
   });
+
+  it('keeps focus inside the two CTAs and ignores Escape', async () => {
+    const previousFocus = document.createElement('button');
+    document.body.append(previousFocus);
+    previousFocus.focus();
+
+    const wrapper = mount(TourTransition, {
+      attachTo: document.body,
+      props: {
+        title: 'Exploration complete',
+        description: 'Transition description',
+        nextDescription: 'Next transition description',
+        proceedLabel: 'Go to Moodboard',
+        laterLabel: 'Continue later'
+      }
+    });
+
+    await nextTick();
+
+    const proceedButton = wrapper.get('[data-testid="tour-transition-proceed"]');
+    const laterButton = wrapper.get('[data-testid="tour-transition-later"]');
+    expect(document.activeElement).toBe(proceedButton.element);
+
+    await wrapper.get('[data-testid="tour-transition"]').trigger('keydown', { key: 'Tab' });
+    expect(document.activeElement).toBe(laterButton.element);
+
+    await wrapper
+      .get('[data-testid="tour-transition"]')
+      .trigger('keydown', { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toBe(proceedButton.element);
+
+    await wrapper.get('[data-testid="tour-transition"]').trigger('keydown', { key: 'Escape' });
+    expect(wrapper.emitted('proceed')).toBeUndefined();
+    expect(wrapper.emitted('later')).toBeUndefined();
+
+    wrapper.unmount();
+    expect(document.activeElement).toBe(previousFocus);
+    previousFocus.remove();
+  });
 });

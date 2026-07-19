@@ -366,7 +366,11 @@ async function handleSaveToFolder(folderId: string) {
 // Esc 返回是全頁級的慣例快捷鍵，不需要先 Tab 聚焦到哪個區塊；
 // 跳過 showCreateFolder 開啟中的情況，避免使用者想關彈窗卻整頁被導走。
 function handleKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape' && !showCreateFolder.value) {
+  if (
+    event.key === 'Escape' &&
+    !showCreateFolder.value &&
+    coreTour.state.value.status !== 'transition'
+  ) {
     handleBack();
   }
 }

@@ -346,6 +346,24 @@ describe('PictureDetail', () => {
     expect(wrapper.find('[data-testid="tour-transition"]').exists()).toBe(true)
   })
 
+  it('does not leave Picture Detail when Escape is pressed during the chapter transition', async () => {
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-save', 'y2k-main-001')
+    tour.completeChapter('exploration')
+
+    const { router, wrapper } = await mountPictureDetail()
+    await flushPromises()
+    const routeBeforeEscape = router.currentRoute.value.fullPath
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await flushPromises()
+
+    expect(router.currentRoute.value.fullPath).toBe(routeBeforeEscape)
+    expect(tour.state.value.status).toBe('transition')
+    expect(wrapper.find('[data-testid="tour-transition"]').exists()).toBe(true)
+  })
+
   it('does not complete exploration when saving fails', async () => {
     vi.mocked(addItem).mockRejectedValueOnce(new Error('save failed'))
     const tour = useUserTour('user-1')

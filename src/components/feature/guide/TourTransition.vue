@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { nextTick, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { gsap } from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 
@@ -32,6 +32,7 @@ let splitTexts: SplitText[] = [];
 let animation: gsap.core.Timeline | null = null;
 let revealRequestId = 0;
 let revealStarted = false;
+let previousActiveElement: HTMLElement | null = null;
 
 const CIRCLE_STROKE_LENGTH = 176;
 const CHECK_STROKE_LENGTH = 70;
@@ -166,8 +167,48 @@ async function playReveal(): Promise<void> {
     );
 }
 
+async function focusFirstButton(): Promise<void> {
+  await nextTick();
+  if (transitionElement.value && proceedButton.value) {
+    proceedButton.value.focus({ preventScroll: true });
+  }
+}
+
+function handleKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    return;
+  }
+
+  if (event.key !== 'Tab' || !transitionElement.value) return;
+
+  const buttons = [proceedButton.value, laterButton.value].filter(
+    (button): button is HTMLButtonElement => button !== null
+  );
+  if (buttons.length === 0) return;
+
+  const currentIndex = buttons.indexOf(document.activeElement as HTMLButtonElement);
+  const nextIndex = event.shiftKey
+    ? currentIndex <= 0
+      ? buttons.length - 1
+      : currentIndex - 1
+    : currentIndex === buttons.length - 1
+      ? 0
+      : currentIndex + 1;
+
+  event.preventDefault();
+  buttons[nextIndex]?.focus({ preventScroll: true });
+}
+
+onBeforeMount(() => {
+  if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+    previousActiveElement = document.activeElement;
+  }
+});
+
 onMounted(() => {
   void playReveal();
+  void focusFirstButton();
 });
 
 watch(
@@ -188,6 +229,11 @@ onBeforeUnmount(() => {
   revealRequestId += 1;
   revealStarted = false;
   cleanupAnimation();
+
+  if (previousActiveElement?.isConnected) {
+    previousActiveElement.focus({ preventScroll: true });
+  }
+  previousActiveElement = null;
 });
 </script>
 
@@ -200,6 +246,7 @@ onBeforeUnmount(() => {
     aria-modal="true"
     aria-labelledby="tour-transition-title"
     aria-describedby="tour-transition-description"
+    @keydown="handleKeydown"
   >
     <div
       ref="backdropElement"
