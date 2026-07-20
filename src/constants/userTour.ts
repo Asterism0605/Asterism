@@ -21,7 +21,7 @@ interface UserTourStepDefinition {
   centerPopover?: boolean;
 }
 
-export const USER_TOUR_STEP_COUNT = 7;
+export const USER_TOUR_STEP_COUNT = 8;
 
 export const USER_TOUR_STEPS: Partial<Record<UserTourStep, UserTourStepDefinition>> = {
   'home-overview': {
@@ -77,12 +77,22 @@ export const USER_TOUR_STEPS: Partial<Record<UserTourStep, UserTourStepDefinitio
     side: 'left',
     align: 'center'
   },
+  'detail-consult': {
+    selector: '[data-tour="detail-consult"]',
+    titleKey: 'userTour.steps.detailConsult.title',
+    descriptionKey: 'userTour.steps.detailConsult.description',
+    progress: 7,
+    previousStep: 'detail-style-tag',
+    nextStep: 'detail-save',
+    side: 'left',
+    align: 'center'
+  },
   'detail-save': {
     selector: '[data-tour="detail-save"]',
     titleKey: 'userTour.steps.detailSave.title',
     descriptionKey: 'userTour.steps.detailSave.description',
-    progress: 7,
-    previousStep: 'detail-style-tag',
+    progress: 8,
+    previousStep: 'detail-consult',
     allowInteraction: true,
     side: 'left',
     align: 'center'

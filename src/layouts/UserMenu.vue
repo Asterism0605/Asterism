@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { CalendarCheck, ChevronDown, ClipboardList, LayoutDashboard, LogOut, Sparkles } from '@lucide/vue';
 import DropdownMenu from '@/components/ui/DropdownMenu.vue';
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     displayName: string;
     initials: string;
+    disabled?: boolean;
     /** 顧問帳號才顯示「被指派的諮詢」入口(#208)。 */
     isConsultant?: boolean;
   }>(),
-  { isConsultant: false }
+  { disabled: false, isConsultant: false }
 );
 
 const emit = defineEmits<{
@@ -25,6 +26,7 @@ const menuOpen = ref(false);
 const menuRef = ref<HTMLElement | null>(null);
 
 function toggleMenu() {
+  if (props.disabled) return;
   menuOpen.value = !menuOpen.value;
 }
 
@@ -63,6 +65,13 @@ function handleLogout() {
   emit('logout');
 }
 
+watch(
+  () => props.disabled,
+  (disabled) => {
+    if (disabled) closeMenu();
+  }
+);
+
 onMounted(() => document.addEventListener('click', handleClickOutside, true));
 onUnmounted(() => document.removeEventListener('click', handleClickOutside, true));
 </script>
@@ -71,6 +80,8 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside, true
   <div ref="menuRef" class="relative">
     <button
       type="button"
+      :disabled="props.disabled"
+      :aria-disabled="props.disabled"
       class="flex items-center gap-2 rounded-full cursor-pointer transition-opacity duration-200 hover:opacity-80"
       :aria-expanded="menuOpen"
       aria-haspopup="true"
