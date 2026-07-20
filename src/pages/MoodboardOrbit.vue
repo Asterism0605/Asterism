@@ -13,6 +13,7 @@ import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vu
 import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
 import FolderDirectory from '@/components/feature/moodboard/FolderDirectory.vue';
 import FolderFilterPanel from '@/components/feature/moodboard/FolderFilterPanel.vue';
+import FolderFilterPanelMobile from '@/components/feature/moodboard/FolderFilterPanelMobile.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
 import { showToast } from '@/composables/useToast';
@@ -21,7 +22,6 @@ import {
   INNER_K,
   ORBIT_SPEED,
   MAX_FOLDERS,
-  DETAIL_CAP,
   HO,
   MW,
   MH,
@@ -436,10 +436,7 @@ function buildDetail() {
 function buildMobileDetail() {
   const o = M_DETAIL_ORBIT;
   const photoFloorBottom = mDesignH.value - 138;
-  const list = toPhotos(
-    moodboardStore.folders[selectedFolder.value]?.images.slice(0, DETAIL_CAP) ?? [],
-    true
-  );
+  const list = toPhotos(folderFilters.displayedImages.value, true);
   const nodes = packPhotos(list, {
     idPrefix: 'md',
     cx: o.cx,
@@ -449,7 +446,7 @@ function buildMobileDetail() {
     gap: 10,
     xMin: 16,
     xMax: 424,
-    yMin: 196,
+    yMin: 250,
     yMax: photoFloorBottom
   });
   mDetailPhotos.value = nodes.map((d) => ({
@@ -674,10 +671,11 @@ watch(orbitImages, () => {
   }
 });
 
-// 篩選條件變動時重新排版資料夾詳情頁的圖片（目前只接了桌機版，手機版待接上）。
+// 篩選條件變動時重新排版資料夾詳情頁的圖片，桌機/手機各自重排自己的版面。
 watch(folderFilters.filteredImages, () => {
-  if (hasFolders.value || isMobile.value) return;
-  buildDetail();
+  if (hasFolders.value) return;
+  if (isMobile.value) buildMobileDetail();
+  else buildDetail();
 });
 
 onMounted(async () => {
@@ -910,6 +908,16 @@ onBeforeUnmount(() => {
 
         <!-- detail: back (just above the name tab) + docked folder-name tab -->
         <div v-show="!hasFolders" class="absolute inset-0 pointer-events-none">
+          <FolderFilterPanelMobile
+            :style-options="folderFilters.availableStyleGroups.value"
+            :medium-options="folderFilters.availableMediums.value"
+            :selected-style-groups="folderFilters.selectedStyleGroups.value"
+            :selected-mediums="folderFilters.selectedMediums.value"
+            :has-active-filters="folderFilters.hasActiveFilters.value"
+            @toggle-style="folderFilters.toggleStyleGroup"
+            @toggle-medium="folderFilters.toggleMedium"
+            @reset="folderFilters.reset"
+          />
           <button
             class="absolute flex items-center gap-2 text-white/80"
             style="

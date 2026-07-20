@@ -1648,5 +1648,29 @@ describe('MoodboardOrbit', () => {
       expect(wrapper.get('[data-testid="folder-filter-reset"]').attributes('disabled')).toBeDefined();
       expect(wrapper.findAll('[data-testid^="moodboard-image-"]')).toHaveLength(1);
     });
+
+    it('mobile: filters narrow the images shown in the folder detail view, reset restores them', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await wrapper.get('[data-testid="moodboard-folder-mobile-0"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.findAll('[data-testid^="image-delete-mobile-"]')).toHaveLength(3);
+
+      await findStyleOption(wrapper, 'minimal')!.trigger('click');
+      await flushPromises();
+
+      expect(wrapper.findAll('[data-testid^="image-delete-mobile-"]')).toHaveLength(2);
+
+      await wrapper.get('[data-testid="folder-filter-reset"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.findAll('[data-testid^="image-delete-mobile-"]')).toHaveLength(3);
+    });
   });
 });

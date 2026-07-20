@@ -286,6 +286,9 @@ export default {
     openImageDetailAria: 'View image detail',
     filterByStyles: 'Filter by Styles',
     filterByMediums: 'Filter by Mediums',
+    filterByHeading: 'Filter by',
+    filterGroupStyles: 'Styles',
+    filterGroupMediums: 'Mediums',
     resetFilters: 'Reset'
   },
   userTour: {

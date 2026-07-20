@@ -281,6 +281,9 @@ export default {
     openImageDetailAria: '查看圖片詳情',
     filterByStyles: '依風格篩選',
     filterByMediums: '依媒介篩選',
+    filterByHeading: '篩選方式',
+    filterGroupStyles: '風格',
+    filterGroupMediums: '媒介',
     resetFilters: '重置'
   },
   userTour: {
