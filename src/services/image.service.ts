@@ -305,13 +305,42 @@ export function getRelatedImages(
   return pickRelatedCandidates(candidates, baseImage, limit).map(toSpreadNode);
 }
 
-// 首頁：把不同風格（styleGroup）的圖片穿插排在一起。
-function interleaveImagesByStyleGroup(
-  images: StyleImage[],
-  maxConsecutive = 2,
-  initialPreviousStyleGroup?: string,
-  initialConsecutiveCount = 0
-): StyleImage[] {
+function isHomeMainImage(image: StyleImage): boolean {
+  return image.id.includes('main');
+}
+
+function isHomeConceptImage(image: StyleImage): boolean {
+  return image.id.includes('concept');
+}
+
+// 首頁同一個 styleGroup 內，保留原始相對順序，但避免兩張女團照（main）相鄰。
+// 當下一張仍是 main 時，優先把後面的概念照（concept）提前作為間隔。
+function orderImagesWithinStyleGroup(images: StyleImage[]): StyleImage[] {
+  const remainingImages = [...images];
+  const orderedImages: StyleImage[] = [];
+
+  while (remainingImages.length > 0) {
+    const previousImage = orderedImages.at(-1);
+    const nextConceptIndex = previousImage && isHomeMainImage(previousImage)
+      ? remainingImages.findIndex((image) => image.id.includes('concept'))
+      : -1;
+    const nextImageIndex = nextConceptIndex >= 0 ? nextConceptIndex : 0;
+    const [nextImage] = remainingImages.splice(nextImageIndex, 1);
+
+    if (nextImage) orderedImages.push(nextImage);
+  }
+
+  return orderedImages;
+}
+
+interface HomeStyleGroupQueue {
+  styleGroup: string;
+  conceptImages: StyleImage[];
+  mainImages: StyleImage[];
+  otherImages: StyleImage[];
+}
+
+function createHomeStyleGroupQueues(images: StyleImage[]): HomeStyleGroupQueue[] {
   const groups = new Map<string, StyleImage[]>();
 
   for (const image of images) {
@@ -320,39 +349,103 @@ function interleaveImagesByStyleGroup(
     else groups.set(image.styleGroup, [image]);
   }
 
-  const groupQueues = [...groups.values()];
+  return [...groups.entries()].map(([styleGroup, groupImages]) => ({
+    styleGroup,
+    conceptImages: groupImages.filter(isHomeConceptImage),
+    mainImages: groupImages.filter(isHomeMainImage),
+    otherImages: groupImages.filter(
+      (image) => !isHomeConceptImage(image) && !isHomeMainImage(image)
+    )
+  }));
+}
+
+function hasRemainingHomeImages(queue: HomeStyleGroupQueue): boolean {
+  return queue.conceptImages.length + queue.mainImages.length + queue.otherImages.length > 0;
+}
+
+function takeNextHomeImage(queue: HomeStyleGroupQueue): StyleImage | undefined {
+  return queue.conceptImages.shift() ?? queue.mainImages.shift() ?? queue.otherImages.shift();
+}
+
+// 首頁：把不同風格（styleGroup）的圖片穿插排在一起。
+// 同 styleGroup 的雙張組合先出現 3 組「概念＋概念」，再出現「概念＋女團」；
+// 後續每次「概念＋女團」前至少要有 2 組「概念＋概念」。未進入組合的圖片以單張跨組穿插。
+function interleaveImagesByStyleGroup(
+  images: StyleImage[],
+  initialPreviousStyleGroup?: string
+): StyleImage[] {
+  const groupQueues = createHomeStyleGroupQueues(images);
   const orderedImages: StyleImage[] = [];
   let previousStyleGroup = initialPreviousStyleGroup;
-  let consecutiveCount = initialConsecutiveCount;
   let cursor = 0;
+  let conceptPairCount = 0;
+  let requiredConceptPairs = 3;
+
+  const findQueueIndex = (canUse: (queue: HomeStyleGroupQueue) => boolean): number => {
+    const offset = groupQueues.findIndex((_, index) => {
+      const queue = groupQueues[(cursor + index) % groupQueues.length];
+      return queue.styleGroup !== previousStyleGroup && canUse(queue);
+    });
+
+    return offset >= 0 ? (cursor + offset) % groupQueues.length : -1;
+  };
+
+  const appendPair = (queueIndex: number, includeMainImage: boolean): void => {
+    const queue = groupQueues[queueIndex];
+    const firstImage = queue.conceptImages.shift();
+    const secondImage = includeMainImage
+      ? queue.mainImages.shift()
+      : queue.conceptImages.shift();
+
+    if (!firstImage || !secondImage) return;
+
+    orderedImages.push(firstImage, secondImage);
+    previousStyleGroup = queue.styleGroup;
+    cursor = (queueIndex + 1) % groupQueues.length;
+  };
+
+  while (orderedImages.length < images.length) {
+    if (conceptPairCount >= requiredConceptPairs) {
+      const mixedPairQueueIndex = findQueueIndex(
+        (queue) => queue.conceptImages.length >= 1 && queue.mainImages.length >= 1
+      );
+
+      if (mixedPairQueueIndex >= 0) {
+        appendPair(mixedPairQueueIndex, true);
+        conceptPairCount = 0;
+        requiredConceptPairs = 2;
+        continue;
+      }
+    }
+
+    const conceptPairQueueIndex = findQueueIndex((queue) => queue.conceptImages.length >= 2);
+
+    if (conceptPairQueueIndex < 0) break;
+
+    appendPair(conceptPairQueueIndex, false);
+    conceptPairCount += 1;
+  }
 
   while (orderedImages.length < images.length) {
     const nextIndex = groupQueues.findIndex((_, offset) => {
       const group = groupQueues[(cursor + offset) % groupQueues.length];
-      const nextStyleGroup = group[0]?.styleGroup;
-      const canUseSameGroup =
-        nextStyleGroup !== previousStyleGroup || consecutiveCount < maxConsecutive;
+      const canUseSameGroup = group.styleGroup !== previousStyleGroup;
 
-      return group.length > 0 && canUseSameGroup;
+      return hasRemainingHomeImages(group) && canUseSameGroup;
     });
-    const fallbackIndex = groupQueues.findIndex((group) => group.length > 0);
+    const fallbackIndex = groupQueues.findIndex(hasRemainingHomeImages);
     const queueIndex =
       nextIndex >= 0 ? (cursor + nextIndex) % groupQueues.length : fallbackIndex;
     const nextGroup = queueIndex >= 0 ? groupQueues[queueIndex] : undefined;
 
     if (!nextGroup) break;
 
-    const nextImage = nextGroup.shift();
+    const nextImage = takeNextHomeImage(nextGroup);
     if (!nextImage) continue;
 
     orderedImages.push(nextImage);
-    consecutiveCount =
-      nextImage.styleGroup === previousStyleGroup ? consecutiveCount + 1 : 1;
     previousStyleGroup = nextImage.styleGroup;
-    cursor =
-      nextGroup.length > 0 && consecutiveCount < maxConsecutive
-        ? queueIndex
-        : (queueIndex + 1) % groupQueues.length;
+    cursor = (queueIndex + 1) % groupQueues.length;
   }
 
   return orderedImages;
@@ -367,19 +460,16 @@ function orderStyleDnaHomeImages(images: StyleImage[], primaryStyle: string): St
     return interleaveImagesByStyleGroup(images);
   }
 
-  const primaryGroupImages = images.filter((image) => image.styleGroup === primaryStyleGroup);
+  const primaryGroupImages = orderImagesWithinStyleGroup(
+    images.filter((image) => image.styleGroup === primaryStyleGroup)
+  );
   const leadingImages = primaryGroupImages.slice(0, STYLE_DNA_PRIMARY_GROUP_IMAGE_COUNT);
   const leadingImageIds = new Set(leadingImages.map((image) => image.id));
   const remainingImages = images.filter((image) => !leadingImageIds.has(image.id));
 
   return [
     ...leadingImages,
-    ...interleaveImagesByStyleGroup(
-      remainingImages,
-      2,
-      primaryStyleGroup,
-      leadingImages.length
-    )
+    ...interleaveImagesByStyleGroup(remainingImages, primaryStyleGroup)
   ];
 }
 

@@ -2,11 +2,22 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import UserMenu from '@/layouts/UserMenu.vue';
 
-function mountUserMenu(displayName = 'Ada Lovelace') {
+function mountUserMenu(displayName = 'Ada Lovelace', isConsultant = false) {
   return mount(UserMenu, {
     props: {
       displayName,
-      initials: 'AL'
+      initials: 'AL',
+      isConsultant
+    }
+  });
+}
+
+function mountDisabledUserMenu() {
+  return mount(UserMenu, {
+    props: {
+      displayName: 'Ada Lovelace',
+      initials: 'AL',
+      disabled: true
     }
   });
 }
@@ -60,6 +71,19 @@ describe('UserMenu', () => {
     expect(wrapper.text()).not.toContain('Signed in as');
   });
 
+  it('shows the consultant bookings entry only for consultants and emits on click', async () => {
+    const consultantWrapper = mountUserMenu('Demo Consultant', true);
+    await consultantWrapper.find('[aria-haspopup="true"]').trigger('click');
+
+    expect(consultantWrapper.text()).toContain('Assigned consultations');
+    await findButtonByText(consultantWrapper, 'Assigned consultations')?.trigger('click');
+    expect(consultantWrapper.emitted('consultantBookings')).toHaveLength(1);
+
+    const memberWrapper = mountUserMenu();
+    await memberWrapper.find('[aria-haspopup="true"]').trigger('click');
+    expect(memberWrapper.text()).not.toContain('Assigned consultations');
+  });
+
   it('emits styleDna when the Style DNA item is clicked', async () => {
     const wrapper = mountUserMenu();
     await wrapper.find('[aria-haspopup="true"]').trigger('click');
@@ -68,5 +92,17 @@ describe('UserMenu', () => {
     await findButtonByText(wrapper, 'Style DNA')?.trigger('click');
 
     expect(wrapper.emitted('styleDna')).toHaveLength(1);
+  });
+
+  it('does not open while disabled by a tour transition', async () => {
+    const wrapper = mountDisabledUserMenu();
+    const trigger = wrapper.find('[aria-haspopup="true"]');
+
+    expect(trigger.attributes('disabled')).toBeDefined();
+    expect(trigger.attributes('aria-disabled')).toBe('true');
+
+    await trigger.trigger('click');
+
+    expect(wrapper.find('[data-testid="user-menu-menu"]').exists()).toBe(false);
   });
 });

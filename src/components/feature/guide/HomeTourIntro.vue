@@ -135,9 +135,8 @@ onBeforeUnmount(() => {
     />
 
     <div
-      class="relative z-[1] mt-[var(--app-header-height)] flex gap-3 h-[calc(65vh-var(--app-header-height))] lg:h-[calc(100vh-var(--app-header-height))] flex-col justify-end pl-30 px-[clamp(1.5rem,5vw,4rem)] pb-[clamp(5rem,15vh,9rem)] max-md:px-6 max-md:pb-16"
+      class="relative z-[1] mt-[var(--app-header-height)] flex gap-3 h-[calc(65vh-var(--app-header-height))] lg:h-[calc(100vh-var(--app-header-height))] flex-col justify-end px-[clamp(1.5rem,5vw,4rem)] lg:pl-30 pb-[clamp(5rem,15vh,9rem)] max-md:px-6 max-md:pb-16"
     >
-
       <p
         id="home-tour-description"
         ref="descriptionElement"
@@ -166,7 +165,7 @@ onBeforeUnmount(() => {
           <img
             :src="arrowImage"
             alt=""
-            class="ml-20 h-auto w-[3rem] shrink-0 motion-reduce:animate-none animate-[homeTourArrow_1.8s_ease-in-out_infinite]"
+            class="ml-20 h-auto w-[3rem] shrink-0 motion-reduce:animate-none animate-[tourArrow_1.8s_ease-in-out_infinite]"
             aria-hidden="true"
           />
           <span class="text-body">{{ props.startLabel }}</span>
@@ -182,7 +181,7 @@ onBeforeUnmount(() => {
           <img
             :src="arrowImage"
             alt=""
-            class="ml-20 h-auto w-[3rem] shrink-0 [animation-delay:0.18s] motion-reduce:animate-none animate-[homeTourArrow_1.8s_ease-in-out_infinite]"
+            class="ml-20 h-auto w-[3rem] shrink-0 [animation-delay:0.18s] motion-reduce:animate-none animate-[tourArrow_1.8s_ease-in-out_infinite]"
             aria-hidden="true"
           />
           <span class="text-body">{{ props.exploreLabel }}</span>
@@ -191,16 +190,3 @@ onBeforeUnmount(() => {
     </div>
   </dialog>
 </template>
-
-<style>
-@keyframes homeTourArrow {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  50% {
-    transform: translateX(0.35rem);
-  }
-}
-</style>

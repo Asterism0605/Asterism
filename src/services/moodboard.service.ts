@@ -8,6 +8,8 @@ import {
   type MoodboardItemRow
 } from '@/api/moodboard.api';
 import { getImageById } from '@/services/image.service';
+import { MOODBOARD_FOLDER_NAME_MAX_LENGTH } from '@/constants/moodboard.constants';
+import { graphemeLength } from '@/utils/graphemeLength';
 import type {
   MoodboardFolder,
   MoodboardViewModel,
@@ -73,6 +75,10 @@ export async function createFolder(
   folders: MoodboardFolder[]
 ): Promise<MoodboardFolder> {
   const normalizedName = name.trim();
+
+  if (graphemeLength(normalizedName) > MOODBOARD_FOLDER_NAME_MAX_LENGTH) {
+    throw new Error(`Folder name must be ${MOODBOARD_FOLDER_NAME_MAX_LENGTH} characters or fewer.`);
+  }
 
   if (folders.length >= MAX_FOLDERS) {
     throw new Error('You have reached the maximum of 10 folders.');

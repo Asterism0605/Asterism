@@ -5,6 +5,7 @@ import { createMemoryHistory, createRouter } from 'vue-router';
 import Home from '@/pages/Home.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
+import { requestHomeTourStart } from '@/composables/guide/useHomeTourFlow';
 import type { AuthSession } from '@/types/auth';
 import type { HomeInspirationImage } from '@/types/image';
 import rawStyleImages from '@/data/style-data.json';
@@ -461,6 +462,54 @@ describe('Home', () => {
 
     expect(document.querySelector('.asterism-tour-popover')).toBe(firstPopover);
     expect(floatingNetwork.props('guideTargetIndex')).toBe(HOME_HERO_IMAGE_INDEX);
+
+    wrapper.unmount();
+  });
+
+  it('starts the core tour through the shared home start request', async () => {
+    const router = createTestRouter();
+    const authStore = useAuthStore();
+    const session: AuthSession = {
+      accessToken: 'test-token',
+      expiresAt: '2099-01-01T00:00:00.000Z',
+      user: {
+        id: 'user-1',
+        email: 'user@example.com',
+        displayName: 'Ada Lovelace',
+        isAdmin: false,
+        createdAt: '2026-01-01T00:00:00.000Z'
+      }
+    };
+    authStore.session = session;
+    authStore.user = session.user;
+    router.push('/');
+    await router.isReady();
+
+    const wrapper = mount(Home, {
+      attachTo: document.body,
+      global: {
+        plugins: [router],
+        stubs: {
+          FloatingImageNetwork: guideFloatingImageNetworkStub,
+          HomeImageClickGuide: homeImageClickGuideStub,
+          HomeTourIntro: homeTourIntroStub,
+          Teleport: true,
+          Transition: false
+        }
+      }
+    });
+
+    await flushPromises();
+    const floatingNetwork = wrapper.findComponent(guideFloatingImageNetworkStub);
+    floatingNetwork.vm.$emit('ready');
+    await flushPromises();
+
+    requestHomeTourStart();
+    await flushPromises();
+
+    expect(localStorage.getItem('asterism:tour:welcome:user-1')).toBe('handled');
+    expect(localStorage.getItem('asterism:tour:core:user-1')).toContain('home-overview');
+    expect(wrapper.find('[data-test="home-tour-intro"]').exists()).toBe(false);
 
     wrapper.unmount();
   });

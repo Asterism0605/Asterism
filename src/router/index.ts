@@ -111,6 +111,13 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/consultant/bookings',
+      name: 'consultant-bookings',
+      // Lazy load：顧問專用頁，一般使用者不需要載進 bundle。
+      component: () => import('@/pages/ConsultantBookings.vue'),
+      meta: { requiresConsultant: true }
+    },
+    {
       path: '/account/consultations',
       name: 'account-consultations',
       component: AccountConsultations,
@@ -162,20 +169,25 @@ router.beforeEach((to) => {
   };
 });
 
-// 路由型別擴充：讓 meta.requiresAuth / requiresAdmin 有型別
+// 路由型別擴充：讓 meta.requiresAuth / requiresAdmin / requiresConsultant 有型別
 declare module 'vue-router' {
   interface RouteMeta {
     requiresAuth?: boolean;
     requiresAdmin?: boolean;
+    requiresConsultant?: boolean;
   }
 }
 
 router.beforeEach((to) => {
   const auth = useAuthStore();
   return resolveAuthGuard(
-    { requiresAuth: to.meta.requiresAuth, requiresAdmin: to.meta.requiresAdmin },
+    {
+      requiresAuth: to.meta.requiresAuth,
+      requiresAdmin: to.meta.requiresAdmin,
+      requiresConsultant: to.meta.requiresConsultant
+    },
     to.fullPath,
-    { isAuthenticated: auth.isAuthenticated, isAdmin: auth.isAdmin }
+    { isAuthenticated: auth.isAuthenticated, isAdmin: auth.isAdmin, isConsultant: auth.isConsultant }
   );
 });
 

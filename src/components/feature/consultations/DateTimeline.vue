@@ -3,11 +3,16 @@ import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
 import type { AccountConsultation } from '@/types/account-consultation';
 
-defineProps<{
-  reservations: AccountConsultation[];
-  selectedId: string;
-  showAll: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    reservations: AccountConsultation[];
+    selectedId: string;
+    showAll: boolean;
+    /** i18n 命名空間:顧問端傳 consultantBookings,兩邊 key 同名。 */
+    scope?: 'accountConsultations' | 'consultantBookings';
+  }>(),
+  { scope: 'accountConsultations' }
+);
 
 const emit = defineEmits<{
   select: [reservationId: string];
@@ -24,7 +29,7 @@ function displayDate(date: string): string {
   <header class="page-heading">
     <span class="page-heading__line" aria-hidden="true"></span>
     <p>
-      {{ t('accountConsultations.youHave') }}
+      {{ t(`${props.scope}.youHave`) }}
       {{ ' ' }}
       <ScrambleText
         class="consultation-count"
@@ -33,11 +38,11 @@ function displayDate(date: string): string {
         :duration="1.8"
         :delay="0.2"
       />
-      {{ ' ' }} {{ t('accountConsultations.upcoming') }}
+      {{ ' ' }} {{ t(`${props.scope}.upcoming`) }}
       {{ ' ' }}
       <ScrambleText
         class="consultation-label"
-        :text="t('accountConsultations.consultations')"
+        :text="t(`${props.scope}.consultations`)"
         chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         :duration="1.8"
         :delay="0.2"
@@ -45,7 +50,7 @@ function displayDate(date: string): string {
     </p>
   </header>
 
-  <nav class="date-timeline" :aria-label="t('accountConsultations.upcomingDates')">
+  <nav class="date-timeline" :aria-label="t(`${props.scope}.upcomingDates`)">
     <div class="date-timeline__viewport">
       <div class="date-timeline__list">
         <button

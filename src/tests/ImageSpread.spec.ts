@@ -138,7 +138,7 @@ describe('ImageSpread', () => {
       step: 'spread-related-image'
     })
     await flushPromises()
-    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('4 / 7')
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('4 / 8')
 
     await wrapper.findAll('[data-testid="related-image-card"]')[0].trigger('click')
     await flushPromises()

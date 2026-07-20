@@ -2,6 +2,14 @@ import { computed, nextTick, onBeforeUnmount, ref, type Ref } from 'vue';
 import { useHomeImageGuide } from './useHomeImageGuide';
 import { useWelcomeTour } from './useWelcomeTour';
 
+export const HOME_TOUR_START_EVENT = 'asterism:home-tour-start';
+
+export function requestHomeTourStart(): void {
+  if (typeof window === 'undefined') return;
+
+  window.dispatchEvent(new Event(HOME_TOUR_START_EVENT));
+}
+
 export function useHomeTourFlow(
   isAuthenticated: Readonly<Ref<boolean>>,
   userId?: Readonly<Ref<string | undefined>>

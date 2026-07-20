@@ -68,13 +68,15 @@ export default {
     folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
     folderCreatedAndSaved: 'Folder created and image saved.',
     deleteFolderFailed: 'Failed to delete the folder. Please try again.',
-    deleteImageFailed: 'Failed to delete the image. Please try again.'
+    deleteImageFailed: 'Failed to delete the image. Please try again.',
+    folderNameTooLong: '@:moodboard.folderNameTooLong'
   },
   userMenu: {
     signedInAs: 'Signed in as',
     moodboard: 'Moodboard',
     styleDna: 'Style DNA',
     myConsultations: 'Consultation',
+    consultantBookings: 'Assigned consultations',
     logout: 'Log out'
   },
   accountConsultations: {
@@ -99,6 +101,29 @@ export default {
       studio: 'I want to create a warm and quiet atmosphere for a small studio renovation.',
       editorial: 'I would like to refine the color direction for an upcoming editorial shoot.',
       livingRoom: 'I need help selecting furniture that works with the scale of my living room.'
+    }
+  },
+  consultantBookings: {
+    youHave: 'You have',
+    upcoming: 'assigned',
+    consultations: 'consultations',
+    upcomingDates: 'Assigned consultation dates',
+    viewAll: 'View all',
+    back: 'Back',
+    viewAllAria: 'View all assigned consultations',
+    backToSelectedAria: 'Back to selected consultation',
+    emptyDescription: 'No consultations are assigned to you yet.',
+    loading: 'Loading assigned consultations…',
+    loadError: "We couldn't load your assigned consultations.",
+    retry: 'Try again',
+    contact: 'Client contact',
+    statusLabel: 'Status',
+    status: {
+      pending_payment: 'Pending payment',
+      confirmed: 'Confirmed',
+      payment_failed: 'Payment failed',
+      canceled: 'Canceled',
+      completed: 'Completed'
     }
   },
   consult: {
@@ -250,6 +275,7 @@ export default {
     startExploring: 'Start Exploring',
     createFolderTitle: 'SAVE TO NEW FOLDER',
     folderNamePlaceholder: 'Folder name',
+    folderNameTooLong: 'Folder name must be {max} characters or fewer.',
     send: 'SEND',
     goToMoodboard: 'Go to Moodboard',
     deleteFolderTitle: 'Delete {name} and All Images',
@@ -265,6 +291,23 @@ export default {
   },
   userTour: {
     progress: '{current} / {total}',
+    control: {
+      open: 'Open guided tour menu',
+      title: 'Guided tour',
+      start: 'Start tour',
+      startDescription: 'Start from the beginning and discover Asterism.',
+      resume: 'Resume tour',
+      resumeDescription: 'Continue where you left off.',
+      restart: 'Restart tour',
+      replay: 'Replay tour',
+      lastProgress: 'Last progress: {progress}',
+      progress: {
+        home: 'Homepage exploration',
+        spread: 'Image exploration',
+        detail: 'Image detail',
+        moodboard: 'Moodboard'
+      }
+    },
     actions: {
       previous: 'Previous',
       next: 'Next',
@@ -304,10 +347,24 @@ export default {
         title: 'Understand style tags',
         description: 'Style tags reveal the background, visual traits, and common uses of a style.'
       },
+      detailConsult: {
+        title: 'Bring inspiration to life',
+        description:
+          'Beyond saving, you can book a professional consultant for the styles you like and get more concrete guidance.'
+      },
       detailSave: {
         title: 'Save to a Moodboard',
         description: 'Open the save menu to use an existing folder or create a new Moodboard.'
       }
+    },
+    transition: {
+      title: 'Exploration complete',
+      description:
+        'You now know how to explore images, understand styles, save inspiration, and find further professional guidance.',
+      nextDescription:
+        'Next, see how the inspiration you saved can become your own visual direction in Moodboard.',
+      proceed: 'Go to Moodboard',
+      later: 'Continue later'
     }
   },
   home: {

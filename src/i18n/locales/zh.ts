@@ -68,13 +68,15 @@ export default {
     folderCleanupFailed: '圖片儲存失敗，且資料夾清除失敗，請至情緒板手動刪除此資料夾。',
     folderCreatedAndSaved: '資料夾已建立，圖片已儲存。',
     deleteFolderFailed: '資料夾刪除失敗，請再試一次。',
-    deleteImageFailed: '圖片刪除失敗，請再試一次。'
+    deleteImageFailed: '圖片刪除失敗，請再試一次。',
+    folderNameTooLong: '@:moodboard.folderNameTooLong'
   },
   userMenu: {
     signedInAs: '目前登入身分',
     moodboard: '情緒板',
     styleDna: 'Style DNA',
     myConsultations: '我的預約',
+    consultantBookings: '被指派的諮詢',
     logout: '登出'
   },
   accountConsultations: {
@@ -99,6 +101,29 @@ export default {
       studio: '我想為小型工作室翻修營造溫暖、安靜的氛圍。',
       editorial: '我想調整即將進行的編輯拍攝色彩方向。',
       livingRoom: '我需要協助挑選符合客廳空間尺度的家具。'
+    }
+  },
+  consultantBookings: {
+    youHave: '你有',
+    upcoming: '場被指派的',
+    consultations: '諮詢',
+    upcomingDates: '被指派的諮詢日期',
+    viewAll: '查看全部',
+    back: '返回',
+    viewAllAria: '查看所有被指派的諮詢預約',
+    backToSelectedAria: '返回所選諮詢預約',
+    emptyDescription: '目前沒有指派給你的預約',
+    loading: '正在載入預約清單…',
+    loadError: '無法載入預約清單。',
+    retry: '再試一次',
+    contact: '客戶聯絡資訊',
+    statusLabel: '狀態',
+    status: {
+      pending_payment: '待付款',
+      confirmed: '已確認',
+      payment_failed: '付款失敗',
+      canceled: '已取消',
+      completed: '已完成'
     }
   },
   consult: {
@@ -245,6 +270,7 @@ export default {
     startExploring: '開始探索',
     createFolderTitle: '建立新資料夾並收藏圖片',
     folderNamePlaceholder: '資料夾名稱',
+    folderNameTooLong: '資料夾名稱不能超過 {max} 個字。',
     send: '送出',
     goToMoodboard: '前往情緒板',
     deleteFolderTitle: '刪除{name}與已收藏圖片',
@@ -260,6 +286,23 @@ export default {
   },
   userTour: {
     progress: '{current} / {total}',
+    control: {
+      open: '開啟探索導覽選單',
+      title: '探索導覽',
+      start: '開始導覽',
+      startDescription: '從頭開始，帶你認識 Asterism。',
+      resume: '繼續導覽',
+      resumeDescription: '從上次進度繼續探索。',
+      restart: '重新開始導覽',
+      replay: '重新觀看導覽',
+      lastProgress: '上次進度：{progress}',
+      progress: {
+        home: '首頁探索',
+        spread: '圖片延展',
+        detail: '圖片詳情',
+        moodboard: 'Moodboard'
+      }
+    },
     actions: {
       previous: '上一步',
       next: '下一步',
@@ -299,10 +342,21 @@ export default {
         title: '認識風格標籤',
         description: '風格標籤可查看背景、視覺特徵與常見應用方式。'
       },
+      detailConsult: {
+        title: '將靈感帶進現實',
+        description: '除了收藏，你也可以針對喜歡的風格預約專業顧問，取得更具體的建議。'
+      },
       detailSave: {
         title: '收藏到 Moodboard',
         description: '開啟收藏選單，將圖片存入既有資料夾或建立新的 Moodboard。'
       }
+    },
+    transition: {
+      title: '探索完成',
+      description: '你已經知道如何探索圖片、查看風格、收藏靈感，以及取得進一步的專業協助。',
+      nextDescription: '接下來，看看剛才收藏的靈感如何在 Moodboard 中整理成自己的美學脈絡。',
+      proceed: '前往 Moodboard',
+      later: '稍後再繼續'
     }
   },
   home: {

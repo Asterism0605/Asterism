@@ -410,7 +410,6 @@ onBeforeUnmount(() => {
       <Button
         type="submit"
         :disabled="submitting"
-        class="disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
       >
         {{ submitting ? $t('consult.preparingCheckout') : $t('consult.confirmPay') }}
       </Button>
@@ -418,7 +417,6 @@ onBeforeUnmount(() => {
         type="button"
         variant="secondary"
         :disabled="submitting"
-        class="disabled:cursor-not-allowed disabled:opacity-50"
         @click="resetForm"
       >
         {{ $t('consult.reset') }}

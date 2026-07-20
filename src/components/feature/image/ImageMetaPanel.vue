@@ -100,6 +100,7 @@ const siteLogoSrc = SITE_LOGO_SRC;
     <div class="flex items-center justify-between gap-3">
       <ActionButton
         class="flex-1 md:w-[calc(50%_-_56px)] md:origin-left md:scale-[1.1] md:flex-none"
+        data-tour="detail-consult"
         variant="consult"
         bracket
         @consult="emit('consult')"

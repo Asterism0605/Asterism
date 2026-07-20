@@ -150,6 +150,37 @@ describe('moodboard.service', () => {
     });
   });
 
+  it('rejects folder names longer than 15 characters before writing', async () => {
+    await expect(
+      createFolder('user-1', 'This name is way too long', existingFolders)
+    ).rejects.toThrow('Folder name must be 15 characters or fewer.');
+    expect(createMoodboardFolder).not.toHaveBeenCalled();
+  });
+
+  it('accepts 15 emoji even though their UTF-16 length is 30', async () => {
+    createMoodboardFolder.mockResolvedValue({
+      id: 'folder-1',
+      profile_id: 'user-1',
+      name: '😀'.repeat(15),
+      created_at: '2026-07-05T00:00:00.000Z',
+      updated_at: '2026-07-05T00:00:00.000Z'
+    });
+
+    await createFolder('user-1', '😀'.repeat(15), existingFolders);
+
+    expect(createMoodboardFolder).toHaveBeenCalledWith({
+      profileId: 'user-1',
+      name: '😀'.repeat(15)
+    });
+  });
+
+  it('rejects 16 emoji as longer than 15 characters', async () => {
+    await expect(
+      createFolder('user-1', '😀'.repeat(16), existingFolders)
+    ).rejects.toThrow('Folder name must be 15 characters or fewer.');
+    expect(createMoodboardFolder).not.toHaveBeenCalled();
+  });
+
   it('rejects duplicate folder names before writing', async () => {
     const folders = [
       {
