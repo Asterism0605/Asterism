@@ -6,7 +6,7 @@ import DetailPanel from '@/components/feature/consultations/DetailPanel.vue';
 import EmptyStateBackground from '@/components/feature/consultations/EmptyStateBackground.vue';
 import OrbitBackground from '@/components/feature/consultations/OrbitBackground.vue';
 import Button from '@/components/ui/Button.vue';
-import { getAssignedBookings } from '@/api/consultant-bookings.api';
+import { getAssignedBookings, setConsultationLocation } from '@/api/consultant-bookings.api';
 import { useAuthStore } from '@/stores/auth.store';
 import type { ConsultantBookingItem } from '@/types/account-consultation';
 
@@ -40,6 +40,13 @@ async function loadBookings(): Promise<void> {
   } finally {
     isLoading.value = false;
   }
+}
+
+async function handleUpdateLocation(location: string): Promise<void> {
+  const booking = selectedBooking.value;
+  if (!booking) return;
+  await setConsultationLocation(booking.id, location);
+  booking.location = location === '' ? undefined : location;
 }
 
 async function selectBooking(bookingId: string): Promise<void> {
@@ -88,6 +95,7 @@ onMounted(() => {
         :show-all="showAllBookings"
         variant="consultant"
         @toggle-view="showAllBookings = !showAllBookings"
+        @update-location="handleUpdateLocation"
       />
     </template>
   </main>

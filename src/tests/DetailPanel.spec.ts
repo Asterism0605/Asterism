@@ -47,3 +47,40 @@ describe('DetailPanel 客人端地點', () => {
     expect(wrapper.text()).toContain('地點待諮詢師提供');
   });
 });
+
+describe('DetailPanel 顧問端編輯地點', () => {
+  function mountConsultant(reservation) {
+    return mount(DetailPanel, {
+      props: {
+        reservation,
+        reservations: [reservation],
+        showAll: false,
+        variant: 'consultant'
+      },
+      global: { plugins: [i18n], stubs: { ScrambleText: true, ConsultationList: true } }
+    });
+  }
+
+  it('confirmed 才顯示編輯區', () => {
+    const editable = mountConsultant(makeReservation({ status: 'confirmed' }));
+    expect(editable.find('[data-testid="location-input"]').exists()).toBe(true);
+
+    const notEditable = mountConsultant(makeReservation({ status: 'pending_payment' }));
+    expect(notEditable.find('[data-testid="location-input"]').exists()).toBe(false);
+  });
+
+  it('online 網址非法時不 emit、顯示錯誤', async () => {
+    const wrapper = mountConsultant(makeReservation({ method: 'Online', status: 'confirmed' }));
+    await wrapper.get('[data-testid="location-input"]').setValue('not-a-url');
+    await wrapper.get('[data-testid="location-save"]').trigger('click');
+    expect(wrapper.emitted('updateLocation')).toBeFalsy();
+    expect(wrapper.text()).toContain('請輸入有效的 http/https 連結');
+  });
+
+  it('合法輸入時 emit updateLocation', async () => {
+    const wrapper = mountConsultant(makeReservation({ method: 'Online', status: 'confirmed' }));
+    await wrapper.get('[data-testid="location-input"]').setValue('https://meet.example.com/z');
+    await wrapper.get('[data-testid="location-save"]').trigger('click');
+    expect(wrapper.emitted('updateLocation')?.[0]).toEqual(['https://meet.example.com/z']);
+  });
+});

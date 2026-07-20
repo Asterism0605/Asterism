@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
 import type { AccountConsultation, ConsultantBookingItem } from '@/types/account-consultation';
@@ -24,6 +24,7 @@ const scope = computed(() =>
 
 const emit = defineEmits<{
   toggleView: [];
+  updateLocation: [value: string];
 }>();
 
 const { t } = useI18n();
@@ -43,6 +44,31 @@ function playDateAnimation(): void {
 }
 
 const isOnline = computed(() => props.reservation.method === 'Online');
+
+const isConfirmed = computed(() => props.reservation.status === 'confirmed');
+const canEditLocation = computed(
+  () => props.variant === 'consultant' && isConfirmed.value
+);
+const locationInput = ref(props.reservation.location ?? '');
+const locationError = ref('');
+
+watch(
+  () => props.reservation.id,
+  () => {
+    locationInput.value = props.reservation.location ?? '';
+    locationError.value = '';
+  }
+);
+
+function saveLocation(): void {
+  const value = locationInput.value.trim();
+  if (isOnline.value && value !== '' && !isHttpUrl(value)) {
+    locationError.value = t('consult.locationInvalidUrl');
+    return;
+  }
+  locationError.value = '';
+  emit('updateLocation', value);
+}
 
 defineExpose({ playDateAnimation });
 </script>
@@ -122,6 +148,34 @@ defineExpose({ playDateAnimation });
           <div>
             <dt>{{ t('consultantBookings.statusLabel') }}</dt>
             <dd>{{ t(`consultantBookings.status.${reservation.status}`) }}</dd>
+          </div>
+          <div v-if="canEditLocation" class="consultation-details__location-edit">
+            <dt>
+              {{ isOnline ? t('consult.locationOnlineLabel') : t('consult.locationInPersonLabel') }}
+            </dt>
+            <dd>
+              <input
+                v-model="locationInput"
+                data-testid="location-input"
+                type="text"
+                :maxlength="500"
+                :placeholder="isOnline
+                  ? t('consult.locationOnlinePlaceholder')
+                  : t('consult.locationInPersonPlaceholder')"
+                class="consultation-details__location-input"
+              />
+              <button
+                type="button"
+                data-testid="location-save"
+                class="consultation-details__location-save"
+                @click="saveLocation"
+              >
+                {{ t('consult.saveLocation') }}
+              </button>
+              <p v-if="locationError" class="consultation-details__location-error">
+                {{ locationError }}
+              </p>
+            </dd>
           </div>
         </template>
       </dl>
@@ -251,6 +305,31 @@ defineExpose({ playDateAnimation });
 
 .consultation-details__pending {
   color: #f0ede680;
+  font-size: 13px;
+}
+
+.consultation-details__location-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #f0ede633;
+  border-radius: 8px;
+  background: #ffffff0a;
+  color: inherit;
+  font: inherit;
+}
+.consultation-details__location-save {
+  margin-top: 8px;
+  padding: 6px 14px;
+  border: 1px solid #f0ede644;
+  border-radius: 9999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.consultation-details__location-error {
+  margin: 6px 0 0;
+  color: var(--color-stellar-red, #e5484d);
   font-size: 13px;
 }
 </style>
