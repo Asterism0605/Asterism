@@ -220,6 +220,7 @@ export default {
     photoOn: '於 {date}',
     photoBy: '',
     consultStylist: '諮詢風格顧問',
+    consultStylistBracket: '諮詢風格顧問',
     addToMoodboard: '加入情緒板',
     addToMoodboardSpread: '加入情緒板',
     createNewFolder: '建立新資料夾',

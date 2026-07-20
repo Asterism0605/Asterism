@@ -3,7 +3,7 @@ import ColorPaletteSwatch from '@/components/ui/ColorPaletteSwatch.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
 import ThemeTag from '@/components/ui/ThemeTag.vue';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
-import { ArrowLeft, ExternalLink } from '@lucide/vue';
+import { ArrowLeft, ChevronDown, ExternalLink, FolderPlus } from '@lucide/vue';
 import SimilarImages from '@/components/feature/image/SimilarImages.vue';
 import { SITE_LOGO_SRC } from '@/constants/assets.constants';
 import type { ImageSpreadNode } from '@/types/image';
@@ -105,11 +105,17 @@ const siteLogoSrc = SITE_LOGO_SRC;
       <ThemeTag :tags="styleTags" compact @select="emit('select-style-tag', $event)" />
     </div>
 
-    <div class="flex items-center gap-3">
-      <ActionButton class="flex-1" variant="consult" @consult="emit('consult')" />
+    <div class="flex items-center justify-between gap-3">
       <ActionButton
-        class="flex-1"
+        class="flex-1 md:w-[calc(50%_-_56px)] md:flex-none"
+        variant="consult"
+        bracket
+        @consult="emit('consult')"
+      />
+      <ActionButton
+        class="detail-save-action flex-1 md:w-[calc(50%_-_56px)] md:flex-none [&>button>span]:text-xs md:[&>button>span]:text-sm"
         data-tour="detail-save"
+        bracket
         :saved="saved"
         :disabled="disabled"
         :can-save="canSave"
@@ -120,7 +126,14 @@ const siteLogoSrc = SITE_LOGO_SRC;
         @opened="emit('save-opened')"
         @create-folder="emit('create-folder')"
         @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
-      />
+      >
+        <template #create-folder-icon>
+          <FolderPlus class="detail-menu-icon" :stroke-width="1.5" aria-hidden="true" />
+        </template>
+        <template #save-folder-icon>
+          <ChevronDown class="detail-menu-icon" :stroke-width="1.5" aria-hidden="true" />
+        </template>
+      </ActionButton>
     </div>
 
     <div class="flex items-center gap-4">
@@ -151,4 +164,34 @@ const siteLogoSrc = SITE_LOGO_SRC;
   margin-left: auto;
   min-height: 2rem;
 }
+
+:deep(.detail-save-action) {
+  --detail-menu-icon-gap: 0.5rem;
+  --detail-menu-icon-size: 1rem;
+}
+
+:deep(.detail-save-action > div > div.relative > div > button:first-child),
+:deep(.detail-save-action > div > div.relative > div > div.relative > button),
+:deep(.detail-save-action [data-leading-icon]) {
+  display: grid;
+  grid-template-columns: var(--detail-menu-icon-size) minmax(0, 1fr);
+  column-gap: var(--detail-menu-icon-gap);
+  align-items: center;
+  justify-content: stretch;
+  text-align: left;
+  padding-left: calc(25% - var(--detail-menu-icon-size) - var(--detail-menu-icon-gap));
+}
+
+:deep(.detail-save-action > div > div.relative > div > button:first-child) {
+  white-space: nowrap;
+}
+
+:deep(.detail-save-action .detail-menu-icon),
+:deep(.detail-save-action [data-leading-icon] > svg) {
+  width: var(--detail-menu-icon-size);
+  height: var(--detail-menu-icon-size);
+  position: static;
+  margin-right: 0;
+}
+
 </style>

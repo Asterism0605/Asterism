@@ -47,7 +47,7 @@ describe('ImageMetaPanel', () => {
 
     const consultBtn = wrapper
       .findAll('button')
-      .find((button) => button.text().includes('CONSULT STYLIST'));
+      .find((button) => button.text().includes('Consult Stylist'));
     await consultBtn!.trigger('click');
 
     expect(wrapper.emitted('consult')).toHaveLength(1);
@@ -62,13 +62,11 @@ describe('ImageMetaPanel', () => {
       }
     });
 
-    const buttons = wrapper.findAll('button');
-    const addBtn = buttons.find((b) => b.text().includes('ADD TO MOODBOARD'));
-    await addBtn!.trigger('click');
+    await wrapper.get('[data-tour="detail-save"] > button').trigger('click');
 
     const saveBtn = wrapper
       .findAll('button')
-      .find((b) => b.text().includes('SAVE TO FOLDER'));
+      .find((b) => b.text().toLowerCase().includes('save to folder'));
     await saveBtn!.trigger('click');
 
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test');
@@ -81,8 +79,8 @@ describe('ImageMetaPanel', () => {
   it('當 disabled prop 為 true 時停用 ADD TO MOODBOARD 按鈕', () => {
     const wrapper = mount(ImageMetaPanel, { props: { ...defaultProps, disabled: true } });
 
-    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'));
-    expect((addBtn!.element as HTMLButtonElement).disabled).toBe(true);
+    const addBtn = wrapper.get('[data-tour="detail-save"] > button');
+    expect((addBtn.element as HTMLButtonElement).disabled).toBe(true);
   });
 
   it('轉發選取的相似圖片 id', async () => {

@@ -20,6 +20,7 @@ interface Props {
   saved?: boolean;
   disabled?: boolean;
   spread?: boolean;
+  bracket?: boolean;
   folders?: FolderItem[];
   justSavedFolderId?: string | null;
   canSave?: boolean;
@@ -46,8 +47,10 @@ const isOpen = ref(false);
 const showFolderList = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
 const moodboardScramble = ref<InstanceType<typeof ScrambleText> | null>(null);
+const consultScramble = ref<InstanceType<typeof ScrambleText> | null>(null);
 
 const isBusy = computed(() => props.disabled || props.justSavedFolderId !== null);
+const usesBracketButton = computed(() => props.spread || props.bracket);
 
 function toggleDropdown() {
   if (!props.canSave) {
@@ -61,12 +64,22 @@ function toggleDropdown() {
 }
 
 function playMoodboardScramble() {
-  if (props.spread) moodboardScramble.value?.play();
+  if (usesBracketButton.value) moodboardScramble.value?.play();
 }
 
 function playMoodboardScrambleOnFocus(event: FocusEvent) {
   if ((event.currentTarget as HTMLElement).matches(':focus-visible')) {
     playMoodboardScramble();
+  }
+}
+
+function playConsultScramble() {
+  if (props.bracket) consultScramble.value?.play();
+}
+
+function playConsultScrambleOnFocus(event: FocusEvent) {
+  if ((event.currentTarget as HTMLElement).matches(':focus-visible')) {
+    playConsultScramble();
   }
 }
 
@@ -113,22 +126,55 @@ onBeforeUnmount(() => {
   <div ref="containerRef" class="relative inline-block">
     <Button
       v-if="props.variant === 'consult'"
-      variant="primary"
-      class="w-full !px-3 !py-3 md:!px-4 md:!py-4"
+      :variant="props.bracket ? 'bracket' : 'primary'"
+      class="w-full"
+      :class="props.bracket ? '' : 'px-3 py-3 md:px-4 md:py-4'"
+      @mouseenter="playConsultScramble"
+      @focus="playConsultScrambleOnFocus"
       @click="emit('consult')"
     >
       <span
-        class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest"
+        class="flex items-center justify-center gap-1 md:gap-2"
+        :class="
+          props.bracket
+            ? 'font-title text-xs font-medium tracking-normal md:text-sm'
+            : 'font-mono text-xs uppercase tracking-widest md:text-sm'
+        "
       >
-        <User class="w-4 h-4 md:w-5.5 md:h-5.5" aria-hidden="true" />
-        {{ $t('image.consultStylist') }}
+        <User
+          :class="props.bracket ? 'relative -top-[2px] size-4' : 'h-4 w-4 md:h-5.5 md:w-5.5'"
+          aria-hidden="true"
+        />
+        <span
+          :class="
+            props.bracket
+              ? 'relative inline-block border-b border-white/80 pb-1 leading-none'
+              : ''
+          "
+        >
+          <template v-if="props.bracket">
+            <span class="invisible" aria-hidden="true">
+              {{ $t('image.consultStylistBracket') }}
+            </span>
+            <ScrambleText
+              ref="consultScramble"
+              class="absolute inset-0 whitespace-nowrap"
+              :text="$t('image.consultStylistBracket')"
+              chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+              :duration="0.7"
+              :speed="0.18"
+              :autoplay="false"
+            />
+          </template>
+          <template v-else>{{ $t('image.consultStylist') }}</template>
+        </span>
       </span>
     </Button>
     <template v-else>
       <Button
-        :variant="props.spread ? 'bracket' : 'secondary'"
+        :variant="usesBracketButton ? 'bracket' : 'secondary'"
         class="w-full disabled:cursor-not-allowed disabled:opacity-50"
-        :class="props.spread ? 'h-10! px-4! py-0!' : 'px-3! py-3! md:px-4! md:py-4!'"
+        :class="usesBracketButton ? 'h-10! px-4! py-0!' : 'px-3! py-3! md:px-4! md:py-4!'"
         :disabled="props.disabled"
         @mouseenter="playMoodboardScramble"
         @focus="playMoodboardScrambleOnFocus"
@@ -137,7 +183,7 @@ onBeforeUnmount(() => {
         <span
           class="flex items-center justify-center gap-1 md:gap-2"
           :class="
-            props.spread
+            usesBracketButton
               ? 'font-title text-sm font-medium tracking-normal'
               : 'font-mono text-xs uppercase tracking-widest md:text-sm'
           "
@@ -150,19 +196,19 @@ onBeforeUnmount(() => {
           <Bookmark
             v-else
             class="w-4 h-4 md:w-4 md:h-4"
-            :class="props.spread ? 'relative -top-[2px]' : ''"
+            :class="usesBracketButton ? 'relative -top-[2px]' : ''"
             :stroke-width="1.5"
             :fill="props.saved ? 'currentColor' : 'none'"
             aria-hidden="true"
           />
           <span
             :class="
-              props.spread
+              usesBracketButton
                 ? 'relative inline-block border-b border-white/80 pb-1 leading-none'
                 : ''
             "
           >
-            <template v-if="props.spread">
+            <template v-if="usesBracketButton">
               <span class="invisible" aria-hidden="true">{{
                 $t('image.addToMoodboardSpread')
               }}</span>
@@ -186,10 +232,11 @@ onBeforeUnmount(() => {
       v-if="isOpen && props.variant === 'bookmark'"
       class="absolute z-10"
       :connector="props.spread"
+      :surface="props.bracket && !props.spread ? 'panel' : 'void'"
       :class="
         props.spread
-          ? 'left-0 top-full mt-[10px] w-full! md:left-full md:top-1/2 md:mt-0 md:ml-10 md:w-40! md:-translate-y-1/2'
-          : 'left-0 top-full mt-2'
+          ? 'left-0 top-full mt-[10px] w-full! md:left-full md:top-1/2 md:mt-0 md:ml-10 md:-translate-y-1/2'
+          : 'left-0 top-full mt-2 w-full!'
       "
     >
       <button
@@ -200,6 +247,7 @@ onBeforeUnmount(() => {
           isOpen = false;
         "
       >
+        <slot name="create-folder-icon" />
         {{ $t('image.createNewFolder') }}
       </button>
 
@@ -211,6 +259,7 @@ onBeforeUnmount(() => {
             data-bracket-dropdown-item
             @click.stop="showFolderList = !showFolderList"
           >
+            <slot name="save-folder-icon" />
             {{ $t('image.saveToFolderMenu') }}
           </button>
 
@@ -220,10 +269,11 @@ onBeforeUnmount(() => {
             :connector="props.spread"
             connector-align="first-item"
             :max-visible-items="5"
+            :surface="props.bracket && !props.spread ? 'panel' : 'void'"
             :class="
               props.spread
-                ? 'left-0 top-full mt-[10px] w-full! md:left-full md:top-0 md:mt-0 md:ml-10 md:w-max! md:min-w-40'
-                : 'left-0 top-full mt-2'
+                ? 'left-0 top-full mt-[10px] w-full! md:left-full md:top-0 md:mt-0 md:ml-10'
+                : 'left-0 top-full mt-2 w-full!'
             "
           >
             <template v-for="(folder, index) in props.folders" :key="folder.id">
@@ -242,7 +292,7 @@ onBeforeUnmount(() => {
                   :fill="folder.saved ? 'currentColor' : 'none'"
                   aria-hidden="true"
                 />
-                <span class="flex-none whitespace-nowrap text-left">
+                <span class="min-w-0 whitespace-normal break-words text-left">
                   {{ props.justSavedFolderId === folder.id ? '✓ Saved' : folder.name }}
                 </span>
               </button>

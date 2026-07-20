@@ -224,6 +224,7 @@ export default {
     photoOn: 'on {date}',
     photoBy: 'by',
     consultStylist: 'CONSULT STYLIST',
+    consultStylistBracket: 'Consult Stylist',
     addToMoodboard: 'ADD TO MOODBOARD',
     addToMoodboardSpread: 'Add to Moodboard',
     createNewFolder: 'Create New Folder',
