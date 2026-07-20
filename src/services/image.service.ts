@@ -1,4 +1,5 @@
 import rawStyleImages from '@/data/style-data.json';
+import homePreviewManifest from '@/data/home-preview-manifest.json';
 import { fetchImagesApi } from '@/api/image.api';
 import { SITE_LOGO_SRC } from '@/constants/assets.constants';
 import type {
@@ -86,10 +87,38 @@ function countSharedStyles(baseImage: StyleImage, candidate: StyleImage): number
   return candidate.style.filter((style) => baseStyles.has(style)).length;
 }
 
+// 首頁概念圖縮圖（issue #181）：檔名與尺寸由 scripts/generate-home-previews.mjs 產生成
+// { 檔名: [寬,高] } 的 manifest，直接從原圖 url 推導 480w/720w 預覽路徑，不必在資料
+// （打包 JSON 或 Supabase）帶欄位。忽略 host（Supabase 存的是 asterism.pics 絕對網址，
+// 正式站＝前端本身，preview 同源可取），只認 /style-image/<檔名>.webp；manifest 同時當
+// 白名單擋掉沒產 preview 的圖（避免破圖），並提供尺寸給 <img> 預留比例消 CLS。
+// 輸出相對路徑，dev（localhost public）與正式站（asterism.pics public）皆通。
+const HOME_PREVIEW_DIMENSIONS = homePreviewManifest as Record<string, number[]>;
+
+function toHomePreview(
+  url: string
+): Pick<HomeInspirationImage, 'src' | 'srcset' | 'width' | 'height'> | null {
+  const base = /\/style-image\/([^/]+)\.webp$/.exec(url)?.[1];
+  const dimensions = base ? HOME_PREVIEW_DIMENSIONS[base] : undefined;
+  if (!base || !dimensions) return null;
+  const prefix = `/style-image/preview/${base}`;
+  return {
+    src: `${prefix}-480.webp`,
+    srcset: `${prefix}-480.webp 480w, ${prefix}-720.webp 720w`,
+    width: dimensions[0],
+    height: dimensions[1]
+  };
+}
+
 function toHomeInspirationImage(image: StyleImage): HomeInspirationImage {
+  const preview = toHomePreview(image.url);
   return {
     id: image.id,
-    src: image.url,
+    // 首頁優先用縮圖；非本地圖（推導不出）退回全尺寸 url。
+    src: preview?.src ?? image.url,
+    srcset: preview?.srcset,
+    width: preview?.width,
+    height: preview?.height,
     alt: image.title || image.style.join(', '),
     styleGroup: image.styleGroup
   };

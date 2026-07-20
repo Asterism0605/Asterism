@@ -316,6 +316,10 @@ onBeforeUnmount(() => {
         <div class="image-card__frame">
           <img
             :src="image.src"
+            :srcset="image.srcset"
+            sizes="(max-width: 768px) 132px, 240px"
+            :width="image.width"
+            :height="image.height"
             :alt="image.alt ?? ''"
             :loading="i === 0 ? 'eager' : 'lazy'"
             :fetchpriority="i === 0 ? 'high' : 'auto'"

@@ -28,6 +28,9 @@ export interface ImageSpreadNode {
 export interface HomeInspirationImage {
   id: string;
   src: string;
+  srcset?: string;
+  width?: number;
+  height?: number;
   alt: string;
   styleGroup: string;
 }

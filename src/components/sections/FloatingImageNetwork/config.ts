@@ -5,6 +5,9 @@
  */
 export interface ImageItem {
   src: string;
+  srcset?: string;
+  width?: number;
+  height?: number;
   alt?: string;
 }
 
