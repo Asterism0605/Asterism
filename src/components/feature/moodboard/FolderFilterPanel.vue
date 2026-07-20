@@ -68,7 +68,7 @@ const mediumsExpanded = ref(false);
       >
         <span class="folder-filter__anchor" aria-hidden="true"></span>
         <span class="folder-filter__connector" aria-hidden="true"></span>
-        <span class="folder-filter__label-text">{{ t('moodboard.filterByMediums') }}</span>
+        <span class="folder-filter__label-text">{{ t('moodboard.filterByFields') }}</span>
       </button>
       <div
         v-show="mediumsExpanded"

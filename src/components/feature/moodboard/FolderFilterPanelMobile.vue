@@ -66,7 +66,7 @@ const { localizeTaxon } = useTaxonomyLabel();
         <div class="folder-filter__list">
           <span class="filter-node filter-node--heading" aria-hidden="true">
             <span class="filter-node__anchor" aria-hidden="true"></span>
-            <span class="filter-node__label">{{ t('moodboard.filterGroupMediums') }}</span>
+            <span class="filter-node__label">{{ t('moodboard.filterGroupFields') }}</span>
           </span>
           <button
             v-for="option in mediumOptions"

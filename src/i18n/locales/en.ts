@@ -285,10 +285,10 @@ export default {
     folderEmptySuffix: '(Empty)',
     openImageDetailAria: 'View image detail',
     filterByStyles: 'Filter by Styles',
-    filterByMediums: 'Filter by Mediums',
+    filterByFields: 'Filter by Fields',
     filterByHeading: 'Filter by',
     filterGroupStyles: 'Styles',
-    filterGroupMediums: 'Mediums',
+    filterGroupFields: 'Fields',
     resetFilters: 'Reset'
   },
   userTour: {
