@@ -271,8 +271,8 @@ const mediumsExpanded = ref(false);
 }
 
 .folder-filter__reset {
-  left: 10%;
-  top: 43%;
+  left: 21%;
+  top: 53%;
   width: auto;
   padding: 6px 14px;
   border: 1px solid rgba(240, 237, 230, 0.3);
