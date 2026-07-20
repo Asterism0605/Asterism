@@ -323,7 +323,7 @@ onBeforeUnmount(() => {
           <img
             :src="arrowImage"
             alt=""
-            class="ml-20 h-auto w-[3rem] shrink-0 motion-reduce:animate-none animate-[homeTourArrow_1.8s_ease-in-out_infinite]"
+            class="ml-20 h-auto w-[3rem] shrink-0 motion-reduce:animate-none animate-[tourArrow_1.8s_ease-in-out_infinite]"
             aria-hidden="true"
           />
           <span class="text-body">{{ props.proceedLabel }}</span>
@@ -339,7 +339,7 @@ onBeforeUnmount(() => {
           <img
             :src="arrowImage"
             alt=""
-            class="ml-20 h-auto w-[3rem] shrink-0 motion-reduce:animate-none animate-[homeTourArrow_1.8s_ease-in-out_infinite] [animation-delay:0.18s]"
+            class="ml-20 h-auto w-[3rem] shrink-0 motion-reduce:animate-none animate-[tourArrow_1.8s_ease-in-out_infinite] [animation-delay:0.18s]"
             aria-hidden="true"
           />
           <span class="text-body">{{ props.laterLabel }}</span>

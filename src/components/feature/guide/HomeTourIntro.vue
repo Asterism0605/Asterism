@@ -165,7 +165,7 @@ onBeforeUnmount(() => {
           <img
             :src="arrowImage"
             alt=""
-            class="ml-20 h-auto w-[3rem] shrink-0 motion-reduce:animate-none animate-[homeTourArrow_1.8s_ease-in-out_infinite]"
+            class="ml-20 h-auto w-[3rem] shrink-0 motion-reduce:animate-none animate-[tourArrow_1.8s_ease-in-out_infinite]"
             aria-hidden="true"
           />
           <span class="text-body">{{ props.startLabel }}</span>
@@ -181,7 +181,7 @@ onBeforeUnmount(() => {
           <img
             :src="arrowImage"
             alt=""
-            class="ml-20 h-auto w-[3rem] shrink-0 [animation-delay:0.18s] motion-reduce:animate-none animate-[homeTourArrow_1.8s_ease-in-out_infinite]"
+            class="ml-20 h-auto w-[3rem] shrink-0 [animation-delay:0.18s] motion-reduce:animate-none animate-[tourArrow_1.8s_ease-in-out_infinite]"
             aria-hidden="true"
           />
           <span class="text-body">{{ props.exploreLabel }}</span>
@@ -190,16 +190,3 @@ onBeforeUnmount(() => {
     </div>
   </dialog>
 </template>
-
-<style>
-@keyframes homeTourArrow {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  50% {
-    transform: translateX(0.35rem);
-  }
-}
-</style>
