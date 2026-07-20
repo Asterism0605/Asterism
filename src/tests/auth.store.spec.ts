@@ -8,7 +8,12 @@ const auth = {
   updateUser: vi.fn().mockResolvedValue({ error: null })
 };
 const single = vi.fn();
-const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+const maybeSingle = vi.fn();
+const from = vi.fn((table: string) =>
+  table === 'consultants'
+    ? { select: () => ({ eq: () => ({ maybeSingle }) }) }
+    : { select: () => ({ eq: () => ({ single }) }) }
+);
 vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth, from }) }));
 
 import { useAuthStore } from '@/stores/auth.store';
@@ -24,6 +29,7 @@ describe('auth.store', () => {
     setActivePinia(createPinia());
     vi.clearAllMocks();
     single.mockResolvedValue({ data: { display_name: 'Admin', username: null, is_admin: true }, error: null });
+    maybeSingle.mockResolvedValue({ data: null, error: null });
   });
 
   it('hydrate 從現有 session 還原並帶 isAdmin', async () => {
@@ -105,5 +111,45 @@ describe('auth.store', () => {
     await store.logout();
 
     expect(store.isPasswordRecovery).toBe(false);
+  });
+
+  it('hydrate 時查到 consultants 列 → isConsultant 為 true', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    maybeSingle.mockResolvedValue({ data: { id: 'consultant-1' }, error: null });
+    const store = useAuthStore();
+
+    await store.hydrate();
+
+    expect(store.isConsultant).toBe(true);
+    expect(store.user?.consultantId).toBe('consultant-1');
+  });
+
+  it('查無 consultants 列 → isConsultant 為 false;logout 後亦為 false', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    const store = useAuthStore();
+
+    await store.hydrate();
+    expect(store.isConsultant).toBe(false);
+
+    maybeSingle.mockResolvedValue({ data: { id: 'consultant-1' }, error: null });
+    await store.hydrate();
+    expect(store.isConsultant).toBe(true);
+
+    await store.logout();
+    expect(store.isConsultant).toBe(false);
+  });
+
+  it('consultants 查詢出錯 → 降級為非顧問、hydrate 不 throw(後端 migration 未部署的安全網)', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    maybeSingle.mockResolvedValue({ data: null, error: { code: '42703' } });
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const store = useAuthStore();
+
+    await expect(store.hydrate()).resolves.toBeUndefined();
+
+    expect(store.isAuthenticated).toBe(true);
+    expect(store.isConsultant).toBe(false);
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
   });
 });

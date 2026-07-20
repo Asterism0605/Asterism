@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
   const session = ref<AuthSession | null>(null);
   const isAuthenticated = computed(() => session.value !== null && user.value !== null);
   const isAdmin = computed(() => user.value?.isAdmin === true);
+  const isConsultant = computed(() => !!user.value?.consultantId);
   // 只在 token_hash + type=recovery 驗證成功後才為 true，是「能改密碼」的唯一憑據。
   // 純記憶體、用完即焚：改完密碼 / 登出即清，重整也會消失（fail-safe 導回請求新連結）。
   const isPasswordRecovery = ref(false);
@@ -102,6 +103,7 @@ export const useAuthStore = defineStore('auth', () => {
     session,
     isAuthenticated,
     isAdmin,
+    isConsultant,
     isPasswordRecovery,
     register,
     login,

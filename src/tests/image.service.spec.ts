@@ -25,6 +25,69 @@ function getMaxConsecutiveStyleGroupCount(styleGroups: string[]): number {
   ).max;
 }
 
+function expectNoAdjacentMainImagesInSameStyleGroup(
+  images: Awaited<ReturnType<typeof getHomeInspirationImages>>
+): void {
+  for (let index = 1; index < images.length; index += 1) {
+    const previousImage = images[index - 1];
+    const currentImage = images[index];
+
+    if (previousImage.styleGroup !== currentImage.styleGroup) continue;
+
+    expect(previousImage.id.includes('main') && currentImage.id.includes('main')).toBe(false);
+  }
+}
+
+function getSameStyleGroupPairTypes(
+  images: Awaited<ReturnType<typeof getHomeInspirationImages>>
+): string[] {
+  const pairTypes: string[] = [];
+
+  for (let index = 0; index < images.length - 1; index += 1) {
+    const firstImage = images[index];
+    const secondImage = images[index + 1];
+
+    if (firstImage.styleGroup !== secondImage.styleGroup) continue;
+
+    const firstType = firstImage.id.includes('concept') ? 'concept' : 'main';
+    const secondType = secondImage.id.includes('concept') ? 'concept' : 'main';
+    pairTypes.push(`${firstType}+${secondType}`);
+    index += 1;
+  }
+
+  return pairTypes;
+}
+
+function expectHomePairCadence(
+  images: Awaited<ReturnType<typeof getHomeInspirationImages>>
+): void {
+  const pairTypes = getSameStyleGroupPairTypes(images);
+  let conceptPairCount = 0;
+  let requiredConceptPairs = 3;
+
+  expect(pairTypes.slice(0, 7)).toEqual([
+    'concept+concept',
+    'concept+concept',
+    'concept+concept',
+    'concept+main',
+    'concept+concept',
+    'concept+concept',
+    'concept+main'
+  ]);
+
+  for (const pairType of pairTypes) {
+    if (pairType === 'concept+concept') {
+      conceptPairCount += 1;
+      continue;
+    }
+
+    expect(pairType).toBe('concept+main');
+    expect(conceptPairCount).toBeGreaterThanOrEqual(requiredConceptPairs);
+    conceptPairCount = 0;
+    requiredConceptPairs = 2;
+  }
+}
+
 describe('image.service', () => {
   it('keeps every style tag within a single style group', () => {
     const styleGroupsByStyle = new Map<string, Set<string>>();
@@ -138,6 +201,8 @@ describe('image.service', () => {
 
     expect(new Set(styleGroups.slice(0, 18)).size).toBe(9);
     expect(getMaxConsecutiveStyleGroupCount(styleGroups)).toBeLessThanOrEqual(2);
+    expectNoAdjacentMainImagesInSameStyleGroup(images);
+    expectHomePairCadence(images);
   });
 
   it('puts 12 images from the top Style DNA tag group first, then restores interleaving', async () => {
@@ -156,6 +221,8 @@ describe('image.service', () => {
     expect(styleGroups.slice(0, 12)).toEqual(Array(12).fill(primaryStyleGroup));
     expect(styleGroups[12]).not.toBe(primaryStyleGroup);
     expect(getMaxConsecutiveStyleGroupCount(styleGroups.slice(12))).toBeLessThanOrEqual(2);
+    expectNoAdjacentMainImagesInSameStyleGroup(images);
+    expectHomePairCadence(images.slice(12));
   });
 
   describe('getMediumGroupImages', () => {

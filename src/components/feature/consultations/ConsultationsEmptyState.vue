@@ -2,6 +2,14 @@
 import { useI18n } from 'vue-i18n';
 import Button from '@/components/ui/Button.vue';
 
+withDefaults(
+  defineProps<{
+    /** consultant:換空狀態文案、不顯示前往預約 CTA(顧問無法自己預約)。 */
+    variant?: 'account' | 'consultant';
+  }>(),
+  { variant: 'account' }
+);
+
 const emit = defineEmits<{
   action: [];
 }>();
@@ -11,8 +19,14 @@ const { t } = useI18n();
 
 <template>
   <section class="consultations-empty-state" role="status">
-    <p>{{ t('accountConsultations.emptyDescription') }}</p>
-    <Button type="button" variant="primary" @click="emit('action')">
+    <p>
+      {{
+        variant === 'consultant'
+          ? t('consultantBookings.emptyDescription')
+          : t('accountConsultations.emptyDescription')
+      }}
+    </p>
+    <Button v-if="variant === 'account'" type="button" variant="primary" @click="emit('action')">
       {{ t('accountConsultations.bookConsultation') }}
     </Button>
   </section>

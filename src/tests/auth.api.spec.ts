@@ -9,7 +9,12 @@ const auth = {
   resend: vi.fn()
 };
 const single = vi.fn();
-const from = vi.fn(() => ({ select: () => ({ eq: () => ({ single }) }) }));
+const maybeSingle = vi.fn();
+const from = vi.fn((table: string) =>
+  table === 'consultants'
+    ? { select: () => ({ eq: () => ({ maybeSingle }) }) }
+    : { select: () => ({ eq: () => ({ single }) }) }
+);
 
 vi.mock('@/api/supabaseClient', () => ({
   getSupabase: () => ({ auth, from })
@@ -27,6 +32,7 @@ describe('auth.api (supabase)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     single.mockResolvedValue({ data: { display_name: 'Alice', username: 'alice', is_admin: true }, error: null });
+    maybeSingle.mockResolvedValue({ data: null, error: null });
   });
 
   it('login 回傳帶 isAdmin 的 session', async () => {
