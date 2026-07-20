@@ -35,7 +35,9 @@ const mockAnswer: StyleDnaAnswer = {
 const mockIsCompleted = ref(false);
 const mockAnswers = reactive<StyleDnaAnswer[]>([]);
 const mockCurrentIndex = ref(0);
+const mockCanSkip = ref(true);
 const mockSelectAnswer = vi.fn();
+const mockSkipQuestion = vi.fn();
 const mockResetQuiz = vi.fn();
 
 vi.mock('@/composables/useStyleDnaQuiz', () => ({
@@ -43,10 +45,13 @@ vi.mock('@/composables/useStyleDnaQuiz', () => ({
     questions: ref(Array.from({ length: 12 }, () => mockQuestion)),
     currentQuestion: computed(() => (mockIsCompleted.value ? null : mockQuestion)),
     currentQuestionIndex: mockCurrentIndex,
+    answeredCount: computed(() => mockAnswers.length),
+    canSkip: mockCanSkip,
     answers: mockAnswers,
     isCompleted: mockIsCompleted,
     result: ref(null),
     selectAnswer: mockSelectAnswer,
+    skipQuestion: mockSkipQuestion,
     resetQuiz: mockResetQuiz
   })
 }));
@@ -68,8 +73,13 @@ function mountStyleDna(router: Router, pinia: ReturnType<typeof createPinia>) {
       stubs: {
         AppHeader: true,
         StyleComparisonPicker: {
-          template: '<button data-testid="select-btn" @click="$emit(\'select\', \'opt-a\')" />',
-          emits: ['select']
+          template: `
+            <div>
+              <button data-testid="select-btn" @click="$emit('select', 'opt-a')" />
+              <button data-testid="skip-btn" @click="$emit('skip')" />
+            </div>
+          `,
+          emits: ['select', 'skip']
         }
       }
     }
@@ -82,7 +92,9 @@ describe('StyleDna', () => {
     mockIsCompleted.value = false;
     mockAnswers.splice(0, mockAnswers.length);
     mockCurrentIndex.value = 0;
+    mockCanSkip.value = true;
     mockSelectAnswer.mockReset();
+    mockSkipQuestion.mockReset();
     mockResetQuiz.mockReset();
   });
 
@@ -128,13 +140,12 @@ describe('StyleDna', () => {
     expect(wrapper.find('.qpm-current').text()).toBe('1');
     expect(wrapper.find('.qpm-total').text()).toBe('12');
 
-    mockCurrentIndex.value = 11;
+    mockAnswers.push(...Array.from({ length: 10 }, () => mockAnswer));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find('.qpm-current').text()).toBe('12');
+    expect(wrapper.find('.qpm-current').text()).toBe('11');
     expect(wrapper.find('.qpm-total').text()).toBe('12');
 
-    // 完成瞬間 index 越界（12），Math.min 應夾住，不顯示 13/12
-    mockCurrentIndex.value = 12;
+    mockAnswers.push(mockAnswer);
     await wrapper.vm.$nextTick();
     expect(wrapper.find('.qpm-current').text()).toBe('12');
     expect(wrapper.find('.qpm-total').text()).toBe('12');
@@ -221,5 +232,38 @@ describe('StyleDna', () => {
     await vi.advanceTimersByTimeAsync(500);
 
     expect(mockSelectAnswer).toHaveBeenCalledTimes(1);
+  });
+
+  it('skips after the short transition without changing answer progress', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const router = createTestRouter();
+    await router.push('/style-dna');
+    await router.isReady();
+
+    const wrapper = mountStyleDna(router, pinia);
+    expect(wrapper.find('.qpm-current').text()).toBe('1');
+
+    await wrapper.find('[data-testid="skip-btn"]').trigger('click');
+    await vi.advanceTimersByTimeAsync(240);
+
+    expect(mockSkipQuestion).toHaveBeenCalledTimes(1);
+    expect(wrapper.find('.qpm-current').text()).toBe('1');
+  });
+
+  it('ignores skip while a selection transition is in progress', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const router = createTestRouter();
+    await router.push('/style-dna');
+    await router.isReady();
+
+    const wrapper = mountStyleDna(router, pinia);
+    await wrapper.find('[data-testid="select-btn"]').trigger('click');
+    await wrapper.find('[data-testid="skip-btn"]').trigger('click');
+    await vi.advanceTimersByTimeAsync(500);
+
+    expect(mockSelectAnswer).toHaveBeenCalledTimes(1);
+    expect(mockSkipQuestion).not.toHaveBeenCalled();
   });
 });

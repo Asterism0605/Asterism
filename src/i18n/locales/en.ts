@@ -231,6 +231,8 @@ export default {
     loadingLine1: 'Forming',
     loadingLine2: 'Your Style DNA',
     pickerHint: 'Click one image to continue',
+    skipPair: 'Neither — show me another pair',
+    skipLimitReached: 'Skip limit reached',
     pickerProgress: '{current} / {total}',
     quizProgress: 'Quiz progress',
     complete: 'Style DNA Complete',

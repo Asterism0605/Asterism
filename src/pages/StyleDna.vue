@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import StyleComparisonPicker from '@/components/feature/dna/StyleComparisonPicker.vue';
 import { useStyleDnaQuiz } from '@/composables/useStyleDnaQuiz';
+import { STYLE_DNA_QUESTION_COUNT } from '@/constants/style-dna.constants';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 
@@ -12,25 +13,37 @@ const authStore = useAuthStore();
 const quiz = useStyleDnaQuiz();
 const {
   answers,
+  answeredCount,
+  canSkip,
   currentQuestion,
   currentQuestionIndex,
   isCompleted,
-  questions,
   resetQuiz,
-  selectAnswer
+  selectAnswer,
+  skipQuestion
 } = quiz;
 const selectedId = ref<string | null>(null);
 const isTransitioning = ref(false);
 const isHoverSuppressed = ref(false);
 const completedTargetPath = '/style-dna/result';
 let hoverSuppressTimer: number | undefined;
+let transitionTimer: number | undefined;
 
-// 手機版進度（對角斜線分數）。current 夾在 total，避免完成瞬間顯示 13/12。
+// 跳過不算有效答案，因此進度只依實際選擇數推進。
 const progressCurrent = computed(() =>
-  Math.min(currentQuestionIndex.value + 1, questions.value.length)
+  Math.min(answeredCount.value + 1, STYLE_DNA_QUESTION_COUNT)
 );
 
 resetQuiz();
+
+const suppressHoverTemporarily = () => {
+  isHoverSuppressed.value = true;
+
+  window.clearTimeout(hoverSuppressTimer);
+  hoverSuppressTimer = window.setTimeout(() => {
+    isHoverSuppressed.value = false;
+  }, 260);
+};
 
 const handleSelect = (optionId: string) => {
   if (isTransitioning.value) {
@@ -44,16 +57,12 @@ const handleSelect = (optionId: string) => {
   selectedId.value = optionId;
   isTransitioning.value = true;
 
-  window.setTimeout(() => {
+  window.clearTimeout(transitionTimer);
+  transitionTimer = window.setTimeout(() => {
     selectAnswer(optionId);
     selectedId.value = null;
     isTransitioning.value = false;
-    isHoverSuppressed.value = true;
-
-    window.clearTimeout(hoverSuppressTimer);
-    hoverSuppressTimer = window.setTimeout(() => {
-      isHoverSuppressed.value = false;
-    }, 260);
+    suppressHoverTemporarily();
 
     if (isCompleted.value) {
       styleDnaStore.completeQuiz([...answers], authStore.user?.id ?? null);
@@ -67,8 +76,27 @@ const handleSelect = (optionId: string) => {
   }, 500);
 };
 
+const handleSkip = () => {
+  if (isTransitioning.value || !canSkip.value) {
+    return;
+  }
+
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+
+  isTransitioning.value = true;
+  window.clearTimeout(transitionTimer);
+  transitionTimer = window.setTimeout(() => {
+    skipQuestion();
+    isTransitioning.value = false;
+    suppressHoverTemporarily();
+  }, 240);
+};
+
 onBeforeUnmount(() => {
   window.clearTimeout(hoverSuppressTimer);
+  window.clearTimeout(transitionTimer);
 });
 </script>
 
@@ -80,16 +108,19 @@ onBeforeUnmount(() => {
       :right-option="currentQuestion.options[1]"
       :selected-id="selectedId"
       :question-index="currentQuestionIndex"
-      :total-questions="questions.length"
+      :progress-current="progressCurrent"
+      :total-questions="STYLE_DNA_QUESTION_COUNT"
+      :can-skip="canSkip"
       :suppress-hover="isHoverSuppressed"
       @select="handleSelect"
+      @skip="handleSkip"
     />
 
     <!-- 手機版（≤980px）：沿用桌機的對角斜線分數樣式（current 左上 / total 右下），改放右下角。 -->
     <div class="quiz-progress-mobile" :aria-label="$t('dna.quizProgress')">
       <span class="qpm-current">{{ progressCurrent }}</span>
       <span class="qpm-slash" aria-hidden="true"></span>
-      <span class="qpm-total">{{ questions.length }}</span>
+      <span class="qpm-total">{{ STYLE_DNA_QUESTION_COUNT }}</span>
     </div>
   </main>
 </template>

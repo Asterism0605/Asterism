@@ -7,12 +7,15 @@ const props = defineProps<{
   rightOption: StyleDnaOption
   selectedId: string | null
   questionIndex: number
+  progressCurrent: number
   totalQuestions: number
+  canSkip: boolean
   suppressHover?: boolean
 }>()
 
 const emit = defineEmits<{
   select: [optionId: string]
+  skip: []
 }>()
 
 const isLeftHigh = computed(() => props.questionIndex % 2 === 0)
@@ -53,14 +56,14 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
       <span class="instruction-dot"></span>
       <span>{{ $t('dna.pickerHint') }}</span>
       <div class="instruction-progress" data-testid="instruction-progress">
-        <span class="instruction-progress__current">{{ questionIndex + 1 }}</span>
+        <span class="instruction-progress__current">{{ progressCurrent }}</span>
         <span class="instruction-progress__slash" aria-hidden="true"></span>
         <span class="instruction-progress__total">{{ totalQuestions }}</span>
       </div>
     </div>
 
     <span class="sr-only" role="status" aria-live="polite">
-      {{ $t('dna.quizProgress') }}: {{ $t('dna.pickerProgress', { current: questionIndex + 1, total: totalQuestions }) }}
+      {{ $t('dna.quizProgress') }}: {{ $t('dna.pickerProgress', { current: progressCurrent, total: totalQuestions }) }}
     </span>
 
     <span class="ambient-dot ambient-dot--one" aria-hidden="true"></span>
@@ -95,6 +98,16 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
       <span class="image-card">
         <img :src="rightOption.image.url" :alt="rightOption.image.title ?? rightOption.image.id" />
       </span>
+    </button>
+
+    <button
+      class="skip-pair"
+      type="button"
+      :disabled="!canSkip || selectedId !== null"
+      data-testid="style-dna-skip"
+      @click="emit('skip')"
+    >
+      {{ canSkip ? $t('dna.skipPair') : $t('dna.skipLimitReached') }}
     </button>
   </div>
 </template>
@@ -456,6 +469,43 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
   pointer-events: none;
 }
 
+.skip-pair {
+  position: absolute;
+  left: 50%;
+  bottom: 5.5%;
+  z-index: 7;
+  padding: 10px 18px;
+  border: 1px solid rgb(240 237 230 / 32%);
+  border-radius: 999px;
+  color: rgb(240 237 230 / 72%);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  background: rgb(6 6 8 / 38%);
+  transform: translateX(-50%);
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    opacity 180ms ease;
+}
+
+.skip-pair:hover:not(:disabled),
+.skip-pair:focus-visible {
+  border-color: rgb(240 237 230 / 62%);
+  color: var(--color-text-primary);
+  background: rgb(240 237 230 / 8%);
+}
+
+.skip-pair:focus-visible {
+  outline: 1px solid rgb(240 237 230 / 68%);
+  outline-offset: 4px;
+}
+
+.skip-pair:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
 @keyframes orbitFloat {
   0%,
   100% {
@@ -512,6 +562,12 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
   .choice--right .orbit {
     transform: rotate(-28deg) scale(0.85);
     transform-origin: center;
+  }
+
+  .skip-pair {
+    bottom: 24px;
+    max-width: calc(100vw - 160px);
+    white-space: nowrap;
   }
 }
 
