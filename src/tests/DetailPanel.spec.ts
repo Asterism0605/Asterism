@@ -35,6 +35,14 @@ describe('DetailPanel 客人端地點', () => {
     expect(link.attributes('target')).toBe('_blank');
   });
 
+  it('online 地點非 http(s) 時渲染純文字(非連結),防止 XSS/危險協定', () => {
+    const wrapper = mountPanel(
+      makeReservation({ method: 'Online', location: 'javascript:alert(1)' })
+    );
+    expect(wrapper.find('a').exists()).toBe(false);
+    expect(wrapper.text()).toContain('javascript:alert(1)');
+  });
+
   it('in_person 有地點時渲染純文字(非連結)', () => {
     const wrapper = mountPanel(
       makeReservation({ method: 'In-Person', location: '台北市信義區松高路 1 號' })
