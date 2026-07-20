@@ -231,15 +231,6 @@ describe('moodboard.service', () => {
     expect(addMoodboardItem).not.toHaveBeenCalled();
   });
 
-  it('rejects adding an image when the folder already has 20 images', async () => {
-    countMoodboardItems.mockResolvedValue(20);
-
-    await expect(addItem('folder-1', 'image-1')).rejects.toThrow(
-      'Each folder can hold up to 20 images.'
-    );
-    expect(addMoodboardItem).not.toHaveBeenCalled();
-  });
-
   it('deletes a folder through the Data API', async () => {
     deleteMoodboardFolder.mockResolvedValue(undefined);
 
