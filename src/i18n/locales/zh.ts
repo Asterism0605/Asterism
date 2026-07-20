@@ -138,6 +138,7 @@ export default {
     method: '諮詢方式',
     online: '線上',
     inPerson: '實體',
+    locationPending: '地點待諮詢師提供',
     timeSlot: '時段',
     timeSlotPlaceholder: '上午 / 下午',
     chooseTimeSlot: '選擇時段',

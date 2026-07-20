@@ -139,6 +139,7 @@ export default {
     method: 'Consultation Method',
     online: 'Online',
     inPerson: 'In-Person',
+    locationPending: 'Location to be provided by your consultant',
     timeSlot: 'Time Slot',
     timeSlotPlaceholder: 'AM / PM',
     chooseTimeSlot: 'Choose time slot',

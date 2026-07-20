@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
 import type { AccountConsultation, ConsultantBookingItem } from '@/types/account-consultation';
 import { formatConsultationDisplayValue } from '@/utils/consultation-display';
+import { isHttpUrl } from '@/utils/http-url';
 import ConsultationList from './ConsultationList.vue';
 
 const props = withDefaults(
@@ -40,6 +41,8 @@ function displayDate(date: string): string {
 function playDateAnimation(): void {
   dateScramble.value?.play();
 }
+
+const isOnline = computed(() => props.reservation.method === 'Online');
 
 defineExpose({ playDateAnimation });
 </script>
@@ -78,7 +81,22 @@ defineExpose({ playDateAnimation });
       <dl class="consultation-details">
         <div>
           <dt>{{ t('consult.method') }}</dt>
-          <dd>{{ displayValue(reservation.method) }}</dd>
+          <dd>
+            {{ displayValue(reservation.method) }}
+            <template v-if="reservation.location">
+              /
+              <a
+                v-if="isOnline && isHttpUrl(reservation.location)"
+                :href="reservation.location"
+                target="_blank"
+                rel="noopener noreferrer"
+              >{{ reservation.location }}</a>
+              <span v-else>{{ reservation.location }}</span>
+            </template>
+            <span v-else-if="variant === 'account'" class="consultation-details__pending">
+              {{ t('consult.locationPending') }}
+            </span>
+          </dd>
         </div>
         <div>
           <dt>{{ t('consult.designField') }}</dt>
@@ -229,5 +247,10 @@ defineExpose({ playDateAnimation });
     padding: 32px 9vw 38px;
     transform: none;
   }
+}
+
+.consultation-details__pending {
+  color: #f0ede680;
+  font-size: 13px;
 }
 </style>
