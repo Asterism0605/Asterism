@@ -137,25 +137,35 @@ const mediumsExpanded = ref(false);
   padding: 0;
   border: 0;
   background: transparent;
-  color: #f0ede6d1;
+  color: #f0ede6bd;
   font-size: 16px;
   font-weight: 400;
   letter-spacing: 0.02em;
   cursor: pointer;
   text-align: left;
+  opacity: 0.5;
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
 }
 
 .folder-filter__label-text {
   margin-left: 10px;
 }
 
-.folder-filter__label:is(:hover, :focus-visible) {
+.folder-filter__label:not([aria-expanded='true']):is(:hover, :focus-visible) {
+  color: #f0ede6d6;
+  opacity: 0.76;
+}
+
+.folder-filter__label[aria-expanded='true'] {
   color: var(--color-text-primary);
+  opacity: 1;
 }
 
 .folder-filter__anchor {
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: #f0ede6eb;
 }
@@ -203,19 +213,28 @@ const mediumsExpanded = ref(false);
   color: #f0ede6bd;
   font: inherit;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.5;
   transition:
     color 180ms ease,
     opacity 180ms ease;
 }
 
 .filter-node:is(:hover, :focus-visible) {
-  opacity: 0.85;
+  filter: drop-shadow(0 0 7px #f0ede657);
+}
+
+.filter-node:not(.filter-node--active):is(:hover, :focus-visible) {
+  color: #f0ede6d6;
+  opacity: 0.76;
+}
+
+.filter-node:not(.filter-node--active):is(:hover, :focus-visible) .filter-node__anchor {
+  transform: scale(1.08);
 }
 
 .filter-node__anchor {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   margin-left: 2px;
   border-radius: 50%;
   background: #f0ede6eb;
@@ -244,6 +263,11 @@ const mediumsExpanded = ref(false);
   box-shadow:
     0 0 0 1px #f0ede68c,
     0 0 10px #f0ede62e;
+  transform: scale(1.15);
+}
+
+.filter-node--active .filter-node__connector {
+  background: #f0ede6e6;
 }
 
 .folder-filter__reset {

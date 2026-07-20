@@ -93,9 +93,12 @@ function folderLabel(folder: MoodboardFolder): string {
 }
 
 .folder-node:is(:hover, :focus-visible) {
+  filter: drop-shadow(0 0 7px #f0ede657);
+}
+
+.folder-node:not(.folder-node--active):is(:hover, :focus-visible) {
   color: #f0ede6d6;
   opacity: 0.76;
-  filter: drop-shadow(0 0 7px #f0ede657);
 }
 
 .folder-node__anchor {
@@ -116,7 +119,7 @@ function folderLabel(folder: MoodboardFolder): string {
 
 .folder-node__label {
   margin-left: 20px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
   letter-spacing: 0.025em;
   white-space: nowrap;
@@ -131,23 +134,23 @@ function folderLabel(folder: MoodboardFolder): string {
   color: var(--color-text-primary);
 }
 
-.folder-node--active .folder-node__anchor,
-.folder-node:is(:hover, :focus-visible) .folder-node__anchor {
-  width: 12px;
-  height: 12px;
-  margin-left: -6px;
+.folder-node--active .folder-node__anchor {
   box-shadow:
     0 0 0 1px #f0ede68c,
     0 0 10px #f0ede62e;
+  transform: scale(1.15);
 }
 
-.folder-node--active .folder-node__label,
-.folder-node:is(:hover, :focus-visible) .folder-node__label {
-  font-size: 20px;
+.folder-node:not(.folder-node--active):is(:hover, :focus-visible) .folder-node__anchor {
+  transform: scale(1.08);
+}
+
+.folder-node--active .folder-node__label {
+  font-size: 18px;
 }
 
 .folder-node--active .folder-node__connector {
-  width: 72px;
+  width: 56px;
   background: #f0ede6e6;
 }
 
@@ -209,7 +212,16 @@ function folderLabel(folder: MoodboardFolder): string {
     margin-left: 0;
   }
 
-  .folder-node--active .folder-node__anchor,
+  .folder-node--active .folder-node__anchor {
+    width: 4px;
+    height: 4px;
+    margin-left: 0;
+    box-shadow:
+      0 0 0 1px #f0ede68c,
+      0 0 10px #f0ede62e;
+    transform: scale(1.25);
+  }
+
   .folder-node:is(:hover, :focus-visible) .folder-node__anchor {
     width: 4px;
     height: 4px;
@@ -222,8 +234,7 @@ function folderLabel(folder: MoodboardFolder): string {
     font-size: 14px;
   }
 
-  .folder-node--active .folder-node__label,
-  .folder-node:is(:hover, :focus-visible) .folder-node__label {
+  .folder-node--active .folder-node__label {
     font-size: 14px;
   }
 }

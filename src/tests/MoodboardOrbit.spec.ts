@@ -1649,6 +1649,23 @@ describe('MoodboardOrbit', () => {
       expect(wrapper.findAll('[data-testid^="moodboard-image-"]')).toHaveLength(1);
     });
 
+    it('collapses the accordion again after leaving and reopening the folder detail view', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+
+      await wrapper.get('.folder-filter__label').trigger('click');
+      await flushPromises();
+      expect(wrapper.get('.folder-filter__label').attributes('aria-expanded')).toBe('true');
+
+      const backButton = wrapper.findAll('button').find((button) => button.text().includes('Back'));
+      await backButton!.trigger('click');
+      await flushPromises();
+      await openFolder(wrapper);
+
+      expect(wrapper.get('.folder-filter__label').attributes('aria-expanded')).toBe('false');
+    });
+
     it('mobile: filters narrow the images shown in the folder detail view, reset restores them', async () => {
       Object.defineProperty(window, 'innerWidth', {
         value: 375,

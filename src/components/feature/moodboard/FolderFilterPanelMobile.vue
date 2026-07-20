@@ -177,7 +177,7 @@ const { localizeTaxon } = useTaxonomyLabel();
   color: #f0ede6bd;
   font: inherit;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.5;
   transition:
     color 180ms ease,
     opacity 180ms ease;
@@ -205,7 +205,7 @@ const { localizeTaxon } = useTaxonomyLabel();
   margin-bottom: 6px;
   transform: translateX(-50%);
   color: #f0ede6d1;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .filter-node:is(:hover, :focus-visible) {
@@ -220,15 +220,21 @@ const { localizeTaxon } = useTaxonomyLabel();
   transition: box-shadow 180ms ease;
 }
 
+.filter-node--heading .filter-node__anchor,
+.filter-node--filter-by .filter-node__anchor {
+  width: 10px;
+  height: 10px;
+}
+
 .filter-node__label {
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.02em;
   white-space: nowrap;
   text-align: center;
 }
 
 .filter-node--heading .filter-node__label {
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .filter-node--active {
@@ -240,6 +246,7 @@ const { localizeTaxon } = useTaxonomyLabel();
   box-shadow:
     0 0 0 1px #f0ede68c,
     0 0 10px #f0ede62e;
+  transform: scale(1.25);
 }
 
 .folder-filter__reset {

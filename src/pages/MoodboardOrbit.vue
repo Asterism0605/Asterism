@@ -1231,6 +1231,7 @@ onBeforeUnmount(() => {
           </div>
 
           <FolderFilterPanel
+            v-if="!hasFolders"
             :style-options="folderFilters.availableStyleGroups.value"
             :medium-options="folderFilters.availableMediums.value"
             :selected-style-groups="folderFilters.selectedStyleGroups.value"
