@@ -505,10 +505,26 @@ function openFolder(i: number) {
 
   selectedFolder.value = i;
   hasFolders.value = false;
+  handleResetFilters();
+  navigate(slugFor(i), i);
+}
+
+function handleToggleStyle(styleGroup: string) {
+  folderFilters.toggleStyleGroup(styleGroup);
+  if (isMobile.value) buildMobileDetail();
+  else buildDetail();
+}
+
+function handleToggleMedium(medium: string) {
+  folderFilters.toggleMedium(medium);
+  if (isMobile.value) buildMobileDetail();
+  else buildDetail();
+}
+
+function handleResetFilters() {
   folderFilters.reset();
   if (isMobile.value) buildMobileDetail();
   else buildDetail();
-  navigate(slugFor(i), i);
 }
 
 function slugFor(i: number) {
@@ -669,13 +685,6 @@ watch(orbitImages, () => {
   if (isMobile.value && hasFolders.value) {
     buildMobileHome();
   }
-});
-
-// 篩選條件變動時重新排版資料夾詳情頁的圖片，桌機/手機各自重排自己的版面。
-watch(folderFilters.filteredImages, () => {
-  if (hasFolders.value) return;
-  if (isMobile.value) buildMobileDetail();
-  else buildDetail();
 });
 
 onMounted(async () => {
@@ -914,9 +923,9 @@ onBeforeUnmount(() => {
             :selected-style-groups="folderFilters.selectedStyleGroups.value"
             :selected-mediums="folderFilters.selectedMediums.value"
             :has-active-filters="folderFilters.hasActiveFilters.value"
-            @toggle-style="folderFilters.toggleStyleGroup"
-            @toggle-medium="folderFilters.toggleMedium"
-            @reset="folderFilters.reset"
+            @toggle-style="handleToggleStyle"
+            @toggle-medium="handleToggleMedium"
+            @reset="handleResetFilters"
           />
           <button
             class="absolute flex items-center gap-2 text-white/80"
@@ -1237,9 +1246,9 @@ onBeforeUnmount(() => {
             :selected-style-groups="folderFilters.selectedStyleGroups.value"
             :selected-mediums="folderFilters.selectedMediums.value"
             :has-active-filters="folderFilters.hasActiveFilters.value"
-            @toggle-style="folderFilters.toggleStyleGroup"
-            @toggle-medium="folderFilters.toggleMedium"
-            @reset="folderFilters.reset"
+            @toggle-style="handleToggleStyle"
+            @toggle-medium="handleToggleMedium"
+            @reset="handleResetFilters"
           />
         </div>
 
