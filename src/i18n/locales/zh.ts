@@ -279,7 +279,11 @@ export default {
     folderSelected: '我的資料夾',
     folderEmptySuffix: '(空)',
     openImageDetailAria: '查看圖片詳情',
-    folderDeleteToggleAria: '切換資料夾刪除圖示顯示'
+    folderDeleteToggleAria: '切換資料夾刪除圖示顯示',
+    imageDeleteToggleAria: '切換圖片多選模式',
+    selectImagesDone: '我選好了',
+    selectImageAria: '選取圖片',
+    deselectImageAria: '取消選取圖片'
   },
   userTour: {
     progress: '{current} / {total}',

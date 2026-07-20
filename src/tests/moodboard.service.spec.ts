@@ -5,13 +5,13 @@ const {
   addMoodboardItem,
   createMoodboardFolder,
   deleteMoodboardFolder,
-  deleteMoodboardItem,
+  deleteMoodboardItems,
   fetchMoodboardFolders
 } = vi.hoisted(() => ({
   addMoodboardItem: vi.fn(),
   createMoodboardFolder: vi.fn(),
   deleteMoodboardFolder: vi.fn(),
-  deleteMoodboardItem: vi.fn(),
+  deleteMoodboardItems: vi.fn(),
   fetchMoodboardFolders: vi.fn()
 }));
 
@@ -19,7 +19,7 @@ vi.mock('@/api/moodboard.api', () => ({
   addMoodboardItem,
   createMoodboardFolder,
   deleteMoodboardFolder,
-  deleteMoodboardItem,
+  deleteMoodboardItems,
   fetchMoodboardFolders
 }));
 
@@ -37,7 +37,7 @@ import {
   addItem,
   createFolder,
   deleteFolder,
-  deleteItem,
+  deleteItems,
   getMoodboardViewModel,
   isImageSaved
 } from '@/services/moodboard.service';
@@ -226,12 +226,15 @@ describe('moodboard.service', () => {
     expect(deleteMoodboardFolder).toHaveBeenCalledWith('folder-1', 'user-1');
   });
 
-  it('deletes an item through the Data API', async () => {
-    deleteMoodboardItem.mockResolvedValue(undefined);
+  it('deletes multiple items through the Data API', async () => {
+    deleteMoodboardItems.mockResolvedValue(undefined);
 
-    await deleteItem({ folderId: 'folder-1', itemId: 'item-1' });
+    await deleteItems({ folderId: 'folder-1', itemIds: ['item-1', 'item-2'] });
 
-    expect(deleteMoodboardItem).toHaveBeenCalledWith({ itemId: 'item-1', folderId: 'folder-1' });
+    expect(deleteMoodboardItems).toHaveBeenCalledWith({
+      itemIds: ['item-1', 'item-2'],
+      folderId: 'folder-1'
+    });
   });
 
   it('checks saved state from the passed store snapshot', () => {

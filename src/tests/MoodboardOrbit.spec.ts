@@ -12,9 +12,9 @@ const { disposeSphere, initSphere, updateSphereImages } = vi.hoisted(() => ({
   updateSphereImages: vi.fn()
 }));
 
-const { deleteFolderMock, deleteItemMock, getMoodboardViewModelMock } = vi.hoisted(() => ({
+const { deleteFolderMock, deleteItemsMock, getMoodboardViewModelMock } = vi.hoisted(() => ({
   deleteFolderMock: vi.fn(),
-  deleteItemMock: vi.fn(),
+  deleteItemsMock: vi.fn(),
   getMoodboardViewModelMock: vi.fn()
 }));
 
@@ -28,7 +28,7 @@ vi.mock('@/components/feature/moodboard/sphere', () => ({
 
 vi.mock('@/services/moodboard.service', () => ({
   deleteFolder: deleteFolderMock,
-  deleteItem: deleteItemMock,
+  deleteItems: deleteItemsMock,
   getMoodboardViewModel: getMoodboardViewModelMock
 }));
 
@@ -71,7 +71,7 @@ describe('MoodboardOrbit', () => {
     initSphere.mockReset();
     updateSphereImages.mockReset();
     deleteFolderMock.mockReset();
-    deleteItemMock.mockReset();
+    deleteItemsMock.mockReset();
     getMoodboardViewModelMock.mockReset();
     showToastMock.mockReset();
     initSphere.mockReturnValue({
@@ -553,8 +553,8 @@ describe('MoodboardOrbit', () => {
       expect(wrapper.find('[data-testid="folder-delete-1"]').exists()).toBe(false);
 
       await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
-      expect(wrapper.get('[data-testid="folder-delete-0"]').exists()).toBe(true);
-      expect(wrapper.get('[data-testid="folder-delete-1"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="folder-delete-0"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="folder-delete-1"]').exists()).toBe(true);
 
       await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
       expect(wrapper.find('[data-testid="folder-delete-0"]').exists()).toBe(false);
@@ -699,69 +699,122 @@ describe('MoodboardOrbit', () => {
       await flushPromises();
     }
 
-    it('desktop only shows the image delete icon while hovering that photo', async () => {
+    it('資料夾詳情頁預設不顯示任何選取圖示，需先點擊玻璃球才進入多選模式', async () => {
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
       await openFolder(wrapper);
       const itemId = store.folders[0].images[0].itemId;
 
-      expect(wrapper.get(`[data-testid="image-delete-${itemId}"]`).attributes('style')).toContain(
-        'opacity: 0'
+      expect(wrapper.find(`[data-testid="image-select-${itemId}"]`).exists()).toBe(false);
+      expect(wrapper.find('[data-testid="moodboard-select-images-done"]').exists()).toBe(false);
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+
+      expect(wrapper.find(`[data-testid="image-select-${itemId}"]`).exists()).toBe(true);
+      expect(wrapper.find('[data-testid="moodboard-select-images-done"]').exists()).toBe(true);
+    });
+
+    it('點擊選取圖示可以來回切換選取狀態', async () => {
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+      const itemId = store.folders[0].images[0].itemId;
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      const toggle = wrapper.get(`[data-testid="image-select-${itemId}"]`);
+
+      expect(toggle.attributes('aria-pressed')).toBe('false');
+
+      await toggle.trigger('click');
+      expect(wrapper.get(`[data-testid="image-select-${itemId}"]`).attributes('aria-pressed')).toBe(
+        'true'
       );
 
-      await wrapper.get(`[data-testid="moodboard-image-${itemId}"]`).trigger('mouseenter');
-      expect(wrapper.get(`[data-testid="image-delete-${itemId}"]`).attributes('style')).toContain(
-        'opacity: 1'
-      );
-
-      await wrapper.get(`[data-testid="moodboard-image-${itemId}"]`).trigger('mouseleave');
-      expect(wrapper.get(`[data-testid="image-delete-${itemId}"]`).attributes('style')).toContain(
-        'opacity: 0'
+      await wrapper.get(`[data-testid="image-select-${itemId}"]`).trigger('click');
+      expect(wrapper.get(`[data-testid="image-select-${itemId}"]`).attributes('aria-pressed')).toBe(
+        'false'
       );
     });
 
-    it('clicking the image delete icon opens the confirm modal without navigating away from the folder', async () => {
+    it('多選模式中再點一次玻璃球會直接退出，不開確認彈窗，選取圖示與「我選好了」按鈕都消失', async () => {
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+      const itemId = store.folders[0].images[0].itemId;
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get(`[data-testid="image-select-${itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+
+      expect(wrapper.find(`[data-testid="image-select-${itemId}"]`).exists()).toBe(false);
+      expect(wrapper.find('[data-testid="moodboard-select-images-done"]').exists()).toBe(false);
+      expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(false);
+    });
+
+    it('沒有選取任何圖片時點擊「我選好了」，效果等同再點一次玻璃球，不開確認彈窗', async () => {
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+      const itemId = store.folders[0].images[0].itemId;
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-images-done"]').trigger('click');
+
+      expect(wrapper.find(`[data-testid="image-select-${itemId}"]`).exists()).toBe(false);
+      expect(wrapper.find('[data-testid="moodboard-select-images-done"]').exists()).toBe(false);
+      expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(false);
+    });
+
+    it('選了圖片後點擊「我選好了」才會開啟確認彈窗，且不會離開資料夾', async () => {
       const store = patchFolders();
       const { wrapper, router } = await mountMoodboard();
       await openFolder(wrapper);
       const itemId = store.folders[0].images[0].itemId;
 
-      await wrapper.get(`[data-testid="moodboard-image-${itemId}"]`).trigger('mouseenter');
-      await wrapper.get(`[data-testid="image-delete-${itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get(`[data-testid="image-select-${itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-images-done"]').trigger('click');
       await flushPromises();
 
       expect(router.currentRoute.value.path).toBe('/moodboard/studio');
       expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(true);
     });
 
-    it('successful delete removes only that image, leaving the rest of the folder untouched', async () => {
-      deleteItemMock.mockResolvedValue(undefined);
+    it('確認後批次刪除所有已選圖片，成功後完全退回多選模式開啟前的初始狀態', async () => {
+      deleteItemsMock.mockResolvedValue(undefined);
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
       await openFolder(wrapper);
       const [first, second] = store.folders[0].images;
 
-      await wrapper.get(`[data-testid="moodboard-image-${first.itemId}"]`).trigger('mouseenter');
-      await wrapper.get(`[data-testid="image-delete-${first.itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get(`[data-testid="image-select-${first.itemId}"]`).trigger('click');
+      await wrapper.get(`[data-testid="image-select-${second.itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-images-done"]').trigger('click');
       await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
       await flushPromises();
 
-      expect(deleteItemMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemId: first.itemId });
-      expect(store.folders[0].images.some((image) => image.itemId === first.itemId)).toBe(false);
-      expect(store.folders[0].images.some((image) => image.itemId === second.itemId)).toBe(true);
+      expect(deleteItemsMock).toHaveBeenCalledWith({
+        folderId: 'folder-1',
+        itemIds: [first.itemId, second.itemId]
+      });
+      expect(store.folders[0].images).toHaveLength(0);
       expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(false);
-      expect(wrapper.find(`[data-testid="moodboard-image-${first.itemId}"]`).exists()).toBe(false);
+      expect(wrapper.find('[data-testid="moodboard-select-images-done"]').exists()).toBe(false);
+      // 完全退回初始狀態：要再點一次玻璃球才能重新進入多選模式。
+      expect(wrapper.find(`[data-testid="image-select-${first.itemId}"]`).exists()).toBe(false);
     });
 
-    it('keeps the modal open and the image intact on a failed delete, showing an error toast, and allows retry', async () => {
-      deleteItemMock.mockRejectedValueOnce(new Error('boom'));
+    it('keeps the modal open and the images intact on a failed delete, showing an error toast, and allows retry', async () => {
+      deleteItemsMock.mockRejectedValueOnce(new Error('boom'));
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
       await openFolder(wrapper);
       const itemId = store.folders[0].images[0].itemId;
 
-      await wrapper.get(`[data-testid="moodboard-image-${itemId}"]`).trigger('mouseenter');
-      await wrapper.get(`[data-testid="image-delete-${itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get(`[data-testid="image-select-${itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-images-done"]').trigger('click');
       await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
       await flushPromises();
 
@@ -772,7 +825,7 @@ describe('MoodboardOrbit', () => {
         message: 'Failed to delete the image. Please try again.'
       });
 
-      deleteItemMock.mockResolvedValueOnce(undefined);
+      deleteItemsMock.mockResolvedValueOnce(undefined);
       await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
       await flushPromises();
 
@@ -780,9 +833,9 @@ describe('MoodboardOrbit', () => {
       expect(wrapper.find('[data-testid="delete-image-confirm"]').exists()).toBe(false);
     });
 
-    it('mobile always shows the image delete icon and can delete without hovering first', async () => {
+    it('mobile 也預設不顯示選取圖示，需先點擊玻璃球才能進入多選模式並刪除', async () => {
       Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
-      deleteItemMock.mockResolvedValue(undefined);
+      deleteItemsMock.mockResolvedValue(undefined);
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
       const homeIcon = wrapper.get('[data-testid="moodboard-folder-mobile-0"]');
@@ -791,16 +844,20 @@ describe('MoodboardOrbit', () => {
       await flushPromises();
       const itemId = store.folders[0].images[0].itemId;
 
-      await wrapper.get(`[data-testid="image-delete-mobile-${itemId}"]`).trigger('click');
+      expect(wrapper.find(`[data-testid="image-select-${itemId}"]`).exists()).toBe(false);
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get(`[data-testid="image-select-${itemId}"]`).trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-images-done"]').trigger('click');
       await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
       await flushPromises();
 
-      expect(deleteItemMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemId });
+      expect(deleteItemsMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemIds: [itemId] });
       expect(store.folders[0].images.some((image) => image.itemId === itemId)).toBe(false);
     });
 
-    it('removing an image from one folder never affects the same image saved in a different folder', async () => {
-      deleteItemMock.mockResolvedValue(undefined);
+    it('removing images from one folder never affects the same image saved in a different folder', async () => {
+      deleteItemsMock.mockResolvedValue(undefined);
       const sharedImage = (itemId: string) => ({
         itemId,
         id: 'shared-image',
@@ -841,13 +898,14 @@ describe('MoodboardOrbit', () => {
       const { wrapper } = await mountMoodboard();
       await openFolder(wrapper);
 
-      await wrapper.get('[data-testid="moodboard-image-item-a"]').trigger('mouseenter');
-      await wrapper.get('[data-testid="image-delete-item-a"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="image-select-item-a"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-images-done"]').trigger('click');
       await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
       await flushPromises();
 
-      expect(deleteItemMock).toHaveBeenCalledTimes(1);
-      expect(deleteItemMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemId: 'item-a' });
+      expect(deleteItemsMock).toHaveBeenCalledTimes(1);
+      expect(deleteItemsMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemIds: ['item-a'] });
       expect(store.folders.find((f) => f.id === 'folder-1')?.images).toEqual([]);
       expect(store.folders.find((f) => f.id === 'folder-3')?.images).toEqual([sharedImage('item-b')]);
     });

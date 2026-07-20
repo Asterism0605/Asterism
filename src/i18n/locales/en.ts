@@ -284,7 +284,11 @@ export default {
     folderSelected: 'My Folders',
     folderEmptySuffix: '(Empty)',
     openImageDetailAria: 'View image detail',
-    folderDeleteToggleAria: 'Toggle folder delete icons'
+    folderDeleteToggleAria: 'Toggle folder delete icons',
+    imageDeleteToggleAria: 'Toggle image select mode',
+    selectImagesDone: "I'm done selecting",
+    selectImageAria: 'Select image',
+    deselectImageAria: 'Deselect image'
   },
   userTour: {
     progress: '{current} / {total}',

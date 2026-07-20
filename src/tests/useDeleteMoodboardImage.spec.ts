@@ -2,21 +2,21 @@ import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useDeleteMoodboardImage } from '@/composables/useDeleteMoodboardImage';
-import { deleteItem } from '@/services/moodboard.service';
+import { deleteItems } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { useAuthStore } from '@/stores/auth.store';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import type { MoodboardFolder, SavedImage } from '@/types/moodboard';
 
 vi.mock('@/services/moodboard.service', () => ({
-  deleteItem: vi.fn()
+  deleteItems: vi.fn()
 }));
 
 vi.mock('@/composables/useToast', () => ({
   showToast: vi.fn()
 }));
 
-const deleteItemMock = vi.mocked(deleteItem);
+const deleteItemsMock = vi.mocked(deleteItems);
 const showToastMock = vi.mocked(showToast);
 
 const savedImage: SavedImage = {
@@ -28,13 +28,22 @@ const savedImage: SavedImage = {
   style: [],
   createdAt: '2026-07-05T00:00:00.000Z'
 };
+const secondSavedImage: SavedImage = {
+  itemId: 'item-2',
+  id: 'img-2',
+  src: '/img-2.webp',
+  title: 'Image 2',
+  styleGroup: 'minimal',
+  style: [],
+  createdAt: '2026-07-05T00:00:00.000Z'
+};
 
 function buildFolder(overrides: Partial<MoodboardFolder> = {}): MoodboardFolder {
   return {
     id: 'folder-1',
     name: 'Studio',
     createdAt: '2026-07-05T00:00:00.000Z',
-    images: [savedImage],
+    images: [savedImage, secondSavedImage],
     ...overrides
   };
 }
@@ -62,17 +71,17 @@ describe('useDeleteMoodboardImage', () => {
       isAdmin: false,
       createdAt: '2026-07-05T00:00:00.000Z'
     };
-    deleteItemMock.mockReset();
+    deleteItemsMock.mockReset();
     showToastMock.mockReset();
   });
 
-  it('找不到目標圖片時不開 modal', () => {
+  it('找不到任何目標圖片時不開 modal', () => {
     const folder = buildFolder();
     const { requestDeleteImage, isDeleteImageModalOpen } = withSetup(() =>
       useDeleteMoodboardImage({ getFolder: () => folder, onDeleted: vi.fn() })
     );
 
-    requestDeleteImage('missing-item');
+    requestDeleteImage(['missing-item']);
 
     expect(isDeleteImageModalOpen.value).toBe(false);
   });
@@ -83,38 +92,52 @@ describe('useDeleteMoodboardImage', () => {
       useDeleteMoodboardImage({ getFolder: () => folder, onDeleted: vi.fn() })
     );
 
-    requestDeleteImage('item-1');
+    requestDeleteImage(['item-1']);
 
     expect(isDeleteImageModalOpen.value).toBe(true);
   });
 
-  it('成功刪除會呼叫 API、更新 store、觸發 onDeleted，並關閉 modal', async () => {
+  it('只保留folder中實際存在的itemId，忽略不存在的id', () => {
+    const folder = buildFolder();
+    const { requestDeleteImage, isDeleteImageModalOpen } = withSetup(() =>
+      useDeleteMoodboardImage({ getFolder: () => folder, onDeleted: vi.fn() })
+    );
+
+    requestDeleteImage(['item-1', 'missing-item']);
+
+    expect(isDeleteImageModalOpen.value).toBe(true);
+  });
+
+  it('成功批次刪除會呼叫 API、更新 store、觸發 onDeleted，並關閉 modal', async () => {
     const moodboardStore = useMoodboardStore();
     const folder = buildFolder();
     moodboardStore.addFolder(folder);
-    deleteItemMock.mockResolvedValue(undefined);
+    deleteItemsMock.mockResolvedValue(undefined);
     const onDeleted = vi.fn();
     const { requestDeleteImage, confirmDeleteImage, isDeleteImageModalOpen, isDeletingImage } =
       withSetup(() => useDeleteMoodboardImage({ getFolder: () => folder, onDeleted }));
 
-    requestDeleteImage('item-1');
+    requestDeleteImage(['item-1', 'item-2']);
     await confirmDeleteImage();
 
-    expect(deleteItemMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemId: 'item-1' });
+    expect(deleteItemsMock).toHaveBeenCalledWith({
+      folderId: 'folder-1',
+      itemIds: ['item-1', 'item-2']
+    });
     expect(moodboardStore.folders[0].images).toHaveLength(0);
-    expect(onDeleted).toHaveBeenCalledWith('item-1');
+    expect(onDeleted).toHaveBeenCalledWith(['item-1', 'item-2']);
     expect(isDeleteImageModalOpen.value).toBe(false);
     expect(isDeletingImage.value).toBe(false);
   });
 
   it('刪除失敗時顯示 error toast，並保留 modal 開啟以便重試', async () => {
     const folder = buildFolder();
-    deleteItemMock.mockRejectedValue(new Error('delete failed'));
+    deleteItemsMock.mockRejectedValue(new Error('delete failed'));
     const onDeleted = vi.fn();
     const { requestDeleteImage, confirmDeleteImage, isDeleteImageModalOpen, isDeletingImage } =
       withSetup(() => useDeleteMoodboardImage({ getFolder: () => folder, onDeleted }));
 
-    requestDeleteImage('item-1');
+    requestDeleteImage(['item-1']);
     await confirmDeleteImage();
 
     expect(showToastMock).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
@@ -126,7 +149,7 @@ describe('useDeleteMoodboardImage', () => {
   it('isDeletingImage 為 true 時防止重複呼叫', async () => {
     const folder = buildFolder();
     let resolveDelete: () => void = () => {};
-    deleteItemMock.mockReturnValue(
+    deleteItemsMock.mockReturnValue(
       new Promise<void>((resolve) => {
         resolveDelete = resolve;
       })
@@ -135,11 +158,11 @@ describe('useDeleteMoodboardImage', () => {
       useDeleteMoodboardImage({ getFolder: () => folder, onDeleted: vi.fn() })
     );
 
-    requestDeleteImage('item-1');
+    requestDeleteImage(['item-1']);
     const firstCall = confirmDeleteImage();
     await confirmDeleteImage();
 
-    expect(deleteItemMock).toHaveBeenCalledTimes(1);
+    expect(deleteItemsMock).toHaveBeenCalledTimes(1);
 
     resolveDelete();
     await firstCall;

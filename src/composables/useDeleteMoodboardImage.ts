@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { deleteItem } from '@/services/moodboard.service';
+import { deleteItems } from '@/services/moodboard.service';
 import { showToast } from '@/composables/useToast';
 import { useAuthStore } from '@/stores/auth.store';
 import { useMoodboardStore } from '@/stores/moodboard.store';
@@ -8,7 +8,7 @@ import type { MoodboardFolder } from '@/types/moodboard';
 
 interface UseDeleteMoodboardImageOptions {
   getFolder: () => MoodboardFolder | undefined;
-  onDeleted: (itemId: string) => void;
+  onDeleted: (itemIds: string[]) => void;
 }
 
 export function useDeleteMoodboardImage(options: UseDeleteMoodboardImageOptions) {
@@ -16,29 +16,34 @@ export function useDeleteMoodboardImage(options: UseDeleteMoodboardImageOptions)
   const authStore = useAuthStore();
   const moodboardStore = useMoodboardStore();
 
-  const deleteImageTarget = ref<{ folderId: string; itemId: string } | null>(null);
+  const deleteImageTarget = ref<{ folderId: string; itemIds: string[] } | null>(null);
   const isDeleteImageModalOpen = ref(false);
   const isDeletingImage = ref(false);
 
-  function requestDeleteImage(itemId: string) {
+  function requestDeleteImage(itemIds: string[]) {
     const folder = options.getFolder();
-    if (!folder || !folder.images.some((image) => image.itemId === itemId)) return;
+    if (!folder) return;
 
-    deleteImageTarget.value = { folderId: folder.id, itemId };
+    const validIds = itemIds.filter((itemId) =>
+      folder.images.some((image) => image.itemId === itemId)
+    );
+    if (validIds.length === 0) return;
+
+    deleteImageTarget.value = { folderId: folder.id, itemIds: validIds };
     isDeleteImageModalOpen.value = true;
   }
 
   async function confirmDeleteImage() {
     if (!deleteImageTarget.value || isDeletingImage.value || !authStore.user) return;
 
-    const { folderId, itemId } = deleteImageTarget.value;
+    const { folderId, itemIds } = deleteImageTarget.value;
     isDeletingImage.value = true;
     try {
-      await deleteItem({ folderId, itemId });
-      moodboardStore.removeImage(folderId, itemId);
+      await deleteItems({ folderId, itemIds });
+      itemIds.forEach((itemId) => moodboardStore.removeImage(folderId, itemId));
       isDeleteImageModalOpen.value = false;
       deleteImageTarget.value = null;
-      options.onDeleted(itemId);
+      options.onDeleted(itemIds);
     } catch {
       showToast({ type: 'error', message: t('toast.deleteImageFailed') });
     } finally {
