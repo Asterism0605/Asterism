@@ -32,6 +32,7 @@ withDefaults(defineProps<Props>(), {
   photographerName: undefined,
   photographerRole: undefined,
   photographerDate: undefined,
+  photographerAvatarUrl: undefined,
   similarImages: () => [],
   saved: false,
   disabled: false,

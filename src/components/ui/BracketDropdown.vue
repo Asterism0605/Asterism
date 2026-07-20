@@ -6,7 +6,7 @@ withDefaults(
     maxVisibleItems?: number;
     surface?: 'void' | 'panel';
   }>(),
-  { connector: false, connectorAlign: 'center', surface: 'void' }
+  { connector: false, connectorAlign: 'center', maxVisibleItems: undefined, surface: 'void' }
 );
 
 const dividerStyles =
