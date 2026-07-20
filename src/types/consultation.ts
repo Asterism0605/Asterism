@@ -113,6 +113,7 @@ export interface MyConsultationBooking {
   designField?: string;
   designFocus?: string;
   notes?: string;
+  location?: string;
   consultant?: MyConsultationConsultant;
   createdAt: string;
 }

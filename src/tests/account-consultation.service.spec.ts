@@ -53,6 +53,7 @@ describe('account-consultation.service', () => {
             designField: 'Graphic Design',
             designFocus: 'Visual Concept',
             notes: 'Notes',
+            location: 'https://meet.example.com/xyz',
             createdAt: '2026-07-01T00:00:00.000Z'
           }
         ]
@@ -60,7 +61,8 @@ describe('account-consultation.service', () => {
       error: null
     });
 
-    await expect(getUpcomingAccountConsultations('access-token')).resolves.toEqual([
+    const result = await getUpcomingAccountConsultations('access-token');
+    expect(result).toEqual([
       {
         id: 'am-booking',
         status: 'confirmed',
@@ -69,7 +71,8 @@ describe('account-consultation.service', () => {
         method: 'Online',
         designField: 'Graphic Design',
         designFocus: 'Visual Concept',
-        notes: 'Notes'
+        notes: 'Notes',
+        location: 'https://meet.example.com/xyz'
       },
       {
         id: 'pm-booking',
@@ -78,7 +81,9 @@ describe('account-consultation.service', () => {
         timeSlot: 'pm',
         method: 'In-Person',
         designField: 'interior',
-        designFocus: undefined
+        designFocus: undefined,
+        notes: undefined,
+        location: undefined
       },
       {
         id: 'later-booking',
@@ -87,9 +92,14 @@ describe('account-consultation.service', () => {
         timeSlot: 'am',
         method: 'Online',
         designField: undefined,
-        designFocus: undefined
+        designFocus: undefined,
+        notes: undefined,
+        location: undefined
       }
     ]);
+    expect(result.find((r) => r.id === 'am-booking')?.location).toBe(
+      'https://meet.example.com/xyz'
+    );
     expect(getMyConsultationBookings).toHaveBeenNthCalledWith(1, 'access-token', undefined);
     expect(getMyConsultationBookings).toHaveBeenNthCalledWith(2, 'access-token', 'cursor-2');
   });
