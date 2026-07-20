@@ -2,14 +2,11 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import {
   Bookmark,
-  BookmarkPlus,
-  ChevronDown,
-  ChevronRight,
-  FolderPlus,
   LoaderCircle,
   User
 } from '@lucide/vue';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
+import BracketDropdown from '@/components/ui/BracketDropdown.vue';
 import Button from '@/components/ui/Button.vue';
 
 interface FolderItem {
@@ -185,77 +182,74 @@ onBeforeUnmount(() => {
       </Button>
     </template>
 
-    <div
+    <BracketDropdown
       v-if="isOpen && props.variant === 'bookmark'"
-      class="absolute z-10 w-40 overflow-visible rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
+      class="absolute z-10"
+      :connector="props.spread"
       :class="
         props.spread
-          ? props.folders.length === 0
-            ? 'left-0 top-full mt-2 md:left-full md:top-0 md:mt-0 md:ml-2'
-            : 'left-0 top-full mt-2 md:left-full md:top-[-50px] md:mt-0 md:ml-2'
+          ? 'left-0 top-full mt-[10px] w-full! md:left-full md:top-1/2 md:mt-0 md:ml-10 md:w-40! md:-translate-y-1/2'
           : 'left-0 top-full mt-2'
       "
     >
       <button
         type="button"
-        class="flex w-full cursor-pointer items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
+        data-bracket-dropdown-item
         @click="
           emit('create-folder');
           isOpen = false;
         "
       >
-        <FolderPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span class="flex-1 min-w-0 text-center md:text-left">{{
-          $t('moodboard.createFolderTitle')
-        }}</span>
+        {{ $t('image.createNewFolder') }}
       </button>
 
       <template v-if="props.folders.length > 0">
-        <div class="mx-4 h-px bg-white/10" />
+        <span data-bracket-dropdown-divider aria-hidden="true" />
         <div class="relative">
           <button
             type="button"
-            class="flex w-full cursor-pointer items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
+            data-bracket-dropdown-item
             @click.stop="showFolderList = !showFolderList"
           >
-            <BookmarkPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span class="flex-1 min-w-0 text-center md:text-left">{{ $t('image.saveToFolder') }}</span>
-            <template v-if="props.spread">
-              <ChevronDown class="ml-auto h-4 w-4 shrink-0 md:hidden" aria-hidden="true" />
-              <ChevronRight class="ml-auto hidden h-4 w-4 shrink-0 md:block" aria-hidden="true" />
-            </template>
-            <ChevronDown v-else class="ml-auto h-4 w-4 shrink-0" aria-hidden="true" />
+            {{ $t('image.saveToFolderMenu') }}
           </button>
 
-          <div
+          <BracketDropdown
             v-if="showFolderList"
-            class="absolute z-20 w-40 overflow-hidden rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
+            class="absolute z-20"
+            :connector="props.spread"
+            connector-align="first-item"
+            :max-visible-items="5"
             :class="
               props.spread
-                ? 'left-0 top-full mt-2 md:left-full md:top-0 md:mt-0 md:ml-2'
+                ? 'left-0 top-full mt-[10px] w-full! md:left-full md:top-0 md:mt-0 md:ml-10 md:w-max! md:min-w-40'
                 : 'left-0 top-full mt-2'
             "
           >
-            <button
-              v-for="folder in props.folders"
-              :key="folder.id"
-              type="button"
-              class="flex w-full cursor-pointer items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50 md:justify-start md:px-3 md:py-2.5"
-              :disabled="isBusy"
-              @click.stop="handleSaveToFolderClick(folder)"
-            >
-              <Bookmark
-                class="h-4 w-4 shrink-0"
-                :fill="folder.saved ? 'currentColor' : 'none'"
-                aria-hidden="true"
-              />
-              <span class="flex-1 min-w-0 truncate text-center md:text-left">
-                {{ props.justSavedFolderId === folder.id ? '✓ Saved' : folder.name }}
-              </span>
-            </button>
-          </div>
+            <template v-for="(folder, index) in props.folders" :key="folder.id">
+              <span v-if="index > 0" data-bracket-dropdown-divider aria-hidden="true" />
+              <button
+                type="button"
+                data-bracket-dropdown-item
+                data-leading-icon
+                :disabled="isBusy"
+                :aria-pressed="folder.saved"
+                @click.stop="handleSaveToFolderClick(folder)"
+              >
+                <Bookmark
+                  class="mr-2 h-4 w-4 shrink-0"
+                  :stroke-width="1.5"
+                  :fill="folder.saved ? 'currentColor' : 'none'"
+                  aria-hidden="true"
+                />
+                <span class="flex-none whitespace-nowrap text-left">
+                  {{ props.justSavedFolderId === folder.id ? '✓ Saved' : folder.name }}
+                </span>
+              </button>
+            </template>
+          </BracketDropdown>
         </div>
       </template>
-    </div>
+    </BracketDropdown>
   </div>
 </template>

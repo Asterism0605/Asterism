@@ -201,7 +201,7 @@ describe('ImageSpread', () => {
     const { wrapper } = await mountImageSpread()
     await flushPromises()
 
-    expect(wrapper.text()).toContain('SAVE TO NEW FOLDER')
+    expect(wrapper.text()).toContain('Create New Folder')
     expect(localStorage.getItem('asterism:pending-moodboard-action')).toBeNull()
   })
 
@@ -323,25 +323,10 @@ describe('ImageSpread', () => {
     expect(push).toHaveBeenCalledWith({ name: 'home' })
   })
 
-  it('點擊桌面版空白背景時從根層 spread 返回首頁', async () => {
-    const { wrapper, push } = await mountImageSpread()
+  it('不渲染可點擊空白背景返回上一層的按鈕', async () => {
+    const { wrapper } = await mountImageSpread()
 
-    await wrapper.find('[data-testid="spread-background-return"]').trigger('click')
-
-    expect(push).toHaveBeenCalledWith({ name: 'home' })
-  })
-
-  it('點擊桌面版空白背景時從 medium spread 返回根層', async () => {
-    const { wrapper, router } = await mountImageSpread(
-      'rpl-interior-001?rootId=rpl-main-001'
-    )
-
-    await wrapper.find('[data-testid="spread-background-return"]').trigger('click')
-    await flushPromises()
-
-    expect(router.currentRoute.value.name).toBe('image-spread')
-    expect(router.currentRoute.value.params.imageId).toBe('rpl-main-001')
-    expect(router.currentRoute.value.query.rootId).toBeUndefined()
+    expect(wrapper.find('[data-testid="spread-background-return"]').exists()).toBe(false)
   })
 
   it('從 medium spread 層返回根層，再返回首頁', async () => {
@@ -375,7 +360,7 @@ describe('ImageSpread', () => {
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('Add to Moodboard'))
     await addBtn!.trigger('click')
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'))
     await saveBtn!.trigger('click')
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test')
     await folderBtn!.trigger('click')
@@ -396,7 +381,7 @@ describe('ImageSpread', () => {
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('Add to Moodboard'))
     await addBtn!.trigger('click')
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'))
     await saveBtn!.trigger('click')
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test')
     await folderBtn!.trigger('click')
@@ -410,12 +395,12 @@ describe('ImageSpread', () => {
     expect(addItem).toHaveBeenCalledOnce()
   })
 
-  it('點擊 SAVE TO FOLDER 時以中心圖片 id 呼叫 addItem', async () => {
+  it('點擊 Save to Folder 時以中心圖片 id 呼叫 addItem', async () => {
     const { wrapper } = await mountImageSpread()
 
     const addBtn = wrapper.findAll('button').find((b) => b.text().includes('Add to Moodboard'))
     await addBtn!.trigger('click')
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'))
     await saveBtn!.trigger('click')
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test')
     await folderBtn!.trigger('click')
@@ -425,7 +410,7 @@ describe('ImageSpread', () => {
     expect(addItem).toHaveBeenCalledWith(folderId, 'y2k-main-001')
   })
 
-  it('送出 SAVE TO NEW FOLDER 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
+  it('送出 Create New Folder 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
     vi.mocked(createFolder).mockResolvedValueOnce({
       ...testFolder,
       id: 'new-folder-id',
@@ -452,7 +437,7 @@ describe('ImageSpread', () => {
         wrapper.findAll('button').find((b) => b.text().includes(text))!
 
       await findBtn('Add to Moodboard').trigger('click')
-      await findBtn('SAVE TO NEW FOLDER').trigger('click')
+      await findBtn('Create New Folder').trigger('click')
       await flushPromises()
 
       const input = document.querySelector('input') as HTMLInputElement
@@ -504,7 +489,7 @@ describe('ImageSpread', () => {
         wrapper.findAll('button').find((b) => b.text().includes(text))!
 
       await findBtn('Add to Moodboard').trigger('click')
-      await findBtn('SAVE TO NEW FOLDER').trigger('click')
+      await findBtn('Create New Folder').trigger('click')
       await flushPromises()
 
       const input = document.querySelector('input') as HTMLInputElement
@@ -526,7 +511,7 @@ describe('ImageSpread', () => {
     }
   })
 
-  it('重開 SAVE TO NEW FOLDER modal 後 input 不再 disabled', async () => {
+  it('重開 Create New Folder modal 後 input 不再 disabled', async () => {
     vi.useFakeTimers()
     const router = createRouter({
       history: createMemoryHistory(),
@@ -549,7 +534,7 @@ describe('ImageSpread', () => {
         wrapper.findAll('button').find((b) => b.text().includes(text))!
 
       await findBtn('Add to Moodboard').trigger('click')
-      await findBtn('SAVE TO NEW FOLDER').trigger('click')
+      await findBtn('Create New Folder').trigger('click')
       await flushPromises()
 
       const input = document.querySelector('input') as HTMLInputElement
@@ -566,7 +551,7 @@ describe('ImageSpread', () => {
       await flushPromises()
 
       await findBtn('Add to Moodboard').trigger('click')
-      await findBtn('SAVE TO NEW FOLDER').trigger('click')
+      await findBtn('Create New Folder').trigger('click')
       await flushPromises()
 
       expect((document.querySelector('input') as HTMLInputElement).disabled).toBe(false)

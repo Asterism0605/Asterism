@@ -281,22 +281,12 @@ watch(
   <ImageSpreadEntrance
     as="main"
     kind="page"
-    class="relative min-h-screen overflow-x-hidden overflow-y-auto bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:92px]"
+    class="relative min-h-screen overflow-x-hidden overflow-y-auto bg-void pt-[var(--app-header-height)] text-text-primary [scrollbar-gutter:stable] [--app-header-height:92px]"
   >
     <ImageSpreadEntrance
       kind="wash"
       class="pointer-events-none absolute inset-0 z-0 image-spread__wash"
       aria-hidden="true"
-    />
-
-    <!-- 桌面版整個空白背景返回上一層；圖片卡片與中央操作區位於更高層，不會觸發此按鈕。 -->
-    <button
-      v-if="centerImage"
-      type="button"
-      data-testid="spread-background-return"
-      class="absolute inset-0 z-[1] hidden cursor-pointer bg-transparent transition-colors duration-200 hover:bg-white/[0.03] lg:block"
-      :aria-label="$t('image.return')"
-      @click="returnToPreviousLayer"
     />
 
     <section

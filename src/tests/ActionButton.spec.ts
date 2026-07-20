@@ -15,7 +15,7 @@ describe('ActionButton', () => {
 
     await flushPromises();
 
-    expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
+    expect(wrapper.text()).toContain('Create New Folder');
   });
 
   it('未登入點擊收藏時 emit auth-required 且不開啟選單', async () => {
@@ -29,23 +29,23 @@ describe('ActionButton', () => {
     await addButton!.trigger('click');
 
     expect(wrapper.emitted('auth-required')).toHaveLength(1);
-    expect(wrapper.text()).not.toContain('SAVE TO NEW FOLDER');
+    expect(wrapper.text()).not.toContain('Create New Folder');
   });
 
-  it('folders 為空陣列時不渲染 SAVE TO FOLDER 區塊', async () => {
+  it('folders 為空陣列時不渲染 Save to Folder 區塊', async () => {
     const wrapper = mount(ActionButton, { props: { folders: [], canSave: true } });
 
     await wrapper.find('button').trigger('click');
 
-    expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
-    expect(wrapper.text()).not.toContain('SAVE TO FOLDER');
+    expect(wrapper.text()).toContain('Create New Folder');
+    expect(wrapper.text()).not.toContain('Save to Folder');
   });
 
-  it('點擊 SAVE TO FOLDER 展開第二層並列出所有資料夾名稱', async () => {
+  it('點擊 Save to Folder 展開第二層並列出所有資料夾名稱', async () => {
     const wrapper = mount(ActionButton, { props: { folders, canSave: true } });
 
     await wrapper.find('button').trigger('click');
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'));
     await saveBtn!.trigger('click');
 
     const folderNames = wrapper.findAll('button').map((b) => b.text());
@@ -53,7 +53,7 @@ describe('ActionButton', () => {
     expect(folderNames).toContain('Another Folder');
   });
 
-  it('資料夾清單中已儲存該圖片的資料夾顯示實心書籤，其餘為空心', async () => {
+  it('資料夾清單以書籤 icon 與 aria-pressed 標示圖片是否已儲存', async () => {
     const wrapper = mount(ActionButton, {
       props: {
         canSave: true,
@@ -65,12 +65,14 @@ describe('ActionButton', () => {
     });
 
     await wrapper.find('button').trigger('click');
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'));
     await saveBtn!.trigger('click');
 
     const savedFolderBtn = wrapper.findAll('button').find((b) => b.text() === 'My Folder');
     const unsavedFolderBtn = wrapper.findAll('button').find((b) => b.text() === 'Another Folder');
 
+    expect(savedFolderBtn!.attributes('aria-pressed')).toBe('true');
+    expect(unsavedFolderBtn!.attributes('aria-pressed')).toBe('false');
     expect(savedFolderBtn!.find('svg').attributes('fill')).toBe('currentColor');
     expect(unsavedFolderBtn!.find('svg').attributes('fill')).toBe('none');
   });
@@ -79,7 +81,7 @@ describe('ActionButton', () => {
     const wrapper = mount(ActionButton, { props: { folders, canSave: true } });
 
     await wrapper.find('button').trigger('click');
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'));
     await saveBtn!.trigger('click');
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'Another Folder');
     await folderBtn!.trigger('click');
@@ -91,7 +93,7 @@ describe('ActionButton', () => {
     const wrapper = mount(ActionButton, { props: { folders, canSave: true } });
 
     await wrapper.find('button').trigger('click');
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'));
     await saveBtn!.trigger('click');
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'My Folder');
     await folderBtn!.trigger('click');
@@ -106,7 +108,7 @@ describe('ActionButton', () => {
     });
 
     await wrapper.find('button').trigger('click');
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'));
     await saveBtn!.trigger('click');
 
     expect(wrapper.text()).toContain('✓ Saved');
@@ -118,7 +120,7 @@ describe('ActionButton', () => {
     });
 
     await wrapper.find('button').trigger('click');
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'));
     await saveBtn!.trigger('click');
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'My Folder');
     await folderBtn!.trigger('click');
@@ -132,7 +134,7 @@ describe('ActionButton', () => {
     });
 
     await wrapper.find('button').trigger('click');
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'));
     await saveBtn!.trigger('click');
     const anotherFolderBtn = wrapper.findAll('button').find((b) => b.text() === 'Another Folder');
 
@@ -149,13 +151,13 @@ describe('ActionButton', () => {
     });
 
     await wrapper.find('button').trigger('click');
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'));
     await saveBtn!.trigger('click');
     expect(wrapper.text()).toContain('✓ Saved');
 
     await wrapper.setProps({ justSavedFolderId: null });
 
-    expect(wrapper.findAll('button').some((b) => b.text().includes('SAVE TO NEW FOLDER'))).toBe(false);
+    expect(wrapper.findAll('button').some((b) => b.text().includes('Create New Folder'))).toBe(false);
   });
 
   it('重新打開第一層 dropdown 時第二層資料夾清單重置為收合', async () => {
@@ -163,7 +165,7 @@ describe('ActionButton', () => {
     const toggleBtn = wrapper.find('button');
 
     await toggleBtn.trigger('click');
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'));
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'));
     await saveBtn!.trigger('click');
     expect(wrapper.findAll('button').some((b) => b.text() === 'My Folder')).toBe(true);
 
@@ -181,27 +183,27 @@ describe('ActionButton', () => {
 
     try {
       await wrapper.find('button').trigger('click');
-      expect(wrapper.text()).toContain('SAVE TO NEW FOLDER');
+      expect(wrapper.text()).toContain('Create New Folder');
 
       document.body.click();
       await flushPromises();
 
-      expect(wrapper.text()).not.toContain('SAVE TO NEW FOLDER');
+      expect(wrapper.text()).not.toContain('Create New Folder');
     } finally {
       wrapper.unmount();
       document.body.innerHTML = '';
     }
   });
 
-  it('點擊 SAVE TO NEW FOLDER 時 emit create-folder 並關閉 dropdown', async () => {
+  it('點擊 Create New Folder 時 emit create-folder 並關閉 dropdown', async () => {
     const wrapper = mount(ActionButton, { props: { folders, canSave: true } });
 
     await wrapper.find('button').trigger('click');
-    const createBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO NEW FOLDER'));
+    const createBtn = wrapper.findAll('button').find((b) => b.text().includes('Create New Folder'));
     await createBtn!.trigger('click');
 
     expect(wrapper.emitted('create-folder')).toHaveLength(1);
-    expect(wrapper.text()).not.toContain('SAVE TO NEW FOLDER');
+    expect(wrapper.text()).not.toContain('Create New Folder');
   });
 
   it('consult variant 渲染 CONSULT STYLIST 按鈕並 emit consult', async () => {

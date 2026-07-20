@@ -33,6 +33,10 @@
 }
 
 @layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
   html,
   body {
     background: linear-gradient(135deg, #060608 0%, #0e0e12 50%, #17171d 100%);
