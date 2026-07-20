@@ -8,7 +8,9 @@ export function useOrbitDrag(
   scaleRef: Ref<number>,
   orbitPhaseRef: Ref<number>,
   enabledRef: Ref<boolean>,
-  getCenter: () => Pick<MoodboardOrbitParams, 'cx' | 'cy'>
+  getCenter: () => Pick<MoodboardOrbitParams, 'cx' | 'cy'>,
+  // 起拖命中判定（舞台座標）：只有落在資料夾附近才起拖。預設整片可拖。
+  canStartAt: (p: { x: number; y: number }) => boolean = () => true
 ) {
   const mHover = ref(-1)
   const dragging = ref(false)
@@ -53,6 +55,10 @@ export function useOrbitDrag(
     if (!el) return
     dragRect = el.getBoundingClientRect()
     const p = evtPoint(e)
+    if (!canStartAt(p)) {
+      dragRect = null
+      return
+    }
     const c = getCenter()
     dragging.value = true
     didDrag = false

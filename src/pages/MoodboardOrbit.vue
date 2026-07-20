@@ -79,6 +79,12 @@ const moodboardTourSteps: ReadonlySet<UserTourStep> = new Set([
   'moodboard-filters',
   'moodboard-tour-control'
 ]);
+const isMoodboardOrbitTourActive = computed(
+  () =>
+    coreTour.state.value.status === 'active' &&
+    coreTour.state.value.currentChapter === 'moodboard' &&
+    coreTour.state.value.step === 'moodboard-orbit'
+);
 
 const activeSphereFolderId = ref<string | null>(null);
 const previewingEmptyFolderId = ref<string | null>(null);
@@ -148,7 +154,10 @@ const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } =
   scale,
   orbitPhase,
   hasFolders,
-  () => (isMobile.value ? M_HOME_ORBIT : HO)
+  () => (isMobile.value ? M_HOME_ORBIT : HO),
+  (point) =>
+    isMoodboardOrbitTourActive.value ||
+    (isMobile.value ? nearMobileFolder(point) : nearDeskFolder(point))
 );
 /* ---- derived ---- */
 const stageStyle = computed<CSSProperties>(() => ({
@@ -247,6 +256,30 @@ const folderView = computed(() => {
     };
   });
 });
+
+function nearMobileFolder(point: { x: number; y: number }): boolean {
+  const margin = 18;
+  return mFolders.value.some(
+    (folder) =>
+      Math.abs(point.x - folder.cx) <= folder.w / 2 + margin &&
+      Math.abs(point.y - folder.cy) <= folder.h / 2 + margin
+  );
+}
+
+function nearDeskFolder(point: { x: number; y: number }): boolean {
+  const margin = 18;
+  return folderView.value.some((folder) => {
+    if (!folder.onLine) return false;
+    const width = folder.w + 20;
+    const height = folder.h + 30;
+    const centerX = folder.left + width / 2;
+    const centerY = folder.top + height / 2;
+    return (
+      Math.abs(point.x - centerX) <= width / 2 + margin &&
+      Math.abs(point.y - centerY) <= height / 2 + margin
+    );
+  });
+}
 
 const showEmpty = computed(() => moodboardStore.status === 'idle' || moodboardStore.isEmpty);
 
