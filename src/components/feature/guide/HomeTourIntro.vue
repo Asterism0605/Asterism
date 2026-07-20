@@ -135,9 +135,8 @@ onBeforeUnmount(() => {
     />
 
     <div
-      class="relative z-[1] mt-[var(--app-header-height)] flex gap-3 h-[calc(65vh-var(--app-header-height))] lg:h-[calc(100vh-var(--app-header-height))] flex-col justify-end pl-30 px-[clamp(1.5rem,5vw,4rem)] pb-[clamp(5rem,15vh,9rem)] max-md:px-6 max-md:pb-16"
+      class="relative z-[1] mt-[var(--app-header-height)] flex gap-3 h-[calc(65vh-var(--app-header-height))] lg:h-[calc(100vh-var(--app-header-height))] flex-col justify-end px-[clamp(1.5rem,5vw,4rem)] lg:pl-30 pb-[clamp(5rem,15vh,9rem)] max-md:px-6 max-md:pb-16"
     >
-
       <p
         id="home-tour-description"
         ref="descriptionElement"

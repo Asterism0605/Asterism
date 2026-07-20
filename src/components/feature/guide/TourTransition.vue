@@ -88,10 +88,20 @@ function showFinalState(): void {
   splitTexts = createDescriptionSplitTexts();
   setCompletedIcon();
   gsap.set(
-    [backdropElement.value, completionIcon.value, titleElement.value, descriptionElement.value, proceedButton.value, laterButton.value],
+    [
+      backdropElement.value,
+      completionIcon.value,
+      titleElement.value,
+      descriptionElement.value,
+      proceedButton.value,
+      laterButton.value
+    ],
     { autoAlpha: 1, y: 0, scale: 1 }
   );
-  gsap.set(splitTexts.flatMap((splitText) => splitText.chars), { autoAlpha: 1, y: 0 });
+  gsap.set(
+    splitTexts.flatMap((splitText) => splitText.chars),
+    { autoAlpha: 1, y: 0 }
+  );
 }
 
 async function playReveal(): Promise<void> {
@@ -155,16 +165,8 @@ async function playReveal(): Promise<void> {
       '>-0.08'
     )
     .to(titleElement.value, { autoAlpha: 1, y: 0, duration: 0.4 }, '>-0.03')
-    .to(
-      descriptionChars,
-      { autoAlpha: 1, y: 0, duration: 0.48, stagger: 0.012 },
-      '>-0.1'
-    )
-    .to(
-      buttons,
-      { autoAlpha: 1, y: 0, duration: 0.42, stagger: 0.14 },
-      '>-0.08'
-    );
+    .to(descriptionChars, { autoAlpha: 1, y: 0, duration: 0.48, stagger: 0.012 }, '>-0.1')
+    .to(buttons, { autoAlpha: 1, y: 0, duration: 0.42, stagger: 0.14 }, '>-0.08');
 }
 
 async function focusFirstButton(): Promise<void> {
@@ -212,7 +214,13 @@ onMounted(() => {
 });
 
 watch(
-  () => [props.title, props.description, props.nextDescription, props.proceedLabel, props.laterLabel],
+  () => [
+    props.title,
+    props.description,
+    props.nextDescription,
+    props.proceedLabel,
+    props.laterLabel
+  ],
   async () => {
     if (!revealStarted) return;
 
@@ -256,7 +264,7 @@ onBeforeUnmount(() => {
     />
 
     <div
-      class="relative z-[1] mt-[60px] flex h-[calc(80vh-60px)] flex-col justify-end gap-3 pl-30 px-[clamp(1.5rem,5vw,4rem)] pb-[clamp(5rem,15vh,9rem)] max-md:px-6 max-md:pb-16 lg:h-[calc(100vh-60px)]"
+      class="relative z-[1] mt-[60px] flex h-[calc(80vh-60px)] flex-col justify-end gap-3 px-[clamp(1.5rem,5vw,4rem)] lg:pl-30 pb-[clamp(5rem,15vh,9rem)] max-md:px-6 max-md:pb-16 lg:h-[calc(100vh-60px)]"
     >
       <div
         ref="completionIcon"
