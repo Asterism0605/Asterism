@@ -276,7 +276,7 @@ describe('MoodboardOrbit', () => {
 
   it('does not open the center image during the orbit drag step', async () => {
     prepareMoodboardTour('moodboard-orbit');
-    const { wrapper, router } = await mountMoodboard();
+    const { router } = await mountMoodboard();
     await flushPromises();
 
     const sphereClick = initSphere.mock.calls.at(-1)?.[4] as (() => void) | undefined;
