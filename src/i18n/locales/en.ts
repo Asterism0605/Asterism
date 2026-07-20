@@ -146,6 +146,7 @@ export default {
     locationInPersonPlaceholder: 'Enter the in-person address',
     saveLocation: 'Save location',
     locationInvalidUrl: 'Enter a valid http/https link',
+    locationSaveFailed: 'Failed to save. Please try again.',
     timeSlot: 'Time Slot',
     timeSlotPlaceholder: 'AM / PM',
     chooseTimeSlot: 'Choose time slot',

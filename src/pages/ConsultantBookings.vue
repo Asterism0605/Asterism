@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ConsultationsEmptyState from '@/components/feature/consultations/ConsultationsEmptyState.vue';
 import DateTimeline from '@/components/feature/consultations/DateTimeline.vue';
 import DetailPanel from '@/components/feature/consultations/DetailPanel.vue';
@@ -11,11 +12,13 @@ import { useAuthStore } from '@/stores/auth.store';
 import type { ConsultantBookingItem } from '@/types/account-consultation';
 
 const authStore = useAuthStore();
+const { t } = useI18n();
 const bookings = ref<ConsultantBookingItem[]>([]);
 const isLoading = ref(true);
 const hasLoadError = ref(false);
 const selectedId = ref('');
 const showAllBookings = ref(false);
+const locationSaveError = ref('');
 const detailsPanel = ref<InstanceType<typeof DetailPanel> | null>(null);
 const selectedBooking = computed<ConsultantBookingItem>(
   () => bookings.value.find((booking) => booking.id === selectedId.value) ?? bookings.value[0]!
@@ -45,13 +48,19 @@ async function loadBookings(): Promise<void> {
 async function handleUpdateLocation(location: string): Promise<void> {
   const booking = selectedBooking.value;
   if (!booking) return;
-  await setConsultationLocation(booking.id, location);
-  booking.location = location === '' ? undefined : location;
+  try {
+    await setConsultationLocation(booking.id, location);
+    locationSaveError.value = '';
+    booking.location = location === '' ? undefined : location;
+  } catch {
+    locationSaveError.value = t('consult.locationSaveFailed');
+  }
 }
 
 async function selectBooking(bookingId: string): Promise<void> {
   selectedId.value = bookingId;
   showAllBookings.value = false;
+  locationSaveError.value = '';
   await nextTick();
   detailsPanel.value?.playDateAnimation();
 }
@@ -93,6 +102,7 @@ onMounted(() => {
         :reservation="selectedBooking"
         :reservations="bookings"
         :show-all="showAllBookings"
+        :save-error="locationSaveError"
         variant="consultant"
         @toggle-view="showAllBookings = !showAllBookings"
         @update-location="handleUpdateLocation"

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createI18n } from 'vue-i18n';
 import DetailPanel from '@/components/feature/consultations/DetailPanel.vue';
 import zh from '@/i18n/locales/zh';
+import type { ConsultantBookingItem } from '@/types/account-consultation';
 
 const i18n = createI18n({ legacy: false, locale: 'zh', messages: { zh } });
 
@@ -82,5 +83,25 @@ describe('DetailPanel 顧問端編輯地點', () => {
     await wrapper.get('[data-testid="location-input"]').setValue('https://meet.example.com/z');
     await wrapper.get('[data-testid="location-save"]').trigger('click');
     expect(wrapper.emitted('updateLocation')?.[0]).toEqual(['https://meet.example.com/z']);
+  });
+
+  it('切換到另一筆預約時,重置輸入與錯誤狀態', async () => {
+    const wrapper = mountConsultant(
+      makeReservation({ id: 'b1', method: 'Online', status: 'confirmed' })
+    );
+    await wrapper.get('[data-testid="location-input"]').setValue('not-a-url');
+    await wrapper.get('[data-testid="location-save"]').trigger('click');
+    expect(wrapper.text()).toContain('請輸入有效的 http/https 連結');
+
+    const nextReservation = makeReservation({
+      id: 'b2',
+      method: 'Online',
+      status: 'confirmed',
+      location: undefined
+    }) as ConsultantBookingItem;
+    await wrapper.setProps({ reservation: nextReservation, reservations: [nextReservation] });
+
+    expect((wrapper.get('[data-testid="location-input"]').element as HTMLInputElement).value).toBe('');
+    expect(wrapper.text()).not.toContain('請輸入有效的 http/https 連結');
   });
 });

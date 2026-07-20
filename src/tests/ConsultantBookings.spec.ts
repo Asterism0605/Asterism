@@ -6,8 +6,11 @@ import { useAuthStore } from '@/stores/auth.store';
 import type { AuthSession } from '@/types/auth';
 import type { ConsultantBookingItem } from '@/types/account-consultation';
 
-const { getAssignedBookings } = vi.hoisted(() => ({ getAssignedBookings: vi.fn() }));
-vi.mock('@/api/consultant-bookings.api', () => ({ getAssignedBookings }));
+const { getAssignedBookings, setConsultationLocation } = vi.hoisted(() => ({
+  getAssignedBookings: vi.fn(),
+  setConsultationLocation: vi.fn()
+}));
+vi.mock('@/api/consultant-bookings.api', () => ({ getAssignedBookings, setConsultationLocation }));
 
 const consultantSession: AuthSession = {
   accessToken: 'access-token',
@@ -59,6 +62,7 @@ async function mountPage() {
 describe('ConsultantBookings', () => {
   beforeEach(() => {
     getAssignedBookings.mockResolvedValue(bookings);
+    setConsultationLocation.mockReset();
   });
 
   it('以自己的 consultantId 查詢並渲染清單與客戶聯絡資訊', async () => {
@@ -96,5 +100,28 @@ describe('ConsultantBookings', () => {
     await flushPromises();
 
     expect(wrapper.findAll('.date-node')).toHaveLength(2);
+  });
+
+  it('儲存地點成功時呼叫 setConsultationLocation 並帶入正確參數', async () => {
+    setConsultationLocation.mockResolvedValue(undefined);
+    const wrapper = await mountPage();
+
+    await wrapper.get('[data-testid="location-input"]').setValue('https://example.com');
+    await wrapper.get('[data-testid="location-save"]').trigger('click');
+    await flushPromises();
+
+    expect(setConsultationLocation).toHaveBeenCalledWith('b1', 'https://example.com');
+  });
+
+  it('儲存地點失敗時不拋出未處理的 rejection,並顯示錯誤訊息', async () => {
+    setConsultationLocation.mockRejectedValue(new Error('boom'));
+    const wrapper = await mountPage();
+
+    await wrapper.get('[data-testid="location-input"]').setValue('https://example.com');
+    await wrapper.get('[data-testid="location-save"]').trigger('click');
+    await flushPromises();
+
+    expect(setConsultationLocation).toHaveBeenCalledWith('b1', 'https://example.com');
+    expect(wrapper.text()).toMatch(/儲存失敗|Failed to save/);
   });
 });

@@ -14,8 +14,10 @@ const props = withDefaults(
     showAll: boolean;
     /** consultant:多渲染客戶聯絡資訊與狀態標籤,i18n 走 consultantBookings。 */
     variant?: 'account' | 'consultant';
+    /** 儲存地點失敗時,父層(ConsultantBookings)傳入的錯誤訊息。 */
+    saveError?: string;
   }>(),
-  { variant: 'account' }
+  { variant: 'account', saveError: '' }
 );
 
 const scope = computed(() =>
@@ -174,6 +176,9 @@ defineExpose({ playDateAnimation });
               </button>
               <p v-if="locationError" class="consultation-details__location-error">
                 {{ locationError }}
+              </p>
+              <p v-if="saveError" class="consultation-details__location-error">
+                {{ saveError }}
               </p>
             </dd>
           </div>

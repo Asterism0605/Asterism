@@ -145,6 +145,7 @@ export default {
     locationInPersonPlaceholder: '輸入實體諮詢地址',
     saveLocation: '儲存地點',
     locationInvalidUrl: '請輸入有效的 http/https 連結',
+    locationSaveFailed: '儲存失敗,請稍後再試。',
     timeSlot: '時段',
     timeSlotPlaceholder: '上午 / 下午',
     chooseTimeSlot: '選擇時段',
