@@ -7,7 +7,7 @@ import type { ConsultantBookingItem } from '@/types/account-consultation';
 
 const i18n = createI18n({ legacy: false, locale: 'zh', messages: { zh } });
 
-function makeReservation(overrides = {}) {
+function makeReservation(overrides: Partial<ConsultantBookingItem> = {}): ConsultantBookingItem {
   return {
     id: 'b1',
     status: 'confirmed',
@@ -18,7 +18,7 @@ function makeReservation(overrides = {}) {
   };
 }
 
-function mountPanel(reservation) {
+function mountPanel(reservation: ConsultantBookingItem) {
   return mount(DetailPanel, {
     props: { reservation, reservations: [reservation], showAll: false },
     global: { plugins: [i18n], stubs: { ScrambleText: true, ConsultationList: true } }
@@ -50,7 +50,7 @@ describe('DetailPanel 客人端地點', () => {
 });
 
 describe('DetailPanel 顧問端編輯地點', () => {
-  function mountConsultant(reservation) {
+  function mountConsultant(reservation: ConsultantBookingItem) {
     return mount(DetailPanel, {
       props: {
         reservation,
