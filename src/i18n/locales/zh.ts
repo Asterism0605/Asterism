@@ -283,7 +283,9 @@ export default {
     imageDeleteToggleAria: '切換圖片多選模式',
     selectImagesDone: '我選好了',
     selectImageAria: '選取圖片',
-    deselectImageAria: '取消選取圖片'
+    deselectImageAria: '取消選取圖片',
+    selectAllImages: '全選圖片',
+    deselectAllImages: '取消全選'
   },
   userTour: {
     progress: '{current} / {total}',

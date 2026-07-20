@@ -148,6 +148,18 @@ function toggleImageSelection(itemId: string) {
   selectedImageIds.value = next;
 }
 
+const isAllImagesSelected = computed(() => {
+  const images = moodboardStore.folders[selectedFolder.value]?.images ?? [];
+  return images.length > 0 && images.every((image) => selectedImageIds.value.has(image.itemId));
+});
+
+function toggleSelectAllImages() {
+  const images = moodboardStore.folders[selectedFolder.value]?.images ?? [];
+  selectedImageIds.value = isAllImagesSelected.value
+    ? new Set()
+    : new Set(images.map((image) => image.itemId));
+}
+
 function confirmSelectedImagesDone() {
   if (selectedImageIds.value.size === 0) {
     toggleImageSelectMode();
@@ -587,6 +599,10 @@ watch(
 
 function onFolderClick(i: number) {
   if (consumeDidDrag()) return;
+  if (isFolderDeleteMode.value) {
+    requestDeleteFolder(i);
+    return;
+  }
   openFolder(i);
 }
 
@@ -600,6 +616,11 @@ function armOrOpenMobileFolder(index: number) {
 
   const folder = moodboardStore.folders[index];
   if (!folder) return;
+
+  if (isFolderDeleteMode.value) {
+    requestDeleteFolder(index);
+    return;
+  }
 
   if (mobileArmedFolderId.value === folder.id) {
     openFolder(index);
@@ -877,11 +898,19 @@ onBeforeUnmount(() => {
               type="button"
               class="moodboard-photo-link"
               data-testid="moodboard-mobile-photo"
-              :disabled="hasFolders ? !sphereFolder || p.placeholder : !p.imageId"
+              :disabled="
+                hasFolders ? !sphereFolder || p.placeholder : !isImageSelectMode && !p.imageId
+              "
               :aria-label="
                 hasFolders ? $t('moodboard.openFolderAria') : $t('moodboard.openImageDetailAria')
               "
-              @click="hasFolders ? onSphereClick() : p.imageId && goToImage(p.imageId)"
+              @click="
+                hasFolders
+                  ? onSphereClick()
+                  : isImageSelectMode
+                    ? p.itemId && toggleImageSelection(p.itemId)
+                    : p.imageId && goToImage(p.imageId)
+              "
             >
               <img
                 :src="p.src"
@@ -1132,9 +1161,9 @@ onBeforeUnmount(() => {
               type="button"
               class="moodboard-photo-link"
               data-testid="moodboard-detail-photo"
-              :disabled="!n.imageId"
+              :disabled="!isImageSelectMode && !n.imageId"
               :aria-label="$t('moodboard.openImageDetailAria')"
-              @click="n.imageId && goToImage(n.imageId)"
+              @click="isImageSelectMode ? toggleImageSelection(n.itemId) : n.imageId && goToImage(n.imageId)"
             >
               <img
                 :src="n.src"
@@ -1276,15 +1305,28 @@ onBeforeUnmount(() => {
         :ariaLabel="$t('moodboard.imageDeleteToggleAria')"
         @click="toggleImageSelectMode"
       />
-      <button
-        v-if="!hasFolders && isImageSelectMode"
-        type="button"
-        class="moodboard-select-done"
-        data-testid="moodboard-select-images-done"
-        @click="confirmSelectedImagesDone"
-      >
-        {{ $t('moodboard.selectImagesDone') }}
-      </button>
+      <div v-if="!hasFolders && isImageSelectMode" class="moodboard-select-actions">
+        <button
+          type="button"
+          class="moodboard-select-done"
+          data-testid="moodboard-select-all-images"
+          @click="toggleSelectAllImages"
+        >
+          {{
+            isAllImagesSelected
+              ? $t('moodboard.deselectAllImages')
+              : $t('moodboard.selectAllImages')
+          }}
+        </button>
+        <button
+          type="button"
+          class="moodboard-select-done"
+          data-testid="moodboard-select-images-done"
+          @click="confirmSelectedImagesDone"
+        >
+          {{ $t('moodboard.selectImagesDone') }}
+        </button>
+      </div>
     </template>
 
     <DeleteFolderConfirm
@@ -1302,19 +1344,26 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.moodboard-select-done {
+.moodboard-select-actions {
   position: fixed;
   right: 90px;
-  bottom: 24px;
+  bottom: 32px;
   z-index: 40;
-  height: 56px;
-  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.moodboard-select-done {
+  height: 40px;
+  padding: 0 14px;
   border: none;
   border-radius: 9999px;
   background: rgba(9, 9, 11, 0.78);
   color: var(--color-text-primary);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
   backdrop-filter: blur(6px);
   box-shadow: 0 4px 20px rgb(0 0 0 / 0.4);
   transition:
@@ -1328,10 +1377,13 @@ onBeforeUnmount(() => {
 }
 
 @media (min-width: 640px) {
-  .moodboard-select-done {
+  .moodboard-select-actions {
     right: 94px;
-    bottom: 32px;
-    height: 52px;
+    bottom: 40px;
+  }
+
+  .moodboard-select-done {
+    height: 36px;
   }
 }
 

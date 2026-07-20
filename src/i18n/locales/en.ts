@@ -288,7 +288,9 @@ export default {
     imageDeleteToggleAria: 'Toggle image select mode',
     selectImagesDone: "I'm done selecting",
     selectImageAria: 'Select image',
-    deselectImageAria: 'Deselect image'
+    deselectImageAria: 'Deselect image',
+    selectAllImages: 'Select all',
+    deselectAllImages: 'Deselect all'
   },
   userTour: {
     progress: '{current} / {total}',

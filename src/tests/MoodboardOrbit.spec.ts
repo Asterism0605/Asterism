@@ -655,6 +655,35 @@ describe('MoodboardOrbit', () => {
         message: 'Failed to delete the folder. Please try again.'
       });
     });
+
+    it('desktop 在刪除模式下點擊資料夾圖示本身，效果等同點擊刪除 icon：開啟確認彈窗且不會進入資料夾', async () => {
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard');
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(true);
+    });
+
+    it('mobile 在刪除模式下點擊資料夾圖示本身，效果等同點擊刪除 icon：開啟確認彈窗且不會進入資料夾', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-folder-mobile-0"]').trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard');
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(true);
+    });
   });
 
   describe('delete image flow', () => {
@@ -805,6 +834,59 @@ describe('MoodboardOrbit', () => {
       expect(wrapper.find(`[data-testid="image-select-${first.itemId}"]`).exists()).toBe(false);
     });
 
+    it('點擊「全選圖片」會選取資料夾內所有圖片，按鈕變成「取消全選」', async () => {
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+      const [first, second] = store.folders[0].images;
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      const selectAllButton = wrapper.get('[data-testid="moodboard-select-all-images"]');
+      expect(selectAllButton.text()).toBe('Select all');
+
+      await selectAllButton.trigger('click');
+
+      expect(wrapper.get(`[data-testid="image-select-${first.itemId}"]`).attributes('aria-pressed')).toBe(
+        'true'
+      );
+      expect(wrapper.get(`[data-testid="image-select-${second.itemId}"]`).attributes('aria-pressed')).toBe(
+        'true'
+      );
+      expect(wrapper.get('[data-testid="moodboard-select-all-images"]').text()).toBe('Deselect all');
+    });
+
+    it('全選後再點「取消全選」會清空所有已選圖片，按鈕變回「全選圖片」', async () => {
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+      const [first, second] = store.folders[0].images;
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-all-images"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-all-images"]').trigger('click');
+
+      expect(wrapper.get(`[data-testid="image-select-${first.itemId}"]`).attributes('aria-pressed')).toBe(
+        'false'
+      );
+      expect(wrapper.get(`[data-testid="image-select-${second.itemId}"]`).attributes('aria-pressed')).toBe(
+        'false'
+      );
+      expect(wrapper.get('[data-testid="moodboard-select-all-images"]').text()).toBe('Select all');
+    });
+
+    it('單獨選取全部圖片後（沒點全選按鈕），全選按鈕也會自動顯示成「取消全選」', async () => {
+      const store = patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+      const [first, second] = store.folders[0].images;
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get(`[data-testid="image-select-${first.itemId}"]`).trigger('click');
+      await wrapper.get(`[data-testid="image-select-${second.itemId}"]`).trigger('click');
+
+      expect(wrapper.get('[data-testid="moodboard-select-all-images"]').text()).toBe('Deselect all');
+    });
+
     it('keeps the modal open and the images intact on a failed delete, showing an error toast, and allows retry', async () => {
       deleteItemsMock.mockRejectedValueOnce(new Error('boom'));
       const store = patchFolders();
@@ -908,6 +990,44 @@ describe('MoodboardOrbit', () => {
       expect(deleteItemsMock).toHaveBeenCalledWith({ folderId: 'folder-1', itemIds: ['item-a'] });
       expect(store.folders.find((f) => f.id === 'folder-1')?.images).toEqual([]);
       expect(store.folders.find((f) => f.id === 'folder-3')?.images).toEqual([sharedImage('item-b')]);
+    });
+
+    it('desktop 在多選模式下點擊圖片本身，效果等同點擊選取 icon：切換選取狀態且不會跳轉到圖片詳情頁', async () => {
+      const store = patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+      await openFolder(wrapper);
+      const itemId = store.folders[0].images[0].itemId;
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper
+        .get(`[data-testid="moodboard-image-${itemId}"] [data-testid="moodboard-detail-photo"]`)
+        .trigger('click');
+      await flushPromises();
+
+      expect(
+        wrapper.get(`[data-testid="image-select-${itemId}"]`).attributes('aria-pressed')
+      ).toBe('true');
+      expect(router.currentRoute.value.path).toBe('/moodboard/studio');
+    });
+
+    it('mobile 在多選模式下點擊圖片本身，效果等同點擊選取 icon：切換選取狀態且不會跳轉到圖片詳情頁', async () => {
+      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true });
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+      const homeIcon = wrapper.get('[data-testid="moodboard-folder-mobile-0"]');
+      await homeIcon.trigger('pointerenter');
+      await homeIcon.trigger('click');
+      await flushPromises();
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-mobile-photo"]').trigger('click');
+      await flushPromises();
+
+      const selectedToggle = wrapper
+        .findAll('[data-testid^="image-select-"]')
+        .find((el) => el.attributes('aria-pressed') === 'true');
+      expect(selectedToggle).toBeTruthy();
+      expect(router.currentRoute.value.path).toBe('/moodboard/studio');
     });
   });
 
