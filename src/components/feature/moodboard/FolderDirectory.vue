@@ -48,7 +48,6 @@ function folderLabel(folder: MoodboardFolder): string {
           'folder-node--empty': folder.images.length === 0
         }"
         :data-testid="`folder-directory-item-${folder.id}`"
-        :data-tour="folder.images.length > 0 ? 'moodboard-folder' : undefined"
         :aria-current="folder.id === activeFolderId ? 'true' : undefined"
         @pointerenter="emit('preview', folder.id)"
         @pointerleave="emit('previewEnd')"
