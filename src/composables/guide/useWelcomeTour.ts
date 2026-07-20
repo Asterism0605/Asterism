@@ -4,6 +4,11 @@ export const WELCOME_TOUR_STORAGE_KEY = 'asterism:tour:welcome';
 export const WELCOME_TOUR_HANDLED_VALUE = 'handled';
 const WELCOME_TOUR_STATE_EVENT = 'asterism:welcome-tour-state-change';
 
+interface WelcomeTourStateChange {
+  userId: string | null;
+  isHandled: boolean;
+}
+
 function getStorageKey(userId?: string | null): string {
   return userId ? `${WELCOME_TOUR_STORAGE_KEY}:${userId}` : WELCOME_TOUR_STORAGE_KEY;
 }
@@ -50,11 +55,14 @@ export function useWelcomeTour(userId?: MaybeRefOrGetter<string | null | undefin
   const currentInstance = getCurrentInstance();
 
   const handleExternalStateChange = (event: Event): void => {
-    const detail = (event as CustomEvent<{ userId?: string | null }>).detail;
+    const detail = (event as CustomEvent<Partial<WelcomeTourStateChange>>).detail;
     const currentUserId = toValue(userId) ?? null;
 
-    if ((detail?.userId ?? null) === currentUserId) {
-      isHandled.value = readHandled(toValue(userId));
+    if (
+      (detail?.userId ?? null) === currentUserId &&
+      typeof detail?.isHandled === 'boolean'
+    ) {
+      isHandled.value = detail.isHandled;
     }
   };
 
@@ -65,12 +73,15 @@ export function useWelcomeTour(userId?: MaybeRefOrGetter<string | null | undefin
     });
   }
 
-  function notifyStateChange(): void {
+  function notifyStateChange(nextIsHandled: boolean): void {
     if (typeof window === 'undefined') return;
 
     window.dispatchEvent(
       new CustomEvent(WELCOME_TOUR_STATE_EVENT, {
-        detail: { userId: toValue(userId) ?? null }
+        detail: {
+          userId: toValue(userId) ?? null,
+          isHandled: nextIsHandled
+        } satisfies WelcomeTourStateChange
       })
     );
   }
@@ -78,13 +89,13 @@ export function useWelcomeTour(userId?: MaybeRefOrGetter<string | null | undefin
   function complete(): void {
     isHandled.value = true;
     persistHandled(toValue(userId));
-    notifyStateChange();
+    notifyStateChange(true);
   }
 
   function reset(): void {
     isHandled.value = false;
     clearHandled(toValue(userId));
-    notifyStateChange();
+    notifyStateChange(false);
   }
 
   if (userId !== undefined) {

@@ -106,7 +106,12 @@ const siteLogoSrc = SITE_LOGO_SRC;
     </div>
 
     <div class="flex items-center gap-3">
-      <ActionButton class="flex-1" variant="consult" @consult="emit('consult')" />
+      <ActionButton
+        class="flex-1"
+        data-tour="detail-consult"
+        variant="consult"
+        @consult="emit('consult')"
+      />
       <ActionButton
         class="flex-1"
         data-tour="detail-save"

@@ -148,6 +148,38 @@ describe('AppHeader', () => {
     expect(wrapper.get('header > button').attributes('data-tour-interactive')).toBeUndefined();
   });
 
+  it('keeps the header above a chapter transition while leaving only language enabled', async () => {
+    await router.push('/images/y2k-main-001');
+    await router.isReady();
+    localStorage.clear();
+    const tour = useUserTour('user-1');
+    tour.start('y2k-main-001');
+    tour.advance('detail-save', 'y2k-main-001');
+    tour.pause();
+    tour.completeChapter('exploration');
+
+    const pinia = createPinia();
+    const authStore = useAuthStore(pinia);
+    const session = createAuthenticatedSession();
+    authStore.session = session;
+    authStore.user = session.user;
+    setActivePinia(pinia);
+    const wrapper = mount(AppHeader, {
+      global: { plugins: [router, pinia] }
+    });
+
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.get('header').classes()).toContain('z-[210]');
+    expect(wrapper.get('header').classes()).toContain('w-full');
+    expect(wrapper.get('header').classes()).not.toContain('max-md:hidden');
+    expect(wrapper.get('header > button').attributes('disabled')).toBeDefined();
+    expect(wrapper.get('[data-tour-interactive="language"] > button').attributes('disabled')).toBeUndefined();
+    expect(wrapper.getComponent(UserMenu).find('[aria-haspopup="true"]').attributes('disabled')).toBeDefined();
+
+    wrapper.unmount();
+  });
+
   it('resumes a paused tour from the header entry', async () => {
     localStorage.clear();
     const tour = useUserTour('user-1');

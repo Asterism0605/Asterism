@@ -306,7 +306,8 @@ export default {
       progress: {
         home: 'Homepage exploration',
         spread: 'Image exploration',
-        detail: 'Image detail'
+        detail: 'Image detail',
+        moodboard: 'Moodboard'
       }
     },
     actions: {
@@ -348,10 +349,24 @@ export default {
         title: 'Understand style tags',
         description: 'Style tags reveal the background, visual traits, and common uses of a style.'
       },
+      detailConsult: {
+        title: 'Bring inspiration to life',
+        description:
+          'Beyond saving, you can book a professional consultant for the styles you like and get more concrete guidance.'
+      },
       detailSave: {
         title: 'Save to a Moodboard',
         description: 'Open the save menu to use an existing folder or create a new Moodboard.'
       }
+    },
+    transition: {
+      title: 'Exploration complete',
+      description:
+        'You now know how to explore images, understand styles, save inspiration, and find further professional guidance.',
+      nextDescription:
+        'Next, see how the inspiration you saved can become your own visual direction in Moodboard.',
+      proceed: 'Go to Moodboard',
+      later: 'Continue later'
     }
   },
   home: {

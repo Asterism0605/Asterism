@@ -18,6 +18,7 @@ import { isImageSaved } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import CreateNewFolder from '@/components/feature/moodboard/CreateNewFolder.vue';
 import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue';
+import TourTransition from '@/components/feature/guide/TourTransition.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
 const route = useRoute();
@@ -154,7 +155,7 @@ function handleSelectStyleTag(tag: string) {
     coreTour.state.value.status === 'active' &&
     coreTour.state.value.step === 'detail-style-tag'
   ) {
-    coreTour.advance('detail-save', currentImage.value?.id);
+    coreTour.advance('detail-consult', currentImage.value?.id);
     coreTour.destroy();
   }
 
@@ -164,7 +165,10 @@ function handleSelectStyleTag(tag: string) {
 async function handleSubmitFolder(name: string) {
   if (!currentImage.value) return;
   const success = await createNewFolder(name, currentImage.value.id);
-  if (success) showCreateFolder.value = false;
+  if (success) {
+    showCreateFolder.value = false;
+    completeExplorationChapter();
+  }
 }
 
 function handleConsult() {
@@ -222,9 +226,28 @@ function handleSelectImage(imageId: string) {
 
 function handleSaveOpened() {
   if (coreTour.state.value.status === 'active' && coreTour.state.value.step === 'detail-save') {
-    coreTour.complete();
+    coreTour.pause();
     coreTour.destroy();
   }
+}
+
+function completeExplorationChapter(): void {
+  if (
+    (coreTour.state.value.status === 'active' || coreTour.state.value.status === 'paused') &&
+    coreTour.state.value.step === 'detail-save'
+  ) {
+    coreTour.completeChapter('exploration');
+    coreTour.destroy();
+  }
+}
+
+function proceedToMoodboard(): void {
+  coreTour.enterChapter('moodboard');
+  void router.push({ name: 'moodboard' });
+}
+
+function continueToMoodboardLater(): void {
+  coreTour.enterChapter('moodboard');
 }
 
 function hasVisibleTourTarget(selector: string): boolean {
@@ -263,6 +286,12 @@ function handlePreviousDetailTourStep(): void {
   const step = coreTour.state.value.step;
 
   if (step === 'detail-save') {
+    coreTour.advance('detail-consult', currentImage.value?.id);
+    void showCurrentDetailTourStep();
+    return;
+  }
+
+  if (step === 'detail-consult') {
     activeStyleTag.value = null;
     coreTour.advance('detail-style-tag', currentImage.value?.id);
     void showCurrentDetailTourStep();
@@ -300,7 +329,12 @@ async function showCurrentDetailTourStep() {
     return;
   }
 
-  if (step !== 'detail-thumbnail' && step !== 'detail-style-tag' && step !== 'detail-save') {
+  if (
+    step !== 'detail-thumbnail' &&
+    step !== 'detail-style-tag' &&
+    step !== 'detail-consult' &&
+    step !== 'detail-save'
+  ) {
     coreTour.pause();
     return;
   }
@@ -325,13 +359,18 @@ async function showCurrentDetailTourStep() {
 
 async function handleSaveToFolder(folderId: string) {
   if (!currentImage.value) return;
-  await saveToMoodboard(folderId, currentImage.value.id);
+  const success = await saveToMoodboard(folderId, currentImage.value.id);
+  if (success) completeExplorationChapter();
 }
 
 // Esc 返回是全頁級的慣例快捷鍵，不需要先 Tab 聚焦到哪個區塊；
 // 跳過 showCreateFolder 開啟中的情況，避免使用者想關彈窗卻整頁被導走。
 function handleKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape' && !showCreateFolder.value) {
+  if (
+    event.key === 'Escape' &&
+    !showCreateFolder.value &&
+    coreTour.state.value.status !== 'transition'
+  ) {
     handleBack();
   }
 }
@@ -398,5 +437,18 @@ watch(
     :model-value="activeStyleTag !== null"
     :tag-label="activeStyleTag"
     @update:model-value="activeStyleTag = null"
+  />
+  <TourTransition
+    v-if="
+      coreTour.state.value.status === 'transition' &&
+      coreTour.state.value.currentChapter === 'exploration'
+    "
+    :title="$t('userTour.transition.title')"
+    :description="$t('userTour.transition.description')"
+    :next-description="$t('userTour.transition.nextDescription')"
+    :proceed-label="$t('userTour.transition.proceed')"
+    :later-label="$t('userTour.transition.later')"
+    @proceed="proceedToMoodboard"
+    @later="continueToMoodboardLater"
   />
 </template>
