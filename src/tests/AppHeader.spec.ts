@@ -241,6 +241,37 @@ describe('AppHeader', () => {
     wrapper.unmount();
   });
 
+  it('resumes the exact Moodboard step after routing to Moodboard', async () => {
+    localStorage.clear();
+    const tour = useUserTour('user-1');
+    tour.enterChapter('moodboard', 'moodboard-filters');
+
+    const pinia = createPinia();
+    const authStore = useAuthStore(pinia);
+    const session = createAuthenticatedSession();
+    authStore.session = session;
+    authStore.user = session.user;
+    setActivePinia(pinia);
+    const wrapper = mount(AppHeader, {
+      global: { plugins: [router, pinia] }
+    });
+    const push = vi.spyOn(router, 'push').mockResolvedValue(undefined as never);
+
+    await wrapper.get('[data-testid="user-tour-control-trigger"]').trigger('click');
+    await wrapper.get('[data-testid="user-tour-resume"]').trigger('click');
+    await flushPromises();
+
+    expect(push).toHaveBeenCalledWith({ name: 'moodboard' });
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      currentChapter: 'moodboard',
+      step: 'moodboard-filters'
+    });
+
+    push.mockRestore();
+    wrapper.unmount();
+  });
+
   it('resumes a paused home step after routing from picture detail', async () => {
     await router.push('/images/y2k-main-001');
     await router.isReady();

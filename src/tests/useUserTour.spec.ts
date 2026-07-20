@@ -97,13 +97,34 @@ describe('useUserTour', () => {
       completedChapters: ['exploration']
     });
 
-    tour.enterChapter('moodboard');
+    tour.enterChapter('moodboard', 'moodboard-images');
 
     expect(tour.state.value).toMatchObject({
       status: 'paused',
       currentChapter: 'moodboard',
-      step: null,
+      step: 'moodboard-images',
       completedChapters: ['exploration']
+    });
+  });
+
+  it('resumes the exact paused Moodboard step', () => {
+    const tour = useUserTour('user-a');
+
+    tour.enterChapter('moodboard', 'moodboard-filters');
+    tour.resume();
+
+    expect(tour.state.value).toMatchObject({
+      status: 'active',
+      currentChapter: 'moodboard',
+      step: 'moodboard-filters'
+    });
+
+    tour.complete();
+
+    expect(tour.state.value).toMatchObject({
+      status: 'completed',
+      currentChapter: null,
+      step: null
     });
   });
 
@@ -141,18 +162,18 @@ describe('useUserTour', () => {
       throw new Error('Storage unavailable');
     });
 
-    first.vm.enterChapter('moodboard');
+    first.vm.enterChapter('moodboard', 'moodboard-images');
     await second.vm.$nextTick();
 
     expect(first.vm.state).toMatchObject({
       status: 'paused',
       currentChapter: 'moodboard',
-      step: null
+      step: 'moodboard-images'
     });
     expect(second.vm.state).toMatchObject({
       status: 'paused',
       currentChapter: 'moodboard',
-      step: null
+      step: 'moodboard-images'
     });
 
     first.unmount();

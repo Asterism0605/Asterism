@@ -110,8 +110,10 @@ async function handleStartUserTour(): Promise<void> {
 async function resumeUserTour(): Promise<void> {
   const step = userTour.state.value.step;
   const targetImageId = userTour.state.value.targetImageId;
-  if (!step && userTour.state.value.currentChapter === 'moodboard') {
+  if (userTour.state.value.currentChapter === 'moodboard') {
     await router.push({ name: 'moodboard' });
+    await nextTick();
+    userTour.resume();
     return;
   }
   if (!step) return;
