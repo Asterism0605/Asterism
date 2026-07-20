@@ -57,7 +57,7 @@ const siteLogoSrc = SITE_LOGO_SRC;
 
 <template>
   <div
-    class="flex flex-col gap-11 overflow-y-auto px-6 py-6 md:h-full"
+    class="flex flex-col gap-12 overflow-y-auto px-6 py-6 md:h-full"
     style="background: linear-gradient(180deg, #2c2c2c 0%, #1e1e1e 100%)"
   >
     <button
@@ -83,21 +83,12 @@ const siteLogoSrc = SITE_LOGO_SRC;
       </a>
     </div>
 
-    <div class="flex flex-col gap-[12px]">
-      <p v-if="photographerDate || photographerName" class="text-mono text-text-secondary">
-        {{ $t('image.photoShared') }}<span v-if="photographerDate"> {{ $t('image.photoOn', { date: photographerDate }) }}</span
-        ><span v-if="photographerName"> {{ $t('image.photoBy') }}</span>
-      </p>
-
-      <ProfileCard
-        v-if="photographerName"
-        class="pt-0!"
-        :name="photographerName"
-        :subtitle="photographerRole"
-        :avatar-url="photographerAvatarUrl"
-        :show-follow="true"
-      />
-    </div>
+    <ProfileCard
+      v-if="photographerName"
+      class="detail-profile-card"
+      :name="photographerName"
+      :avatar-url="photographerAvatarUrl"
+    />
 
     <ColorPaletteSwatch :colors="colorPalette" class="bg-transparent! p-0!" />
 
@@ -107,13 +98,13 @@ const siteLogoSrc = SITE_LOGO_SRC;
 
     <div class="flex items-center justify-between gap-3">
       <ActionButton
-        class="flex-1 md:w-[calc(50%_-_56px)] md:flex-none"
+        class="flex-1 md:w-[calc(50%_-_56px)] md:origin-left md:scale-[1.1] md:flex-none"
         variant="consult"
         bracket
         @consult="emit('consult')"
       />
       <ActionButton
-        class="detail-save-action flex-1 md:w-[calc(50%_-_56px)] md:flex-none [&>button>span]:text-xs md:[&>button>span]:text-sm"
+        class="detail-save-action flex-1 md:w-[calc(50%_-_56px)] md:origin-right md:scale-[1.1] md:flex-none [&>button>span]:text-xs md:[&>button>span]:text-sm"
         data-tour="detail-save"
         bracket
         :saved="saved"
@@ -151,6 +142,11 @@ const siteLogoSrc = SITE_LOGO_SRC;
 </template>
 
 <style scoped>
+:deep(.detail-profile-card) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 :deep(.glass-panel) {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -166,8 +162,18 @@ const siteLogoSrc = SITE_LOGO_SRC;
 }
 
 :deep(.detail-save-action) {
+  --detail-menu-content-left: clamp(1rem, 15%, 2.5rem);
   --detail-menu-icon-gap: 0.5rem;
   --detail-menu-icon-size: 1rem;
+}
+
+:deep(.detail-save-action > button > span:not([aria-hidden])) {
+  display: grid;
+  grid-template-columns: var(--detail-menu-icon-size) auto;
+  column-gap: var(--detail-menu-icon-gap);
+  align-items: center;
+  justify-content: center;
+  text-align: left;
 }
 
 :deep(.detail-save-action > div > div.relative > div > button:first-child),
@@ -179,7 +185,11 @@ const siteLogoSrc = SITE_LOGO_SRC;
   align-items: center;
   justify-content: stretch;
   text-align: left;
-  padding-left: calc(25% - var(--detail-menu-icon-size) - var(--detail-menu-icon-gap));
+  padding-left: var(--detail-menu-content-left);
+}
+
+:deep(.detail-save-action > button > span:not([aria-hidden]) > span) {
+  justify-self: start;
 }
 
 :deep(.detail-save-action > div > div.relative > div > button:first-child) {
