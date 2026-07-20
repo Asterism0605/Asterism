@@ -843,6 +843,7 @@ onBeforeUnmount(() => {
             v-for="f in mFolders"
             :key="'mf' + f.i"
             :data-testid="`moodboard-folder-mobile-${f.i}`"
+            :data-tour="f.hasFolder && !f.dimmed ? 'moodboard-orbit-folder' : undefined"
             class="absolute"
             :style="{
               left: f.cx - f.w / 2 + 'px',
@@ -1126,7 +1127,7 @@ onBeforeUnmount(() => {
             v-for="fv in folderView"
             :key="'f' + fv.i"
             :data-testid="`moodboard-folder-${fv.i}`"
-            :data-tour="fv.hasFolder && !fv.dimmed ? 'moodboard-folder' : undefined"
+            :data-tour="fv.hasFolder && !fv.dimmed ? 'moodboard-orbit-folder' : undefined"
             class="absolute"
             :style="{
               left: fv.left + 'px',

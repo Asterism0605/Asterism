@@ -33,4 +33,10 @@ describe('Moodboard user tour steps', () => {
   it('allows interaction with the Moodboard orbit target', () => {
     expect(USER_TOUR_STEPS['moodboard-orbit']?.allowInteraction).toBe(true);
   });
+
+  it('targets the orbit folder instead of the directory folder for F4', () => {
+    expect(USER_TOUR_STEPS['moodboard-folder']?.selector).toBe(
+      '[data-tour="moodboard-orbit-folder"]'
+    );
+  });
 });

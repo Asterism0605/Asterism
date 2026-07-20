@@ -135,7 +135,7 @@ export const USER_TOUR_STEPS: Partial<Record<UserTourStep, UserTourStepDefinitio
     align: 'center'
   },
   'moodboard-folder': {
-    selector: '[data-tour="moodboard-folder"]',
+    selector: '[data-tour="moodboard-orbit-folder"]',
     titleKey: 'userTour.steps.moodboardFolder.title',
     descriptionKey: 'userTour.steps.moodboardFolder.description',
     progress: 4,
