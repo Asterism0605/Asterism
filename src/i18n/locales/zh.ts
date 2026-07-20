@@ -278,7 +278,8 @@ export default {
     openFolderAria: '開啟資料夾',
     folderSelected: '我的資料夾',
     folderEmptySuffix: '(空)',
-    openImageDetailAria: '查看圖片詳情'
+    openImageDetailAria: '查看圖片詳情',
+    folderDeleteToggleAria: '切換資料夾刪除圖示顯示'
   },
   userTour: {
     progress: '{current} / {total}',

@@ -12,6 +12,7 @@ import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConf
 import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
 import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
 import FolderDirectory from '@/components/feature/moodboard/FolderDirectory.vue';
+import MoodboardGlassButton from '@/components/feature/moodboard/MoodboardGlassButton.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
 import { showToast } from '@/composables/useToast';
@@ -114,11 +115,12 @@ const deskStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
 const mDetailPhotos = ref<MoodboardMobileSavedPhoto[]>([]);
 const mHomePhotosRandom = ref<MoodboardMobilePhoto[]>([]);
-const deleteHoverIdx = ref(-1);
 const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
 const deleteImageHoverIdx = ref<string | null>(null);
+// 資料夾列表的刪除 icon 開關：跟資料夾詳情頁的多選狀態機各自獨立，不共用。
+const isFolderDeleteMode = ref(false);
 
 const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
   useDeleteMoodboardImage({
@@ -313,9 +315,7 @@ function leaveFolder() {
   hoverIdx.value = -1;
 }
 
-// deleteHoverIdx 獨立於 hoverFolder：空資料夾（0 張圖片）也要能 hover 顯示刪除 icon
 function onFolderMouseEnter(index: number) {
-  deleteHoverIdx.value = index;
   if (dragging.value) return;
 
   const folder = moodboardStore.folders[index];
@@ -332,8 +332,11 @@ function onFolderMouseEnter(index: number) {
 }
 
 function onFolderMouseLeave() {
-  deleteHoverIdx.value = -1;
   leaveFolder();
+}
+
+function toggleFolderDeleteMode() {
+  isFolderDeleteMode.value = !isFolderDeleteMode.value;
 }
 
 function requestDeleteFolder(index: number) {
@@ -355,7 +358,6 @@ async function confirmDeleteFolder() {
     isDeleteModalOpen.value = false;
     deleteTarget.value = null;
     hoverIdx.value = -1;
-    deleteHoverIdx.value = -1;
     mHover.value = -1;
   } catch {
     showToast({ type: 'error', message: t('toast.deleteFolderFailed') });
@@ -504,6 +506,7 @@ function openFolder(i: number) {
 
   selectedFolder.value = i;
   hasFolders.value = false;
+  isFolderDeleteMode.value = false;
   if (isMobile.value) buildMobileDetail();
   else buildDetail();
   navigate(slugFor(i), i);
@@ -529,6 +532,7 @@ function navigate(slug: string, i: number) {
 
 function goHome() {
   hasFolders.value = true;
+  isFolderDeleteMode.value = false;
   hoverIdx.value = -1;
   mHover.value = -1;
   dragging.value = false;
@@ -788,7 +792,7 @@ onBeforeUnmount(() => {
               }"
             />
             <DeleteIconButton
-              v-if="f.hasFolder"
+              v-if="f.hasFolder && isFolderDeleteMode"
               :data-testid="`folder-delete-mobile-${f.i}`"
               :size="28"
               :icon-size="20"
@@ -1059,7 +1063,7 @@ onBeforeUnmount(() => {
               }"
             />
             <DeleteIconButton
-              v-if="fv.hasFolder"
+              v-if="fv.hasFolder && isFolderDeleteMode"
               :data-testid="`folder-delete-${fv.i}`"
               :size="28"
               :icon-size="20"
@@ -1067,9 +1071,6 @@ onBeforeUnmount(() => {
                 position: 'absolute',
                 top: '-3px',
                 right: '-3px',
-                opacity: deleteHoverIdx === fv.i ? 1 : 0,
-                pointerEvents: deleteHoverIdx === fv.i ? 'auto' : 'none',
-                transition: 'opacity .2s ease',
                 zIndex: 40
               }"
               @delete="requestDeleteFolder(fv.i)"
@@ -1226,6 +1227,13 @@ onBeforeUnmount(() => {
           />
         </div>
       </div>
+
+      <MoodboardGlassButton
+        v-if="hasFolders && moodboardStore.folders.length > 0"
+        data-testid="moodboard-folder-delete-toggle"
+        :aria-label="$t('moodboard.folderDeleteToggleAria')"
+        @click="toggleFolderDeleteMode"
+      />
     </template>
 
     <DeleteFolderConfirm

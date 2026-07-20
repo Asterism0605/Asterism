@@ -322,7 +322,10 @@ describe('MoodboardOrbit', () => {
       patchFolders();
       const { wrapper } = await mountMoodboard();
 
-      expect(wrapper.findAll('[data-testid^="moodboard-folder-"]')).toHaveLength(10);
+      const folderSlots = wrapper
+        .findAll('[data-testid^="moodboard-folder-"]')
+        .filter((slot) => /^moodboard-folder-\d+$/.test(slot.attributes('data-testid') ?? ''));
+      expect(folderSlots).toHaveLength(10);
     });
 
     it('dims an empty slot that has no folder and blocks hover/click on it', async () => {
@@ -542,31 +545,27 @@ describe('MoodboardOrbit', () => {
       return store;
     }
 
-    it('desktop only shows the delete icon while hovering the folder, including empty folders', async () => {
+    it('desktop 預設不顯示任何資料夾的刪除 icon，點擊玻璃球後全部顯示，再點一次全部收起', async () => {
       patchFolders();
       const { wrapper } = await mountMoodboard();
 
-      expect(wrapper.get('[data-testid="folder-delete-0"]').attributes('style')).toContain(
-        'opacity: 0'
-      );
+      expect(wrapper.find('[data-testid="folder-delete-0"]').exists()).toBe(false);
+      expect(wrapper.find('[data-testid="folder-delete-1"]').exists()).toBe(false);
 
-      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseenter');
-      expect(wrapper.get('[data-testid="folder-delete-0"]').attributes('style')).toContain(
-        'opacity: 1'
-      );
-      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseleave');
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
+      expect(wrapper.get('[data-testid="folder-delete-0"]').exists()).toBe(true);
+      expect(wrapper.get('[data-testid="folder-delete-1"]').exists()).toBe(true);
 
-      await wrapper.get('[data-testid="moodboard-folder-1"]').trigger('mouseenter');
-      expect(wrapper.get('[data-testid="folder-delete-1"]').attributes('style')).toContain(
-        'opacity: 1'
-      );
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
+      expect(wrapper.find('[data-testid="folder-delete-0"]').exists()).toBe(false);
+      expect(wrapper.find('[data-testid="folder-delete-1"]').exists()).toBe(false);
     });
 
     it('clicking the delete icon only opens the confirm modal, without opening the folder', async () => {
       patchFolders();
       const { wrapper, router } = await mountMoodboard();
 
-      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseenter');
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
       await wrapper.get('[data-testid="folder-delete-0"]').trigger('click');
       await flushPromises();
 
@@ -579,7 +578,7 @@ describe('MoodboardOrbit', () => {
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
 
-      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseenter');
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
       await wrapper.get('[data-testid="folder-delete-0"]').trigger('click');
       await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
       await flushPromises();
@@ -594,7 +593,7 @@ describe('MoodboardOrbit', () => {
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
 
-      await wrapper.get('[data-testid="moodboard-folder-0"]').trigger('mouseenter');
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
       await wrapper.get('[data-testid="folder-delete-0"]').trigger('click');
       await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
       await flushPromises();
@@ -614,7 +613,7 @@ describe('MoodboardOrbit', () => {
       expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(false);
     });
 
-    it('mobile shows the delete icon persistently and can delete without hovering first', async () => {
+    it('mobile 預設也不顯示刪除 icon，點擊玻璃球後才能刪除', async () => {
       Object.defineProperty(window, 'innerWidth', {
         value: 375,
         configurable: true,
@@ -624,6 +623,9 @@ describe('MoodboardOrbit', () => {
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
 
+      expect(wrapper.find('[data-testid="folder-delete-mobile-0"]').exists()).toBe(false);
+
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
       await wrapper.get('[data-testid="folder-delete-mobile-0"]').trigger('click');
       await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
       await flushPromises();
@@ -642,6 +644,7 @@ describe('MoodboardOrbit', () => {
       const store = patchFolders();
       const { wrapper } = await mountMoodboard();
 
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
       await wrapper.get('[data-testid="folder-delete-mobile-0"]').trigger('click');
       await wrapper.get('[data-testid="delete-folder-confirm"]').trigger('click');
       await flushPromises();
