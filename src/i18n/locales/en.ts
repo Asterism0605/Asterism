@@ -65,6 +65,7 @@ export default {
     saveContactSupport: 'Something went wrong. Please contact support.',
     saveFailed: 'Failed to save. Please try again.',
     folderLimit: 'You have reached the maximum of 10 folders.',
+    folderImageLimit: 'Each folder can hold up to 20 images.',
     folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
     folderCreatedAndSaved: 'Folder created and image saved.',
     deleteFolderFailed: 'Failed to delete the folder. Please try again.',
