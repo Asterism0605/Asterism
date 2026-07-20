@@ -8,9 +8,7 @@ export function useOrbitDrag(
   scaleRef: Ref<number>,
   orbitPhaseRef: Ref<number>,
   enabledRef: Ref<boolean>,
-  getCenter: () => Pick<MoodboardOrbitParams, 'cx' | 'cy'>,
-  // 起拖命中判定（舞台座標）：只有落在資料夾附近才起拖。預設整片可拖。
-  canStartAt: (p: { x: number; y: number }) => boolean = () => true
+  getCenter: () => Pick<MoodboardOrbitParams, 'cx' | 'cy'>
 ) {
   const mHover = ref(-1)
   const dragging = ref(false)
@@ -55,11 +53,6 @@ export function useOrbitDrag(
     if (!el) return
     dragRect = el.getBoundingClientRect()
     const p = evtPoint(e)
-    // 只有落在資料夾附近才起拖，避免整個版面（含軌道弧線空白處）都能拖。
-    if (!canStartAt(p)) {
-      dragRect = null
-      return
-    }
     const c = getCenter()
     dragging.value = true
     didDrag = false
@@ -86,7 +79,8 @@ export function useOrbitDrag(
   }
 
   function onDragEnd(e?: PointerEvent) {
-    if (activePointerId !== null && e && e.pointerId !== activePointerId) return
+    if (activePointerId !== null && e && e.pointerId !== activePointerId) return false
+    const endedWithDrag = dragStart !== null && didDrag
     if (dragRaf) {
       window.cancelAnimationFrame(dragRaf)
       dragRaf = 0
@@ -100,6 +94,7 @@ export function useOrbitDrag(
     dragRect = null
     activePointerId = null
     captureTarget = null
+    return endedWithDrag
   }
 
   function consumeDidDrag(): boolean {

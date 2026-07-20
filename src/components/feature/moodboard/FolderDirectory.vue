@@ -33,8 +33,11 @@ function folderLabel(folder: MoodboardFolder): string {
 </script>
 
 <template>
-  <nav class="folder-directory" :aria-label="t('moodboard.folderSelected')">
-    <div class="folder-directory__list">
+  <nav
+    class="folder-directory"
+    :aria-label="t('moodboard.folderSelected')"
+  >
+    <div class="folder-directory__list" data-tour="moodboard-directory">
       <button
         v-for="folder in sortedFolders"
         :key="folder.id"
@@ -45,6 +48,7 @@ function folderLabel(folder: MoodboardFolder): string {
           'folder-node--empty': folder.images.length === 0
         }"
         :data-testid="`folder-directory-item-${folder.id}`"
+        :data-tour="folder.images.length > 0 ? 'moodboard-folder' : undefined"
         :aria-current="folder.id === activeFolderId ? 'true' : undefined"
         @pointerenter="emit('preview', folder.id)"
         @pointerleave="emit('previewEnd')"

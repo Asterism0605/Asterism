@@ -5,6 +5,7 @@ import { createMemoryHistory, createRouter } from 'vue-router';
 import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
+import { useUserTour } from '@/composables/guide/useUserTour';
 
 const { disposeSphere, initSphere, updateSphereImages } = vi.hoisted(() => ({
   disposeSphere: vi.fn(),
@@ -47,6 +48,8 @@ function createTestRouter() {
   });
 }
 
+const mountedMoodboards: Array<{ unmount: () => void }> = [];
+
 async function mountMoodboard(initialPath = '/moodboard') {
   const router = createTestRouter();
   await router.push(initialPath);
@@ -59,8 +62,42 @@ async function mountMoodboard(initialPath = '/moodboard') {
       stubs: { Teleport: true }
     }
   });
+  mountedMoodboards.push(wrapper);
 
   return { wrapper, router };
+}
+
+const tourFolder = {
+  id: 'tour-folder',
+  name: 'Tour folder',
+  createdAt: '2026-07-05T00:00:00.000Z',
+  images: [
+    {
+      itemId: 'tour-item',
+      id: 'tour-image',
+      src: '/style-image/tour.webp',
+      title: 'Tour image',
+      styleGroup: 'minimal',
+      style: [],
+      createdAt: '2026-07-05T00:00:00.000Z'
+    }
+  ]
+};
+
+function prepareMoodboardTour(step: Parameters<ReturnType<typeof useUserTour>['advance']>[0]) {
+  const authStore = useAuthStore();
+  authStore.user = {
+    id: 'user-1',
+    email: 'member@example.com',
+    displayName: 'Member',
+    isAdmin: false,
+    createdAt: '2026-01-01T00:00:00.000Z'
+  };
+  useMoodboardStore().$patch({ status: 'success', loadedProfileId: 'user-1', folders: [tourFolder] });
+  const tour = useUserTour('user-1');
+  tour.enterChapter('moodboard', step);
+  tour.resume();
+  return tour;
 }
 
 describe('MoodboardOrbit', () => {
@@ -84,9 +121,13 @@ describe('MoodboardOrbit', () => {
       configurable: true,
       writable: true
     });
+    vi.spyOn(HTMLElement.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(0, 0, 120, 80)
+    ] as unknown as DOMRectList);
   });
 
   afterEach(() => {
+    mountedMoodboards.splice(0).forEach((wrapper) => wrapper.unmount());
     document.body.innerHTML = '';
   });
 
@@ -99,6 +140,260 @@ describe('MoodboardOrbit', () => {
     expect(wrapper.find('[data-testid="moodboard-empty-cta"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="moodboard-empty-sphere"]').exists()).toBe(true);
     expect(wrapper.find('img[src="/images/folder-idle.png"]').exists()).toBe(false);
+  });
+
+  it('keeps free exploration opted out on a direct Moodboard visit', async () => {
+    const tour = prepareMoodboardTour('moodboard-images');
+    tour.optOut();
+    await mountMoodboard();
+    await flushPromises();
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      enabled: false,
+      status: 'idle',
+      currentChapter: null,
+      step: null
+    });
+    expect(document.querySelector('.driver-popover')).toBeNull();
+  });
+
+  it('pauses Chapter 2 instead of starting over an empty Moodboard', async () => {
+    const authStore = useAuthStore();
+    authStore.user = {
+      id: 'user-1',
+      email: 'member@example.com',
+      displayName: 'Member',
+      isAdmin: false,
+      createdAt: '2026-01-01T00:00:00.000Z'
+    };
+    useMoodboardStore().$patch({ status: 'success', loadedProfileId: 'user-1', folders: [] });
+    const tour = useUserTour('user-1');
+    tour.enterChapter('moodboard', 'moodboard-images');
+    tour.resume();
+    await mountMoodboard();
+    await flushPromises();
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'paused',
+      currentChapter: 'moodboard',
+      step: 'moodboard-images'
+    });
+  });
+
+  it('does not advance the directory step when a folder is hovered', async () => {
+    prepareMoodboardTour('moodboard-directory');
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+
+    await wrapper.get('[data-testid="folder-directory-item-tour-folder"]').trigger('pointerenter');
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'moodboard-directory'
+    });
+  });
+
+  it('uses bounded targets for the image cluster and directory list', async () => {
+    prepareMoodboardTour('moodboard-images');
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+
+    expect(wrapper.get('[data-tour="moodboard-images"]').element.tagName).toBe('DIV');
+    expect(wrapper.get('[data-tour="moodboard-directory"]').classes()).toContain(
+      'folder-directory__list'
+    );
+  });
+
+  it('advances the orbit step after an actual drag', async () => {
+    prepareMoodboardTour('moodboard-orbit');
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+    const stage = wrapper.get('[data-testid="moodboard-stage-desktop"]');
+    Object.defineProperty(stage.element, 'setPointerCapture', {
+      configurable: true,
+      value: vi.fn()
+    });
+    Object.defineProperty(stage.element, 'hasPointerCapture', {
+      configurable: true,
+      value: vi.fn(() => false)
+    });
+    const pointerDown = new Event('pointerdown', { bubbles: true, cancelable: true });
+    Object.defineProperties(pointerDown, {
+      pointerId: { value: 21 },
+      clientX: { value: 900 },
+      clientY: { value: 100 }
+    });
+    const pointerMove = new Event('pointermove', { bubbles: true, cancelable: true });
+    Object.defineProperties(pointerMove, {
+      pointerId: { value: 21 },
+      clientX: { value: 760 },
+      clientY: { value: 220 }
+    });
+    const pointerUp = new Event('pointerup', { bubbles: true });
+    Object.defineProperty(pointerUp, 'pointerId', { value: 21 });
+
+    stage.element.dispatchEvent(pointerDown);
+    stage.element.dispatchEvent(pointerMove);
+    stage.element.dispatchEvent(pointerUp);
+    await flushPromises();
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'moodboard-folder'
+    });
+  });
+
+  it('starts the orbit drag away from a folder and advances only once', async () => {
+    prepareMoodboardTour('moodboard-orbit');
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+    const stage = wrapper.get('[data-testid="moodboard-stage-desktop"]');
+    const pointer = (type: string, pointerId: number, clientX: number, clientY: number) => {
+      const event = new Event(type, { bubbles: true, cancelable: true });
+      Object.defineProperties(event, {
+        pointerId: { value: pointerId },
+        clientX: { value: clientX },
+        clientY: { value: clientY }
+      });
+      return event;
+    };
+
+    stage.element.dispatchEvent(pointer('pointerdown', 31, 50, 500));
+    stage.element.dispatchEvent(pointer('pointermove', 31, 120, 570));
+    stage.element.dispatchEvent(pointer('pointerup', 31, 120, 570));
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      step: 'moodboard-folder'
+    });
+
+    useUserTour('user-1').advance('moodboard-orbit');
+    stage.element.dispatchEvent(pointer('pointerleave', 31, 120, 570));
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'moodboard-orbit'
+    });
+  });
+
+  it('does not open the center image during the orbit drag step', async () => {
+    prepareMoodboardTour('moodboard-orbit');
+    const { wrapper, router } = await mountMoodboard();
+    await flushPromises();
+
+    const sphereClick = initSphere.mock.calls.at(-1)?.[4] as (() => void) | undefined;
+    sphereClick?.();
+    await flushPromises();
+
+    expect(router.currentRoute.value.path).toBe('/moodboard');
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'moodboard-orbit'
+    });
+  });
+
+  it('makes the whole orbit surface interactive during the drag step', async () => {
+    prepareMoodboardTour('moodboard-orbit');
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+
+    const target = wrapper.get('[data-tour="moodboard-orbit"]');
+    expect(target.element.tagName).toBe('DIV');
+    expect(target.attributes('style')).toContain('cursor: grab');
+  });
+
+  it('uses directory copy without hover instructions on mobile', async () => {
+    Object.defineProperty(window, 'innerWidth', { value: 500, configurable: true });
+    prepareMoodboardTour('moodboard-directory');
+    await mountMoodboard();
+    await flushPromises();
+
+    const description = document.querySelector('.driver-popover-description')?.textContent ?? '';
+    expect(description.toLowerCase()).not.toContain('hover');
+    expect(description).toContain('Tap');
+  });
+
+  it('opens a valid folder into filters without completing the tour', async () => {
+    prepareMoodboardTour('moodboard-folder');
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+
+    await wrapper.get('[data-testid="folder-directory-item-tour-folder"]').trigger('click');
+    await flushPromises();
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      currentChapter: 'moodboard',
+      step: 'moodboard-filters'
+    });
+  });
+
+  it('advances filters to the tour-control step without completing', async () => {
+    prepareMoodboardTour('moodboard-folder');
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+    await wrapper.get('[data-testid="folder-directory-item-tour-folder"]').trigger('click');
+    await flushPromises();
+    const tourControl = document.createElement('button');
+    tourControl.dataset.tour = 'moodboard-tour-control';
+    document.body.append(tourControl);
+
+    document.querySelector<HTMLButtonElement>('[data-testid="user-tour-next"]')?.click();
+    await flushPromises();
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      currentChapter: 'moodboard',
+      step: 'moodboard-tour-control'
+    });
+  });
+
+  it('enters the completion transition from the final Done action', async () => {
+    prepareMoodboardTour('moodboard-tour-control');
+    const tourControl = document.createElement('button');
+    tourControl.dataset.tour = 'moodboard-tour-control';
+    document.body.append(tourControl);
+    const { wrapper } = await mountMoodboard();
+    await flushPromises();
+
+    document.querySelector<HTMLButtonElement>('[data-testid="user-tour-next"]')?.click();
+    await flushPromises();
+
+    expect(wrapper.find('[data-testid="tour-transition"]').exists()).toBe(true);
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'transition',
+      currentChapter: 'moodboard',
+      step: null
+    });
+  });
+
+  it('restarts the completed tour from home', async () => {
+    const tour = prepareMoodboardTour('moodboard-tour-control');
+    tour.completeChapter('moodboard');
+    const { wrapper, router } = await mountMoodboard('/moodboard/tour-folder');
+
+    await wrapper.get('[data-testid="tour-transition-proceed"]').trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.name).toBe('home');
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      currentChapter: 'exploration',
+      step: 'home-overview'
+    });
+  });
+
+  it('persists completion without leaving the open folder', async () => {
+    const tour = prepareMoodboardTour('moodboard-tour-control');
+    tour.completeChapter('moodboard');
+    const { wrapper, router } = await mountMoodboard('/moodboard/tour-folder');
+
+    await wrapper.get('[data-testid="tour-transition-later"]').trigger('click');
+
+    expect(router.currentRoute.value.fullPath).toBe('/moodboard/tour-folder');
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'completed',
+      currentChapter: null,
+      step: null
+    });
   });
 
   it('routes the empty state CTA back to the homepage', async () => {

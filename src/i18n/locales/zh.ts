@@ -345,6 +345,34 @@ export default {
       detailSave: {
         title: '收藏到 Moodboard',
         description: '開啟收藏選單，將圖片存入既有資料夾或建立新的 Moodboard。'
+      },
+      moodboardImages: {
+        title: '你的收藏靈感',
+        description: '收藏的圖片會集中顯示在這裡，形成你的個人靈感集合。'
+      },
+      moodboardDirectory: {
+        title: '統一查看收藏資料夾',
+        description:
+          '你可以在目錄中查看所有收藏資料夾。將游標移到資料夾上可切換右側 3D 圖片球預覽，點擊後正式開啟資料夾。',
+        mobileDescription:
+          '你可以在目錄中查看所有收藏資料夾。點一下可預覽資料夾，再點一次即可正式開啟。'
+      },
+      moodboardOrbit: {
+        title: '瀏覽資料夾軌道',
+        description: '拖曳軌道，可以瀏覽環繞在靈感集合周圍的其他資料夾。'
+      },
+      moodboardFolder: {
+        title: '開啟資料夾',
+        description: '點擊一個已有收藏圖片的資料夾，查看其中的收藏內容。'
+      },
+      moodboardFilters: {
+        title: '篩選收藏內容',
+        description:
+          '開啟資料夾後，可以依「領域」或「風格」篩選收藏圖片。兩個篩選器沒有固定使用順序，也可以同時套用，查看同時符合兩項條件的收藏內容。'
+      },
+      moodboardTourControl: {
+        title: '隨時掌握導覽進度',
+        description: '你可以隨時使用這個圖示暫停、繼續或重新開始網站導覽。'
       }
     },
     transition: {
@@ -353,6 +381,13 @@ export default {
       nextDescription: '接下來，看看剛才收藏的靈感如何在 Moodboard 中整理成自己的美學脈絡。',
       proceed: '前往 Moodboard',
       later: '稍後再繼續'
+    },
+    moodboardCompletion: {
+      title: 'Moodboard 導覽完成',
+      description: '你已經知道如何瀏覽、整理與篩選收藏的靈感。',
+      nextDescription: '你可以隨時重新觀看導覽，或繼續整理這個收藏。',
+      restart: '重新開始導覽',
+      stay: '繼續整理靈感'
     }
   },
   home: {
