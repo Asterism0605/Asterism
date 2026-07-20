@@ -124,4 +124,37 @@ describe('ConsultantBookings', () => {
     expect(setConsultationLocation).toHaveBeenCalledWith('b1', 'https://example.com');
     expect(wrapper.text()).toMatch(/儲存失敗|Failed to save/);
   });
+
+  it('切換預約後,舊預約延遲返回的儲存失敗結果不應顯示在目前選取的預約上', async () => {
+    const twoConfirmedBookings: ConsultantBookingItem[] = [
+      { ...bookings[0]! },
+      { ...bookings[1]!, status: 'confirmed' }
+    ];
+    getAssignedBookings.mockResolvedValue(twoConfirmedBookings);
+
+    let rejectFirstSave: (reason?: unknown) => void = () => {};
+    setConsultationLocation.mockImplementationOnce(
+      () =>
+        new Promise((_resolve, reject) => {
+          rejectFirstSave = reject;
+        })
+    );
+
+    const wrapper = await mountPage();
+
+    await wrapper.get('[data-testid="location-input"]').setValue('https://example.com');
+    await wrapper.get('[data-testid="location-save"]').trigger('click');
+    await flushPromises();
+
+    expect(setConsultationLocation).toHaveBeenCalledWith('b1', 'https://example.com');
+
+    const dateNodes = wrapper.findAll('.date-node');
+    await dateNodes[1]!.trigger('click');
+    await flushPromises();
+
+    rejectFirstSave(new Error('boom'));
+    await flushPromises();
+
+    expect(wrapper.text()).not.toMatch(/儲存失敗|Failed to save/);
+  });
 });

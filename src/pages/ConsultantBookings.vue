@@ -50,10 +50,14 @@ async function handleUpdateLocation(location: string): Promise<void> {
   if (!booking) return;
   try {
     await setConsultationLocation(booking.id, location);
-    locationSaveError.value = '';
     booking.location = location === '' ? undefined : location;
+    if (booking.id === selectedId.value) {
+      locationSaveError.value = '';
+    }
   } catch {
-    locationSaveError.value = t('consult.locationSaveFailed');
+    if (booking.id === selectedId.value) {
+      locationSaveError.value = t('consult.locationSaveFailed');
+    }
   }
 }
 
