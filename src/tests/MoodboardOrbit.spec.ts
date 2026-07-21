@@ -1585,7 +1585,9 @@ describe('MoodboardOrbit', () => {
       wrapper: Awaited<ReturnType<typeof mountMoodboard>>['wrapper'],
       label: string
     ) {
-      return wrapper.findAll('.filter-node').find((node) => node.text().includes(label));
+      return wrapper
+        .findAll('[data-testid="folder-filter-style-option"]')
+        .find((node) => node.text().includes(label));
     }
 
     it('shows every image in the folder before any filter is applied, with reset disabled', async () => {
@@ -1602,7 +1604,7 @@ describe('MoodboardOrbit', () => {
       const { wrapper } = await mountMoodboard();
       await openFolder(wrapper);
 
-      await wrapper.get('.folder-filter__label').trigger('click');
+      await wrapper.get('[data-testid="folder-filter-styles-toggle"]').trigger('click');
       await findStyleOption(wrapper, 'minimal')!.trigger('click');
       await flushPromises();
 
@@ -1617,7 +1619,7 @@ describe('MoodboardOrbit', () => {
       const { wrapper } = await mountMoodboard();
       await openFolder(wrapper);
 
-      await wrapper.get('.folder-filter__label').trigger('click');
+      await wrapper.get('[data-testid="folder-filter-styles-toggle"]').trigger('click');
       await findStyleOption(wrapper, 'minimal')!.trigger('click');
       await flushPromises();
 
@@ -1633,7 +1635,7 @@ describe('MoodboardOrbit', () => {
       const { wrapper } = await mountMoodboard();
       await openFolder(wrapper);
 
-      await wrapper.get('.folder-filter__label').trigger('click');
+      await wrapper.get('[data-testid="folder-filter-styles-toggle"]').trigger('click');
       await findStyleOption(wrapper, 'minimal')!.trigger('click');
       await flushPromises();
       expect(
@@ -1654,16 +1656,16 @@ describe('MoodboardOrbit', () => {
       const { wrapper } = await mountMoodboard();
       await openFolder(wrapper);
 
-      await wrapper.get('.folder-filter__label').trigger('click');
+      await wrapper.get('[data-testid="folder-filter-styles-toggle"]').trigger('click');
       await flushPromises();
-      expect(wrapper.get('.folder-filter__label').attributes('aria-expanded')).toBe('true');
+      expect(wrapper.get('[data-testid="folder-filter-styles-toggle"]').attributes('aria-expanded')).toBe('true');
 
       const backButton = wrapper.findAll('button').find((button) => button.text().includes('Back'));
       await backButton!.trigger('click');
       await flushPromises();
       await openFolder(wrapper);
 
-      expect(wrapper.get('.folder-filter__label').attributes('aria-expanded')).toBe('false');
+      expect(wrapper.get('[data-testid="folder-filter-styles-toggle"]').attributes('aria-expanded')).toBe('false');
     });
 
     it('mobile: filters narrow the images shown in the folder detail view, reset restores them', async () => {

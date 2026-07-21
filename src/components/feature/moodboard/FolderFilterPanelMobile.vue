@@ -23,7 +23,7 @@ const { localizeTaxon } = useTaxonomyLabel();
 
 <template>
   <div
-    class="folder-filter-panel"
+    class="folder-filter-panel absolute inset-0 z-[4] pointer-events-none"
     role="group"
     aria-labelledby="mobile-folder-filter-heading"
   >
@@ -40,33 +40,42 @@ const { localizeTaxon } = useTaxonomyLabel();
     ></span>
 
     <section
-      class="folder-filter folder-filter--styles"
+      class="absolute left-[8%] top-[38px] w-[84%] pointer-events-auto"
       aria-labelledby="mobile-folder-filter-styles-heading"
     >
       <h3 id="mobile-folder-filter-styles-heading" class="sr-only">
         {{ t('moodboard.filterGroupStyles') }}
       </h3>
-      <div class="folder-filter__viewport">
-        <div class="folder-filter__list">
-          <span class="filter-node filter-node--filter-by" aria-hidden="true">
-            <span class="filter-node__label">{{ t('moodboard.filterByHeading') }}</span>
+      <div
+        class="folder-filter__viewport flex overflow-x-auto overflow-y-hidden touch-pan-x pt-7 pl-9"
+      >
+        <div class="flex flex-row items-start gap-[26px]">
+          <span
+            class="filter-node filter-node--filter-by relative flex flex-col items-center gap-1.5 p-0 border-0 cursor-pointer opacity-100 pointer-events-none"
+            aria-hidden="true"
+          >
+            <span class="filter-node__label absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 text-base tracking-[0.02em] whitespace-nowrap">{{ t('moodboard.filterByHeading') }}</span>
             <span class="filter-node__anchor" aria-hidden="true"></span>
           </span>
-          <span class="filter-node filter-node--heading" aria-hidden="true">
+          <span
+            class="filter-node filter-node--heading relative flex flex-col items-center gap-1.5 p-0 border-0 cursor-pointer opacity-100 pointer-events-none ml-5"
+            aria-hidden="true"
+          >
             <span class="filter-node__anchor" aria-hidden="true"></span>
-            <span class="filter-node__label">{{ t('moodboard.filterGroupStyles') }}</span>
+            <span class="filter-node__label text-base tracking-[0.02em] whitespace-nowrap">{{ t('moodboard.filterGroupStyles') }}</span>
           </span>
           <button
             v-for="option in styleOptions"
             :key="option.value"
             type="button"
-            class="filter-node"
+            class="filter-node relative flex flex-col items-center gap-1.5 p-0 border-0 cursor-pointer opacity-50"
             :class="{ 'filter-node--active': selectedStyleGroups.has(option.value) }"
+            data-testid="folder-filter-style-option"
             :aria-pressed="selectedStyleGroups.has(option.value)"
             @click="emit('toggle-style', option.value)"
           >
             <span class="filter-node__anchor" aria-hidden="true"></span>
-            <span class="filter-node__label"
+            <span class="filter-node__label text-sm tracking-[0.02em] whitespace-nowrap"
               >{{ localizeTaxon(option.value) }} ({{ option.count }})</span
             >
           </button>
@@ -75,29 +84,33 @@ const { localizeTaxon } = useTaxonomyLabel();
     </section>
 
     <section
-      class="folder-filter folder-filter--mediums"
+      class="absolute left-[8%] top-[126px] w-[84%] pointer-events-auto"
       aria-labelledby="mobile-folder-filter-mediums-heading"
     >
       <h3 id="mobile-folder-filter-mediums-heading" class="sr-only">
         {{ t('moodboard.filterGroupFields') }}
       </h3>
-      <div class="folder-filter__viewport">
-        <div class="folder-filter__list">
-          <span class="filter-node filter-node--heading" aria-hidden="true">
+      <div class="folder-filter__viewport flex overflow-x-auto overflow-y-hidden touch-pan-x pl-36">
+        <div class="flex flex-row items-start gap-[26px]">
+          <span
+            class="filter-node filter-node--heading relative flex flex-col items-center gap-1.5 p-0 border-0 cursor-pointer opacity-100 pointer-events-none"
+            aria-hidden="true"
+          >
             <span class="filter-node__anchor" aria-hidden="true"></span>
-            <span class="filter-node__label">{{ t('moodboard.filterGroupFields') }}</span>
+            <span class="filter-node__label text-base tracking-[0.02em] whitespace-nowrap">{{ t('moodboard.filterGroupFields') }}</span>
           </span>
           <button
             v-for="option in mediumOptions"
             :key="option.value"
             type="button"
-            class="filter-node"
+            class="filter-node relative flex flex-col items-center gap-1.5 p-0 border-0 cursor-pointer opacity-50"
             :class="{ 'filter-node--active': selectedMediums.has(option.value) }"
+            data-testid="folder-filter-medium-option"
             :aria-pressed="selectedMediums.has(option.value)"
             @click="emit('toggle-medium', option.value)"
           >
             <span class="filter-node__anchor" aria-hidden="true"></span>
-            <span class="filter-node__label"
+            <span class="filter-node__label text-sm tracking-[0.02em] whitespace-nowrap"
               >{{ localizeTaxon(option.value) }} ({{ option.count }})</span
             >
           </button>
@@ -107,7 +120,7 @@ const { localizeTaxon } = useTaxonomyLabel();
 
     <button
       type="button"
-      class="folder-filter folder-filter__reset"
+      class="folder-filter__reset absolute left-[82%] top-4 w-auto py-[5px] px-3 border rounded-full text-xs tracking-[0.04em] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 pointer-events-auto"
       data-testid="folder-filter-reset"
       :disabled="!hasActiveFilters"
       @click="emit('reset')"
@@ -118,13 +131,6 @@ const { localizeTaxon } = useTaxonomyLabel();
 </template>
 
 <style scoped>
-.folder-filter-panel {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  pointer-events: none;
-}
-
 .folder-filter-panel__rule {
   position: absolute;
   left: 0;
@@ -141,35 +147,8 @@ const { localizeTaxon } = useTaxonomyLabel();
   top: 130px;
 }
 
-.folder-filter {
-  position: absolute;
-  left: 8%;
-  width: 84%;
-  pointer-events: auto;
-}
-
-.folder-filter--styles {
-  top: 38px;
-}
-
-.folder-filter--styles .folder-filter__viewport {
-  padding-top: 28px;
-  padding-left: 36px;
-}
-
-.folder-filter--mediums {
-  top: 126px;
-}
-
-.folder-filter--mediums .folder-filter__viewport {
-  padding-left: 144px;
-}
-
 .folder-filter__viewport {
-  display: flex;
-  overflow: auto hidden;
   overscroll-behavior-x: contain;
-  touch-action: pan-x;
   scrollbar-width: none;
 }
 
@@ -177,26 +156,10 @@ const { localizeTaxon } = useTaxonomyLabel();
   display: none;
 }
 
-.folder-filter__list {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 26px;
-}
-
 .filter-node {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-  border: 0;
   background: transparent;
   color: #f0ede6bd;
   font: inherit;
-  cursor: pointer;
-  opacity: 0.5;
   transition:
     color 180ms ease,
     opacity 180ms ease;
@@ -204,27 +167,10 @@ const { localizeTaxon } = useTaxonomyLabel();
 
 .filter-node--heading {
   color: #f0ede6d1;
-  opacity: 1;
-  pointer-events: none;
-}
-
-.folder-filter--styles .filter-node--heading {
-  margin-left: 20px;
-}
-
-.filter-node--filter-by {
-  opacity: 1;
-  pointer-events: none;
 }
 
 .filter-node--filter-by .filter-node__label {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  margin-bottom: 6px;
-  transform: translateX(-50%);
   color: #f0ede6d1;
-  font-size: 16px;
 }
 
 .filter-node:is(:hover, :focus-visible) {
@@ -246,14 +192,7 @@ const { localizeTaxon } = useTaxonomyLabel();
 }
 
 .filter-node__label {
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
   text-align: center;
-}
-
-.filter-node--heading .filter-node__label {
-  font-size: 16px;
 }
 
 .filter-node--active {
@@ -269,17 +208,9 @@ const { localizeTaxon } = useTaxonomyLabel();
 }
 
 .folder-filter__reset {
-  left: 82%;
-  top: 16px;
-  width: auto;
-  padding: 5px 12px;
-  border: 1px solid rgba(240, 237, 230, 0.3);
-  border-radius: 999px;
+  border-color: rgba(240, 237, 230, 0.3);
   background: transparent;
   color: #f0ede6d1;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  cursor: pointer;
   transition:
     background-color 180ms ease,
     color 180ms ease;
@@ -288,11 +219,6 @@ const { localizeTaxon } = useTaxonomyLabel();
 .folder-filter__reset:is(:hover, :focus-visible) {
   background: rgba(240, 237, 230, 0.1);
   color: var(--color-text-primary);
-}
-
-.folder-filter__reset:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
 }
 
 .folder-filter__reset:disabled:is(:hover, :focus-visible) {

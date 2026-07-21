@@ -26,32 +26,39 @@ const mediumsExpanded = ref(false);
 </script>
 
 <template>
-  <div class="folder-filter-panel">
-    <section class="folder-filter folder-filter--styles">
+  <div
+    class="folder-filter-panel absolute left-[5%] top-[5%] z-[4] flex flex-col items-start gap-7 pointer-events-none"
+  >
+    <section class="w-[450px] pointer-events-auto">
       <button
         type="button"
-        class="folder-filter__label"
+        class="folder-filter__label flex items-center p-0 border-0 text-base tracking-[0.02em] cursor-pointer opacity-50"
+        data-testid="folder-filter-styles-toggle"
         :aria-expanded="stylesExpanded"
         @click="stylesExpanded = !stylesExpanded"
       >
         <span class="folder-filter__anchor" aria-hidden="true"></span>
         <span class="folder-filter__connector" aria-hidden="true"></span>
-        <span class="folder-filter__label-text">{{ t('moodboard.filterByStyles') }}</span>
+        <span class="ml-2.5">{{ t('moodboard.filterByStyles') }}</span>
       </button>
-      <div v-show="stylesExpanded" class="folder-filter__viewport">
-        <div class="folder-filter__list">
+      <div
+        v-show="stylesExpanded"
+        class="folder-filter__viewport overflow-x-hidden overflow-y-auto max-h-[calc(3*36px)] pl-[46px] mt-5"
+      >
+        <div class="flex flex-col">
           <button
             v-for="option in styleOptions"
             :key="option.value"
             type="button"
-            class="filter-node"
+            class="filter-node relative flex items-center h-9 p-0 border-0 cursor-pointer opacity-50"
             :class="{ 'filter-node--active': selectedStyleGroups.has(option.value) }"
+            data-testid="folder-filter-style-option"
             :aria-pressed="selectedStyleGroups.has(option.value)"
             @click="emit('toggle-style', option.value)"
           >
             <span class="filter-node__anchor" aria-hidden="true"></span>
             <span class="filter-node__connector" aria-hidden="true"></span>
-            <span class="filter-node__label"
+            <span class="ml-2.5 text-sm tracking-[0.02em] whitespace-nowrap"
               >{{ localizeTaxon(option.value) }} ({{ option.count }})</span
             >
           </button>
@@ -59,34 +66,36 @@ const mediumsExpanded = ref(false);
       </div>
     </section>
 
-    <section class="folder-filter folder-filter--mediums">
+    <section class="w-[260px] pointer-events-auto">
       <button
         type="button"
-        class="folder-filter__label"
+        class="folder-filter__label flex items-center p-0 border-0 text-base tracking-[0.02em] cursor-pointer opacity-50"
+        data-testid="folder-filter-fields-toggle"
         :aria-expanded="mediumsExpanded"
         @click="mediumsExpanded = !mediumsExpanded"
       >
         <span class="folder-filter__anchor" aria-hidden="true"></span>
         <span class="folder-filter__connector" aria-hidden="true"></span>
-        <span class="folder-filter__label-text">{{ t('moodboard.filterByFields') }}</span>
+        <span class="ml-2.5">{{ t('moodboard.filterByFields') }}</span>
       </button>
       <div
         v-show="mediumsExpanded"
-        class="folder-filter__viewport folder-filter__viewport--mediums"
+        class="folder-filter__viewport overflow-x-hidden overflow-y-auto max-h-[calc(4*36px)] pl-[46px] mt-2"
       >
-        <div class="folder-filter__list">
+        <div class="flex flex-col">
           <button
             v-for="option in mediumOptions"
             :key="option.value"
             type="button"
-            class="filter-node"
+            class="filter-node relative flex items-center h-9 p-0 border-0 cursor-pointer opacity-50"
             :class="{ 'filter-node--active': selectedMediums.has(option.value) }"
+            data-testid="folder-filter-medium-option"
             :aria-pressed="selectedMediums.has(option.value)"
             @click="emit('toggle-medium', option.value)"
           >
             <span class="filter-node__anchor" aria-hidden="true"></span>
             <span class="filter-node__connector" aria-hidden="true"></span>
-            <span class="filter-node__label"
+            <span class="ml-2.5 text-sm tracking-[0.02em] whitespace-nowrap"
               >{{ localizeTaxon(option.value) }} ({{ option.count }})</span
             >
           </button>
@@ -96,7 +105,7 @@ const mediumsExpanded = ref(false);
 
     <button
       type="button"
-      class="folder-filter folder-filter__reset"
+      class="folder-filter__reset py-1.5 px-3.5 border rounded-full text-[13px] tracking-[0.04em] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 pointer-events-auto"
       data-testid="folder-filter-reset"
       :disabled="!hasActiveFilters"
       @click="emit('reset')"
@@ -107,47 +116,14 @@ const mediumsExpanded = ref(false);
 </template>
 
 <style scoped>
-.folder-filter-panel {
-  position: absolute;
-  left: 5%;
-  top: 5%;
-  z-index: 4;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 28px;
-  pointer-events: none;
-}
-
-.folder-filter {
-  width: 260px;
-  pointer-events: auto;
-}
-
-.folder-filter--styles {
-  width: 450px;
-}
-
 .folder-filter__label {
-  display: flex;
-  align-items: center;
-  padding: 0;
-  border: 0;
   background: transparent;
   color: #f0ede6bd;
-  font-size: 16px;
   font-weight: 400;
-  letter-spacing: 0.02em;
-  cursor: pointer;
   text-align: left;
-  opacity: 0.5;
   transition:
     color 180ms ease,
     opacity 180ms ease;
-}
-
-.folder-filter__label-text {
-  margin-left: 10px;
 }
 
 .folder-filter__label:not([aria-expanded='true']):is(:hover, :focus-visible) {
@@ -174,10 +150,6 @@ const mediumsExpanded = ref(false);
 }
 
 .folder-filter__viewport {
-  overflow: hidden auto;
-  max-height: calc(3 * 36px);
-  padding-left: 46px;
-  margin-top: 8px;
   overscroll-behavior: contain;
   scrollbar-width: none;
 }
@@ -186,31 +158,10 @@ const mediumsExpanded = ref(false);
   display: none;
 }
 
-.folder-filter__viewport--mediums {
-  max-height: calc(4 * 36px);
-}
-
-.folder-filter--styles .folder-filter__viewport {
-  margin-top: 20px;
-}
-
-.folder-filter__list {
-  display: flex;
-  flex-direction: column;
-}
-
 .filter-node {
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: 36px;
-  padding: 0;
-  border: 0;
   background: transparent;
   color: #f0ede6bd;
   font: inherit;
-  cursor: pointer;
-  opacity: 0.5;
   transition:
     color 180ms ease,
     opacity 180ms ease;
@@ -244,13 +195,6 @@ const mediumsExpanded = ref(false);
   background: #f0ede6c2;
 }
 
-.filter-node__label {
-  margin-left: 10px;
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
 .filter-node--active {
   color: var(--color-text-primary);
   opacity: 1;
@@ -268,15 +212,9 @@ const mediumsExpanded = ref(false);
 }
 
 .folder-filter__reset {
-  width: auto;
-  padding: 6px 14px;
-  border: 1px solid rgba(240, 237, 230, 0.3);
-  border-radius: 999px;
+  border-color: rgba(240, 237, 230, 0.3);
   background: transparent;
   color: #f0ede6d1;
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  cursor: pointer;
   transition:
     background-color 180ms ease,
     color 180ms ease;
@@ -285,11 +223,6 @@ const mediumsExpanded = ref(false);
 .folder-filter__reset:is(:hover, :focus-visible) {
   background: rgba(240, 237, 230, 0.1);
   color: var(--color-text-primary);
-}
-
-.folder-filter__reset:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
 }
 
 .folder-filter__reset:disabled:is(:hover, :focus-visible) {
