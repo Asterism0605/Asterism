@@ -284,7 +284,13 @@ export default {
     openFolderAria: 'Open folder',
     folderSelected: 'My Folders',
     folderEmptySuffix: '(Empty)',
-    openImageDetailAria: 'View image detail'
+    openImageDetailAria: 'View image detail',
+    filterByStyles: 'Filter by Styles',
+    filterByFields: 'Filter by Fields',
+    filterByHeading: 'Filter by',
+    filterGroupStyles: 'Styles',
+    filterGroupFields: 'Fields',
+    resetFilters: 'Reset'
   },
   userTour: {
     progress: '{current} / {total}',

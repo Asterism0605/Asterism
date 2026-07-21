@@ -23,6 +23,7 @@ const folder: MoodboardFolder = {
       title: 'Image 1',
       styleGroup: 'minimal',
       style: ['Minimalism'],
+      medium: null,
       createdAt: '2026-07-05T00:00:00.000Z'
     }
   ]
@@ -217,6 +218,7 @@ describe('moodboard store', () => {
           title: 'Shared',
           styleGroup: null,
           style: [],
+          medium: null,
           createdAt: '2026-07-05T00:00:00.000Z'
         }
       ]
@@ -233,6 +235,7 @@ describe('moodboard store', () => {
           title: 'Shared',
           styleGroup: null,
           style: [],
+          medium: null,
           createdAt: '2026-07-04T00:00:00.000Z'
         }
       ]

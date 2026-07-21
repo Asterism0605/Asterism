@@ -279,7 +279,13 @@ export default {
     openFolderAria: '開啟資料夾',
     folderSelected: '我的資料夾',
     folderEmptySuffix: '(空)',
-    openImageDetailAria: '查看圖片詳情'
+    openImageDetailAria: '查看圖片詳情',
+    filterByStyles: '依風格篩選',
+    filterByFields: '依領域篩選',
+    filterByHeading: '篩選方式',
+    filterGroupStyles: '風格',
+    filterGroupFields: '領域',
+    resetFilters: '重置'
   },
   userTour: {
     progress: '{current} / {total}',
