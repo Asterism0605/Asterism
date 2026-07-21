@@ -3,7 +3,7 @@ import ColorPaletteSwatch from '@/components/ui/ColorPaletteSwatch.vue';
 import ProfileCard from '@/components/ui/ProfileCard.vue';
 import ThemeTag from '@/components/ui/ThemeTag.vue';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
-import { ArrowLeft, ExternalLink } from '@lucide/vue';
+import { ArrowLeft, ChevronDown, ExternalLink, FolderPlus } from '@lucide/vue';
 import SimilarImages from '@/components/feature/image/SimilarImages.vue';
 import { SITE_LOGO_SRC } from '@/constants/assets.constants';
 import type { ImageSpreadNode } from '@/types/image';
@@ -14,7 +14,6 @@ interface Props {
   colorPalette: string[];
   styleTags: string[];
   photographerName?: string;
-  photographerRole?: string;
   photographerDate?: string;
   photographerAvatarUrl?: string;
   similarImages?: ImageSpreadNode[];
@@ -30,8 +29,8 @@ withDefaults(defineProps<Props>(), {
   sourceUrl: undefined,
   sourceLabel: undefined,
   photographerName: undefined,
-  photographerRole: undefined,
   photographerDate: undefined,
+  photographerAvatarUrl: undefined,
   similarImages: () => [],
   saved: false,
   disabled: false,
@@ -57,7 +56,7 @@ const siteLogoSrc = SITE_LOGO_SRC;
 
 <template>
   <div
-    class="flex flex-col gap-11 overflow-y-auto px-6 py-6 md:h-full"
+    class="flex flex-col gap-12 overflow-y-auto px-6 py-6 md:h-full"
     style="background: linear-gradient(180deg, #2c2c2c 0%, #1e1e1e 100%)"
   >
     <button
@@ -70,7 +69,7 @@ const siteLogoSrc = SITE_LOGO_SRC;
     </button>
 
     <div class="flex items-center justify-between gap-4">
-      <h1 class="text-h1 font-[300] text-text-primary leading-tight">{{ $t('image.info') }}</h1>
+      <h1 class="text-h1 font-[100] text-text-primary leading-tight">{{ $t('image.info') }}</h1>
       <a
         v-if="sourceUrl"
         :href="sourceUrl"
@@ -83,21 +82,12 @@ const siteLogoSrc = SITE_LOGO_SRC;
       </a>
     </div>
 
-    <div class="flex flex-col gap-[12px]">
-      <p v-if="photographerDate || photographerName" class="text-mono text-text-secondary">
-        {{ $t('image.photoShared') }}<span v-if="photographerDate"> {{ $t('image.photoOn', { date: photographerDate }) }}</span
-        ><span v-if="photographerName"> {{ $t('image.photoBy') }}</span>
-      </p>
-
-      <ProfileCard
-        v-if="photographerName"
-        class="pt-0!"
-        :name="photographerName"
-        :subtitle="photographerRole"
-        :avatar-url="photographerAvatarUrl"
-        :show-follow="true"
-      />
-    </div>
+    <ProfileCard
+      v-if="photographerName"
+      class="detail-profile-card"
+      :name="photographerName"
+      :avatar-url="photographerAvatarUrl"
+    />
 
     <ColorPaletteSwatch :colors="colorPalette" class="bg-transparent! p-0!" />
 
@@ -105,16 +95,18 @@ const siteLogoSrc = SITE_LOGO_SRC;
       <ThemeTag :tags="styleTags" compact @select="emit('select-style-tag', $event)" />
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center justify-between gap-3">
       <ActionButton
-        class="flex-1"
+        class="flex-1 md:w-[calc(50%_-_56px)] md:origin-left md:scale-[1.1] md:flex-none"
         data-tour="detail-consult"
         variant="consult"
+        bracket
         @consult="emit('consult')"
       />
       <ActionButton
-        class="flex-1"
+        class="detail-save-action flex-1 md:w-[calc(50%_-_56px)] md:origin-right md:scale-[1.1] md:flex-none [&>button>span]:text-xs md:[&>button>span]:text-sm"
         data-tour="detail-save"
+        bracket
         :saved="saved"
         :disabled="disabled"
         :can-save="canSave"
@@ -125,7 +117,14 @@ const siteLogoSrc = SITE_LOGO_SRC;
         @opened="emit('save-opened')"
         @create-folder="emit('create-folder')"
         @save-to-folder="(folderId) => emit('save-to-folder', folderId)"
-      />
+      >
+        <template #create-folder-icon>
+          <FolderPlus class="detail-menu-icon" :stroke-width="1.5" aria-hidden="true" />
+        </template>
+        <template #save-folder-icon>
+          <ChevronDown class="detail-menu-icon" :stroke-width="1.5" aria-hidden="true" />
+        </template>
+      </ActionButton>
     </div>
 
     <div class="flex items-center gap-4">
@@ -143,6 +142,11 @@ const siteLogoSrc = SITE_LOGO_SRC;
 </template>
 
 <style scoped>
+:deep(.detail-profile-card) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 :deep(.glass-panel) {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -156,4 +160,48 @@ const siteLogoSrc = SITE_LOGO_SRC;
   margin-left: auto;
   min-height: 2rem;
 }
+
+:deep(.detail-save-action) {
+  --detail-menu-content-left: clamp(1rem, 15%, 2.5rem);
+  --detail-menu-icon-gap: 0.5rem;
+  --detail-menu-icon-size: 1rem;
+}
+
+:deep(.detail-save-action > button > span:not([aria-hidden])) {
+  display: grid;
+  grid-template-columns: var(--detail-menu-icon-size) auto;
+  column-gap: var(--detail-menu-icon-gap);
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+}
+
+:deep(.detail-save-action > div > div.relative > div > button:first-child),
+:deep(.detail-save-action > div > div.relative > div > div.relative > button),
+:deep(.detail-save-action [data-leading-icon]) {
+  display: grid;
+  grid-template-columns: var(--detail-menu-icon-size) minmax(0, 1fr);
+  column-gap: var(--detail-menu-icon-gap);
+  align-items: center;
+  justify-content: stretch;
+  text-align: left;
+  padding-left: var(--detail-menu-content-left);
+}
+
+:deep(.detail-save-action > button > span:not([aria-hidden]) > span) {
+  justify-self: start;
+}
+
+:deep(.detail-save-action > div > div.relative > div > button:first-child) {
+  white-space: nowrap;
+}
+
+:deep(.detail-save-action .detail-menu-icon),
+:deep(.detail-save-action [data-leading-icon] > svg) {
+  width: var(--detail-menu-icon-size);
+  height: var(--detail-menu-icon-size);
+  position: static;
+  margin-right: 0;
+}
+
 </style>

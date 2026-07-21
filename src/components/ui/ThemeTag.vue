@@ -29,7 +29,7 @@ const localizedTags = computed(() =>
 <template>
   <template v-if="compact">
     <section class="flex flex-col gap-4">
-      <h2 class="text-h3 text-text-primary">{{ $t('common.themeTags') }}</h2>
+      <h2 class="zh-heading-spacing text-h3 text-text-primary">{{ $t('common.themeTags') }}</h2>
       <div class="flex flex-wrap gap-2 md:gap-3">
         <button
           v-for="tag in localizedTags"
@@ -45,7 +45,7 @@ const localizedTags = computed(() =>
   </template>
   <template v-else>
     <section class="flex flex-col gap-4 sm:gap-5">
-      <h2 class="text-h3 text-text-primary">{{ $t('common.themeTags') }}</h2>
+      <h2 class="zh-heading-spacing text-h3 text-text-primary">{{ $t('common.themeTags') }}</h2>
 
       <div class="w-full glass-panel rounded-3xl px-4 py-5 sm:rounded-[32px] sm:px-10 sm:py-8">
         <div class="flex flex-wrap items-center gap-x-5 gap-y-3 sm:gap-x-3 sm:gap-y-5">

@@ -10,6 +10,7 @@ const TARGET_READY_RETRY_FRAMES = 8;
 
 export interface UserTourShowOptions {
   onPrevious?: () => void;
+  onComplete?: () => void;
 }
 
 function nextFrame(): Promise<void> {
@@ -28,6 +29,10 @@ export function useUserTourPresenter(tour: UserTourController) {
   ): Promise<boolean> {
     const definition = USER_TOUR_STEPS[step];
     if (!definition) return false;
+    const descriptionKey =
+      window.innerWidth < 768 && definition.mobileDescriptionKey
+        ? definition.mobileDescriptionKey
+        : definition.descriptionKey;
 
     activeShowOptions = options;
     const requestId = ++showRequestId;
@@ -53,13 +58,17 @@ export function useUserTourPresenter(tour: UserTourController) {
           );
         },
         title: t(definition.titleKey),
-        description: t(definition.descriptionKey),
+        description: t(descriptionKey),
         progressLabel: t('userTour.progress', {
           current: definition.progress,
-          total: USER_TOUR_STEP_COUNT
+          total: definition.total ?? USER_TOUR_STEP_COUNT
         }),
         previousLabel: definition.previousStep ? t('userTour.actions.previous') : undefined,
-        nextLabel: definition.nextStep ? t('userTour.actions.next') : undefined,
+        nextLabel: definition.completeTour
+          ? t('userTour.actions.done')
+          : definition.nextStep
+            ? t('userTour.actions.next')
+            : undefined,
         closeLabel: t('userTour.actions.close'),
         side: definition.side,
         align: definition.align,
@@ -72,18 +81,27 @@ export function useUserTourPresenter(tour: UserTourController) {
             tour.pause();
             destroy();
           }),
-        onNext: definition.nextStep
+        onNext: definition.completeTour
           ? () => {
+              if (options.onComplete) options.onComplete();
+              else tour.complete();
+              destroy();
+            }
+          : definition.nextStep
+            ? () => {
               tour.advance(definition.nextStep as UserTourStep);
               void show(definition.nextStep as UserTourStep, options);
             }
-          : undefined
+            : undefined
       });
 
       if (didShow) return true;
       if (attempt < TARGET_READY_RETRY_FRAMES) await nextFrame();
     }
 
+    if (tour.state.value.status === 'active' && tour.state.value.step === step) {
+      tour.pause();
+    }
     return false;
   }
 

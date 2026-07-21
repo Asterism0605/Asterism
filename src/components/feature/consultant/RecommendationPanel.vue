@@ -450,7 +450,7 @@ onBeforeUnmount(() => {
 .recommendation-panel__field > span {
   color: #f0ede6d6;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .recommendation-panel__radio-grid {
@@ -487,6 +487,10 @@ onBeforeUnmount(() => {
   min-width: 0;
 }
 
+.recommendation-panel :deep(.overlay-input) {
+  font-weight: 400;
+}
+
 .recommendation-panel__field--wide {
   grid-column: 1 / -1;
 }
@@ -507,7 +511,7 @@ onBeforeUnmount(() => {
   background-color: #ffffff12;
   color: var(--color-text-primary);
   font-size: var(--text-caption);
-  font-weight: 500;
+  font-weight: 400;
   text-align: left;
   outline: none;
   transition:
@@ -560,7 +564,7 @@ onBeforeUnmount(() => {
   padding: 8px 12px;
   color: #f0ede6c7;
   font-size: var(--text-caption);
-  font-weight: 600;
+  font-weight: 400;
   text-align: left;
   transition:
     background-color 180ms ease,
@@ -588,7 +592,7 @@ onBeforeUnmount(() => {
   background-color: #ffffff12;
   color: var(--color-text-primary);
   font-size: var(--text-caption);
-  font-weight: 500;
+  font-weight: 400;
   outline: none;
   transition: background-color 200ms ease;
 }
@@ -649,7 +653,7 @@ onBeforeUnmount(() => {
   margin-top: 32px;
   color: #f0ede6d1;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.45;
 }
 

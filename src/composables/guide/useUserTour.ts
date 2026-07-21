@@ -12,7 +12,13 @@ export type UserTourStep =
   | 'detail-thumbnail'
   | 'detail-style-tag'
   | 'detail-consult'
-  | 'detail-save';
+  | 'detail-save'
+  | 'moodboard-images'
+  | 'moodboard-directory'
+  | 'moodboard-orbit'
+  | 'moodboard-folder'
+  | 'moodboard-filters'
+  | 'moodboard-tour-control';
 
 export interface UserTourState {
   version: 1;
@@ -47,7 +53,13 @@ const STEPS: ReadonlySet<UserTourStep> = new Set([
   'detail-thumbnail',
   'detail-style-tag',
   'detail-consult',
-  'detail-save'
+  'detail-save',
+  'moodboard-images',
+  'moodboard-directory',
+  'moodboard-orbit',
+  'moodboard-folder',
+  'moodboard-filters',
+  'moodboard-tour-control'
 ]);
 
 export function getUserTourStorageKey(userId: string): string {
@@ -233,11 +245,11 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
     });
   }
 
-  function enterChapter(chapter: UserTourChapter): void {
+  function enterChapter(chapter: UserTourChapter, step: UserTourStep | null = null): void {
     update({
       status: 'paused',
       currentChapter: chapter,
-      step: null,
+      step,
       targetImageId: undefined
     });
   }

@@ -1,14 +1,18 @@
 import {
   addMoodboardItem,
+  countMoodboardItems,
   createMoodboardFolder,
   deleteMoodboardFolder,
-  deleteMoodboardItem,
+  deleteMoodboardItems,
   fetchMoodboardFolders,
   type MoodboardFolderRow,
   type MoodboardItemRow
 } from '@/api/moodboard.api';
 import { getImageById } from '@/services/image.service';
-import { MOODBOARD_FOLDER_NAME_MAX_LENGTH } from '@/constants/moodboard.constants';
+import {
+  MOODBOARD_FOLDER_IMAGE_MAX,
+  MOODBOARD_FOLDER_NAME_MAX_LENGTH
+} from '@/constants/moodboard.constants';
 import { graphemeLength } from '@/utils/graphemeLength';
 import type {
   MoodboardFolder,
@@ -32,6 +36,7 @@ function toSavedImage(row: MoodboardItemRow): SavedImage | null {
     title: image.title,
     styleGroup: image.style_group,
     style: image.style ?? [],
+    medium: image.medium,
     createdAt: row.created_at
   };
 }
@@ -105,14 +110,14 @@ export async function deleteFolder(folderId: string, profileId: string): Promise
   await deleteMoodboardFolder(folderId, profileId);
 }
 
-export async function deleteItem({
+export async function deleteItems({
   folderId,
-  itemId
+  itemIds
 }: {
   folderId: string;
-  itemId: string;
+  itemIds: string[];
 }): Promise<void> {
-  await deleteMoodboardItem({ itemId, folderId });
+  await deleteMoodboardItems({ itemIds, folderId });
 }
 
 export async function addItem(folderId: string, imageId: string): Promise<SavedImage> {
@@ -120,6 +125,12 @@ export async function addItem(folderId: string, imageId: string): Promise<SavedI
 
   if (!image) {
     throw new Error('Image not found.');
+  }
+
+  const currentCount = await countMoodboardItems(folderId);
+
+  if (currentCount >= MOODBOARD_FOLDER_IMAGE_MAX) {
+    throw new Error(`Each folder can hold up to ${MOODBOARD_FOLDER_IMAGE_MAX} images.`);
   }
 
   const row = await addMoodboardItem({ folderId, imageId });
@@ -131,6 +142,7 @@ export async function addItem(folderId: string, imageId: string): Promise<SavedI
     title: image.title,
     styleGroup: image.styleGroup,
     style: image.style,
+    medium: image.medium ?? null,
     createdAt: row.created_at
   };
 }

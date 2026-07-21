@@ -7336,5 +7336,245 @@
       "#D6DCE4"
     ],
     "attribution": "Asterism"
+  },
+  {
+    "id": "syc-interior-design-bedroom-502",
+    "url": "/style-image/syc-interior-design-bedroom-502.webp",
+    "title": "霓虹塗鴉街頭臥室",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#191315",
+      "#7C6553",
+      "#D24C7A"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-interior-design-bedroom-503",
+    "url": "/style-image/syc-interior-design-bedroom-503.webp",
+    "title": "滑板坡道街頭臥室",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#2C2B27",
+      "#8E9175",
+      "#C6BEAE"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-bottom-101",
+    "url": "/style-image/doa-outfit-bottom-101.webp",
+    "title": "酒紅金繡宮廷長褲",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#3A1420",
+      "#A9834D",
+      "#E8DCC3"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-bottom-102",
+    "url": "/style-image/doa-outfit-bottom-102.webp",
+    "title": "香檳金繡魚尾長裙",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#6E5540",
+      "#C9A98A",
+      "#E9DAC6"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-bottom-103",
+    "url": "/style-image/doa-outfit-bottom-103.webp",
+    "title": "立體花繡宮廷蓬裙",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#6A5540",
+      "#CBA982",
+      "#E9D9C1"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-accessory-102",
+    "url": "/style-image/eag-outfit-accessory-102.webp",
+    "title": "工業鉚接金屬腰包",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+      "#2E2C29",
+      "#8A8681",
+      "#C9C4BC"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-accessory-103",
+    "url": "/style-image/eag-outfit-accessory-103.webp",
+    "title": "解構鐵板塗鴉肩包",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+      "#1C1C1E",
+      "#7C7B79",
+      "#BDB9B2"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-bottom-102",
+    "url": "/style-image/eag-outfit-bottom-102.webp",
+    "title": "拼接雙色解構寬褲",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#2A2724",
+      "#8C8073",
+      "#C6BBA9"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-bottom-103",
+    "url": "/style-image/eag-outfit-bottom-103.webp",
+    "title": "拼板解構闊腿褲",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#2C2B29",
+      "#7E7A72",
+      "#B4AFA4"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-fulllook-102",
+    "url": "/style-image/eag-outfit-fulllook-102.webp",
+    "title": "解構寬版丹寧全身造型",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Full Look",
+    "colorPalette": [
+      "#232120",
+      "#6E6B66",
+      "#A7A29A"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-graphic-packaging-101",
+    "url": "/style-image/retro-graphic-packaging-101.webp",
+    "title": "復古櫻桃可樂包裝",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#4A2622",
+      "#B23A2E",
+      "#D9C6A2"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-graphic-packaging-102",
+    "url": "/style-image/retro-graphic-packaging-102.webp",
+    "title": "懷舊藥房風保養罐裝",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#5A6B4F",
+      "#C6733E",
+      "#D3A445"
+    ],
+    "attribution": "Asterism"
   }
 ]

@@ -6,6 +6,7 @@ export interface MoodboardImageRow {
   title: string;
   style_group: string;
   style: string[] | null;
+  medium: string | null;
 }
 
 export interface MoodboardItemRow {
@@ -35,8 +36,8 @@ export interface AddMoodboardItemInput {
   imageId: string;
 }
 
-export interface DeleteMoodboardItemInput {
-  itemId: string;
+export interface DeleteMoodboardItemsInput {
+  itemIds: string[];
   folderId: string;
 }
 
@@ -56,7 +57,8 @@ const MOODBOARD_FOLDER_SELECT = `
       url,
       title,
       style_group,
-      style
+      style,
+      medium
     )
   )
 `;
@@ -145,25 +147,39 @@ export async function addMoodboardItem(
   return data as Omit<MoodboardItemRow, 'images'>;
 }
 
-// 不像 deleteMoodboardFolder 那樣過濾 profile_id：item 的 ownership 是透過
-// folder_id 關聯到 moodboard_folders.profile_id，交給 Supabase RLS policy 擋非本人操作。
-export async function deleteMoodboardItem({
-  itemId,
-  folderId
-}: DeleteMoodboardItemInput): Promise<void> {
-  const { data, error } = await getSupabase()
+export async function countMoodboardItems(folderId: string): Promise<number> {
+  const { count, error } = await getSupabase()
     .from('moodboard_items')
-    .delete()
-    .eq('id', itemId)
-    .eq('folder_id', folderId)
-    .select('id')
-    .maybeSingle();
+    .select('*', { count: 'exact', head: true })
+    .eq('folder_id', folderId);
 
   if (error) {
     throw error;
   }
 
-  if (!data) {
-    throw new Error('Moodboard item was not deleted.');
+  return count ?? 0;
+}
+
+// 不像 deleteMoodboardFolder 那樣過濾 profile_id：item 的 ownership 是透過
+// folder_id 關聯到 moodboard_folders.profile_id，交給 Supabase RLS policy 擋非本人操作。
+// 用 .in() 一次送出單一 DELETE 請求刪多筆，資料庫端是原子操作，不會有部分成功
+// 部分失敗的中間狀態要處理。
+export async function deleteMoodboardItems({
+  itemIds,
+  folderId
+}: DeleteMoodboardItemsInput): Promise<void> {
+  const { data, error } = await getSupabase()
+    .from('moodboard_items')
+    .delete()
+    .in('id', itemIds)
+    .eq('folder_id', folderId)
+    .select('id');
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data || data.length !== itemIds.length) {
+    throw new Error('Moodboard items were not deleted.');
   }
 }

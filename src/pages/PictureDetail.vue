@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ImageStagePanel from '@/components/feature/image/ImageStagePanel.vue';
 import ImageMetaPanel from '@/components/feature/image/ImageMetaPanel.vue';
@@ -241,13 +241,15 @@ function completeExplorationChapter(): void {
   }
 }
 
-function proceedToMoodboard(): void {
-  coreTour.enterChapter('moodboard');
-  void router.push({ name: 'moodboard' });
+async function proceedToMoodboard(): Promise<void> {
+  coreTour.enterChapter('moodboard', 'moodboard-images');
+  await router.push({ name: 'moodboard' });
+  await nextTick();
+  coreTour.resume();
 }
 
 function continueToMoodboardLater(): void {
-  coreTour.enterChapter('moodboard');
+  coreTour.enterChapter('moodboard', 'moodboard-images');
 }
 
 function hasVisibleTourTarget(selector: string): boolean {
@@ -321,6 +323,7 @@ async function showCurrentDetailTourStep() {
   }
 
   if (
+    coreTour.state.value.currentChapter === 'moodboard' ||
     step === 'home-overview' ||
     step === 'home-image' ||
     step === 'spread-related-group' ||
@@ -407,7 +410,6 @@ watch(
         :style-tags="currentImage.style"
         :similar-images="similarImages"
         :photographer-name="photographerInfo.name"
-        photographer-role="Photographer"
         :photographer-avatar-url="photographerInfo.avatarUrl"
         photographer-date="Aug 19, 2025"
         :saved="isSaved"

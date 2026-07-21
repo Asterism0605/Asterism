@@ -12,7 +12,7 @@ const emit = defineEmits<{
 
 <template>
   <div class="flex flex-col gap-4">
-    <h2 class="text-h3 text-text-primary">{{ $t('image.similar') }}</h2>
+    <h2 class="zh-heading-spacing text-h3 text-text-primary">{{ $t('image.similar') }}</h2>
 
     <div v-if="images.length" class="grid grid-cols-2 gap-4 md:grid-cols-4">
       <button

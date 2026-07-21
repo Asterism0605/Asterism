@@ -1,14 +1,22 @@
 ﻿<script setup lang="ts">
-import { ArrowLeft } from '@lucide/vue';
 import { computed } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
 import Button from '@/components/ui/Button.vue';
+import ImageSpreadLabel from '@/components/ui/ImageSpreadLabel.vue';
 import ActionButton from '@/components/feature/image/ActionButton.vue';
 import { useTaxonomyLabel } from '@/composables/useTaxonomyLabel';
 import type { ImageSpreadNode } from '@/types/image';
 
 const { localizeTaxon } = useTaxonomyLabel();
+
+const returnButtonStyles = {
+  root: 'group',
+  label:
+    'inline-block border-b border-white/80 pb-1 leading-none transition-[opacity,transform] duration-200 group-hover:scale-[0.94] group-hover:opacity-0',
+  arrow:
+    "pointer-events-none absolute left-1/2 top-1/2 h-px w-7 -translate-x-[40%] -translate-y-1/2 bg-current opacity-0 transition-[opacity,transform] duration-200 before:absolute before:left-0 before:top-1/2 before:size-[9px] before:-translate-y-1/2 before:rotate-45 before:border-b before:border-l before:border-current before:content-[''] group-hover:-translate-x-1/2 group-hover:opacity-100"
+} as const;
 
 const props = withDefaults(
   defineProps<{
@@ -52,7 +60,7 @@ const mainImageLabel = computed(() => {
   <ImageSpreadEntrance
     as="section"
     kind="center"
-    class="relative z-20 mx-auto flex w-full max-w-[460px] flex-col items-center gap-5"
+    class="relative z-20 mx-auto flex w-full max-w-[460px] flex-col items-center gap-5 lg:gap-7"
   >
     <div class="relative flex w-full justify-center">
       <ConstellationBackground
@@ -81,26 +89,31 @@ const mainImageLabel = computed(() => {
           :alt="image.alt"
           class="aspect-[4/5] w-full cursor-pointer object-cover"
         />
-        <figcaption
+        <ImageSpreadLabel
           v-if="mainImageLabel"
+          as="figcaption"
+          size="large"
           data-testid="spread-main-image-label"
-          class="absolute bottom-4 left-4 rounded-full bg-void/80 px-4 py-2 text-sm font-semibold text-text-primary backdrop-blur-md"
         >
           {{ localizeTaxon(mainImageLabel) }}
-        </figcaption>
+        </ImageSpreadLabel>
       </ImageSpreadEntrance>
     </div>
 
     <ImageSpreadEntrance
       kind="actions"
       :delay="180"
-      class="flex flex-wrap items-center justify-center gap-3 pt-1"
+      class="relative isolate flex origin-center scale-85 flex-wrap items-center justify-center gap-10 pt-1 before:pointer-events-none before:absolute before:-inset-x-6 before:-inset-y-3 before:-z-10 before:rounded-full before:bg-void before:blur-xl before:content-[''] lg:scale-100"
     >
-      <Button variant="primary" type="button" data-testid="return-home" @click="emit('return')">
-        <span class="inline-flex items-center gap-2">
-          <ArrowLeft class="size-4" aria-hidden="true" />
-          {{ $t('image.return') }}
-        </span>
+      <Button
+        variant="bracket"
+        type="button"
+        data-testid="return-home"
+        :class="returnButtonStyles.root"
+        @click="emit('return')"
+      >
+        <span :class="returnButtonStyles.label">{{ $t('image.return') }}</span>
+        <span aria-hidden="true" :class="returnButtonStyles.arrow" />
       </Button>
       <ActionButton
         class="min-w-48"

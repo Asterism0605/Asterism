@@ -81,6 +81,7 @@ export interface SavedImage {
   title: string;
   styleGroup: string | null;
   style: string[];
+  medium: string | null;
   createdAt: string;
 }
 

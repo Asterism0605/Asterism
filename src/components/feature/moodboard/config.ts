@@ -1,3 +1,4 @@
+import { MOODBOARD_FOLDER_IMAGE_MAX } from '@/constants/moodboard.constants';
 import type {
   MoodboardFolder,
   MoodboardHomePhoto,
@@ -33,7 +34,7 @@ export const M_HOME_ORBIT: MoodboardOrbitParams = {
 };
 export const M_DETAIL_ORBIT: MoodboardOrbitParams = {
   cx: 220,
-  cy: 770,
+  cy: 818,
   rx: 597,
   ry: 597,
   node: { x: 470, y: 230 }
@@ -109,14 +110,16 @@ export function buildMoodboardOrbitImages(savedImages: SavedImage[]): MoodboardO
     isPlaceholder: false
   }));
 
-  if (uniqueImages.length >= 20) {
+  if (uniqueImages.length >= MOODBOARD_FOLDER_IMAGE_MAX) {
     return realImages;
   }
 
-  return [...realImages, ...buildPlaceholders(20 - uniqueImages.length)];
+  return [...realImages, ...buildPlaceholders(MOODBOARD_FOLDER_IMAGE_MAX - uniqueImages.length)];
 }
 
-export function buildPlaceholderOrbitImages(count = 20): MoodboardOrbitImage[] {
+export function buildPlaceholderOrbitImages(
+  count = MOODBOARD_FOLDER_IMAGE_MAX
+): MoodboardOrbitImage[] {
   return buildPlaceholders(count);
 }
 

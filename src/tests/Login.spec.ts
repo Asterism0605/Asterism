@@ -94,7 +94,7 @@ describe('Login', () => {
 
     await wrapper
       .findAll('button')
-      .find((button) => button.text().includes('Sign Up'))!
+      .find((button) => button.text().includes('Sign up'))!
       .trigger('click');
 
     expect(push).toHaveBeenCalledWith({
