@@ -410,7 +410,6 @@ watch(
         :style-tags="currentImage.style"
         :similar-images="similarImages"
         :photographer-name="photographerInfo.name"
-        photographer-role="Photographer"
         :photographer-avatar-url="photographerInfo.avatarUrl"
         photographer-date="Aug 19, 2025"
         :saved="isSaved"

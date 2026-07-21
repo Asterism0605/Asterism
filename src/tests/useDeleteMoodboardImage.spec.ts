@@ -26,6 +26,7 @@ const savedImage: SavedImage = {
   title: 'Image 1',
   styleGroup: 'minimal',
   style: [],
+  medium: null,
   createdAt: '2026-07-05T00:00:00.000Z'
 };
 

@@ -12,6 +12,8 @@ import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConf
 import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
 import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
 import FolderDirectory from '@/components/feature/moodboard/FolderDirectory.vue';
+import FolderFilterPanel from '@/components/feature/moodboard/FolderFilterPanel.vue';
+import FolderFilterPanelMobile from '@/components/feature/moodboard/FolderFilterPanelMobile.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
 import MoodboardStatusDisplay from '@/components/feature/moodboard/MoodboardStatusDisplay.vue';
 import TourTransition from '@/components/feature/guide/TourTransition.vue';
@@ -21,7 +23,6 @@ import {
   INNER_K,
   ORBIT_SPEED,
   MAX_FOLDERS,
-  DETAIL_CAP,
   HO,
   MW,
   MH,
@@ -46,6 +47,7 @@ import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
 import { useDeleteMoodboardImage } from '@/composables/useDeleteMoodboardImage';
+import { useFolderImageFilters } from '@/composables/useFolderImageFilters';
 import { deleteFolder } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
@@ -143,6 +145,10 @@ const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDele
       deleteImageHoverIdx.value = null;
     }
   });
+
+const folderFilters = useFolderImageFilters(
+  () => moodboardStore.folders[selectedFolder.value]?.images ?? []
+);
 
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
@@ -434,9 +440,7 @@ function onImgError(e: Event) {
 function buildDetail() {
   const o = HO;
   const floor = deskVisibleH.value;
-  const list = toPhotos(
-    moodboardStore.folders[selectedFolder.value]?.images.slice(0, DETAIL_CAP) ?? []
-  );
+  const list = toPhotos(folderFilters.displayedImages.value);
   const nodes = packPhotos(list, {
     idPrefix: 's',
     cx: o.cx,
@@ -469,10 +473,7 @@ function buildDetail() {
 function buildMobileDetail() {
   const o = M_DETAIL_ORBIT;
   const photoFloorBottom = mDesignH.value - 138;
-  const list = toPhotos(
-    moodboardStore.folders[selectedFolder.value]?.images.slice(0, DETAIL_CAP) ?? [],
-    true
-  );
+  const list = toPhotos(folderFilters.displayedImages.value, true);
   const nodes = packPhotos(list, {
     idPrefix: 'md',
     cx: o.cx,
@@ -482,7 +483,7 @@ function buildMobileDetail() {
     gap: 10,
     xMin: 16,
     xMax: 424,
-    yMin: 196,
+    yMin: 250,
     yMax: photoFloorBottom
   });
   mDetailPhotos.value = nodes.map((d) => ({
@@ -542,8 +543,7 @@ function openFolder(i: number) {
 
   selectedFolder.value = i;
   hasFolders.value = false;
-  if (isMobile.value) buildMobileDetail();
-  else buildDetail();
+  handleResetFilters();
   navigate(slugFor(i), i);
   if (
     coreTour.state.value.status === 'active' &&
@@ -551,6 +551,24 @@ function openFolder(i: number) {
   ) {
     coreTour.advance('moodboard-filters');
   }
+}
+
+function handleToggleStyle(styleGroup: string) {
+  folderFilters.toggleStyleGroup(styleGroup);
+  if (isMobile.value) buildMobileDetail();
+  else buildDetail();
+}
+
+function handleToggleMedium(medium: string) {
+  folderFilters.toggleMedium(medium);
+  if (isMobile.value) buildMobileDetail();
+  else buildDetail();
+}
+
+function handleResetFilters() {
+  folderFilters.reset();
+  if (isMobile.value) buildMobileDetail();
+  else buildDetail();
 }
 
 function slugFor(i: number) {
@@ -953,6 +971,16 @@ onBeforeUnmount(() => {
           class="absolute inset-0 pointer-events-none"
           data-tour="moodboard-filters"
         >
+          <FolderFilterPanelMobile
+            :style-options="folderFilters.availableStyleGroups.value"
+            :medium-options="folderFilters.availableMediums.value"
+            :selected-style-groups="folderFilters.selectedStyleGroups.value"
+            :selected-mediums="folderFilters.selectedMediums.value"
+            :has-active-filters="folderFilters.hasActiveFilters.value"
+            @toggle-style="handleToggleStyle"
+            @toggle-medium="handleToggleMedium"
+            @reset="handleResetFilters"
+          />
           <button
             class="absolute flex items-center gap-2 text-white/80"
             style="
@@ -1277,6 +1305,18 @@ onBeforeUnmount(() => {
               {{ selectedName }}
             </div>
           </div>
+
+          <FolderFilterPanel
+            v-if="!hasFolders"
+            :style-options="folderFilters.availableStyleGroups.value"
+            :medium-options="folderFilters.availableMediums.value"
+            :selected-style-groups="folderFilters.selectedStyleGroups.value"
+            :selected-mediums="folderFilters.selectedMediums.value"
+            :has-active-filters="folderFilters.hasActiveFilters.value"
+            @toggle-style="handleToggleStyle"
+            @toggle-medium="handleToggleMedium"
+            @reset="handleResetFilters"
+          />
         </div>
 
         <div

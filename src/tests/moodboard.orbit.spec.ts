@@ -10,6 +10,7 @@ const createSavedImages = (count: number): SavedImage[] =>
     title: `Saved ${index}`,
     styleGroup: 'minimal',
     style: [],
+    medium: null,
     createdAt: '2026-07-05T00:00:00.000Z'
   }));
 

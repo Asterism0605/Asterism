@@ -33,7 +33,7 @@ export const M_HOME_ORBIT: MoodboardOrbitParams = {
 };
 export const M_DETAIL_ORBIT: MoodboardOrbitParams = {
   cx: 220,
-  cy: 770,
+  cy: 818,
   rx: 597,
   ry: 597,
   node: { x: 470, y: 230 }
@@ -109,14 +109,14 @@ export function buildMoodboardOrbitImages(savedImages: SavedImage[]): MoodboardO
     isPlaceholder: false
   }));
 
-  if (uniqueImages.length >= 20) {
+  if (uniqueImages.length >= DETAIL_CAP) {
     return realImages;
   }
 
-  return [...realImages, ...buildPlaceholders(20 - uniqueImages.length)];
+  return [...realImages, ...buildPlaceholders(DETAIL_CAP - uniqueImages.length)];
 }
 
-export function buildPlaceholderOrbitImages(count = 20): MoodboardOrbitImage[] {
+export function buildPlaceholderOrbitImages(count = DETAIL_CAP): MoodboardOrbitImage[] {
   return buildPlaceholders(count);
 }
 
