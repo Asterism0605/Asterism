@@ -39,7 +39,8 @@ vi.mock('@/components/feature/guide/TourTransition.vue', () => ({
   default: {
     props: ['title', 'description', 'proceedLabel', 'laterLabel'],
     emits: ['proceed', 'later'],
-    template: '<div data-testid="tour-transition" />'
+    template:
+      '<div data-testid="tour-transition"><button data-testid="tour-transition-proceed" @click="$emit(\'proceed\')" /><button data-testid="tour-transition-later" @click="$emit(\'later\')" /></div>'
   }
 }))
 
@@ -363,6 +364,39 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.fullPath).toBe(routeBeforeEscape)
     expect(tour.state.value.status).toBe('transition')
     expect(wrapper.find('[data-testid="tour-transition"]').exists()).toBe(true)
+  })
+
+  it('starts Moodboard Chapter 2 only from the transition proceed action', async () => {
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.completeChapter('exploration')
+    const { router, wrapper } = await mountPictureDetail()
+
+    await wrapper.get('[data-testid="tour-transition-proceed"]').trigger('click')
+    await flushPromises()
+
+    expect(router.currentRoute.value.name).toBe('moodboard')
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      currentChapter: 'moodboard',
+      step: 'moodboard-images'
+    })
+  })
+
+  it('keeps Moodboard Chapter 2 paused when continuing later', async () => {
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.completeChapter('exploration')
+    const { router, wrapper } = await mountPictureDetail()
+
+    await wrapper.get('[data-testid="tour-transition-later"]').trigger('click')
+
+    expect(router.currentRoute.value.name).toBe('picture-detail')
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'paused',
+      currentChapter: 'moodboard',
+      step: 'moodboard-images'
+    })
   })
 
   it('does not complete exploration when saving fails', async () => {

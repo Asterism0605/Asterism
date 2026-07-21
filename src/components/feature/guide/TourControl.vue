@@ -34,7 +34,13 @@ const STEP_PROGRESS_KEYS: Record<UserTourStep, string> = {
   'detail-thumbnail': 'userTour.control.progress.detail',
   'detail-style-tag': 'userTour.control.progress.detail',
   'detail-consult': 'userTour.control.progress.detail',
-  'detail-save': 'userTour.control.progress.detail'
+  'detail-save': 'userTour.control.progress.detail',
+  'moodboard-images': 'userTour.control.progress.moodboard',
+  'moodboard-directory': 'userTour.control.progress.moodboard',
+  'moodboard-orbit': 'userTour.control.progress.moodboard',
+  'moodboard-folder': 'userTour.control.progress.moodboard',
+  'moodboard-filters': 'userTour.control.progress.moodboard',
+  'moodboard-tour-control': 'userTour.control.progress.moodboard'
 };
 
 const isDisabled = computed(() => props.status === 'active' || props.status === 'transition');
@@ -86,6 +92,7 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside, 
   >
     <button
       type="button"
+      data-tour="moodboard-tour-control"
       data-testid="user-tour-control-trigger"
       class="group flex size-8.5 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/[0.03] p-1.5 text-text-primary shadow-[0_0_0_1px_rgba(255,255,255,0.02)] transition-[border-color,box-shadow,opacity,transform] duration-200 hover:border-gold-dim/60 hover:shadow-[0_0_24px_rgba(168,137,58,0.24)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-dim/70 disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:border-white/15 disabled:hover:shadow-none motion-reduce:transition-none"
       :disabled="isDisabled"

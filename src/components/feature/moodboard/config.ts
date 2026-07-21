@@ -12,6 +12,7 @@ export const INNER_K = 0.9;
 export const ORBIT_SPEED = (Math.PI * 2) / 60;
 export const SPRITE_RADIUS = 2.2;
 export const MAX_FOLDERS = 10;
+export const DETAIL_CAP = 20;
 
 export const HO: MoodboardOrbitParams = {
   cx: 980,

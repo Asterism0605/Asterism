@@ -1,7 +1,7 @@
 # Asterism 使用者導覽企劃與規格書
 
 > 文件版本：v1.3
-> 更新日期：2026-07-19
+> 更新日期：2026-07-20
 > 適用範圍：首頁探索、圖片延展、圖片詳情、顧問諮詢、個人選單、Moodboard
 
 ---
@@ -299,14 +299,22 @@ home-overview → home-image → spread-related-group → spread-related-image
 
 ### 目前實作狀態
 
-已完成 Chapter 1 結束後的 Moodboard 入口過場，以及 `currentChapter = moodboard` 的暫停狀態保存；使用者可選擇前往 Moodboard，或稍後從常駐導覽入口繼續。Moodboard 軌道、資料夾與收藏整理的詳細 target 導覽尚未完成，仍依本節規格列為後續工作。
+已完成 Chapter 1 結束後的 Moodboard 入口過場、`currentChapter = moodboard` 的暫停狀態保存，以及六步驟 Chapter 2 導覽。只有「前往 Moodboard」與常駐入口的「繼續導覽」會啟動 Chapter 2；自由探索、稍後繼續後自行進入 Moodboard，以及空狀態都不會自動啟動。
 
-| Step | Target       | 說明文案                                   | 互動規則             | 完成條件         |
-| ---- | ------------ | ------------------------------------------ | -------------------- | ---------------- |
-| F1   | 中央收藏圖片 | 這裡會顯示你收藏的圖片，形成個人靈感集合。 | Highlight 中央區域   | 下一步           |
-| F2   | 外圈資料夾   | 外圈代表不同 Moodboard 資料夾。            | Highlight 資料夾節點 | 下一步           |
-| F3   | 軌道         | 拖曳軌道可以瀏覽其他資料夾。               | 顯示手勢動畫一次     | 實際拖曳或下一步 |
-| F4   | 資料夾       | 點擊資料夾，查看其中收藏的圖片。           | 指定資料夾可點       | 點擊資料夾       |
+| Step | Step ID | Target | 說明文案 | 互動規則 | 完成條件 |
+| ---- | ------- | ------ | -------- | -------- | -------- |
+| F1 | `moodboard-images` | 中央收藏圖片 | 這裡會顯示你收藏的圖片，形成個人靈感集合。 | Highlight 中央圖片群的有限範圍，不框選整張 canvas | 下一步 |
+| F2 | `moodboard-directory` | 左側資料夾目錄清單 | 可統一查看收藏資料夾；桌機版說明 hover 預覽，手機版只說明點按操作。 | target 不包含目錄上方留白；只做文字說明，不模擬 hover 或切換 3D 預覽 | 下一步 |
+| F3 | `moodboard-orbit` | 軌道 | 拖曳軌道可以瀏覽其他資料夾。 | 整個軌道區都可開始拖曳；停用中央圖片開啟行為 | 實際拖曳或下一步 |
+| F4 | `moodboard-folder` | 有收藏內容的資料夾 | 點擊資料夾，查看其中收藏的圖片。 | 先將可用資料夾定位至可點擊範圍並暫停軌道自轉 | 實際開啟後進入 F5 |
+| F5 | `moodboard-filters` | 資料夾內容區 | 可依領域或風格篩選，也可同時套用兩項條件。 | 目前只做文字介紹，不要求操作尚未完整實作的領域篩選 | 下一步 |
+| F6 | `moodboard-tour-control` | 右上角常駐導覽入口 | 可隨時從此暫停、繼續或重新開始網站導覽。 | Highlight 既有 TourControl trigger，不要求點擊 | 點擊「完成」後進入 Moodboard 完成過場 |
+
+F6 完成時先進入 `transition`，不立即持久化 `completed`。過場的「重新開始導覽」返回首頁並從 `home-overview` 開始；「繼續整理靈感」留在目前資料夾 route，並持久化 `completed`。
+
+`TourControl.vue` 只提供穩定 target；完成 callback 與 `TourTransition.vue` 由 `MoodboardOrbit.vue` 負責。任何 Moodboard target 在重試後仍不存在時，導覽回到 `paused`，保留目前 step 供常駐入口續播。
+
+測試需涵蓋 F5 前進但不完成、F6 Done 進入 `transition`、重新開始回首頁，以及留在資料夾並持久化完成狀態。
 
 ### 空狀態處理
 
@@ -562,7 +570,7 @@ interface TourAnalyticsPayload {
 - [x] 過場期間保留 AppHeader，僅允許中英文切換；語系切換不重播過場動畫（Frontend）
 - [x] Chapter 1 補上顧問諮詢 awareness 與收藏成功觸發條件（Frontend）
 - [ ] 個人選單導覽（Frontend）
-- [ ] Moodboard 軌道與資料夾導覽（Frontend）
+- [x] Moodboard 圖片、目錄、軌道、資料夾與篩選說明導覽（Frontend）
 - [ ] 顧問諮詢完整流程說明與預約導覽（Frontend）
 
 ### Phase 4 — 本機狀態與測試（預計 1.5–2 天）
@@ -586,7 +594,7 @@ interface TourAnalyticsPayload {
 - 導覽期間的頁面捲動位置、Header 層級與小裝置版面已納入跨 route／RWD 處理；TourControl 下拉選單沿用 UserMenu 的深色視覺語言，選項 icon 統一使用 Lucide。
 - Welcome Tour 的 `complete()`／`reset()` 事件會直接攜帶最新 `isHandled`，即使 `localStorage` 寫入或刪除失敗，同頁相同 userId 的 instance 仍能同步目前 session 狀態。
 
-尚未完成的範圍：Moodboard 軌道與資料夾的詳細步驟、UserMenu 內容導覽、顧問諮詢完整預約流程，以及完整 Playwright／Accessibility／Reduced motion 驗證。
+尚未完成的範圍：UserMenu 內容導覽、顧問諮詢完整預約流程、Moodboard 領域篩選功能，以及完整 Playwright／Accessibility／Reduced motion 驗證。
 
 ### Definition of Done
 
