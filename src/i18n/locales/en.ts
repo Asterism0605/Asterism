@@ -2,7 +2,7 @@
 export default {
   nav: {
     login: 'Log in',
-    signup: 'Sign Up'
+    signup: 'Sign up'
   },
   auth: {
     loginTitle: 'Login',
@@ -65,6 +65,7 @@ export default {
     saveContactSupport: 'Something went wrong. Please contact support.',
     saveFailed: 'Failed to save. Please try again.',
     folderLimit: 'You have reached the maximum of 10 folders.',
+    folderImageLimit: 'Each folder can hold up to 20 images.',
     folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
     folderCreatedAndSaved: 'Folder created and image saved.',
     deleteFolderFailed: 'Failed to delete the folder. Please try again.',
@@ -249,8 +250,12 @@ export default {
     photoOn: 'on {date}',
     photoBy: 'by',
     consultStylist: 'CONSULT STYLIST',
+    consultStylistBracket: 'Consult Stylist',
     addToMoodboard: 'ADD TO MOODBOARD',
+    addToMoodboardSpread: 'Add to Moodboard',
+    createNewFolder: 'Create New Folder',
     saveToFolder: 'SAVE TO FOLDER',
+    saveToFolderMenu: 'Save to Folder',
     similar: 'Similar',
     return: 'Return',
     notFoundEyebrow: 'Image not found',
@@ -290,7 +295,13 @@ export default {
     selectImageAria: 'Select image',
     deselectImageAria: 'Deselect image',
     selectAllImages: 'Select all',
-    deselectAllImages: 'Deselect all'
+    deselectAllImages: 'Deselect all',
+    filterByStyles: 'Filter by Styles',
+    filterByFields: 'Filter by Fields',
+    filterByHeading: 'Filter by',
+    filterGroupStyles: 'Styles',
+    filterGroupFields: 'Fields',
+    resetFilters: 'Reset'
   },
   userTour: {
     progress: '{current} / {total}',

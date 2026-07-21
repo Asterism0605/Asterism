@@ -1705,4 +1705,188 @@ describe('MoodboardOrbit', () => {
       expect(wrapper.find('[data-testid^="folder-directory-item-"]').exists()).toBe(false);
     });
   });
+
+  describe('folder filter panel', () => {
+    const filterableImage = (id: string, styleGroup: string, medium: string | null) => ({
+      itemId: `item-${id}`,
+      id,
+      src: `/style-image/${id}.webp`,
+      title: id,
+      styleGroup,
+      style: [],
+      medium,
+      createdAt: '2026-07-05T00:00:00.000Z'
+    });
+
+    function patchFolders() {
+      useAuthStore().$patch({
+        user: {
+          id: 'user-1',
+          email: 'user@example.com',
+          displayName: 'User',
+          isAdmin: false,
+          createdAt: '2026-07-01T00:00:00.000Z'
+        }
+      });
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        loadedProfileId: 'user-1',
+        folders: [
+          {
+            id: 'folder-1',
+            name: 'Studio',
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [
+              filterableImage('img-a', 'minimal', 'Interior Design'),
+              filterableImage('img-b', 'minimal', 'Architecture'),
+              filterableImage('img-c', 'retro', 'Interior Design')
+            ]
+          },
+          {
+            id: 'folder-2',
+            name: 'Other',
+            createdAt: '2026-07-04T00:00:00.000Z',
+            images: [filterableImage('img-d', 'retro', 'Architecture')]
+          }
+        ]
+      });
+      return store;
+    }
+
+    async function openFolder(
+      wrapper: Awaited<ReturnType<typeof mountMoodboard>>['wrapper'],
+      testId = 'moodboard-folder-0'
+    ) {
+      await wrapper.get(`[data-testid="${testId}"]`).trigger('click');
+      await flushPromises();
+    }
+
+    function findStyleOption(
+      wrapper: Awaited<ReturnType<typeof mountMoodboard>>['wrapper'],
+      label: string
+    ) {
+      return wrapper
+        .findAll('[data-testid="folder-filter-style-option"]')
+        .find((node) => node.text().includes(label));
+    }
+
+    it('shows every image in the folder before any filter is applied, with reset disabled', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+
+      expect(
+        wrapper.findAll(
+          '[data-testid^="moodboard-image-"]:not([data-testid="moodboard-image-delete-toggle"])'
+        )
+      ).toHaveLength(3);
+      expect(wrapper.get('[data-testid="folder-filter-reset"]').attributes('disabled')).toBeDefined();
+    });
+
+    it('selecting a style narrows the displayed images and enables the reset button', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+
+      await wrapper.get('[data-testid="folder-filter-styles-toggle"]').trigger('click');
+      await findStyleOption(wrapper, 'minimal')!.trigger('click');
+      await flushPromises();
+
+      expect(
+        wrapper.findAll(
+          '[data-testid^="moodboard-image-"]:not([data-testid="moodboard-image-delete-toggle"])'
+        )
+      ).toHaveLength(2);
+      expect(
+        wrapper.get('[data-testid="folder-filter-reset"]').attributes('disabled')
+      ).toBeUndefined();
+    });
+
+    it('resetting clears the filter, restores all images, and disables the reset button again', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+
+      await wrapper.get('[data-testid="folder-filter-styles-toggle"]').trigger('click');
+      await findStyleOption(wrapper, 'minimal')!.trigger('click');
+      await flushPromises();
+
+      await wrapper.get('[data-testid="folder-filter-reset"]').trigger('click');
+      await flushPromises();
+
+      expect(
+        wrapper.findAll(
+          '[data-testid^="moodboard-image-"]:not([data-testid="moodboard-image-delete-toggle"])'
+        )
+      ).toHaveLength(3);
+      expect(wrapper.get('[data-testid="folder-filter-reset"]').attributes('disabled')).toBeDefined();
+    });
+
+    it('resets the filters when opening a different folder', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+
+      await wrapper.get('[data-testid="folder-filter-styles-toggle"]').trigger('click');
+      await findStyleOption(wrapper, 'minimal')!.trigger('click');
+      await flushPromises();
+      expect(
+        wrapper.get('[data-testid="folder-filter-reset"]').attributes('disabled')
+      ).toBeUndefined();
+
+      const backButton = wrapper.findAll('button').find((button) => button.text().includes('Back'));
+      await backButton!.trigger('click');
+      await flushPromises();
+      await openFolder(wrapper, 'moodboard-folder-1');
+
+      expect(wrapper.get('[data-testid="folder-filter-reset"]').attributes('disabled')).toBeDefined();
+      expect(
+        wrapper.findAll(
+          '[data-testid^="moodboard-image-"]:not([data-testid="moodboard-image-delete-toggle"])'
+        )
+      ).toHaveLength(1);
+    });
+
+    it('collapses the accordion again after leaving and reopening the folder detail view', async () => {
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+
+      await wrapper.get('[data-testid="folder-filter-styles-toggle"]').trigger('click');
+      await flushPromises();
+      expect(wrapper.get('[data-testid="folder-filter-styles-toggle"]').attributes('aria-expanded')).toBe('true');
+
+      const backButton = wrapper.findAll('button').find((button) => button.text().includes('Back'));
+      await backButton!.trigger('click');
+      await flushPromises();
+      await openFolder(wrapper);
+
+      expect(wrapper.get('[data-testid="folder-filter-styles-toggle"]').attributes('aria-expanded')).toBe('false');
+    });
+
+    it('mobile: filters narrow the images shown in the folder detail view, reset restores them', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await wrapper.get('[data-testid="moodboard-folder-mobile-0"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.findAll('[data-testid="moodboard-mobile-photo"]')).toHaveLength(3);
+
+      await findStyleOption(wrapper, 'minimal')!.trigger('click');
+      await flushPromises();
+
+      expect(wrapper.findAll('[data-testid="moodboard-mobile-photo"]')).toHaveLength(2);
+
+      await wrapper.get('[data-testid="folder-filter-reset"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.findAll('[data-testid="moodboard-mobile-photo"]')).toHaveLength(3);
+    });
+  });
 });

@@ -128,7 +128,7 @@ onBeforeUnmount(() => {
 .recommendation-panel__field > span {
   color: #f0ede6d6;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .recommendation-panel__dropdown {
@@ -147,7 +147,7 @@ onBeforeUnmount(() => {
   background-color: #ffffff12;
   color: var(--color-text-primary);
   font-size: var(--text-caption);
-  font-weight: 500;
+  font-weight: 400;
   text-align: left;
   outline: none;
   transition:
@@ -200,7 +200,7 @@ onBeforeUnmount(() => {
   padding: 8px 12px;
   color: #f0ede6c7;
   font-size: var(--text-caption);
-  font-weight: 600;
+  font-weight: 400;
   text-align: left;
   transition:
     background-color 180ms ease,
