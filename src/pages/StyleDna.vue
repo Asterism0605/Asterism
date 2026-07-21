@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main class="style-dna-page">
+  <main class="style-dna-page relative h-screen w-screen overflow-hidden bg-[var(--color-deep)]">
     <StyleComparisonPicker
       v-if="currentQuestion"
       :left-option="currentQuestion.options[0]"
@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
 
     <!-- 手機版（≤768px）：有效答案越多，星點越靠近畫面底部；跳過不改變進度。 -->
     <div
-      class="quiz-progress-mobile"
+      class="quiz-progress-mobile pointer-events-none fixed top-[64px] right-[18px] bottom-0 z-[61] hidden w-[20px]"
       role="progressbar"
       :aria-label="$t('dna.quizProgress')"
       aria-valuemin="0"
@@ -141,26 +141,23 @@ onBeforeUnmount(() => {
       })"
       :style="{ '--quiz-progress': mobileProgress }"
     >
-      <span class="qpm-track" aria-hidden="true"></span>
-      <span class="qpm-fill" aria-hidden="true"></span>
-      <span class="qpm-star" aria-hidden="true">✦</span>
+      <span
+        class="qpm-track absolute top-[7px] bottom-[7px] left-1/2 w-px bg-[rgb(240_237_230_/_28%)]"
+        aria-hidden="true"
+      ></span>
+      <span
+        class="qpm-fill absolute top-[7px] left-1/2 w-px bg-[rgb(240_237_230_/_74%)]"
+        aria-hidden="true"
+      ></span>
+      <span
+        class="qpm-star absolute left-1/2 text-[14px] leading-none text-[var(--color-text-primary)]"
+        aria-hidden="true"
+      >✦</span>
     </div>
   </main>
 </template>
 
 <style scoped>
-.style-dna-page {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background: var(--color-deep);
-}
-
-.quiz-progress-mobile {
-  display: none;
-}
-
 @media (max-width: 768px) {
   .quiz-progress {
     display: none;
@@ -168,44 +165,21 @@ onBeforeUnmount(() => {
 
   /* 星點完整保留在畫面內，並沿同一段有效軌道等距移動 12 次。 */
   .quiz-progress-mobile {
-    position: fixed;
-    top: 64px;
-    right: 18px;
-    bottom: 0;
-    z-index: 61;
     display: block;
-    width: 20px;
-    pointer-events: none;
   }
 
   .qpm-track,
   .qpm-fill {
-    position: absolute;
-    left: 50%;
-    top: 7px;
-    bottom: 7px;
-    width: 1px;
     transform: translateX(-50%);
   }
 
-  .qpm-track {
-    background: rgb(240 237 230 / 28%);
-  }
-
   .qpm-fill {
-    bottom: auto;
     height: calc(var(--quiz-progress) * (100% - 14px));
-    background: rgb(240 237 230 / 74%);
     transition: height 480ms ease;
   }
 
   .qpm-star {
-    position: absolute;
-    left: 50%;
     top: calc(7px + var(--quiz-progress) * (100% - 14px));
-    color: var(--color-text-primary);
-    font-size: 14px;
-    line-height: 1;
     text-shadow:
       0 0 8px rgb(240 237 230 / 76%),
       0 0 18px rgb(240 237 230 / 38%);

@@ -45,45 +45,45 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 
 <template>
   <div
-    class="comparison-stage"
+    class="comparison-stage absolute inset-0 overflow-hidden bg-[var(--color-deep)]"
     :class="{
       'is-hover-suppressed': suppressHover,
       'is-skipping': isSkipping
     }"
   >
     <div
-      class="axis axis--left"
+      class="axis axis--left absolute top-0 bottom-0 left-[17.4%] z-[1] w-px bg-[rgb(240_237_230_/_72%)]"
       aria-hidden="true"
     ></div>
     <div
-      class="axis axis--right"
+      class="axis axis--right absolute top-0 bottom-0 left-[86.2%] z-[1] w-px bg-[rgb(240_237_230_/_72%)]"
       aria-hidden="true"
     ></div>
     <div
-      class="axis-dot axis-dot--left"
+      class="axis-dot axis-dot--left absolute left-[17.4%] z-[4] h-[20px] w-[20px] rounded-[50%] bg-[rgb(240_237_230_/_92%)]"
       :class="isLeftHigh ? 'is-high' : 'is-low'"
       aria-hidden="true"
     ></div>
     <div
-      class="axis-dot axis-dot--right"
+      class="axis-dot axis-dot--right absolute left-[86.2%] z-[4] h-[20px] w-[20px] rounded-[50%] bg-[rgb(240_237_230_/_92%)]"
       :class="isLeftHigh ? 'is-low' : 'is-high'"
       aria-hidden="true"
     ></div>
 
     <div
-      class="instruction"
+      class="instruction absolute top-[17%] right-[13.8%] left-[17.4%] z-[5] flex items-center gap-[28px] text-[14px] text-[rgb(240_237_230_/_80%)]"
       aria-hidden="true"
     >
-      <span class="instruction-line"></span>
+      <span class="instruction-line relative ml-[55px] h-px w-[230px] bg-[rgb(240_237_230_/_78%)]"></span>
       <span>{{ $t('dna.pickerHint') }}</span>
       <span
-        class="desktop-progress"
+        class="desktop-progress pointer-events-none relative h-[20px] min-w-[80px] flex-1"
         :style="{ '--desktop-progress': desktopProgress }"
         aria-hidden="true"
       >
-        <span class="desktop-progress__track"></span>
-        <span class="desktop-progress__fill"></span>
-        <span class="desktop-progress__star">✦</span>
+        <span class="desktop-progress__track absolute top-1/2 right-0 left-0 h-px bg-[rgb(240_237_230_/_78%)]"></span>
+        <span class="desktop-progress__fill absolute top-1/2 left-0 h-px bg-[rgb(240_237_230_/_92%)]"></span>
+        <span class="desktop-progress__star absolute top-1/2 text-[14px] leading-[1] text-[var(--color-text-primary)]">✦</span>
       </span>
     </div>
 
@@ -92,11 +92,11 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
     </span>
 
     <span
-      class="ambient-dot ambient-dot--one"
+      class="ambient-dot ambient-dot--one pointer-events-none absolute z-[2] h-[6px] w-[6px] rounded-[50%] bg-[var(--color-text-primary)]"
       aria-hidden="true"
     ></span>
     <span
-      class="ambient-dot ambient-dot--two"
+      class="ambient-dot ambient-dot--two pointer-events-none absolute z-[2] h-[10px] w-[10px] rounded-[50%] bg-[var(--color-text-primary)]"
       aria-hidden="true"
     ></span>
     <span
@@ -105,19 +105,20 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
     ></span>
 
     <div
-      class="choice"
+      class="choice absolute z-[4] h-[520px] w-[520px] isolate"
       :class="getChoiceClass('left', leftOption.id)"
     >
-      <span class="orbit" aria-hidden="true"></span>
-      <span class="star star--large" aria-hidden="true"></span>
-      <span class="star star--medium" aria-hidden="true"></span>
-      <span class="star star--small" aria-hidden="true"></span>
+      <span class="orbit pointer-events-none absolute z-[1]" aria-hidden="true"></span>
+      <span class="star star--large pointer-events-none absolute z-[3] h-[10px] w-[10px] rounded-[50%] bg-[var(--color-text-primary)]" aria-hidden="true"></span>
+      <span class="star star--medium pointer-events-none absolute z-[3] h-[8px] w-[8px] rounded-[50%] bg-[var(--color-text-primary)]" aria-hidden="true"></span>
+      <span class="star star--small pointer-events-none absolute z-[3] h-[5px] w-[5px] rounded-[50%] bg-[var(--color-text-primary)]" aria-hidden="true"></span>
       <button
-        class="image-card"
+        class="image-card absolute top-[94px] left-[176px] z-[5] h-[330px] w-[230px] cursor-pointer overflow-hidden border-0 bg-[#111] p-0 [box-shadow:0_18px_60px_rgb(0_0_0_/_22%)]"
         type="button"
         @click="emit('select', leftOption.id)"
       >
         <img
+          class="block h-full w-full object-cover"
           :src="leftOption.image.url"
           :alt="leftOption.image.title ?? leftOption.image.id"
         />
@@ -125,19 +126,20 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
     </div>
 
     <div
-      class="choice"
+      class="choice absolute z-[4] h-[520px] w-[520px] isolate"
       :class="getChoiceClass('right', rightOption.id)"
     >
-      <span class="orbit" aria-hidden="true"></span>
-      <span class="star star--large" aria-hidden="true"></span>
-      <span class="star star--medium" aria-hidden="true"></span>
-      <span class="star star--small" aria-hidden="true"></span>
+      <span class="orbit pointer-events-none absolute z-[1]" aria-hidden="true"></span>
+      <span class="star star--large pointer-events-none absolute z-[3] h-[10px] w-[10px] rounded-[50%] bg-[var(--color-text-primary)]" aria-hidden="true"></span>
+      <span class="star star--medium pointer-events-none absolute z-[3] h-[8px] w-[8px] rounded-[50%] bg-[var(--color-text-primary)]" aria-hidden="true"></span>
+      <span class="star star--small pointer-events-none absolute z-[3] h-[5px] w-[5px] rounded-[50%] bg-[var(--color-text-primary)]" aria-hidden="true"></span>
       <button
-        class="image-card"
+        class="image-card absolute top-[40px] left-[100px] z-[5] h-[310px] w-[232px] cursor-pointer overflow-hidden border-0 bg-[#111] p-0 [box-shadow:0_18px_60px_rgb(0_0_0_/_22%)]"
         type="button"
         @click="emit('select', rightOption.id)"
       >
         <img
+          class="block h-full w-full object-cover"
           :src="rightOption.image.url"
           :alt="rightOption.image.title ?? rightOption.image.id"
         />
@@ -145,7 +147,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
     </div>
 
     <button
-      class="skip-pair"
+      class="skip-pair absolute z-[7] cursor-pointer rounded-[999px] border border-solid border-[rgb(240_237_230_/_32%)] bg-[rgb(6_6_8_/_38%)] px-[18px] py-[10px] text-[12px] tracking-[0.08em] text-[rgb(240_237_230_/_72%)]"
       type="button"
       :disabled="!canSkip || selectedId !== null"
       data-testid="style-dna-skip"
@@ -157,47 +159,9 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 </template>
 
 <style scoped>
-.comparison-stage {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  background: var(--color-deep);
-}
-
-.axis {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  z-index: 1;
-  width: 1px;
-  background: rgb(240 237 230 / 72%);
-}
-
-.axis--left {
-  left: 17.4%;
-}
-
-.axis--right {
-  left: 86.2%;
-}
-
 .axis-dot {
-  position: absolute;
-  z-index: 4;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: rgb(240 237 230 / 92%);
   transform: translate(-50%, -50%);
   transition: top 500ms ease;
-}
-
-.axis-dot--left {
-  left: 17.4%;
-}
-
-.axis-dot--right {
-  left: 86.2%;
 }
 
 .axis-dot.is-high {
@@ -209,44 +173,16 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .instruction {
-  position: absolute;
-  left: 17.4%;
-  right: 13.8%;
-  top: 17%;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  color: rgb(240 237 230 / 80%);
-  font-size: 14px;
   transform: translateX(0);
-}
-
-.desktop-progress {
-  position: relative;
-  flex: 1;
-  min-width: 80px;
-  height: 20px;
-  pointer-events: none;
 }
 
 .desktop-progress__track,
 .desktop-progress__fill {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  height: 1px;
   transform: translateY(-50%);
-}
-
-.desktop-progress__track {
-  right: 0;
-  background: rgb(240 237 230 / 78%);
 }
 
 .desktop-progress__fill {
   width: calc(var(--desktop-progress) * 100%);
-  background: rgb(240 237 230 / 92%);
   box-shadow:
     0 0 6px rgb(240 237 230 / 72%),
     0 0 14px rgb(240 237 230 / 34%);
@@ -254,25 +190,12 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .desktop-progress__star {
-  position: absolute;
   left: calc(7px + var(--desktop-progress) * (100% - 14px));
-  top: 50%;
-  color: var(--color-text-primary);
-  font-size: 14px;
-  line-height: 1;
   text-shadow:
     0 0 8px rgb(240 237 230 / 76%),
     0 0 18px rgb(240 237 230 / 38%);
   transform: translate(-50%, -50%);
   transition: left 480ms ease;
-}
-
-.instruction-line {
-  position: relative;
-  width: 230px;
-  height: 1px;
-  margin-left: 55px;
-  background: rgb(240 237 230 / 78%);
 }
 
 .instruction-line::before {
@@ -288,11 +211,6 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .choice {
-  position: absolute;
-  z-index: 4;
-  width: 520px;
-  height: 520px;
-  isolation: isolate;
   transition:
     top 500ms ease,
     opacity 240ms ease,
@@ -343,14 +261,6 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .image-card {
-  position: absolute;
-  z-index: 5;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
-  background: #111;
-  box-shadow: 0 18px 60px rgb(0 0 0 / 22%);
-  cursor: pointer;
   transition:
     opacity 240ms ease,
     transform 220ms ease,
@@ -372,31 +282,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
   transform: translateY(-3px) scale(1.018);
 }
 
-.choice--left .image-card {
-  left: 176px;
-  top: 94px;
-  width: 230px;
-  height: 330px;
-}
-
-.choice--right .image-card {
-  left: 100px;
-  top: 40px;
-  width: 232px;
-  height: 310px;
-}
-
-.image-card img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .orbit {
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
   animation: orbitFloat 6.4s ease-in-out infinite;
 }
 
@@ -432,27 +318,7 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .star {
-  position: absolute;
-  z-index: 3;
-  border-radius: 50%;
-  background: var(--color-text-primary);
-  pointer-events: none;
   animation: starFloat 4.4s ease-in-out infinite;
-}
-
-.star--large {
-  width: 10px;
-  height: 10px;
-}
-
-.star--medium {
-  width: 8px;
-  height: 8px;
-}
-
-.star--small {
-  width: 5px;
-  height: 5px;
 }
 
 .choice--left .star--large {
@@ -491,26 +357,17 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .ambient-dot {
-  position: absolute;
-  z-index: 2;
-  border-radius: 50%;
-  background: var(--color-text-primary);
-  pointer-events: none;
   animation: starFloat 5.2s ease-in-out infinite;
 }
 
 .ambient-dot--one {
   left: 47%;
   top: 28.5%;
-  width: 6px;
-  height: 6px;
 }
 
 .ambient-dot--two {
   right: 6%;
   top: 32%;
-  width: 10px;
-  height: 10px;
   animation-delay: -1.7s;
 }
 
@@ -528,18 +385,8 @@ const getChoiceClass = (side: 'left' | 'right', optionId: string) => [
 }
 
 .skip-pair {
-  position: absolute;
   left: 32px;
   bottom: 32px;
-  z-index: 7;
-  padding: 10px 18px;
-  border: 1px solid rgb(240 237 230 / 32%);
-  border-radius: 999px;
-  color: rgb(240 237 230 / 72%);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  background: rgb(6 6 8 / 38%);
-  cursor: pointer;
   transform: none;
   transition:
     color 180ms ease,
