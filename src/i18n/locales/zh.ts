@@ -65,6 +65,7 @@ export default {
     saveContactSupport: '發生錯誤，請聯絡客服。',
     saveFailed: '儲存失敗，請再試一次。',
     folderLimit: '你已達到資料夾數量上限（10 個）。',
+    folderImageLimit: '每個資料夾最多只能收藏 20 張圖片。',
     folderCleanupFailed: '圖片儲存失敗，且資料夾清除失敗，請至情緒板手動刪除此資料夾。',
     folderCreatedAndSaved: '資料夾已建立，圖片已儲存。',
     deleteFolderFailed: '資料夾刪除失敗，請再試一次。',
@@ -285,7 +286,13 @@ export default {
     selectImageAria: '選取圖片',
     deselectImageAria: '取消選取圖片',
     selectAllImages: '全選圖片',
-    deselectAllImages: '取消全選'
+    deselectAllImages: '取消全選',
+    filterByStyles: '依風格篩選',
+    filterByFields: '依領域篩選',
+    filterByHeading: '篩選方式',
+    filterGroupStyles: '風格',
+    filterGroupFields: '領域',
+    resetFilters: '重置'
   },
   userTour: {
     progress: '{current} / {total}',

@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
+import { MOODBOARD_FOLDER_IMAGE_MAX } from '@/constants/moodboard.constants';
 import { getMoodboardViewModel } from '@/services/moodboard.service';
 import type {
   MoodboardFolder,
@@ -25,10 +26,10 @@ export const useMoodboardStore = defineStore('moodboard', () => {
     () =>
       status.value === 'success' &&
       totalSavedItemCount.value > 0 &&
-      totalSavedItemCount.value < 20
+      totalSavedItemCount.value < MOODBOARD_FOLDER_IMAGE_MAX
   );
   const isNormal = computed(
-    () => status.value === 'success' && totalSavedItemCount.value >= 20
+    () => status.value === 'success' && totalSavedItemCount.value >= MOODBOARD_FOLDER_IMAGE_MAX
   );
 
   function fetchMoodboard(profileId: string): Promise<void> {

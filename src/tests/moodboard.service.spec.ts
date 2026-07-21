@@ -3,12 +3,14 @@ import type { MoodboardFolder } from '@/types/moodboard';
 
 const {
   addMoodboardItem,
+  countMoodboardItems,
   createMoodboardFolder,
   deleteMoodboardFolder,
   deleteMoodboardItems,
   fetchMoodboardFolders
 } = vi.hoisted(() => ({
   addMoodboardItem: vi.fn(),
+  countMoodboardItems: vi.fn(),
   createMoodboardFolder: vi.fn(),
   deleteMoodboardFolder: vi.fn(),
   deleteMoodboardItems: vi.fn(),
@@ -17,6 +19,7 @@ const {
 
 vi.mock('@/api/moodboard.api', () => ({
   addMoodboardItem,
+  countMoodboardItems,
   createMoodboardFolder,
   deleteMoodboardFolder,
   deleteMoodboardItems,
@@ -29,7 +32,8 @@ vi.mock('@/services/image.service', () => ({
     src: `/style-image/${id}.webp`,
     title: `Image ${id}`,
     styleGroup: 'minimal',
-    style: ['Minimalism']
+    style: ['Minimalism'],
+    medium: 'Interior Design'
   })
 }));
 
@@ -68,7 +72,8 @@ describe('moodboard.service', () => {
               url: '/image-1.webp',
               title: 'Image 1',
               style_group: 'minimal',
-              style: ['Minimalism']
+              style: ['Minimalism'],
+              medium: 'Interior Design'
             }
           }
         ]
@@ -83,8 +88,41 @@ describe('moodboard.service', () => {
       itemId: 'item-1',
       id: 'image-1',
       src: '/image-1.webp',
-      styleGroup: 'minimal'
+      styleGroup: 'minimal',
+      medium: 'Interior Design'
     });
+  });
+
+  it('maps a null medium through as-is', async () => {
+    fetchMoodboardFolders.mockResolvedValue([
+      {
+        id: 'folder-1',
+        profile_id: 'user-1',
+        name: 'Studio',
+        created_at: '2026-07-05T00:00:00.000Z',
+        updated_at: '2026-07-05T00:00:00.000Z',
+        moodboard_items: [
+          {
+            id: 'item-1',
+            folder_id: 'folder-1',
+            image_id: 'image-1',
+            created_at: '2026-07-05T00:00:00.000Z',
+            images: {
+              id: 'image-1',
+              url: '/image-1.webp',
+              title: 'Image 1',
+              style_group: 'minimal',
+              style: ['Minimalism'],
+              medium: null
+            }
+          }
+        ]
+      }
+    ]);
+
+    const viewModel = await getMoodboardViewModel('user-1');
+
+    expect(viewModel.folders[0].images[0].medium).toBeNull();
   });
 
   it('keeps only the newest fetched item for each image id', async () => {
@@ -198,6 +236,7 @@ describe('moodboard.service', () => {
   });
 
   it('adds an image through the Data API and returns an immediate UI item', async () => {
+    countMoodboardItems.mockResolvedValue(0);
     addMoodboardItem.mockResolvedValue({
       id: 'item-1',
       folder_id: 'folder-1',
@@ -214,8 +253,18 @@ describe('moodboard.service', () => {
     expect(item).toMatchObject({
       itemId: 'item-1',
       id: 'image-1',
-      src: '/style-image/image-1.webp'
+      src: '/style-image/image-1.webp',
+      medium: 'Interior Design'
     });
+  });
+
+  it('rejects adding an image when the folder already has 20 images', async () => {
+    countMoodboardItems.mockResolvedValue(20);
+
+    await expect(addItem('folder-1', 'image-1')).rejects.toThrow(
+      'Each folder can hold up to 20 images.'
+    );
+    expect(addMoodboardItem).not.toHaveBeenCalled();
   });
 
   it('deletes a folder through the Data API', async () => {
@@ -251,6 +300,7 @@ describe('moodboard.service', () => {
             title: 'Image 1',
             styleGroup: 'minimal',
             style: [],
+            medium: null,
             createdAt: '2026-07-05T00:00:00.000Z'
           }
         ]
