@@ -145,6 +145,19 @@ export async function addMoodboardItem(
   return data as Omit<MoodboardItemRow, 'images'>;
 }
 
+export async function countMoodboardItems(folderId: string): Promise<number> {
+  const { count, error } = await getSupabase()
+    .from('moodboard_items')
+    .select('*', { count: 'exact', head: true })
+    .eq('folder_id', folderId);
+
+  if (error) {
+    throw error;
+  }
+
+  return count ?? 0;
+}
+
 // 不像 deleteMoodboardFolder 那樣過濾 profile_id：item 的 ownership 是透過
 // folder_id 關聯到 moodboard_folders.profile_id，交給 Supabase RLS policy 擋非本人操作。
 export async function deleteMoodboardItem({
