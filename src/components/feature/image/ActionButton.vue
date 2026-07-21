@@ -153,11 +153,15 @@ onBeforeUnmount(() => {
           "
         >
           <template v-if="props.bracket">
+            <span class="sr-only">
+              {{ $t('image.consultStylistBracket') }}
+            </span>
             <span class="invisible" aria-hidden="true">
               {{ $t('image.consultStylistBracket') }}
             </span>
             <ScrambleText
               ref="consultScramble"
+              aria-hidden="true"
               class="absolute inset-0 whitespace-nowrap"
               :text="$t('image.consultStylistBracket')"
               chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
@@ -209,11 +213,15 @@ onBeforeUnmount(() => {
             "
           >
             <template v-if="usesBracketButton">
+              <span class="sr-only">
+                {{ $t('image.addToMoodboardSpread') }}
+              </span>
               <span class="invisible" aria-hidden="true">{{
                 $t('image.addToMoodboardSpread')
               }}</span>
               <ScrambleText
                 ref="moodboardScramble"
+                aria-hidden="true"
                 class="absolute inset-0 whitespace-nowrap"
                 :text="$t('image.addToMoodboardSpread')"
                 chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "

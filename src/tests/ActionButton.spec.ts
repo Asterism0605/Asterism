@@ -215,6 +215,22 @@ describe('ActionButton', () => {
     expect(wrapper.emitted('consult')).toHaveLength(1);
   });
 
+  it('bracket consult 按鈕以穩定文字提供 accessible name 並隱藏動畫文字', () => {
+    const wrapper = mount(ActionButton, { props: { variant: 'consult', bracket: true } });
+    const button = wrapper.find('button');
+
+    expect(button.find('.sr-only').text()).toBe('Consult Stylist');
+    expect(button.findComponent({ name: 'ScrambleText' }).attributes('aria-hidden')).toBe('true');
+  });
+
+  it('bracket moodboard 按鈕以穩定文字提供 accessible name 並隱藏動畫文字', () => {
+    const wrapper = mount(ActionButton, { props: { bracket: true } });
+    const button = wrapper.find('button');
+
+    expect(button.find('.sr-only').text()).toBe('Add to Moodboard');
+    expect(button.findComponent({ name: 'ScrambleText' }).attributes('aria-hidden')).toBe('true');
+  });
+
   it('disabled 為 true 時停用主按鈕', () => {
     const wrapper = mount(ActionButton, { props: { disabled: true } });
 

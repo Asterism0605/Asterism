@@ -122,20 +122,6 @@
   }
 }
 
-/* 中文字重 */
-html:lang(zh-Hant) h1 {
-  font-weight: 100;
-}
-
-html:lang(zh-Hant) h2,
-html:lang(zh-Hant) h3 {
-  font-weight: 200;
-}
-
-html:lang(zh-Hant) p {
-  font-weight: 300;
-}
-
 /* 中文字距 */
 html:lang(zh-Hant) .zh-heading-spacing {
   letter-spacing: 1px;
@@ -157,11 +143,19 @@ html:lang(zh-Hant) .zh-heading-spacing {
     line-height: var(--leading-tight);
   }
 
+  html:lang(zh-Hant) .text-h1 {
+    font-weight: 100;
+  }
+
   .text-h2 {
     font-size: var(--text-h2);
     font-family: var(--font-family-title);
     font-weight: 500;
     line-height: var(--leading-tight);
+  }
+
+  html:lang(zh-Hant) .text-h2 {
+    font-weight: 200;
   }
 
   .text-h3 {
@@ -171,8 +165,16 @@ html:lang(zh-Hant) .zh-heading-spacing {
     line-height: var(--leading-tight);
   }
 
+  html:lang(zh-Hant) .text-h3 {
+    font-weight: 200;
+  }
+
   .text-body {
     font-size: var(--text-body);
+  }
+
+  html:lang(zh-Hant) .text-body {
+    font-weight: 300;
   }
   .text-caption {
     font-size: var(--text-caption);

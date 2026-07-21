@@ -14,7 +14,6 @@ interface Props {
   colorPalette: string[];
   styleTags: string[];
   photographerName?: string;
-  photographerRole?: string;
   photographerDate?: string;
   photographerAvatarUrl?: string;
   similarImages?: ImageSpreadNode[];
@@ -30,7 +29,6 @@ withDefaults(defineProps<Props>(), {
   sourceUrl: undefined,
   sourceLabel: undefined,
   photographerName: undefined,
-  photographerRole: undefined,
   photographerDate: undefined,
   photographerAvatarUrl: undefined,
   similarImages: () => [],
