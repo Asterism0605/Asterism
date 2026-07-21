@@ -290,6 +290,29 @@ describe('MoodboardOrbit', () => {
     });
   });
 
+  it.each([
+    ['desktop', 1024, 'moodboard-folder-0'],
+    ['mobile', 375, 'moodboard-folder-mobile-0']
+  ])('does not open an orbit folder on %s during the orbit drag step', async (_, width, testId) => {
+    Object.defineProperty(window, 'innerWidth', {
+      value: width,
+      configurable: true,
+      writable: true
+    });
+    prepareMoodboardTour('moodboard-orbit');
+    const { wrapper, router } = await mountMoodboard();
+    await flushPromises();
+
+    await wrapper.get(`[data-testid="${testId}"]`).trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.path).toBe('/moodboard');
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'moodboard-orbit'
+    });
+  });
+
   it('makes the whole orbit surface interactive during the drag step', async () => {
     prepareMoodboardTour('moodboard-orbit');
     const { wrapper } = await mountMoodboard();

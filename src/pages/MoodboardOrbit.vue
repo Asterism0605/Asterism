@@ -50,7 +50,7 @@ import { deleteFolder } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
 import { usePageUserTour } from '@/composables/guide/usePageUserTour';
-import type { UserTourStep } from '@/composables/guide/useUserTour';
+import { useMoodboardTourFlow } from '@/composables/guide/useMoodboardTourFlow';
 
 const props = defineProps({
   height: { type: String, default: '100vh' },
@@ -71,20 +71,6 @@ const { t } = useI18n();
 const moodboardStore = useMoodboardStore();
 const authStore = useAuthStore();
 const coreTour = usePageUserTour(computed(() => authStore.user?.id));
-const moodboardTourSteps: ReadonlySet<UserTourStep> = new Set([
-  'moodboard-images',
-  'moodboard-directory',
-  'moodboard-orbit',
-  'moodboard-folder',
-  'moodboard-filters',
-  'moodboard-tour-control'
-]);
-const isMoodboardOrbitTourActive = computed(
-  () =>
-    coreTour.state.value.status === 'active' &&
-    coreTour.state.value.currentChapter === 'moodboard' &&
-    coreTour.state.value.step === 'moodboard-orbit'
-);
 
 const activeSphereFolderId = ref<string | null>(null);
 const previewingEmptyFolderId = ref<string | null>(null);
@@ -137,6 +123,16 @@ const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
 const deleteImageHoverIdx = ref<string | null>(null);
+
+const { isOrbitActive: isMoodboardOrbitTourActive } = useMoodboardTourFlow({
+  coreTour,
+  folders: computed(() => moodboardStore.folders),
+  status: computed(() => moodboardStore.status),
+  isEmpty: computed(() => moodboardStore.isEmpty),
+  hasFolders,
+  previewFolder,
+  goHome
+});
 
 const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
   useDeleteMoodboardImage({
@@ -282,53 +278,6 @@ function nearDeskFolder(point: { x: number; y: number }): boolean {
 }
 
 const showEmpty = computed(() => moodboardStore.status === 'idle' || moodboardStore.isEmpty);
-
-function showCurrentMoodboardTourStep(): void {
-  const { currentChapter, status, step } = coreTour.state.value;
-  if (
-    currentChapter !== 'moodboard' ||
-    status !== 'active' ||
-    !step ||
-    !moodboardTourSteps.has(step) ||
-    moodboardStore.status !== 'success'
-  ) {
-    return;
-  }
-
-  if (moodboardStore.isEmpty) {
-    coreTour.pause();
-    return;
-  }
-
-  if (step === 'moodboard-folder') {
-    const folderIndex = moodboardStore.folders.findIndex((folder) => folder.images.length > 0);
-    if (folderIndex !== -1) previewFolder(folderIndex);
-  }
-
-  void coreTour.showStep(step, {
-    onPrevious: showPreviousMoodboardTourStep,
-    onComplete:
-      step === 'moodboard-tour-control'
-        ? () => coreTour.completeChapter('moodboard')
-        : undefined
-  });
-}
-
-function showPreviousMoodboardTourStep(): void {
-  const previousSteps: Partial<Record<UserTourStep, UserTourStep>> = {
-    'moodboard-directory': 'moodboard-images',
-    'moodboard-orbit': 'moodboard-directory',
-    'moodboard-folder': 'moodboard-orbit',
-    'moodboard-filters': 'moodboard-folder',
-    'moodboard-tour-control': 'moodboard-filters'
-  };
-  const currentStep = coreTour.state.value.step;
-  const previousStep = currentStep ? previousSteps[currentStep] : undefined;
-  if (!previousStep) return;
-
-  if (currentStep === 'moodboard-filters') goHome();
-  coreTour.advance(previousStep);
-}
 
 async function restartCompletedTour(): Promise<void> {
   await router.push({ name: 'home' });
@@ -589,6 +538,7 @@ function buildMobileHome() {
 }
 
 function openFolder(i: number) {
+  if (isMoodboardOrbitTourActive.value) return;
   if (!moodboardStore.folders[i]?.images.length) return;
 
   selectedFolder.value = i;
@@ -646,18 +596,6 @@ watch(
   }
 );
 
-watch(
-  [
-    () => coreTour.state.value.status,
-    () => coreTour.state.value.step,
-    () => moodboardStore.status,
-    () => moodboardStore.isEmpty,
-    hasFolders
-  ],
-  showCurrentMoodboardTourStep,
-  { immediate: true, flush: 'post' }
-);
-
 function onFolderClick(i: number) {
   if (consumeDidDrag()) return;
   openFolder(i);
@@ -690,12 +628,6 @@ function armOrOpenMobileFolderById(folderId: string) {
 
 function onSphereClick() {
   if (consumeDidDrag()) return;
-  if (
-    coreTour.state.value.status === 'active' &&
-    coreTour.state.value.step === 'moodboard-orbit'
-  ) {
-    return;
-  }
 
   const folder = sphereFolder.value;
   if (!folder) return;
