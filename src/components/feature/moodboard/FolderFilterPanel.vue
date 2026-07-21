@@ -109,26 +109,23 @@ const mediumsExpanded = ref(false);
 <style scoped>
 .folder-filter-panel {
   position: absolute;
-  inset: 0;
+  left: 5%;
+  top: 5%;
   z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
   pointer-events: none;
 }
 
 .folder-filter {
-  position: absolute;
   width: 260px;
   pointer-events: auto;
 }
 
 .folder-filter--styles {
-  left: 5%;
-  top: 5%;
   width: 450px;
-}
-
-.folder-filter--mediums {
-  left: 7%;
-  top: 24%;
 }
 
 .folder-filter__label {
@@ -271,8 +268,6 @@ const mediumsExpanded = ref(false);
 }
 
 .folder-filter__reset {
-  left: 21%;
-  top: 53%;
   width: auto;
   padding: 6px 14px;
   border: 1px solid rgba(240, 237, 230, 0.3);

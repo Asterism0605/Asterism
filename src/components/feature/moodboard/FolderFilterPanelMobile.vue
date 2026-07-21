@@ -22,7 +22,14 @@ const { localizeTaxon } = useTaxonomyLabel();
 </script>
 
 <template>
-  <div class="folder-filter-panel">
+  <div
+    class="folder-filter-panel"
+    role="group"
+    aria-labelledby="mobile-folder-filter-heading"
+  >
+    <h2 id="mobile-folder-filter-heading" class="sr-only">
+      {{ t('moodboard.filterByHeading') }}
+    </h2>
     <span
       class="folder-filter-panel__rule folder-filter-panel__rule--styles"
       aria-hidden="true"
@@ -32,7 +39,13 @@ const { localizeTaxon } = useTaxonomyLabel();
       aria-hidden="true"
     ></span>
 
-    <div class="folder-filter folder-filter--styles">
+    <section
+      class="folder-filter folder-filter--styles"
+      aria-labelledby="mobile-folder-filter-styles-heading"
+    >
+      <h3 id="mobile-folder-filter-styles-heading" class="sr-only">
+        {{ t('moodboard.filterGroupStyles') }}
+      </h3>
       <div class="folder-filter__viewport">
         <div class="folder-filter__list">
           <span class="filter-node filter-node--filter-by" aria-hidden="true">
@@ -59,9 +72,15 @@ const { localizeTaxon } = useTaxonomyLabel();
           </button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="folder-filter folder-filter--mediums">
+    <section
+      class="folder-filter folder-filter--mediums"
+      aria-labelledby="mobile-folder-filter-mediums-heading"
+    >
+      <h3 id="mobile-folder-filter-mediums-heading" class="sr-only">
+        {{ t('moodboard.filterGroupFields') }}
+      </h3>
       <div class="folder-filter__viewport">
         <div class="folder-filter__list">
           <span class="filter-node filter-node--heading" aria-hidden="true">
@@ -84,7 +103,7 @@ const { localizeTaxon } = useTaxonomyLabel();
           </button>
         </div>
       </div>
-    </div>
+    </section>
 
     <button
       type="button"
