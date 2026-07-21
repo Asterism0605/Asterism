@@ -2,12 +2,17 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ArrowRight, Play, RotateCcw } from '@lucide/vue';
-import type { UserTourStatus, UserTourStep } from '@/composables/guide/useUserTour';
+import type {
+  UserTourChapter,
+  UserTourStatus,
+  UserTourStep
+} from '@/composables/guide/useUserTour';
 import DropdownMenu from '@/components/ui/DropdownMenu.vue';
 
 const props = defineProps<{
   status: UserTourStatus;
   step: UserTourStep | null;
+  chapter?: UserTourChapter | null;
 }>();
 
 const emit = defineEmits<{
@@ -28,13 +33,18 @@ const STEP_PROGRESS_KEYS: Record<UserTourStep, string> = {
   'spread-related-image': 'userTour.control.progress.spread',
   'detail-thumbnail': 'userTour.control.progress.detail',
   'detail-style-tag': 'userTour.control.progress.detail',
+  'detail-consult': 'userTour.control.progress.detail',
   'detail-save': 'userTour.control.progress.detail'
 };
 
-const isDisabled = computed(() => props.status === 'active');
+const isDisabled = computed(() => props.status === 'active' || props.status === 'transition');
 const isPaused = computed(() => props.status === 'paused');
 const isCompleted = computed(() => props.status === 'completed');
-const progressLabel = computed(() => (props.step ? t(STEP_PROGRESS_KEYS[props.step]) : ''));
+const progressLabel = computed(() => {
+  if (props.step) return t(STEP_PROGRESS_KEYS[props.step]);
+  if (props.chapter === 'moodboard') return t('userTour.control.progress.moodboard');
+  return '';
+});
 
 function closeMenu(): void {
   isOpen.value = false;

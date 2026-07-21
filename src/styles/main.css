@@ -32,6 +32,17 @@
   --leading-normal: 1.5;
 }
 
+@keyframes tourArrow {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(0.35rem);
+  }
+}
+
 @layer base {
   html,
   body {

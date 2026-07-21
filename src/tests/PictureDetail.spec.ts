@@ -35,6 +35,14 @@ vi.mock('@/components/feature/image/ImageStagePanel.vue', () => ({
   }
 }))
 
+vi.mock('@/components/feature/guide/TourTransition.vue', () => ({
+  default: {
+    props: ['title', 'description', 'proceedLabel', 'laterLabel'],
+    emits: ['proceed', 'later'],
+    template: '<div data-testid="tour-transition" />'
+  }
+}))
+
 const fakeUser = {
   id: 'user-1',
   email: 'member@example.com',
@@ -216,7 +224,7 @@ describe('PictureDetail', () => {
       status: 'active',
       step: 'detail-style-tag'
     })
-    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 7')
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 8')
 
     wrapper.unmount()
     host.remove()
@@ -228,7 +236,7 @@ describe('PictureDetail', () => {
     })
   })
 
-  it('continues from the desktop thumbnail through steps 7 and 8', async () => {
+  it('continues from the desktop thumbnail through consultant awareness and save', async () => {
     const rects = vi.spyOn(Element.prototype, 'getClientRects').mockReturnValue([
       new DOMRect(100, 100, 200, 300)
     ] as unknown as DOMRectList)
@@ -242,7 +250,7 @@ describe('PictureDetail', () => {
     const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: host })
     await flushPromises()
 
-    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('5 / 7')
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('5 / 8')
     await wrapper.get('[data-test="image-stage-panel"]').trigger('click')
     await flushPromises()
 
@@ -250,12 +258,21 @@ describe('PictureDetail', () => {
       status: 'active',
       step: 'detail-style-tag'
     })
-    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 7')
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('6 / 8')
 
     await wrapper.get('[data-tour="detail-style-tag"] button').trigger('click')
     wrapper.findComponent(StyleTagModal).vm.$emit('update:modelValue', false)
     await flushPromises()
-    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('7 / 7')
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('7 / 8')
+
+    document.querySelector<HTMLButtonElement>('[data-testid="user-tour-next"]')?.click()
+    await flushPromises()
+
+    expect(document.querySelector('.asterism-tour-popover')?.textContent).toContain('8 / 8')
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      step: 'detail-save'
+    })
 
     wrapper.unmount()
     visibleThumbnailTarget.remove()
@@ -307,6 +324,64 @@ describe('PictureDetail', () => {
 
     expect(router.currentRoute.value.name).toBe('consultant')
     expect(router.currentRoute.value.query.sourceImageId).toBe('rpl-interior-lighting-001')
+  })
+
+  it('completes exploration and shows the Moodboard transition only after saving succeeds', async () => {
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-save', 'y2k-main-001')
+
+    const { wrapper, folderId } = await mountPictureDetail()
+    await wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))!.trigger('click')
+    await wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))!.trigger('click')
+    await wrapper.findAll('button').find((b) => b.text() === 'test')!.trigger('click')
+    await flushPromises()
+
+    expect(addItem).toHaveBeenCalledWith(folderId, 'y2k-main-001')
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'transition',
+      currentChapter: 'exploration',
+      completedChapters: ['exploration']
+    })
+    expect(wrapper.find('[data-testid="tour-transition"]').exists()).toBe(true)
+  })
+
+  it('does not leave Picture Detail when Escape is pressed during the chapter transition', async () => {
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-save', 'y2k-main-001')
+    tour.completeChapter('exploration')
+
+    const { router, wrapper } = await mountPictureDetail()
+    await flushPromises()
+    const routeBeforeEscape = router.currentRoute.value.fullPath
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await flushPromises()
+
+    expect(router.currentRoute.value.fullPath).toBe(routeBeforeEscape)
+    expect(tour.state.value.status).toBe('transition')
+    expect(wrapper.find('[data-testid="tour-transition"]').exists()).toBe(true)
+  })
+
+  it('does not complete exploration when saving fails', async () => {
+    vi.mocked(addItem).mockRejectedValueOnce(new Error('save failed'))
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.advance('detail-save', 'y2k-main-001')
+
+    const { wrapper } = await mountPictureDetail()
+    await wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))!.trigger('click')
+    await wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))!.trigger('click')
+    await wrapper.findAll('button').find((b) => b.text() === 'test')!.trigger('click')
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'paused',
+      step: 'detail-save',
+      completedChapters: []
+    })
+    expect(wrapper.find('[data-testid="tour-transition"]').exists()).toBe(false)
   })
 
   it('routes unauthenticated consult clicks to sign-up with the consultant target', async () => {

@@ -73,6 +73,15 @@ describe('TourControl', () => {
     expect(wrapper.find('[data-testid="user-tour-control-menu"]').exists()).toBe(false);
   });
 
+  it('also disables the target control during a chapter transition', async () => {
+    const wrapper = mountTourControl('transition');
+    const trigger = wrapper.get('[data-testid="user-tour-control-trigger"]');
+
+    expect(trigger.attributes('disabled')).toBeDefined();
+    await trigger.trigger('click');
+    expect(wrapper.find('[data-testid="user-tour-control-menu"]').exists()).toBe(false);
+  });
+
   it('closes the menu with Escape and when clicking outside', async () => {
     const wrapper = mountTourControl('idle');
     const trigger = wrapper.get('[data-testid="user-tour-control-trigger"]');

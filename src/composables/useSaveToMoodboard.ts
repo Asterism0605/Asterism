@@ -5,6 +5,7 @@ import { addItem, createFolder, deleteFolder } from '@/services/moodboard.servic
 import { showToast } from '@/composables/useToast';
 import {
   MOODBOARD_FEEDBACK_DISPLAY_MS,
+  MOODBOARD_FOLDER_IMAGE_MAX,
   MOODBOARD_FOLDER_NAME_MAX_LENGTH
 } from '@/constants/moodboard.constants';
 import { useAuthStore } from '@/stores/auth.store';
@@ -39,9 +40,15 @@ export function useSaveToMoodboard() {
   onScopeDispose(clearJustSavedTimer);
 
   function mapSaveImageError(e: unknown, t: ReturnType<typeof useI18n>['t']): string {
-    return e instanceof Error && e.message === 'Image not found.'
-      ? t('toast.saveContactSupport')
-      : t('toast.saveFailed');
+    if (e instanceof Error) {
+      if (e.message === 'Image not found.') {
+        return t('toast.saveContactSupport');
+      }
+      if (e.message === `Each folder can hold up to ${MOODBOARD_FOLDER_IMAGE_MAX} images.`) {
+        return t('toast.folderImageLimit');
+      }
+    }
+    return t('toast.saveFailed');
   }
 
   function redirectGuestToLogin(imageId: string): false {

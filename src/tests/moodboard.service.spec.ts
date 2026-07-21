@@ -3,12 +3,14 @@ import type { MoodboardFolder } from '@/types/moodboard';
 
 const {
   addMoodboardItem,
+  countMoodboardItems,
   createMoodboardFolder,
   deleteMoodboardFolder,
   deleteMoodboardItem,
   fetchMoodboardFolders
 } = vi.hoisted(() => ({
   addMoodboardItem: vi.fn(),
+  countMoodboardItems: vi.fn(),
   createMoodboardFolder: vi.fn(),
   deleteMoodboardFolder: vi.fn(),
   deleteMoodboardItem: vi.fn(),
@@ -17,6 +19,7 @@ const {
 
 vi.mock('@/api/moodboard.api', () => ({
   addMoodboardItem,
+  countMoodboardItems,
   createMoodboardFolder,
   deleteMoodboardFolder,
   deleteMoodboardItem,
@@ -198,6 +201,7 @@ describe('moodboard.service', () => {
   });
 
   it('adds an image through the Data API and returns an immediate UI item', async () => {
+    countMoodboardItems.mockResolvedValue(0);
     addMoodboardItem.mockResolvedValue({
       id: 'item-1',
       folder_id: 'folder-1',
@@ -216,6 +220,15 @@ describe('moodboard.service', () => {
       id: 'image-1',
       src: '/style-image/image-1.webp'
     });
+  });
+
+  it('rejects adding an image when the folder already has 20 images', async () => {
+    countMoodboardItems.mockResolvedValue(20);
+
+    await expect(addItem('folder-1', 'image-1')).rejects.toThrow(
+      'Each folder can hold up to 20 images.'
+    );
+    expect(addMoodboardItem).not.toHaveBeenCalled();
   });
 
   it('deletes a folder through the Data API', async () => {

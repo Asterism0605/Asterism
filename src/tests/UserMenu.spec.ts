@@ -12,6 +12,16 @@ function mountUserMenu(displayName = 'Ada Lovelace', isConsultant = false) {
   });
 }
 
+function mountDisabledUserMenu() {
+  return mount(UserMenu, {
+    props: {
+      displayName: 'Ada Lovelace',
+      initials: 'AL',
+      disabled: true
+    }
+  });
+}
+
 function findButtonByText(wrapper: ReturnType<typeof mountUserMenu>, text: string) {
   const button = wrapper.findAll('button').find((candidate) => candidate.text() === text);
 
@@ -82,5 +92,17 @@ describe('UserMenu', () => {
     await findButtonByText(wrapper, 'Style DNA')?.trigger('click');
 
     expect(wrapper.emitted('styleDna')).toHaveLength(1);
+  });
+
+  it('does not open while disabled by a tour transition', async () => {
+    const wrapper = mountDisabledUserMenu();
+    const trigger = wrapper.find('[aria-haspopup="true"]');
+
+    expect(trigger.attributes('disabled')).toBeDefined();
+    expect(trigger.attributes('aria-disabled')).toBe('true');
+
+    await trigger.trigger('click');
+
+    expect(wrapper.find('[data-testid="user-menu-menu"]').exists()).toBe(false);
   });
 });

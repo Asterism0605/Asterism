@@ -1,7 +1,7 @@
 # Asterism 使用者導覽企劃與規格書
 
-> 文件版本：v1.2
-> 更新日期：2026-07-15  
+> 文件版本：v1.3
+> 更新日期：2026-07-19
 > 適用範圍：首頁探索、圖片延展、圖片詳情、顧問諮詢、個人選單、Moodboard
 
 ---
@@ -158,14 +158,25 @@ Phase 2 為支援 Home、ImageSpread 與 PictureDetail 跨 route 延續，先建
 interface UserTourState {
   version: 1;
   enabled: boolean;
-  status: 'idle' | 'active' | 'paused' | 'completed';
+  status: 'idle' | 'active' | 'paused' | 'transition' | 'completed';
+  currentChapter: 'exploration' | 'moodboard' | null;
+  completedChapters: ('exploration' | 'moodboard')[];
   step: UserTourStep | null;
   targetImageId?: string;
   updatedAt: string;
 }
 ```
 
-點擊 Pause 先以既有 `ModalOverlay.vue` 確認；確認暫停後保留進度，只有重新開始才重置進度。完整的常駐選單、各頁獨立重播與 `completedFlows` 保留給後續階段。本期不新增 schema、不同步 Supabase，也不建立登入後的雲端導覽狀態；跨裝置同步列為未來需求，未達到實際需求前不實作。
+目前 Chapter 1 使用 8 個具名步驟，依序涵蓋首頁、四領域延展與圖片詳情：
+
+```text
+home-overview → home-image → spread-related-group → spread-related-image
+→ detail-thumbnail → detail-style-tag → detail-consult → detail-save
+```
+
+`detail-consult` 只負責顧問諮詢功能認知；`detail-save` 則要求收藏成功後才算完成 Chapter 1。完成 Chapter 1 後，狀態先進入 `transition`，由過場 CTA 決定前往 Moodboard 或稍後繼續。確認稍後繼續時保留 `currentChapter = moodboard` 與空白 step，讓使用者可以從常駐入口再進入 Moodboard。
+
+點擊 Pause 先以既有 `ModalOverlay.vue` 確認；確認暫停後保留進度，只有重新開始才重置進度。Welcome Tour 的 `localStorage` 只負責重新整理後還原狀態；同一頁內的多個 composable instance 透過攜帶 `userId` 與最新 `isHandled` 的自訂事件同步，不以舊 storage 值覆蓋目前 session。核心導覽仍不新增 schema、不同步 Supabase，也不建立登入後的雲端導覽狀態；跨裝置同步列為未來需求，未達到實際需求前不實作。
 
 ### 5.4 Phase 1 身份分流
 
@@ -249,8 +260,8 @@ interface UserTourState {
 | ---- | -------------- | ------------------------------------------------------ | ----------------------------- | ---------------- |
 | C1   | 左側懸浮縮圖   | 點擊縮圖，可以切換同一風格中的相關圖片。               | 指定縮圖顯示 focus ring       | 點擊縮圖         |
 | C2   | 主題／風格標籤 | 標籤不只用來分類，也能查看風格背景、特徵與應用方式。   | 點擊標籤開啟 Popover / Drawer | 開啟說明         |
-| C3   | 收藏功能       | 將圖片存入既有資料夾，或建立新的 Moodboard 資料夾。    | 開啟收藏選單                  | 完成收藏或下一步 |
-| C4   | 顧問諮詢 CTA   | 顧問會結合這張圖片、Style DNA 與你填寫的需求提供建議。 | 顯示資料來源說明              | 下一步或進入諮詢 |
+| C3   | 顧問諮詢 CTA   | 顧問會結合這張圖片、Style DNA 與你填寫的需求提供建議。 | 顯示資料來源說明              | 顯示功能認知     |
+| C4   | 收藏功能       | 將圖片存入既有資料夾，或建立新的 Moodboard 資料夾。    | 開啟收藏選單，完成後觸發 Chapter 過場 | 收藏成功         |
 
 ### 標籤知識說明規格
 
@@ -285,6 +296,10 @@ interface UserTourState {
 ### 目標
 
 讓使用者理解收藏圖片、資料夾與軌道拖曳操作。
+
+### 目前實作狀態
+
+已完成 Chapter 1 結束後的 Moodboard 入口過場，以及 `currentChapter = moodboard` 的暫停狀態保存；使用者可選擇前往 Moodboard，或稍後從常駐導覽入口繼續。Moodboard 軌道、資料夾與收藏整理的詳細 target 導覽尚未完成，仍依本節規格列為後續工作。
 
 | Step | Target       | 說明文案                                   | 互動規則             | 完成條件         |
 | ---- | ------------ | ------------------------------------------ | -------------------- | ---------------- |
@@ -542,17 +557,36 @@ interface TourAnalyticsPayload {
 
 - [x] AppHeader 常駐 Target 導覽控制入口（Frontend）
 - [x] 導覽控制支援開始、繼續、重新開始與完成後重播（Frontend）
+- [x] 以 `exploration`／`moodboard` Chapter 狀態區分跨功能流程（Frontend）
+- [x] Chapter 1 完成後顯示 GSAP Chapter 過場，提供前往 Moodboard／稍後繼續兩個 CTA（Frontend）
+- [x] 過場期間保留 AppHeader，僅允許中英文切換；語系切換不重播過場動畫（Frontend）
+- [x] Chapter 1 補上顧問諮詢 awareness 與收藏成功觸發條件（Frontend）
 - [ ] 個人選單導覽（Frontend）
 - [ ] Moodboard 軌道與資料夾導覽（Frontend）
-- [ ] 顧問諮詢說明（Frontend）
+- [ ] 顧問諮詢完整流程說明與預約導覽（Frontend）
 
 ### Phase 4 — 本機狀態與測試（預計 1.5–2 天）
 
-- [ ] 建立 UserMenu 動態選單與各頁獨立重播（Frontend）
-- [x] 補 Phase 2 狀態、Driver adapter 與核心頁面 Vitest（Frontend）
+- [ ] 建立 UserMenu 導覽與各頁獨立重播（Frontend）
+- [x] 補 Phase 2／3 狀態、Driver adapter 與核心頁面 Vitest（Frontend）
+- [x] 補 Welcome Tour 跨 composable instance 的即時狀態同步與失敗降級測試（Frontend）
 - [ ] 補完整 Playwright 跨頁流程測試（Frontend）
 - [ ] RWD、Accessibility、Reduced motion 驗證（Frontend）
 - [ ] 評估既有事件追蹤能力；本期不新增資料表或追蹤服務（Frontend）
+
+### 目前實作紀錄（截至 2026-07-19）
+
+目前已完成的可交付範圍如下：
+
+- Welcome Tour 與登入後核心導覽均維持使用者 ID 隔離的本機狀態。
+- Chapter 1 已串起首頁、圖片延展與圖片詳情，共 8 個具名步驟；顧問諮詢為 awareness，收藏成功才完成 Chapter 1。
+- `TourControl.vue` 已掛載於 `AppHeader.vue`，支援開始、繼續、重新開始與 Chapter 狀態提示；導覽 active／transition 時會鎖定控制入口。
+- Chapter 1 完成後會進入 GSAP 過場，包含完成圓圈與勾選動畫、分段文案、前往 Moodboard／稍後繼續 CTA，以及中英文切換。
+- 過場期間 AppHeader 保持露出，只有語言切換可操作；語系變更只更新文字，不重新播放過場動畫。
+- 導覽期間的頁面捲動位置、Header 層級與小裝置版面已納入跨 route／RWD 處理；TourControl 下拉選單沿用 UserMenu 的深色視覺語言，選項 icon 統一使用 Lucide。
+- Welcome Tour 的 `complete()`／`reset()` 事件會直接攜帶最新 `isHandled`，即使 `localStorage` 寫入或刪除失敗，同頁相同 userId 的 instance 仍能同步目前 session 狀態。
+
+尚未完成的範圍：Moodboard 軌道與資料夾的詳細步驟、UserMenu 內容導覽、顧問諮詢完整預約流程，以及完整 Playwright／Accessibility／Reduced motion 驗證。
 
 ### Definition of Done
 

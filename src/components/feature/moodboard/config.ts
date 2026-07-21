@@ -109,14 +109,14 @@ export function buildMoodboardOrbitImages(savedImages: SavedImage[]): MoodboardO
     isPlaceholder: false
   }));
 
-  if (uniqueImages.length >= 20) {
+  if (uniqueImages.length >= DETAIL_CAP) {
     return realImages;
   }
 
-  return [...realImages, ...buildPlaceholders(20 - uniqueImages.length)];
+  return [...realImages, ...buildPlaceholders(DETAIL_CAP - uniqueImages.length)];
 }
 
-export function buildPlaceholderOrbitImages(count = 20): MoodboardOrbitImage[] {
+export function buildPlaceholderOrbitImages(count = DETAIL_CAP): MoodboardOrbitImage[] {
   return buildPlaceholders(count);
 }
 

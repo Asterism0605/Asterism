@@ -1,6 +1,8 @@
 import { getCurrentInstance, onBeforeUnmount, ref, toValue, watch, type MaybeRefOrGetter } from 'vue';
 
-export type UserTourStatus = 'idle' | 'active' | 'paused' | 'completed';
+export type UserTourStatus = 'idle' | 'active' | 'paused' | 'transition' | 'completed';
+
+export type UserTourChapter = 'exploration' | 'moodboard';
 
 export type UserTourStep =
   | 'home-overview'
@@ -9,12 +11,15 @@ export type UserTourStep =
   | 'spread-related-image'
   | 'detail-thumbnail'
   | 'detail-style-tag'
+  | 'detail-consult'
   | 'detail-save';
 
 export interface UserTourState {
   version: 1;
   enabled: boolean;
   status: UserTourStatus;
+  currentChapter: UserTourChapter | null;
+  completedChapters: UserTourChapter[];
   step: UserTourStep | null;
   targetImageId?: string;
   updatedAt: string;
@@ -22,7 +27,18 @@ export interface UserTourState {
 
 const STORAGE_PREFIX = 'asterism:tour:core';
 const USER_TOUR_STATE_EVENT = 'asterism:user-tour-state-change';
-const STATUSES: ReadonlySet<UserTourStatus> = new Set(['idle', 'active', 'paused', 'completed']);
+interface UserTourStateChange {
+  userId: string;
+  state: UserTourState;
+}
+const STATUSES: ReadonlySet<UserTourStatus> = new Set([
+  'idle',
+  'active',
+  'paused',
+  'transition',
+  'completed'
+]);
+const CHAPTERS: ReadonlySet<UserTourChapter> = new Set(['exploration', 'moodboard']);
 const STEPS: ReadonlySet<UserTourStep> = new Set([
   'home-overview',
   'home-image',
@@ -30,6 +46,7 @@ const STEPS: ReadonlySet<UserTourStep> = new Set([
   'spread-related-image',
   'detail-thumbnail',
   'detail-style-tag',
+  'detail-consult',
   'detail-save'
 ]);
 
@@ -42,6 +59,8 @@ function createIdleState(): UserTourState {
     version: 1,
     enabled: true,
     status: 'idle',
+    currentChapter: null,
+    completedChapters: [],
     step: null,
     updatedAt: new Date().toISOString()
   };
@@ -52,16 +71,36 @@ function isUserTourState(value: unknown): value is UserTourState {
 
   const state = value as Record<string, unknown>;
   const step = state.step;
+  const currentChapter = state.currentChapter;
+  const completedChapters = state.completedChapters;
 
   return (
     state.version === 1 &&
     typeof state.enabled === 'boolean' &&
     typeof state.status === 'string' &&
     STATUSES.has(state.status as UserTourStatus) &&
+    (currentChapter === undefined ||
+      currentChapter === null ||
+      (typeof currentChapter === 'string' && CHAPTERS.has(currentChapter as UserTourChapter))) &&
+    (completedChapters === undefined ||
+      (Array.isArray(completedChapters) &&
+        completedChapters.every(
+          (chapter): chapter is UserTourChapter =>
+            typeof chapter === 'string' && CHAPTERS.has(chapter as UserTourChapter)
+        ))) &&
     (step === null || (typeof step === 'string' && STEPS.has(step as UserTourStep))) &&
     (state.targetImageId === undefined || typeof state.targetImageId === 'string') &&
     typeof state.updatedAt === 'string'
   );
+}
+
+function normalizeState(value: UserTourState): UserTourState {
+  return {
+    ...value,
+    currentChapter:
+      value.currentChapter ?? (value.step === null ? null : 'exploration'),
+    completedChapters: value.completedChapters ?? []
+  };
 }
 
 function readState(userId: string): UserTourState {
@@ -74,7 +113,7 @@ function readState(userId: string): UserTourState {
     if (!raw) return createIdleState();
 
     const parsed: unknown = JSON.parse(raw);
-    if (isUserTourState(parsed)) return parsed;
+    if (isUserTourState(parsed)) return normalizeState(parsed);
 
     window.localStorage.removeItem(key);
   } catch {
@@ -96,10 +135,15 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
   const currentInstance = getCurrentInstance();
   const handleExternalStateChange = (event: Event) => {
     const currentUserId = toValue(userId);
-    const detail = (event as CustomEvent<{ userId?: string }>).detail;
+    const detail = (event as CustomEvent<Partial<UserTourStateChange>>).detail;
 
-    if (currentUserId && detail?.userId === currentUserId) {
-      state.value = readState(currentUserId);
+    if (
+      currentUserId &&
+      detail?.userId === currentUserId &&
+      detail.state &&
+      isUserTourState(detail.state)
+    ) {
+      state.value = normalizeState(detail.state);
     }
   };
 
@@ -124,7 +168,9 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
 
     if (currentInstance) {
       window.dispatchEvent(
-        new CustomEvent(USER_TOUR_STATE_EVENT, { detail: { userId: currentUserId } })
+        new CustomEvent<UserTourStateChange>(USER_TOUR_STATE_EVENT, {
+          detail: { userId: currentUserId, state: next }
+        })
       );
     }
   }
@@ -142,6 +188,8 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
     update({
       enabled: true,
       status: 'active',
+      currentChapter: 'exploration',
+      completedChapters: [],
       step: 'home-overview',
       targetImageId
     });
@@ -162,11 +210,45 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
   }
 
   function advance(step: UserTourStep, targetImageId = state.value.targetImageId): void {
-    update({ status: 'active', step, targetImageId });
+    update({
+      status: 'active',
+      currentChapter: state.value.currentChapter ?? 'exploration',
+      step,
+      targetImageId
+    });
+  }
+
+  // Chapter 1 currently uses this as the handoff into the Moodboard transition.
+  function completeChapter(chapter: UserTourChapter): void {
+    const completedChapters = state.value.completedChapters.includes(chapter)
+      ? state.value.completedChapters
+      : [...state.value.completedChapters, chapter];
+
+    update({
+      status: 'transition',
+      currentChapter: chapter,
+      completedChapters,
+      step: null,
+      targetImageId: undefined
+    });
+  }
+
+  function enterChapter(chapter: UserTourChapter): void {
+    update({
+      status: 'paused',
+      currentChapter: chapter,
+      step: null,
+      targetImageId: undefined
+    });
   }
 
   function complete(): void {
-    update({ status: 'completed', step: null, targetImageId: undefined });
+    update({
+      status: 'completed',
+      currentChapter: null,
+      step: null,
+      targetImageId: undefined
+    });
   }
 
   function setEnabled(enabled: boolean): void {
@@ -177,7 +259,14 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
   }
 
   function optOut(): void {
-    update({ enabled: false, status: 'idle', step: null, targetImageId: undefined });
+    update({
+      enabled: false,
+      status: 'idle',
+      currentChapter: null,
+      completedChapters: [],
+      step: null,
+      targetImageId: undefined
+    });
   }
 
   watch(
@@ -194,6 +283,8 @@ export function useUserTour(userId: MaybeRefOrGetter<string | null | undefined>)
     resume,
     restart,
     advance,
+    completeChapter,
+    enterChapter,
     complete,
     setEnabled,
     optOut
