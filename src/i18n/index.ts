@@ -23,9 +23,18 @@ function initialLocale(): AppLocale {
   return saved === 'zh' || saved === 'en' ? saved : 'en';
 }
 
+function syncDocumentLanguage(locale: AppLocale): void {
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = locale === 'zh' ? 'zh-Hant' : 'en';
+  }
+}
+
+const locale = initialLocale();
+syncDocumentLanguage(locale);
+
 export const i18n = createI18n({
   legacy: false,
-  locale: initialLocale(),
+  locale,
   fallbackLocale: 'en',
   messages
 });
@@ -35,5 +44,5 @@ export function setLocale(locale: AppLocale): void {
   if (typeof localStorage !== 'undefined') {
     localStorage.setItem(STORAGE_KEY, locale);
   }
-  document.documentElement.lang = locale === 'zh' ? 'zh-Hant' : 'en';
+  syncDocumentLanguage(locale);
 }

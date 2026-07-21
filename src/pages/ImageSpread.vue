@@ -5,6 +5,7 @@ import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue'
 import ImageSpreadOverlay from '@/components/feature/image/ImageSpreadOverlay.vue'
 import RelatedImageCluster from '@/components/feature/image/RelatedImageCluster.vue'
 import Button from '@/components/ui/Button.vue'
+import ImageSpreadLabel from '@/components/ui/ImageSpreadLabel.vue'
 import {
   getImageById,
   getMediumGroupImages,
@@ -280,7 +281,7 @@ watch(
   <ImageSpreadEntrance
     as="main"
     kind="page"
-    class="relative min-h-screen overflow-x-hidden overflow-y-auto bg-void pt-[var(--app-header-height)] text-text-primary [--app-header-height:92px]"
+    class="relative min-h-screen overflow-x-hidden overflow-y-auto bg-void pt-[var(--app-header-height)] text-text-primary [scrollbar-gutter:stable] [--app-header-height:92px]"
   >
     <ImageSpreadEntrance
       kind="wash"
@@ -290,7 +291,7 @@ watch(
 
     <section
       v-if="centerImage"
-      class="relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] w-full max-w-[1600px] flex-col items-center justify-center gap-8 px-6 pb-10 pt-6 lg:px-10 lg:pt-8"
+      class="pointer-events-none relative z-10 mx-auto flex min-h-[calc(100vh-var(--app-header-height))] w-full max-w-[1600px] flex-col items-center justify-center gap-8 px-6 pb-10 pt-6 lg:px-10 lg:pt-8"
     >
       <div class="relative z-10 flex w-full flex-1 items-center justify-center">
         <RelatedImageCluster
@@ -301,6 +302,7 @@ watch(
         />
 
         <ImageSpreadOverlay
+          class="pointer-events-auto"
           :image="centerImage"
           :saved="isSaved"
           :disabled="isSaving"
@@ -315,7 +317,7 @@ watch(
         />
       </div>
 
-      <div class="grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
+      <div class="pointer-events-auto grid w-full max-w-3xl grid-cols-2 gap-3 lg:hidden">
         <ImageSpreadEntrance
           v-for="(image, index) in relatedImages"
           :key="image.id"
@@ -334,13 +336,12 @@ watch(
             loading="lazy"
             class="aspect-[4/5] w-full cursor-pointer object-cover"
           />
-          <span
+          <ImageSpreadLabel
             v-if="getRelatedImageLabel(image)"
             data-tour-medium-label
-            class="absolute bottom-2 left-2 max-w-[calc(100%-1rem)] rounded-full bg-void/78 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-text-primary"
           >
             {{ getRelatedImageLabel(image) }}
-          </span>
+          </ImageSpreadLabel>
         </ImageSpreadEntrance>
       </div>
     </section>

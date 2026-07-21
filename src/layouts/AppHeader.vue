@@ -165,7 +165,7 @@ async function resumeUserTour(): Promise<void> {
       <img class="w-8 h-8" :src="siteLogoSrc" alt="Asterism" />
     </button>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-6">
       <div
         ref="langMenuRef"
         class="relative"
@@ -231,8 +231,8 @@ async function resumeUserTour(): Promise<void> {
       />
 
       <template v-if="!authStore.isAuthenticated">
-        <Button variant="ghost" class="min-w-[80px] text-center" @click="router.push({ name: 'login' })">{{ $t('nav.login') }}</Button>
-        <Button variant="primary" class="min-w-[88px] text-center" @click="router.push({ name: 'sign-up' })">{{ $t('nav.signup') }}</Button>
+        <Button variant="ghost" class="header-auth-button px-0! text-center" @click="router.push({ name: 'login' })">{{ $t('nav.login') }}</Button>
+        <Button variant="ghost" class="header-auth-button px-0! text-center text-[13.5px]!" @click="router.push({ name: 'sign-up' })">{{ $t('nav.signup') }}</Button>
       </template>
 
       <UserMenu
@@ -260,3 +260,17 @@ async function resumeUserTour(): Promise<void> {
     <img :src="imageSearchEntryIcon" alt="" class="size-full" />
   </router-link>
 </template>
+
+<style scoped>
+@media (min-width: 768px) {
+  .header-auth-button:lang(zh-Hant) {
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .header-auth-button:lang(zh-Hant) {
+    font-size: 12px !important;
+  }
+}
+</style>

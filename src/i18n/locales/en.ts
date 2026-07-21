@@ -2,7 +2,7 @@
 export default {
   nav: {
     login: 'Log in',
-    signup: 'Sign Up'
+    signup: 'Sign up'
   },
   auth: {
     loginTitle: 'Login',
@@ -250,8 +250,12 @@ export default {
     photoOn: 'on {date}',
     photoBy: 'by',
     consultStylist: 'CONSULT STYLIST',
+    consultStylistBracket: 'Consult Stylist',
     addToMoodboard: 'ADD TO MOODBOARD',
+    addToMoodboardSpread: 'Add to Moodboard',
+    createNewFolder: 'Create New Folder',
     saveToFolder: 'SAVE TO FOLDER',
+    saveToFolderMenu: 'Save to Folder',
     similar: 'Similar',
     return: 'Return',
     notFoundEyebrow: 'Image not found',

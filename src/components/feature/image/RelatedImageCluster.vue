@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ImageSpreadEntrance from '@/components/effects/ImageSpreadEntrance.vue';
+import ImageSpreadLabel from '@/components/ui/ImageSpreadLabel.vue';
 import type { ImageSpreadNode } from '@/types/image';
 
 const props = defineProps<{
@@ -48,13 +49,12 @@ function getPositionClass(index: number) {
         loading="lazy"
         class="aspect-[4/5] w-full cursor-pointer object-cover transition duration-300 group-hover:scale-[1.03]"
       />
-      <span
+      <ImageSpreadLabel
         v-if="getImageLabel?.(image)"
         data-tour-medium-label
-        class="absolute bottom-3 left-3 z-10 max-w-[calc(100%-1.5rem)] rounded-full bg-void/78 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-primary backdrop-blur-md"
       >
         {{ getImageLabel(image) }}
-      </span>
+      </ImageSpreadLabel>
     </ImageSpreadEntrance>
   </div>
 </template>
