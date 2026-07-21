@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const trashIcon = '/images/image-trash-icon.png';
+const trashIcon = '/images/image-trash-icon.webp';
 
 defineProps<{
   ariaLabel: string;
@@ -13,7 +13,7 @@ const emit = defineEmits<{
 <template>
   <button
     type="button"
-    class="moodboard-glass-button"
+    class="moodboard-glass-button fixed right-6 bottom-6 sm:right-8 sm:bottom-8 z-40 w-14 h-14 sm:w-[52px] sm:h-[52px] border-0 rounded-full p-0 overflow-hidden cursor-pointer transition duration-200 ease-[ease] hover:scale-[1.08]"
     :aria-label="ariaLabel"
     @click="emit('click')"
   >
@@ -23,34 +23,10 @@ const emit = defineEmits<{
 
 <style scoped>
 .moodboard-glass-button {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 40;
-  width: 56px;
-  height: 56px;
-  border: none;
-  border-radius: 9999px;
-  padding: 0;
-  overflow: hidden;
-  cursor: pointer;
   box-shadow: 0 4px 20px rgb(0 0 0 / 0.4);
-  transition:
-    transform 200ms ease,
-    box-shadow 200ms ease;
 }
 
 .moodboard-glass-button:hover {
-  transform: scale(1.08);
   box-shadow: 0 6px 26px rgb(0 0 0 / 0.5);
-}
-
-@media (min-width: 640px) {
-  .moodboard-glass-button {
-    right: 32px;
-    bottom: 32px;
-    width: 52px;
-    height: 52px;
-  }
 }
 </style>

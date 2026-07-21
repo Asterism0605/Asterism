@@ -912,11 +912,12 @@ onBeforeUnmount(() => {
                 "
               ></div>
             </button>
+            <!-- eslint-disable vue/attribute-hyphenation -->
             <ImageSelectToggle
               v-if="isImageSelectMode && p.itemId"
               :data-testid="`image-select-${p.itemId}`"
               :selected="selectedImageIds.has(p.itemId)"
-              :aria-label="
+              :ariaLabel="
                 selectedImageIds.has(p.itemId)
                   ? $t('moodboard.deselectImageAria')
                   : $t('moodboard.selectImageAria')
@@ -924,6 +925,7 @@ onBeforeUnmount(() => {
               :style="{ position: 'absolute', top: '-12px', right: '-12px', zIndex: 40 }"
               @toggle="toggleImageSelection(p.itemId)"
             />
+            <!-- eslint-enable vue/attribute-hyphenation -->
           </div>
         </div>
 
@@ -1166,11 +1168,12 @@ onBeforeUnmount(() => {
                 "
               ></div>
             </button>
+            <!-- eslint-disable vue/attribute-hyphenation -->
             <ImageSelectToggle
               v-if="isImageSelectMode"
               :data-testid="`image-select-${n.itemId}`"
               :selected="selectedImageIds.has(n.itemId)"
-              :aria-label="
+              :ariaLabel="
                 selectedImageIds.has(n.itemId)
                   ? $t('moodboard.deselectImageAria')
                   : $t('moodboard.selectImageAria')
@@ -1183,6 +1186,7 @@ onBeforeUnmount(() => {
               }"
               @toggle="toggleImageSelection(n.itemId)"
             />
+            <!-- eslint-enable vue/attribute-hyphenation -->
           </div>
 
           <!-- back link (sits just above the docked tab, against the visible bottom) -->
@@ -1269,23 +1273,28 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
+      <!-- eslint-disable vue/attribute-hyphenation -->
       <MoodboardGlassButton
         v-if="hasFolders && moodboardStore.folders.length > 0"
         data-testid="moodboard-folder-delete-toggle"
-        :aria-label="$t('moodboard.folderDeleteToggleAria')"
+        :ariaLabel="$t('moodboard.folderDeleteToggleAria')"
         @click="toggleFolderDeleteMode"
       />
 
       <MoodboardGlassButton
         v-if="!hasFolders"
         data-testid="moodboard-image-delete-toggle"
-        :aria-label="$t('moodboard.imageDeleteToggleAria')"
+        :ariaLabel="$t('moodboard.imageDeleteToggleAria')"
         @click="toggleImageSelectMode"
       />
-      <div v-if="!hasFolders && isImageSelectMode" class="moodboard-select-actions">
+      <!-- eslint-enable vue/attribute-hyphenation -->
+      <div
+        v-if="!hasFolders && isImageSelectMode"
+        class="moodboard-select-actions fixed right-[90px] bottom-8 sm:right-[94px] sm:bottom-10 z-40 flex items-center gap-2"
+      >
         <button
           type="button"
-          class="moodboard-select-done"
+          class="moodboard-select-done h-10 sm:h-9 py-0 px-3.5 border-0 rounded-full text-[13px] whitespace-nowrap cursor-pointer transition duration-200 ease-[ease] hover:scale-[1.04]"
           data-testid="moodboard-select-all-images"
           @click="toggleSelectAllImages"
         >
@@ -1297,7 +1306,7 @@ onBeforeUnmount(() => {
         </button>
         <button
           type="button"
-          class="moodboard-select-done"
+          class="moodboard-select-done h-10 sm:h-9 py-0 px-3.5 border-0 rounded-full text-[13px] whitespace-nowrap cursor-pointer transition duration-200 ease-[ease] hover:scale-[1.04]"
           data-testid="moodboard-select-images-done"
           @click="confirmSelectedImagesDone"
         >
@@ -1321,48 +1330,16 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.moodboard-select-actions {
-  position: fixed;
-  right: 90px;
-  bottom: 32px;
-  z-index: 40;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .moodboard-select-done {
-  height: 40px;
-  padding: 0 14px;
-  border: none;
-  border-radius: 9999px;
   background: rgba(9, 9, 11, 0.78);
   color: var(--color-text-primary);
-  font-size: 13px;
   font-weight: 500;
-  white-space: nowrap;
-  cursor: pointer;
   backdrop-filter: blur(6px);
   box-shadow: 0 4px 20px rgb(0 0 0 / 0.4);
-  transition:
-    transform 200ms ease,
-    box-shadow 200ms ease;
 }
 
 .moodboard-select-done:hover {
-  transform: scale(1.04);
   box-shadow: 0 6px 26px rgb(0 0 0 / 0.5);
-}
-
-@media (min-width: 640px) {
-  .moodboard-select-actions {
-    right: 94px;
-    bottom: 40px;
-  }
-
-  .moodboard-select-done {
-    height: 36px;
-  }
 }
 
 .moodboard-corner-orbit {
