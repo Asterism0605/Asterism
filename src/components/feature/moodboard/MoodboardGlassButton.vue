@@ -33,6 +33,7 @@ const emit = defineEmits<{
   border-radius: 9999px;
   padding: 0;
   overflow: hidden;
+  cursor: pointer;
   box-shadow: 0 4px 20px rgb(0 0 0 / 0.4);
   transition:
     transform 200ms ease,
