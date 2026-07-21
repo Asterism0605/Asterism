@@ -123,6 +123,20 @@ const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
 
+const folderFilters = useFolderImageFilters(
+  () => moodboardStore.folders[selectedFolder.value]?.images ?? []
+);
+
+function getSelectableImageIds(): string[] {
+  // 有套用篩選時，「全選」只包含目前顯示的圖片，避免刪除使用者看不到的項目；
+  // 未篩選時才以整個資料夾作為全選範圍。
+  const images = folderFilters.hasActiveFilters.value
+    ? folderFilters.displayedImages.value
+    : (moodboardStore.folders[selectedFolder.value]?.images ?? []);
+
+  return images.map((image) => image.itemId);
+}
+
 const {
   isFolderDeleteMode,
   isImageSelectMode,
@@ -134,9 +148,7 @@ const {
   toggleSelectAllImages,
   resetImageSelection,
   resetInteractionState
-} = useMoodboardInteractionState(
-  () => (moodboardStore.folders[selectedFolder.value]?.images ?? []).map((image) => image.itemId)
-);
+} = useMoodboardInteractionState(getSelectableImageIds);
 
 const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
   useDeleteMoodboardImage({
@@ -155,10 +167,6 @@ function confirmSelectedImagesDone() {
   }
   requestDeleteImage(Array.from(selectedImageIds.value));
 }
-
-const folderFilters = useFolderImageFilters(
-  () => moodboardStore.folders[selectedFolder.value]?.images ?? []
-);
 
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(

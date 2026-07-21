@@ -1803,6 +1803,44 @@ describe('MoodboardOrbit', () => {
       ).toBeUndefined();
     });
 
+    it('selects and deletes only filtered images when select all is used with active filters', async () => {
+      deleteItemsMock.mockResolvedValue(undefined);
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+
+      await wrapper.get('[data-testid="folder-filter-styles-toggle"]').trigger('click');
+      await findStyleOption(wrapper, 'minimal')!.trigger('click');
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-all-images"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-images-done"]').trigger('click');
+      await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(deleteItemsMock).toHaveBeenCalledWith({
+        folderId: 'folder-1',
+        itemIds: ['item-img-a', 'item-img-b']
+      });
+    });
+
+    it('selects and deletes every folder image when select all is used without filters', async () => {
+      deleteItemsMock.mockResolvedValue(undefined);
+      patchFolders();
+      const { wrapper } = await mountMoodboard();
+      await openFolder(wrapper);
+
+      await wrapper.get('[data-testid="moodboard-image-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-all-images"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-select-images-done"]').trigger('click');
+      await wrapper.get('[data-testid="delete-image-confirm"]').trigger('click');
+      await flushPromises();
+
+      expect(deleteItemsMock).toHaveBeenCalledWith({
+        folderId: 'folder-1',
+        itemIds: ['item-img-a', 'item-img-b', 'item-img-c']
+      });
+    });
+
     it('resetting clears the filter, restores all images, and disables the reset button again', async () => {
       patchFolders();
       const { wrapper } = await mountMoodboard();
