@@ -167,7 +167,6 @@ function confirmSelectedImagesDone() {
   }
   requestDeleteImage(Array.from(selectedImageIds.value));
 }
-
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
   () => (isMobile.value ? mStage.value : deskStage.value),
