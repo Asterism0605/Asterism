@@ -386,7 +386,7 @@ export default {
       title: 'Moodboard 導覽完成',
       description: '你已經知道如何瀏覽、整理與篩選收藏的靈感。',
       nextDescription: '你可以隨時重新觀看導覽，或繼續整理這個收藏。',
-      restart: '重新開始導覽',
+      exploreStyleDna: '探索我的美學 DNA',
       stay: '繼續整理靈感'
     }
   },

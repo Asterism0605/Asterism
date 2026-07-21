@@ -279,10 +279,9 @@ function nearDeskFolder(point: { x: number; y: number }): boolean {
 
 const showEmpty = computed(() => moodboardStore.status === 'idle' || moodboardStore.isEmpty);
 
-async function restartCompletedTour(): Promise<void> {
-  await router.push({ name: 'home' });
-  await nextTick();
-  coreTour.restart();
+function exploreStyleDna(): void {
+  coreTour.complete();
+  void router.push({ name: 'style-dna' });
 }
 
 function stayInMoodboard(): void {
@@ -1315,9 +1314,9 @@ onBeforeUnmount(() => {
       :title="$t('userTour.moodboardCompletion.title')"
       :description="$t('userTour.moodboardCompletion.description')"
       :next-description="$t('userTour.moodboardCompletion.nextDescription')"
-      :proceed-label="$t('userTour.moodboardCompletion.restart')"
+      :proceed-label="$t('userTour.moodboardCompletion.exploreStyleDna')"
       :later-label="$t('userTour.moodboardCompletion.stay')"
-      @proceed="restartCompletedTour"
+      @proceed="exploreStyleDna"
       @later="stayInMoodboard"
     />
   </div>

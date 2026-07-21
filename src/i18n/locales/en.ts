@@ -400,7 +400,7 @@ export default {
       title: 'Your Moodboard tour is complete',
       description: 'You now know how to browse, organize, and refine your saved inspiration.',
       nextDescription: 'You can revisit the tour anytime, or keep shaping this collection.',
-      restart: 'Restart tour',
+      exploreStyleDna: 'Explore my style DNA',
       stay: 'Continue organizing inspiration'
     }
   },

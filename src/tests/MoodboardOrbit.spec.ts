@@ -6,6 +6,8 @@ import MoodboardOrbit from '@/pages/MoodboardOrbit.vue';
 import { useMoodboardStore } from '@/stores/moodboard.store';
 import { useAuthStore } from '@/stores/auth.store';
 import { useUserTour } from '@/composables/guide/useUserTour';
+import en from '@/i18n/locales/en';
+import zh from '@/i18n/locales/zh';
 
 const { disposeSphere, initSphere, updateSphereImages } = vi.hoisted(() => ({
   disposeSphere: vi.fn(),
@@ -43,7 +45,8 @@ function createTestRouter() {
     routes: [
       { path: '/', name: 'home', component: { template: '<div />' } },
       { path: '/moodboard/:slug?', name: 'moodboard', component: MoodboardOrbit },
-      { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } }
+      { path: '/images/:imageId', name: 'picture-detail', component: { template: '<div />' } },
+      { path: '/style-dna', name: 'style-dna', component: { template: '<div />' } }
     ]
   });
 }
@@ -388,19 +391,25 @@ describe('MoodboardOrbit', () => {
     });
   });
 
-  it('restarts the completed tour from home', async () => {
+  it('continues from the completed tour to Style DNA', async () => {
     const tour = prepareMoodboardTour('moodboard-tour-control');
     tour.completeChapter('moodboard');
     const { wrapper, router } = await mountMoodboard('/moodboard/tour-folder');
 
+    expect(wrapper.get('[data-testid="tour-transition-proceed"]').text()).toContain(
+      'Explore my style DNA'
+    );
+    expect(en.userTour.moodboardCompletion.exploreStyleDna).toBe('Explore my style DNA');
+    expect(zh.userTour.moodboardCompletion.exploreStyleDna).toBe('探索我的美學 DNA');
+
     await wrapper.get('[data-testid="tour-transition-proceed"]').trigger('click');
     await flushPromises();
 
-    expect(router.currentRoute.value.name).toBe('home');
+    expect(router.currentRoute.value.name).toBe('style-dna');
     expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
-      status: 'active',
-      currentChapter: 'exploration',
-      step: 'home-overview'
+      status: 'completed',
+      currentChapter: null,
+      step: null
     });
   });
 
