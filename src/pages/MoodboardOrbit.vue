@@ -12,6 +12,8 @@ import DeleteFolderConfirm from '@/components/feature/moodboard/DeleteFolderConf
 import DeleteIconButton from '@/components/feature/moodboard/DeleteIconButton.vue';
 import DeleteImageConfirm from '@/components/feature/moodboard/DeleteImageConfirm.vue';
 import FolderDirectory from '@/components/feature/moodboard/FolderDirectory.vue';
+import ImageSelectToggle from '@/components/feature/moodboard/ImageSelectToggle.vue';
+import MoodboardGlassButton from '@/components/feature/moodboard/MoodboardGlassButton.vue';
 import FolderFilterPanel from '@/components/feature/moodboard/FolderFilterPanel.vue';
 import FolderFilterPanelMobile from '@/components/feature/moodboard/FolderFilterPanelMobile.vue';
 import MoodboardEmptyState from '@/components/feature/moodboard/MoodboardEmptyState.vue';
@@ -47,6 +49,7 @@ import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
 import { useDeleteMoodboardImage } from '@/composables/useDeleteMoodboardImage';
+import { useMoodboardInteractionState } from '@/composables/useMoodboardInteractionState';
 import { useFolderImageFilters } from '@/composables/useFolderImageFilters';
 import { deleteFolder } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
@@ -120,11 +123,9 @@ const deskStage = ref<HTMLElement | null>(null);
 const mDesignH = ref(MH);
 const mDetailPhotos = ref<MoodboardMobileSavedPhoto[]>([]);
 const mHomePhotosRandom = ref<MoodboardMobilePhoto[]>([]);
-const deleteHoverIdx = ref(-1);
 const deleteTarget = ref<{ id: string; name: string } | null>(null);
 const isDeleteModalOpen = ref(false);
 const isDeletingFolder = ref(false);
-const deleteImageHoverIdx = ref<string | null>(null);
 
 const { isOrbitActive: isMoodboardOrbitTourActive } = useMoodboardTourFlow({
   coreTour,
@@ -136,20 +137,50 @@ const { isOrbitActive: isMoodboardOrbitTourActive } = useMoodboardTourFlow({
   goHome
 });
 
-const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
-  useDeleteMoodboardImage({
-    getFolder: () => moodboardStore.folders[selectedFolder.value],
-    onDeleted: (itemId) => {
-      scatter.value = scatter.value.filter((n) => n.itemId !== itemId);
-      mDetailPhotos.value = mDetailPhotos.value.filter((p) => p.itemId !== itemId);
-      deleteImageHoverIdx.value = null;
-    }
-  });
-
 const folderFilters = useFolderImageFilters(
   () => moodboardStore.folders[selectedFolder.value]?.images ?? []
 );
 
+function getSelectableImageIds(): string[] {
+  // 有套用篩選時，「全選」只包含目前顯示的圖片，避免刪除使用者看不到的項目；
+  // 未篩選時才以整個資料夾作為全選範圍。
+  const images = folderFilters.hasActiveFilters.value
+    ? folderFilters.displayedImages.value
+    : (moodboardStore.folders[selectedFolder.value]?.images ?? []);
+
+  return images.map((image) => image.itemId);
+}
+
+const {
+  isFolderDeleteMode,
+  isImageSelectMode,
+  selectedImageIds,
+  toggleFolderDeleteMode,
+  toggleImageSelectMode,
+  toggleImageSelection,
+  isAllImagesSelected,
+  toggleSelectAllImages,
+  resetImageSelection,
+  resetInteractionState
+} = useMoodboardInteractionState(getSelectableImageIds);
+
+const { isDeleteImageModalOpen, isDeletingImage, requestDeleteImage, confirmDeleteImage } =
+  useDeleteMoodboardImage({
+    getFolder: () => moodboardStore.folders[selectedFolder.value],
+    onDeleted: (itemIds) => {
+      scatter.value = scatter.value.filter((n) => !itemIds.includes(n.itemId));
+      mDetailPhotos.value = mDetailPhotos.value.filter((p) => !itemIds.includes(p.itemId));
+      resetImageSelection();
+    }
+  });
+
+function confirmSelectedImagesDone() {
+  if (selectedImageIds.value.size === 0) {
+    toggleImageSelectMode();
+    return;
+  }
+  requestDeleteImage(Array.from(selectedImageIds.value));
+}
 // 拖拉旋轉手機/桌機共用同一顆 orbitPhase；差異只在舞台元素與軌道中心，依 isMobile 切換幾何。
 const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } = useOrbitDrag(
   () => (isMobile.value ? mStage.value : deskStage.value),
@@ -356,9 +387,7 @@ function leaveFolder() {
   hoverIdx.value = -1;
 }
 
-// deleteHoverIdx 獨立於 hoverFolder：空資料夾（0 張圖片）也要能 hover 顯示刪除 icon
 function onFolderMouseEnter(index: number) {
-  deleteHoverIdx.value = index;
   if (dragging.value) return;
 
   const folder = moodboardStore.folders[index];
@@ -375,7 +404,6 @@ function onFolderMouseEnter(index: number) {
 }
 
 function onFolderMouseLeave() {
-  deleteHoverIdx.value = -1;
   leaveFolder();
 }
 
@@ -398,7 +426,6 @@ async function confirmDeleteFolder() {
     isDeleteModalOpen.value = false;
     deleteTarget.value = null;
     hoverIdx.value = -1;
-    deleteHoverIdx.value = -1;
     mHover.value = -1;
   } catch {
     showToast({ type: 'error', message: t('toast.deleteFolderFailed') });
@@ -543,6 +570,7 @@ function openFolder(i: number) {
 
   selectedFolder.value = i;
   hasFolders.value = false;
+  resetInteractionState();
   handleResetFilters();
   navigate(slugFor(i), i);
   if (
@@ -591,6 +619,7 @@ function navigate(slug: string, i: number) {
 
 function goHome() {
   hasFolders.value = true;
+  resetInteractionState();
   hoverIdx.value = -1;
   mHover.value = -1;
   dragging.value = false;
@@ -607,6 +636,7 @@ watch(
   (slug) => {
     if (!slug && !hasFolders.value) {
       hasFolders.value = true;
+      resetImageSelection();
       hoverIdx.value = -1;
       mHover.value = -1;
     }
@@ -615,6 +645,10 @@ watch(
 
 function onFolderClick(i: number) {
   if (consumeDidDrag()) return;
+  if (isFolderDeleteMode.value) {
+    requestDeleteFolder(i);
+    return;
+  }
   openFolder(i);
 }
 
@@ -628,6 +662,11 @@ function armOrOpenMobileFolder(index: number) {
 
   const folder = moodboardStore.folders[index];
   if (!folder) return;
+
+  if (isFolderDeleteMode.value) {
+    requestDeleteFolder(index);
+    return;
+  }
 
   if (mobileArmedFolderId.value === folder.id) {
     openFolder(index);
@@ -855,7 +894,7 @@ onBeforeUnmount(() => {
               }"
             />
             <DeleteIconButton
-              v-if="f.hasFolder"
+              v-if="f.hasFolder && isFolderDeleteMode"
               :data-testid="`folder-delete-mobile-${f.i}`"
               :size="28"
               :icon-size="20"
@@ -911,11 +950,19 @@ onBeforeUnmount(() => {
               type="button"
               class="moodboard-photo-link"
               data-testid="moodboard-mobile-photo"
-              :disabled="hasFolders ? !sphereFolder || p.placeholder : !p.imageId"
+              :disabled="
+                hasFolders ? !sphereFolder || p.placeholder : !isImageSelectMode && !p.imageId
+              "
               :aria-label="
                 hasFolders ? $t('moodboard.openFolderAria') : $t('moodboard.openImageDetailAria')
               "
-              @click="hasFolders ? onSphereClick() : p.imageId && goToImage(p.imageId)"
+              @click="
+                hasFolders
+                  ? onSphereClick()
+                  : isImageSelectMode
+                    ? p.itemId && toggleImageSelection(p.itemId)
+                    : p.imageId && goToImage(p.imageId)
+              "
             >
               <img
                 :src="p.src"
@@ -940,13 +987,20 @@ onBeforeUnmount(() => {
                 "
               ></div>
             </button>
-            <DeleteIconButton
-              v-if="p.itemId"
-              :data-testid="`image-delete-mobile-${p.itemId}`"
-              :aria-label="$t('moodboard.deleteImageAria')"
+            <!-- eslint-disable vue/attribute-hyphenation -->
+            <ImageSelectToggle
+              v-if="isImageSelectMode && p.itemId"
+              :data-testid="`image-select-${p.itemId}`"
+              :selected="selectedImageIds.has(p.itemId)"
+              :ariaLabel="
+                selectedImageIds.has(p.itemId)
+                  ? $t('moodboard.deselectImageAria')
+                  : $t('moodboard.selectImageAria')
+              "
               :style="{ position: 'absolute', top: '-12px', right: '-12px', zIndex: 40 }"
-              @delete="requestDeleteImage(p.itemId)"
+              @toggle="toggleImageSelection(p.itemId)"
             />
+            <!-- eslint-enable vue/attribute-hyphenation -->
           </div>
         </div>
 
@@ -1150,7 +1204,7 @@ onBeforeUnmount(() => {
               }"
             />
             <DeleteIconButton
-              v-if="fv.hasFolder"
+              v-if="fv.hasFolder && isFolderDeleteMode"
               :data-testid="`folder-delete-${fv.i}`"
               :size="28"
               :icon-size="20"
@@ -1158,9 +1212,6 @@ onBeforeUnmount(() => {
                 position: 'absolute',
                 top: '-3px',
                 right: '-3px',
-                opacity: deleteHoverIdx === fv.i ? 1 : 0,
-                pointerEvents: deleteHoverIdx === fv.i ? 'auto' : 'none',
-                transition: 'opacity .2s ease',
                 zIndex: 40
               }"
               @delete="requestDeleteFolder(fv.i)"
@@ -1186,16 +1237,14 @@ onBeforeUnmount(() => {
               height: n.h + 'px',
               animationDelay: n.delay + 's'
             }"
-            @mouseenter="n.itemId && (deleteImageHoverIdx = n.itemId)"
-            @mouseleave="deleteImageHoverIdx = null"
           >
             <button
               type="button"
               class="moodboard-photo-link"
               data-testid="moodboard-detail-photo"
-              :disabled="!n.imageId"
+              :disabled="!isImageSelectMode && !n.imageId"
               :aria-label="$t('moodboard.openImageDetailAria')"
-              @click="n.imageId && goToImage(n.imageId)"
+              @click="isImageSelectMode ? toggleImageSelection(n.itemId) : n.imageId && goToImage(n.imageId)"
             >
               <img
                 :src="n.src"
@@ -1221,21 +1270,25 @@ onBeforeUnmount(() => {
                 "
               ></div>
             </button>
-            <DeleteIconButton
-              v-if="n.itemId"
-              :data-testid="`image-delete-${n.itemId}`"
-              :aria-label="$t('moodboard.deleteImageAria')"
+            <!-- eslint-disable vue/attribute-hyphenation -->
+            <ImageSelectToggle
+              v-if="isImageSelectMode"
+              :data-testid="`image-select-${n.itemId}`"
+              :selected="selectedImageIds.has(n.itemId)"
+              :ariaLabel="
+                selectedImageIds.has(n.itemId)
+                  ? $t('moodboard.deselectImageAria')
+                  : $t('moodboard.selectImageAria')
+              "
               :style="{
                 position: 'absolute',
                 top: '-12px',
                 right: '-12px',
-                zIndex: 40,
-                opacity: deleteImageHoverIdx === n.itemId ? 1 : 0,
-                pointerEvents: deleteImageHoverIdx === n.itemId ? 'auto' : 'none',
-                transition: 'opacity .2s ease'
+                zIndex: 40
               }"
-              @delete="requestDeleteImage(n.itemId)"
+              @toggle="toggleImageSelection(n.itemId)"
             />
+            <!-- eslint-enable vue/attribute-hyphenation -->
           </div>
 
           <!-- back link (sits just above the docked tab, against the visible bottom) -->
@@ -1333,6 +1386,47 @@ onBeforeUnmount(() => {
           />
         </div>
       </div>
+
+      <!-- eslint-disable vue/attribute-hyphenation -->
+      <MoodboardGlassButton
+        v-if="hasFolders && moodboardStore.folders.length > 0"
+        data-testid="moodboard-folder-delete-toggle"
+        :ariaLabel="$t('moodboard.folderDeleteToggleAria')"
+        @click="toggleFolderDeleteMode"
+      />
+
+      <MoodboardGlassButton
+        v-if="!hasFolders"
+        data-testid="moodboard-image-delete-toggle"
+        :ariaLabel="$t('moodboard.imageDeleteToggleAria')"
+        @click="toggleImageSelectMode"
+      />
+      <!-- eslint-enable vue/attribute-hyphenation -->
+      <div
+        v-if="!hasFolders && isImageSelectMode"
+        class="moodboard-select-actions fixed right-[90px] bottom-8 sm:right-[94px] sm:bottom-10 z-40 flex items-center gap-2"
+      >
+        <button
+          type="button"
+          class="moodboard-select-done h-10 sm:h-9 py-0 px-3.5 border-0 rounded-full text-[13px] whitespace-nowrap cursor-pointer transition duration-200 ease-[ease] hover:scale-[1.04]"
+          data-testid="moodboard-select-all-images"
+          @click="toggleSelectAllImages"
+        >
+          {{
+            isAllImagesSelected
+              ? $t('moodboard.deselectAllImages')
+              : $t('moodboard.selectAllImages')
+          }}
+        </button>
+        <button
+          type="button"
+          class="moodboard-select-done h-10 sm:h-9 py-0 px-3.5 border-0 rounded-full text-[13px] whitespace-nowrap cursor-pointer transition duration-200 ease-[ease] hover:scale-[1.04]"
+          data-testid="moodboard-select-images-done"
+          @click="confirmSelectedImagesDone"
+        >
+          {{ $t('moodboard.selectImagesDone') }}
+        </button>
+      </div>
     </template>
 
     <DeleteFolderConfirm
@@ -1363,6 +1457,18 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.moodboard-select-done {
+  background: rgba(9, 9, 11, 0.78);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 0.4);
+}
+
+.moodboard-select-done:hover {
+  box-shadow: 0 6px 26px rgb(0 0 0 / 0.5);
+}
+
 .moodboard-corner-orbit {
   position: absolute;
   z-index: 0;
