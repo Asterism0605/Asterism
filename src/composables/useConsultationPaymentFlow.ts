@@ -7,7 +7,11 @@ import {
   getConsultationBookingDetail
 } from '@/api/consultation.api';
 import { useAuthStore } from '@/stores/auth.store';
-import type { ConsultationBookingDetail, ConsultationCheckoutRequest } from '@/types/consultation';
+import type {
+  ConsultationBookingDetail,
+  ConsultationCheckoutRequest,
+  ConsultationSummary
+} from '@/types/consultation';
 
 export interface ConsultationBookingPayload {
   method: 'online' | 'in_person';
@@ -39,6 +43,8 @@ interface UseConsultationPaymentFlowReturn {
   checkoutErrorMessage: Ref<string>;
   isCheckoutSubmitting: ComputedRef<boolean>;
   paymentReturnStatus: Ref<PaymentReturnStatus>;
+  // 付款確認回來時後端實際指派到的顧問(真實資料，不是表單即時預覽那份)。
+  confirmedConsultant: Ref<ConsultationSummary | null>;
   handleSubmit: (payload: ConsultationBookingPayload) => Promise<void>;
   handleReset: () => void;
   restartBooking: () => Promise<void>;
@@ -71,6 +77,7 @@ export function useConsultationPaymentFlow(
   const checkoutStatus = ref<CheckoutStatus>('idle');
   const checkoutErrorMessage = ref('');
   const paymentReturnStatus = ref<PaymentReturnStatus>('idle');
+  const confirmedConsultant = ref<ConsultationSummary | null>(null);
   const paymentPollingAttempts = ref(0);
   let paymentPollingTimer: ReturnType<typeof window.setTimeout> | null = null;
 
@@ -247,6 +254,7 @@ export function useConsultationPaymentFlow(
 
       const status = resolvePaymentReturnStatus(response.data);
       paymentReturnStatus.value = status;
+      confirmedConsultant.value = response.data.consultant ?? null;
 
       if (isTerminalPaymentStatus(status)) {
         clearPaymentPolling();
@@ -301,6 +309,14 @@ export function useConsultationPaymentFlow(
       return;
     }
 
+    // Stripe 導回來的網址是後端寫死的 successUrl，不帶 bookingId，第一次只能靠
+    // sessionStorage 撿回來；但終態一確認就會清掉 sessionStorage(見下方
+    // fetchBookingPaymentStatus)。把 bookingId 補寫回網址，之後重新整理/回到這頁
+    // 才能直接從網址讀到，不會因為 sessionStorage 被清空而顯示「找不到預約」。
+    if (!queryBookingId) {
+      await router.replace({ query: { ...route.query, bookingId } });
+    }
+
     paymentReturnStatus.value = paymentQuery === 'success' ? 'confirming' : 'canceled';
     const status = await fetchBookingPaymentStatus(bookingId);
 
@@ -314,6 +330,7 @@ export function useConsultationPaymentFlow(
     clearCheckoutSessionState();
     paymentPollingAttempts.value = 0;
     paymentReturnStatus.value = 'idle';
+    confirmedConsultant.value = null;
     await router.replace({ path: '/consultant' });
   }
 
@@ -324,6 +341,7 @@ export function useConsultationPaymentFlow(
     checkoutErrorMessage,
     isCheckoutSubmitting,
     paymentReturnStatus,
+    confirmedConsultant,
     handleSubmit,
     handleReset,
     restartBooking

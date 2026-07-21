@@ -9,14 +9,19 @@ import type { AuthSession } from '@/types/auth';
 import type { ConsultationBookingDetail } from '@/types/consultation';
 import type { StyleDnaAnswer } from '@/types/style-dna';
 
-const { createCheckoutMock, getBookingMock } = vi.hoisted(() => ({
+const { createCheckoutMock, getBookingMock, fetchActiveConsultantsMock } = vi.hoisted(() => ({
   createCheckoutMock: vi.fn(),
-  getBookingMock: vi.fn()
+  getBookingMock: vi.fn(),
+  fetchActiveConsultantsMock: vi.fn().mockResolvedValue([])
 }));
 
 vi.mock('@/api/consultation.api', () => ({
   createConsultationCheckoutSession: createCheckoutMock,
   getConsultationBookingDetail: getBookingMock
+}));
+
+vi.mock('@/api/consultants.api', () => ({
+  fetchActiveConsultants: fetchActiveConsultantsMock
 }));
 
 const memberSession: AuthSession = {
@@ -131,7 +136,10 @@ describe('StyleConsultant', () => {
     );
   });
 
-  it('renders Style DNA and matched consultant information for authenticated users with result data', async () => {
+  it('shows a pending placeholder until a design field is chosen, then matches live', async () => {
+    fetchActiveConsultantsMock.mockResolvedValue([
+      { id: 'consultant-1', displayName: 'Spatial Consultant · Mira Chen', specialty: 'spatial' }
+    ]);
     const pinia = createPinia();
     setActivePinia(pinia);
     const authStore = useAuthStore();
@@ -145,13 +153,19 @@ describe('StyleConsultant', () => {
     await router.isReady();
 
     const wrapper = mountPage(router, pinia);
+    await flushPromises();
 
     expect(wrapper.text()).toContain('Style DNA');
     expect(wrapper.text()).toContain('Y2K');
     expect(wrapper.text()).toContain('100%');
     expect(wrapper.text()).toContain('Matched consultant');
-    expect(wrapper.text()).toContain('Spatial Consultant · Ilya Chen');
+    expect(wrapper.text()).not.toContain('Spatial Consultant · Mira Chen');
     expect(wrapper.find('[data-testid="consultant-style-dna-fallback"]').exists()).toBe(false);
+
+    wrapper.getComponent({ name: 'RecommendationPanel' }).vm.$emit('designFieldChange', 'interior');
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('Spatial Consultant · Mira Chen');
   });
 
   it('redirects unauthenticated checkout attempts to login without calling the API', async () => {
@@ -427,6 +441,63 @@ describe('StyleConsultant', () => {
     expect(wrapper.text()).toContain('Booking confirmed');
   });
 
+  it('shows a My Bookings link and the real assigned consultant only once payment is confirmed', async () => {
+    vi.useFakeTimers();
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    const styleDnaStore = useStyleDnaStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    styleDnaStore.completeQuiz([y2kAnswer], memberSession.user.id);
+    const router = createTestRouter();
+    router.addRoute({ path: '/account/consultations', name: 'account-consultations', component: { template: '<div />' } });
+    const pendingDetail: ConsultationBookingDetail = {
+      booking: {
+        id: 'booking-1',
+        status: 'pending_payment',
+        method: 'online',
+        consultationDate: '2026-07-10',
+        timeSlot: 'am',
+        contactEmail: 'member@example.com',
+        createdAt: '2026-07-07T00:00:00Z',
+        updatedAt: '2026-07-07T00:00:00Z'
+      },
+      payment: { status: 'pending', amount: 500, currency: 'TWD' }
+    };
+    const paidDetail: ConsultationBookingDetail = {
+      ...pendingDetail,
+      booking: { ...pendingDetail.booking, status: 'confirmed' },
+      payment: { ...pendingDetail.payment, status: 'paid' },
+      consultant: { id: 'consultant-9', displayName: 'Spatial Consultant · Real Match', title: 'Consultant' }
+    };
+    getBookingMock
+      .mockResolvedValueOnce({ success: true, data: pendingDetail, error: null })
+      .mockResolvedValueOnce({ success: true, data: paidDetail, error: null });
+    await router.push('/consultant?payment=success&bookingId=booking-1');
+    await router.isReady();
+    const wrapper = mountPage(router, pinia);
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('Payment is processing');
+    expect(wrapper.text()).not.toContain('My bookings');
+
+    await vi.advanceTimersByTimeAsync(2000);
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('Booking confirmed');
+    expect(wrapper.text()).toContain('Spatial Consultant · Real Match');
+
+    const myBookingsButton = wrapper
+      .findAllComponents({ name: 'Button' })
+      .find((button) => button.text() === 'My bookings');
+    expect(myBookingsButton).toBeTruthy();
+    await myBookingsButton!.trigger('click');
+    await flushPromises();
+
+    expect(router.currentRoute.value.path).toBe('/account/consultations');
+  });
+
   it('shows a timeout state when payment polling stays pending', async () => {
     vi.useFakeTimers();
     const pinia = createPinia();
@@ -461,6 +532,53 @@ describe('StyleConsultant', () => {
 
     expect(wrapper.text()).toContain('Payment is still processing');
     expect(getBookingMock).toHaveBeenCalledTimes(7);
+  });
+
+  it('writes the recovered bookingId into the URL so a later reload survives sessionStorage being cleared', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    const router = createTestRouter();
+    const paidDetail: ConsultationBookingDetail = {
+      booking: {
+        id: 'booking-1',
+        status: 'confirmed',
+        method: 'online',
+        consultationDate: '2026-07-10',
+        timeSlot: 'am',
+        contactEmail: 'member@example.com',
+        createdAt: '2026-07-07T00:00:00Z',
+        updatedAt: '2026-07-07T00:00:00Z'
+      },
+      payment: { status: 'paid', amount: 500, currency: 'TWD' }
+    };
+    getBookingMock.mockResolvedValue({ success: true, data: paidDetail, error: null });
+
+    // Stripe 導回的網址本來就不帶 bookingId，第一次靠 sessionStorage 撿回來。
+    sessionStorage.setItem('asterism.consultation.checkoutBookingId', 'booking-1');
+    await router.push('/consultant?payment=success');
+    await router.isReady();
+    const wrapper = mountPage(router, pinia);
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('Booking confirmed');
+    const recoveredFullPath = router.currentRoute.value.fullPath;
+    expect(router.currentRoute.value.query.bookingId).toBe('booking-1');
+    // 終態確認後 sessionStorage 那份會被清掉，之後只能靠網址上的 bookingId。
+    expect(sessionStorage.getItem('asterism.consultation.checkoutBookingId')).toBeNull();
+
+    // 模擬真的重新整理瀏覽器：全新的 router/app，只從網址(已經寫回 bookingId)還原狀態，
+    // sessionStorage 是空的——這才是瀏覽器重新整理真正發生的事(舊的 JS 全部丟棄重來)。
+    const reloadRouter = createTestRouter();
+    await reloadRouter.push(recoveredFullPath);
+    await reloadRouter.isReady();
+    const reloadWrapper = mountPage(reloadRouter, pinia);
+    await flushPromises();
+
+    expect(reloadWrapper.text()).toContain('Booking confirmed');
+    expect(reloadWrapper.text()).not.toContain('Booking not found');
   });
 
   it('redirects payment returns without an access token to login with the return URL', async () => {

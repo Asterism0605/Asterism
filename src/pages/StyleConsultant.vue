@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
@@ -8,7 +8,8 @@ import ConsultantSummary from '@/components/feature/consultant/ConsultantSummary
 import RecommendationPanel from '@/components/feature/consultant/RecommendationPanel.vue';
 import { useConsultationPaymentFlow } from '@/composables/useConsultationPaymentFlow';
 import type { PaymentReturnStatus } from '@/composables/useConsultationPaymentFlow';
-import { matchConsultantByStyleTag } from '@/services/consultant-match.service';
+import { fetchActiveConsultants, type ConsultantRow } from '@/api/consultants.api';
+import { matchConsultantByDesignField } from '@/services/consultant-match.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 
@@ -17,7 +18,7 @@ interface ConsultantProfile {
     label: string;
     percentage: number;
   }>;
-  consultantLabel: string;
+  consultantLabel: string | null;
 }
 
 const PAYMENT_RETURN_COPY = {
@@ -67,21 +68,19 @@ const styleDnaStore = useStyleDnaStore();
 const route = useRoute();
 const { t } = useI18n();
 
-const profile = computed<ConsultantProfile | null>(() => {
-  const result = styleDnaStore.currentResult;
+// 顧問清單只在掛載時抓一次(is_active 名單不會在同一次頁面停留期間變動)，
+// 表單選設計領域時純前端查表配對，不用每次都打一次 API。
+const consultants = ref<ConsultantRow[]>([]);
+const selectedDesignField = ref('');
 
-  if (!authStore.isAuthenticated || !result) {
-    return null;
+onMounted(async () => {
+  try {
+    consultants.value = await fetchActiveConsultants();
+  } catch (e) {
+    console.warn('[consultant] fetch active consultants failed:', e);
   }
+});
 
-  return {
-    styleDna: result.styles,
-    consultantLabel: matchConsultantByStyleTag(result)
-  };
-});
-const summaryStatus = computed(() => {
-  return profile.value ? 'ready' : 'missing-result';
-});
 const sourceImageId = computed(() => {
   const rawSourceImageId = route.query.sourceImageId;
 
@@ -94,10 +93,37 @@ const {
   checkoutErrorMessage,
   isCheckoutSubmitting,
   paymentReturnStatus,
+  confirmedConsultant,
   handleSubmit,
   handleReset,
   restartBooking
 } = useConsultationPaymentFlow(sourceImageId);
+
+const matchedConsultant = computed(() =>
+  matchConsultantByDesignField(selectedDesignField.value, consultants.value)
+);
+
+const profile = computed<ConsultantProfile | null>(() => {
+  const result = styleDnaStore.currentResult;
+
+  if (!authStore.isAuthenticated || !result) {
+    return null;
+  }
+
+  // 付款確認過了,顯示後端真正指派到的顧問;確認前顯示表單即時預覽的配對結果。
+  const consultantLabel =
+    paymentReturnStatus.value === 'paid' && confirmedConsultant.value
+      ? confirmedConsultant.value.displayName
+      : (matchedConsultant.value?.displayName ?? null);
+
+  return {
+    styleDna: result.styles,
+    consultantLabel
+  };
+});
+const summaryStatus = computed(() => {
+  return profile.value ? 'ready' : 'missing-result';
+});
 const paymentReturnCopy = computed(() => {
   if (paymentReturnStatus.value === 'idle') {
     return null;
@@ -146,6 +172,7 @@ const paymentReturnCopy = computed(() => {
           v-if="paymentReturnCopy"
           :title="paymentReturnCopy.title"
           :description="paymentReturnCopy.description"
+          :show-my-bookings-link="paymentReturnStatus === 'paid'"
           @restart="restartBooking"
         />
 
@@ -156,6 +183,7 @@ const paymentReturnCopy = computed(() => {
           :submitting="isCheckoutSubmitting"
           @submit="handleSubmit"
           @reset="handleReset"
+          @design-field-change="selectedDesignField = $event"
         />
 
         <p v-if="checkoutErrorMessage" class="style-consultant__confirmation" role="alert">

@@ -9,7 +9,8 @@ interface ConsultantProfile {
     label: string;
     percentage: number;
   }>;
-  consultantLabel: string;
+  // 選了設計領域才查得到對應顧問，未選之前是 null，顯示待配對提示。
+  consultantLabel: string | null;
 }
 
 const props = withDefaults(
@@ -64,7 +65,7 @@ const { displayLabel } = useStyleTagLabel();
       </div>
       <div>
         <dt>{{ $t('consult.matchedConsultant') }}</dt>
-        <dd>{{ profile.consultantLabel }}</dd>
+        <dd>{{ profile.consultantLabel ?? $t('consult.matchedConsultantPending') }}</dd>
       </div>
     </dl>
 

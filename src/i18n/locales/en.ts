@@ -134,6 +134,7 @@ export default {
     intro2:
       "We've matched you with a consultant to help translate your Style DNA into a real design direction.",
     matchedConsultant: 'Matched consultant',
+    matchedConsultantPending: 'Matched once you pick a design field',
     needDna: 'We need a Style DNA result before matching a consultant.',
     retakeQuiz: 'Take Style DNA quiz',
     skip: 'Skip',
@@ -214,6 +215,7 @@ export default {
     paymentErrorTitle: 'Unable to check payment',
     paymentErrorDescription: 'Please try again later or start a new booking.',
     bookAgain: 'Book again',
+    viewMyBookings: 'My bookings',
     errDate: 'Date is required.',
     errTimeSlot: 'Time slot is required.',
     errDesignField: 'Design field is required.',
