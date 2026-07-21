@@ -73,8 +73,13 @@ function mountStyleDna(router: Router, pinia: ReturnType<typeof createPinia>) {
       stubs: {
         AppHeader: true,
         StyleComparisonPicker: {
+          props: ['positionIndex', 'isSkipping'],
           template: `
-            <div>
+            <div
+              data-testid="picker"
+              :data-position-index="positionIndex"
+              :data-is-skipping="String(isSkipping)"
+            >
               <button data-testid="select-btn" @click="$emit('select', 'opt-a')" />
               <button data-testid="skip-btn" @click="$emit('skip')" />
             </div>
@@ -127,7 +132,7 @@ describe('StyleDna', () => {
     expect(push).toHaveBeenCalledWith('/style-dna/result');
   });
 
-  it('renders mobile quiz progress that tracks the current question (#92)', async () => {
+  it('renders a mobile vertical progress track based on completed answers (#92)', async () => {
     const pinia = createPinia();
     setActivePinia(pinia);
     const router = createTestRouter();
@@ -136,19 +141,22 @@ describe('StyleDna', () => {
 
     const wrapper = mountStyleDna(router, pinia);
 
-    expect(wrapper.find('.quiz-progress-mobile').exists()).toBe(true);
-    expect(wrapper.find('.qpm-current').text()).toBe('1');
-    expect(wrapper.find('.qpm-total').text()).toBe('12');
+    const progress = wrapper.get('.quiz-progress-mobile');
+    expect(progress.attributes('role')).toBe('progressbar');
+    expect(progress.attributes('aria-valuenow')).toBe('0');
+    expect(progress.attributes('aria-valuemax')).toBe('12');
+    expect(progress.attributes('style')).toContain('--quiz-progress: 0');
+    expect(wrapper.find('.qpm-track').exists()).toBe(true);
+    expect(wrapper.find('.qpm-star').exists()).toBe(true);
 
     mockAnswers.push(...Array.from({ length: 10 }, () => mockAnswer));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find('.qpm-current').text()).toBe('11');
-    expect(wrapper.find('.qpm-total').text()).toBe('12');
+    expect(progress.attributes('aria-valuenow')).toBe('10');
 
-    mockAnswers.push(mockAnswer);
+    mockAnswers.push(mockAnswer, mockAnswer);
     await wrapper.vm.$nextTick();
-    expect(wrapper.find('.qpm-current').text()).toBe('12');
-    expect(wrapper.find('.qpm-total').text()).toBe('12');
+    expect(progress.attributes('aria-valuenow')).toBe('12');
+    expect(progress.attributes('style')).toContain('--quiz-progress: 1');
   });
 
   it('syncs the current Style DNA result when an authenticated user completes the quiz', async () => {
@@ -234,6 +242,28 @@ describe('StyleDna', () => {
     expect(mockSelectAnswer).toHaveBeenCalledTimes(1);
   });
 
+  it('changes the high-low layout only after an answered question', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const router = createTestRouter();
+    await router.push('/style-dna');
+    await router.isReady();
+
+    mockSelectAnswer.mockImplementationOnce(() => {
+      mockAnswers.push(mockAnswer);
+      mockCurrentIndex.value += 1;
+    });
+
+    const wrapper = mountStyleDna(router, pinia);
+    const picker = wrapper.get('[data-testid="picker"]');
+    expect(picker.attributes('data-position-index')).toBe('0');
+
+    await wrapper.find('[data-testid="select-btn"]').trigger('click');
+    await vi.advanceTimersByTimeAsync(500);
+
+    expect(picker.attributes('data-position-index')).toBe('1');
+  });
+
   it('skips after the short transition without changing answer progress', async () => {
     const pinia = createPinia();
     setActivePinia(pinia);
@@ -242,13 +272,23 @@ describe('StyleDna', () => {
     await router.isReady();
 
     const wrapper = mountStyleDna(router, pinia);
-    expect(wrapper.find('.qpm-current').text()).toBe('1');
+    const progress = wrapper.get('.quiz-progress-mobile');
+    const picker = wrapper.get('[data-testid="picker"]');
+    expect(progress.attributes('aria-valuenow')).toBe('0');
+    expect(picker.attributes('data-position-index')).toBe('0');
+
+    mockSkipQuestion.mockImplementationOnce(() => {
+      mockCurrentIndex.value += 1;
+    });
 
     await wrapper.find('[data-testid="skip-btn"]').trigger('click');
+    expect(picker.attributes('data-is-skipping')).toBe('true');
     await vi.advanceTimersByTimeAsync(240);
 
     expect(mockSkipQuestion).toHaveBeenCalledTimes(1);
-    expect(wrapper.find('.qpm-current').text()).toBe('1');
+    expect(progress.attributes('aria-valuenow')).toBe('0');
+    expect(picker.attributes('data-position-index')).toBe('0');
+    expect(picker.attributes('data-is-skipping')).toBe('false');
   });
 
   it('ignores skip while a selection transition is in progress', async () => {

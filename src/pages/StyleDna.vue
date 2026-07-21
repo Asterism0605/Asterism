@@ -16,7 +16,6 @@ const {
   answeredCount,
   canSkip,
   currentQuestion,
-  currentQuestionIndex,
   isCompleted,
   resetQuiz,
   selectAnswer,
@@ -24,6 +23,7 @@ const {
 } = quiz;
 const selectedId = ref<string | null>(null);
 const isTransitioning = ref(false);
+const isSkipping = ref(false);
 const isHoverSuppressed = ref(false);
 const completedTargetPath = '/style-dna/result';
 let hoverSuppressTimer: number | undefined;
@@ -33,6 +33,14 @@ let transitionTimer: number | undefined;
 const progressCurrent = computed(() =>
   Math.min(answeredCount.value + 1, STYLE_DNA_QUESTION_COUNT)
 );
+// 手機版星點在選擇動畫開始時先移動，最後一題可在導向結果頁前抵達底端。
+const mobileAnsweredCount = computed(() =>
+  Math.min(
+    answeredCount.value + (selectedId.value === null ? 0 : 1),
+    STYLE_DNA_QUESTION_COUNT
+  )
+);
+const mobileProgress = computed(() => mobileAnsweredCount.value / STYLE_DNA_QUESTION_COUNT);
 
 resetQuiz();
 
@@ -86,9 +94,11 @@ const handleSkip = () => {
   }
 
   isTransitioning.value = true;
+  isSkipping.value = true;
   window.clearTimeout(transitionTimer);
   transitionTimer = window.setTimeout(() => {
     skipQuestion();
+    isSkipping.value = false;
     isTransitioning.value = false;
     suppressHoverTemporarily();
   }, 240);
@@ -107,20 +117,33 @@ onBeforeUnmount(() => {
       :left-option="currentQuestion.options[0]"
       :right-option="currentQuestion.options[1]"
       :selected-id="selectedId"
-      :question-index="currentQuestionIndex"
+      :position-index="answeredCount"
       :progress-current="progressCurrent"
       :total-questions="STYLE_DNA_QUESTION_COUNT"
       :can-skip="canSkip"
+      :is-skipping="isSkipping"
       :suppress-hover="isHoverSuppressed"
       @select="handleSelect"
       @skip="handleSkip"
     />
 
-    <!-- 手機版（≤980px）：沿用桌機的對角斜線分數樣式（current 左上 / total 右下），改放右下角。 -->
-    <div class="quiz-progress-mobile" :aria-label="$t('dna.quizProgress')">
-      <span class="qpm-current">{{ progressCurrent }}</span>
-      <span class="qpm-slash" aria-hidden="true"></span>
-      <span class="qpm-total">{{ STYLE_DNA_QUESTION_COUNT }}</span>
+    <!-- 手機版（≤768px）：有效答案越多，星點越靠近畫面底部；跳過不改變進度。 -->
+    <div
+      class="quiz-progress-mobile"
+      role="progressbar"
+      :aria-label="$t('dna.quizProgress')"
+      aria-valuemin="0"
+      :aria-valuemax="STYLE_DNA_QUESTION_COUNT"
+      :aria-valuenow="mobileAnsweredCount"
+      :aria-valuetext="$t('dna.pickerProgress', {
+        current: mobileAnsweredCount,
+        total: STYLE_DNA_QUESTION_COUNT
+      })"
+      :style="{ '--quiz-progress': mobileProgress }"
+    >
+      <span class="qpm-track" aria-hidden="true"></span>
+      <span class="qpm-fill" aria-hidden="true"></span>
+      <span class="qpm-star" aria-hidden="true">✦</span>
     </div>
   </main>
 </template>
@@ -138,46 +161,56 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 768px) {
   .quiz-progress {
     display: none;
   }
 
-  /* 對角斜線分數，放右下角（桌機是左下，手機改右下）。 */
+  /* 星點完整保留在畫面內，並沿同一段有效軌道等距移動 12 次。 */
   .quiz-progress-mobile {
     position: fixed;
-    right: 28px;
-    bottom: 30px;
+    top: 64px;
+    right: 18px;
+    bottom: 0;
     z-index: 61;
     display: block;
-    width: 52px;
-    height: 48px;
-    color: rgb(240 237 230 / 70%);
-    font-size: 18px;
-    font-weight: 200;
+    width: 20px;
     pointer-events: none;
   }
 
-  .qpm-current {
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-
-  .qpm-total {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-  }
-
-  .qpm-slash {
+  .qpm-track,
+  .qpm-fill {
     position: absolute;
     left: 50%;
-    top: 50%;
-    width: 52px;
-    height: 1px;
-    background: rgb(240 237 230 / 78%);
-    transform: translate(-50%, -50%) rotate(-38deg);
+    top: 7px;
+    bottom: 7px;
+    width: 1px;
+    transform: translateX(-50%);
+  }
+
+  .qpm-track {
+    background: rgb(240 237 230 / 28%);
+  }
+
+  .qpm-fill {
+    bottom: auto;
+    height: calc(var(--quiz-progress) * (100% - 14px));
+    background: rgb(240 237 230 / 74%);
+    transition: height 480ms ease;
+  }
+
+  .qpm-star {
+    position: absolute;
+    left: 50%;
+    top: calc(7px + var(--quiz-progress) * (100% - 14px));
+    color: var(--color-text-primary);
+    font-size: 14px;
+    line-height: 1;
+    text-shadow:
+      0 0 8px rgb(240 237 230 / 76%),
+      0 0 18px rgb(240 237 230 / 38%);
+    transform: translate(-50%, -50%);
+    transition: top 480ms ease;
   }
 }
 </style>
