@@ -6,7 +6,7 @@
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
-import { AMBIENT_DOTS, type ImageItem, type NodePosition } from './config';
+import { AMBIENT_DOTS, HOME_CARD_WIDTH, type ImageItem, type NodePosition } from './config';
 import {
   buildFloatingImageLayout,
   getConstellationSize,
@@ -32,6 +32,9 @@ const emit = defineEmits<{
   imagesLoaded: [];
   guideTargetReady: [];
 }>();
+
+const imageSizes = `(max-width: 768px) ${HOME_CARD_WIDTH.mobile}px, ${HOME_CARD_WIDTH.desktop}px`;
+const mobileCardWidthPx = `${HOME_CARD_WIDTH.mobile}px`;
 
 const containerRef = ref<HTMLElement | null>(null);
 const positions = ref<NodePosition[]>([]);
@@ -317,7 +320,7 @@ onBeforeUnmount(() => {
           <img
             :src="image.src"
             :srcset="image.srcset"
-            sizes="(max-width: 768px) 132px, 240px"
+            :sizes="imageSizes"
             :width="image.width"
             :height="image.height"
             :alt="image.alt ?? ''"
@@ -413,7 +416,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .image-card {
-    width: min(var(--mobile-card-width, 132px), 36vw) !important;
+    width: min(v-bind(mobileCardWidthPx), 36vw) !important;
   }
 }
 

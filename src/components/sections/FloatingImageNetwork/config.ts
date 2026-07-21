@@ -59,6 +59,9 @@ export interface LayoutPreset {
 export const MAX_IMAGES = 6;
 export const HOME_HERO_IMAGE_INDEX = 0;
 
+// 首頁卡片的顯示寬度：srcset 的 `sizes` 屬性與行動版 CSS 都要對齊同一組數字。
+export const HOME_CARD_WIDTH = { mobile: 132, desktop: 240 } as const;
+
 export const LAYOUT_PRESETS: Record<'auto' | 'home', LayoutPreset> = {
   auto: {
     widths: [130, 150, 160, 170, 200, 210],
