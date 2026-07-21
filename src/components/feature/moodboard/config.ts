@@ -1,3 +1,4 @@
+import { MOODBOARD_FOLDER_IMAGE_MAX } from '@/constants/moodboard.constants';
 import type {
   MoodboardFolder,
   MoodboardHomePhoto,
@@ -108,14 +109,16 @@ export function buildMoodboardOrbitImages(savedImages: SavedImage[]): MoodboardO
     isPlaceholder: false
   }));
 
-  if (uniqueImages.length >= DETAIL_CAP) {
+  if (uniqueImages.length >= MOODBOARD_FOLDER_IMAGE_MAX) {
     return realImages;
   }
 
-  return [...realImages, ...buildPlaceholders(DETAIL_CAP - uniqueImages.length)];
+  return [...realImages, ...buildPlaceholders(MOODBOARD_FOLDER_IMAGE_MAX - uniqueImages.length)];
 }
 
-export function buildPlaceholderOrbitImages(count = DETAIL_CAP): MoodboardOrbitImage[] {
+export function buildPlaceholderOrbitImages(
+  count = MOODBOARD_FOLDER_IMAGE_MAX
+): MoodboardOrbitImage[] {
   return buildPlaceholders(count);
 }
 

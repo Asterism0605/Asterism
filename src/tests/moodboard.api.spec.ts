@@ -10,7 +10,10 @@ const deleteMaybeSingle = vi.fn();
 const deleteSelect = vi.fn(() => ({ maybeSingle: deleteMaybeSingle }));
 const deleteEqProfile = vi.fn(() => ({ select: deleteSelect }));
 const deleteEqId = vi.fn(() => ({ eq: deleteEqProfile }));
-const del = vi.fn(() => ({ eq: deleteEqId }));
+const deleteItemsSelect = vi.fn();
+const deleteItemsEqFolder = vi.fn(() => ({ select: deleteItemsSelect }));
+const deleteItemsIn = vi.fn(() => ({ eq: deleteItemsEqFolder }));
+const del = vi.fn(() => ({ eq: deleteEqId, in: deleteItemsIn }));
 const from = vi.fn(() => ({ select, insert, delete: del }));
 
 vi.mock('@/api/supabaseClient', () => ({
@@ -21,7 +24,7 @@ import {
   addMoodboardItem,
   createMoodboardFolder,
   deleteMoodboardFolder,
-  deleteMoodboardItem,
+  deleteMoodboardItems,
   fetchMoodboardFolders
 } from '@/api/moodboard.api';
 
@@ -116,32 +119,35 @@ describe('moodboard.api', () => {
     );
   });
 
-  it('deletes an item by id and folder, scoping the delete to that folder', async () => {
-    deleteMaybeSingle.mockResolvedValue({ data: { id: 'item-1' }, error: null });
+  it('deletes multiple items by id list scoped to the folder, using .in() for a single batch request', async () => {
+    deleteItemsSelect.mockResolvedValue({
+      data: [{ id: 'item-1' }, { id: 'item-2' }],
+      error: null
+    });
 
-    await deleteMoodboardItem({ itemId: 'item-1', folderId: 'folder-1' });
+    await deleteMoodboardItems({ itemIds: ['item-1', 'item-2'], folderId: 'folder-1' });
 
     expect(from).toHaveBeenCalledWith('moodboard_items');
     expect(del).toHaveBeenCalled();
-    expect(deleteEqId).toHaveBeenCalledWith('id', 'item-1');
-    expect(deleteEqProfile).toHaveBeenCalledWith('folder_id', 'folder-1');
-    expect(deleteSelect).toHaveBeenCalledWith('id');
+    expect(deleteItemsIn).toHaveBeenCalledWith('id', ['item-1', 'item-2']);
+    expect(deleteItemsEqFolder).toHaveBeenCalledWith('folder_id', 'folder-1');
+    expect(deleteItemsSelect).toHaveBeenCalledWith('id');
   });
 
-  it('propagates item delete errors', async () => {
+  it('propagates batch item delete errors', async () => {
     const error = { message: 'permission denied' };
-    deleteMaybeSingle.mockResolvedValue({ data: null, error });
+    deleteItemsSelect.mockResolvedValue({ data: null, error });
 
     await expect(
-      deleteMoodboardItem({ itemId: 'item-1', folderId: 'folder-1' })
+      deleteMoodboardItems({ itemIds: ['item-1'], folderId: 'folder-1' })
     ).rejects.toBe(error);
   });
 
-  it('throws when no item row was actually deleted (wrong folder, already deleted, stale id, or blocked by RLS because the folder is not owned by the caller)', async () => {
-    deleteMaybeSingle.mockResolvedValue({ data: null, error: null });
+  it('throws when not every requested item was deleted (partial match, wrong folder, already deleted, or blocked by RLS because the folder is not owned by the caller)', async () => {
+    deleteItemsSelect.mockResolvedValue({ data: [{ id: 'item-1' }], error: null });
 
     await expect(
-      deleteMoodboardItem({ itemId: 'item-1', folderId: 'folder-1' })
-    ).rejects.toThrow('Moodboard item was not deleted.');
+      deleteMoodboardItems({ itemIds: ['item-1', 'item-2'], folderId: 'folder-1' })
+    ).rejects.toThrow('Moodboard items were not deleted.');
   });
 });

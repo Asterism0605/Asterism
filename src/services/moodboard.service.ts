@@ -3,7 +3,7 @@ import {
   countMoodboardItems,
   createMoodboardFolder,
   deleteMoodboardFolder,
-  deleteMoodboardItem,
+  deleteMoodboardItems,
   fetchMoodboardFolders,
   type MoodboardFolderRow,
   type MoodboardItemRow
@@ -110,14 +110,14 @@ export async function deleteFolder(folderId: string, profileId: string): Promise
   await deleteMoodboardFolder(folderId, profileId);
 }
 
-export async function deleteItem({
+export async function deleteItems({
   folderId,
-  itemId
+  itemIds
 }: {
   folderId: string;
-  itemId: string;
+  itemIds: string[];
 }): Promise<void> {
-  await deleteMoodboardItem({ itemId, folderId });
+  await deleteMoodboardItems({ itemIds, folderId });
 }
 
 export async function addItem(folderId: string, imageId: string): Promise<SavedImage> {
