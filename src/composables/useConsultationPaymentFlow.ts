@@ -84,9 +84,7 @@ export function useConsultationPaymentFlow(
   const accessToken = computed(() => authStore.session?.accessToken ?? '');
   const isCheckoutSubmitting = computed(() => checkoutStatus.value === 'loading');
 
-  function toCheckoutRequest(
-    payload: ConsultationBookingPayload
-  ): ConsultationCheckoutRequest {
+  function toCheckoutRequest(payload: ConsultationBookingPayload): ConsultationCheckoutRequest {
     return {
       method: payload.method,
       consultationDate: payload.date,
@@ -120,8 +118,8 @@ export function useConsultationPaymentFlow(
 
     const code =
       typeof error === 'object' && error !== null && 'response' in error
-        ? (error as { response?: { data?: { error?: { code?: unknown } } } }).response?.data
-            ?.error?.code
+        ? (error as { response?: { data?: { error?: { code?: unknown } } } }).response?.data?.error
+            ?.code
         : undefined;
     if (typeof code === 'string') {
       return checkoutErrorMessageForCode(code);
@@ -190,9 +188,7 @@ export function useConsultationPaymentFlow(
     clearCheckoutSessionState();
   }
 
-  function resolvePaymentReturnStatus(
-    detail: ConsultationBookingDetail
-  ): PaymentReturnStatus {
+  function resolvePaymentReturnStatus(detail: ConsultationBookingDetail): PaymentReturnStatus {
     if (detail.booking.status === 'confirmed' && detail.payment.status === 'paid') {
       return 'paid';
     }
@@ -299,22 +295,21 @@ export function useConsultationPaymentFlow(
       return;
     }
 
-    const queryBookingId =
-      typeof route.query.bookingId === 'string' ? route.query.bookingId : '';
-    const bookingId =
-      queryBookingId || sessionStorage.getItem(CHECKOUT_BOOKING_ID_KEY) || '';
+    const queryBookingId = typeof route.query.bookingId === 'string' ? route.query.bookingId : '';
+    const bookingId = queryBookingId || sessionStorage.getItem(CHECKOUT_BOOKING_ID_KEY) || '';
 
     if (!bookingId) {
       paymentReturnStatus.value = 'missing-booking-id';
       return;
     }
 
-    // Stripe 導回來的網址是後端寫死的 successUrl，不帶 bookingId，第一次只能靠
-    // sessionStorage 撿回來；但終態一確認就會清掉 sessionStorage(見下方
-    // fetchBookingPaymentStatus)。把 bookingId 補寫回網址，之後重新整理/回到這頁
-    // 才能直接從網址讀到，不會因為 sessionStorage 被清空而顯示「找不到預約」。
     if (!queryBookingId) {
-      await router.replace({ query: { ...route.query, bookingId } });
+      const returnUrl = router.resolve({
+        path: route.path,
+        query: { ...route.query, bookingId },
+        hash: route.hash
+      }).fullPath;
+      window.history.replaceState(window.history.state, '', returnUrl);
     }
 
     paymentReturnStatus.value = paymentQuery === 'success' ? 'confirming' : 'canceled';

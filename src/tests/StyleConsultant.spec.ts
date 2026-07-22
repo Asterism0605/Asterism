@@ -593,6 +593,7 @@ describe('StyleConsultant', () => {
   });
 
   it('writes the recovered bookingId into the URL so a later reload survives sessionStorage being cleared', async () => {
+    const replaceStateSpy = vi.spyOn(window.history, 'replaceState');
     const pinia = createPinia();
     setActivePinia(pinia);
     const authStore = useAuthStore();
@@ -622,8 +623,12 @@ describe('StyleConsultant', () => {
     await flushPromises();
 
     expect(wrapper.text()).toContain('Booking confirmed');
-    const recoveredFullPath = router.currentRoute.value.fullPath;
-    expect(router.currentRoute.value.query.bookingId).toBe('booking-1');
+    expect(replaceStateSpy).toHaveBeenCalledWith(
+      window.history.state,
+      '',
+      '/consultant?payment=success&bookingId=booking-1'
+    );
+    const recoveredFullPath = String(replaceStateSpy.mock.lastCall?.[2]);
     // 終態確認後 sessionStorage 那份會被清掉，之後只能靠網址上的 bookingId。
     expect(sessionStorage.getItem('asterism.consultation.checkoutBookingId')).toBeNull();
 
