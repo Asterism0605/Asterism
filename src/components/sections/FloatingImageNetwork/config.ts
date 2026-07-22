@@ -6,6 +6,8 @@
 export interface ImageItem {
   src: string;
   srcset?: string;
+  // 縮圖載入失敗時退回的原圖 url（首頁 preview 用，見 image.service toHomeInspirationImage）。
+  fallbackSrc?: string;
   width?: number;
   height?: number;
   alt?: string;

@@ -10,7 +10,9 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
     "format": "prettier --write src/",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "previews:generate": "node scripts/generate-home-previews.mjs",
+    "previews:check": "node scripts/generate-home-previews.mjs --check"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.2.0",

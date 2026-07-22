@@ -117,6 +117,8 @@ function toHomeInspirationImage(image: StyleImage): HomeInspirationImage {
     // 首頁優先用縮圖；非本地圖（推導不出）退回全尺寸 url。
     src: preview?.src ?? image.url,
     srcset: preview?.srcset,
+    // 只有實際套了縮圖時才需要 fallback；沒套的 src 本來就是原圖，無從退回。
+    fallbackSrc: preview ? image.url : undefined,
     width: preview?.width,
     height: preview?.height,
     alt: image.title || image.style.join(', '),

@@ -29,6 +29,8 @@ export interface HomeInspirationImage {
   id: string;
   src: string;
   srcset?: string;
+  // 縮圖載入失敗時退回的原圖 url；只有實際套了 preview 的圖才有值。
+  fallbackSrc?: string;
   width?: number;
   height?: number;
   alt: string;
