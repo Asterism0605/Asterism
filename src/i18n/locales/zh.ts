@@ -128,10 +128,10 @@ export default {
     }
   },
   consult: {
-    eyebrow: 'Style DNA 轉譯',
+    eyebrow: '風格美學轉譯',
     title: '預約諮詢',
     intro1: '你的美學座標已完成定位。',
-    intro2: '我們為你配對了一位顧問，協助把你的 Style DNA 轉化為實際的設計方向。',
+    intro2: '我們將為你配對一位顧問，協助把你的風格偏好轉化為實際的設計方向。',
     matchedConsultant: '配對顧問',
     matchedConsultantPreview: '可能配對顧問',
     matchedConsultantPending: '選擇設計領域後配對',
@@ -141,6 +141,7 @@ export default {
     savingLocation: '儲存中…',
     needDna: '配對顧問前，需要先有 Style DNA 測驗結果。',
     retakeQuiz: '重新測驗',
+    takeDnaQuiz: '進行 Style DNA 測驗',
     skip: '略過',
     method: '諮詢方式',
     online: '線上',

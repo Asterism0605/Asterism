@@ -3,8 +3,6 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStyleTagLabel } from '@/composables/useStyleTagLabel';
 
-type ConsultantSummaryStatus = 'missing-result' | 'ready';
-
 interface ConsultantProfile {
   styleDna: Array<{
     label: string;
@@ -19,26 +17,14 @@ interface ConsultantProfile {
 
 const props = withDefaults(
   defineProps<{
-    status?: ConsultantSummaryStatus;
     profile?: ConsultantProfile | null;
-    hasSourceData?: boolean;
   }>(),
   {
-    status: undefined,
-    profile: null,
-    hasSourceData: false
+    profile: null
   }
 );
 
-const effectiveStatus = computed<ConsultantSummaryStatus>(() => {
-  if (props.status) {
-    return props.status;
-  }
-
-  return props.hasSourceData && props.profile ? 'ready' : 'missing-result';
-});
-
-const canShowProfile = computed(() => effectiveStatus.value === 'ready' && props.profile !== null);
+const hasStyleDnaResult = computed(() => Boolean(props.profile?.styleDna.length));
 
 const { locale } = useI18n();
 const { displayLabel } = useStyleTagLabel();
@@ -61,10 +47,10 @@ const { displayLabel } = useStyleTagLabel();
       <p>{{ $t('consult.intro2') }}</p>
     </div>
 
-    <dl v-if="canShowProfile && profile" class="consultant-summary__profile">
+    <dl class="consultant-summary__profile">
       <div>
         <dt>Style DNA</dt>
-        <dd>
+        <dd v-if="hasStyleDnaResult && profile">
           <ol class="consultant-summary__dna-list">
             <li v-for="style in profile.styleDna" :key="style.label">
               <span>{{ displayLabel(style.label) }}</span>
@@ -72,14 +58,23 @@ const { displayLabel } = useStyleTagLabel();
             </li>
           </ol>
         </dd>
+        <dd v-else data-testid="consultant-style-dna-fallback">
+          <RouterLink
+            :to="{ name: 'style-dna' }"
+            class="inline-flex min-h-10 items-center justify-center rounded-full border border-text-primary/30 px-4 py-2 text-center text-sm text-text-primary transition-colors hover:border-text-primary/70 hover:bg-text-primary/10"
+            data-testid="consultant-style-dna-cta"
+          >
+            {{ $t('consult.takeDnaQuiz') }}
+          </RouterLink>
+        </dd>
       </div>
       <div>
         <dt>
-          {{ $t(profile.matchIsConfirmed === false
+          {{ $t(profile?.matchIsConfirmed === false
             ? 'consult.matchedConsultantPreview'
             : 'consult.matchedConsultant') }}
         </dt>
-        <dd>{{ profile.consultantLabel ?? $t('consult.matchedConsultantPending') }}</dd>
+        <dd>{{ profile?.consultantLabel ?? $t('consult.matchedConsultantPending') }}</dd>
       </div>
     </dl>
 

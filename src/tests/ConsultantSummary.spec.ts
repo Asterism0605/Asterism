@@ -3,11 +3,8 @@ import { describe, expect, it } from 'vitest'
 import ConsultantSummary from '@/components/feature/consultant/ConsultantSummary.vue'
 
 describe('ConsultantSummary', () => {
-  it('does not render a Style DNA summary when the quiz is incomplete', () => {
+  it('renders the consultant panel and a Style DNA quiz CTA when the quiz is incomplete', () => {
     const wrapper = mount(ConsultantSummary, {
-      props: {
-        status: 'missing-result'
-      },
       global: {
         stubs: {
           RouterLink: {
@@ -18,17 +15,16 @@ describe('ConsultantSummary', () => {
       }
     })
 
-    expect(wrapper.find('.consultant-summary__profile').exists()).toBe(false)
-    expect(wrapper.find('[data-testid="consultant-style-dna-fallback"]').exists()).toBe(false)
-    expect(wrapper.text()).not.toContain('We need a Style DNA result')
-    expect(wrapper.text()).not.toContain('Take Style DNA quiz')
-    expect(wrapper.text()).not.toContain('Matched consultant')
+    expect(wrapper.find('.consultant-summary__profile').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="consultant-style-dna-fallback"]').exists()).toBe(true)
+    expect(wrapper.text()).toContain('Take Style DNA quiz')
+    expect(wrapper.text()).toContain('Matched consultant')
+    expect(wrapper.text()).toContain('Matched once you pick a design field')
   })
 
   it('renders Style DNA rows and the matched consultant when ready', () => {
     const wrapper = mount(ConsultantSummary, {
       props: {
-        status: 'ready',
         profile: {
           styleDna: [
             { label: 'Luminous Minimalism', percentage: 54 },
@@ -53,7 +49,6 @@ describe('ConsultantSummary', () => {
   it('shows a pending placeholder instead of a consultant name when nothing is matched yet', () => {
     const wrapper = mount(ConsultantSummary, {
       props: {
-        status: 'ready',
         profile: {
           styleDna: [{ label: 'Luminous Minimalism', percentage: 54 }],
           consultantLabel: null,

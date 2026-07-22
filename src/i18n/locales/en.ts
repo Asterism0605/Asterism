@@ -129,11 +129,11 @@ export default {
     }
   },
   consult: {
-    eyebrow: 'Style DNA translation',
+    eyebrow: 'Style Translation',
     title: 'Consultation Booking',
     intro1: 'Your aesthetic coordinates have been mapped.',
     intro2:
-      "We've matched you with a consultant to help translate your Style DNA into a real design direction.",
+      "We'll match you with a consultant to help translate your style preferences into a practical design direction.",
     matchedConsultant: 'Matched consultant',
     matchedConsultantPreview: 'Possible match',
     matchedConsultantPending: 'Matched once you pick a design field',
@@ -143,6 +143,7 @@ export default {
     savingLocation: 'Saving…',
     needDna: 'We need a Style DNA result before matching a consultant.',
     retakeQuiz: 'Take Style DNA quiz',
+    takeDnaQuiz: 'Take Style DNA quiz',
     skip: 'Skip',
     method: 'Consultation Method',
     online: 'Online',
