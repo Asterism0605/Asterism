@@ -150,4 +150,18 @@ describe('moodboard.api', () => {
       deleteMoodboardItems({ itemIds: ['item-1', 'item-2'], folderId: 'folder-1' })
     ).rejects.toThrow('Moodboard items were not deleted.');
   });
+
+  it('deduplicates repeated item ids before querying, so a duplicate id does not look like a partial delete', async () => {
+    deleteItemsSelect.mockResolvedValue({
+      data: [{ id: 'item-1' }, { id: 'item-2' }],
+      error: null
+    });
+
+    await deleteMoodboardItems({
+      itemIds: ['item-1', 'item-2', 'item-1'],
+      folderId: 'folder-1'
+    });
+
+    expect(deleteItemsIn).toHaveBeenCalledWith('id', ['item-1', 'item-2']);
+  });
 });

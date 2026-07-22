@@ -49,7 +49,10 @@ import { initSphere } from '@/components/feature/moodboard/sphere';
 import type { SphereHandle } from '@/components/feature/moodboard/sphere';
 import { useOrbitDrag } from '@/components/feature/moodboard/useOrbitDrag';
 import { useDeleteMoodboardImage } from '@/composables/useDeleteMoodboardImage';
-import { useMoodboardInteractionState } from '@/composables/useMoodboardInteractionState';
+import {
+  useMoodboardFolderActivation,
+  useMoodboardInteractionState
+} from '@/composables/useMoodboardInteractionState';
 import { useFolderImageFilters } from '@/composables/useFolderImageFilters';
 import { deleteFolder } from '@/services/moodboard.service';
 import { useMoodboardStore } from '@/stores/moodboard.store';
@@ -107,7 +110,7 @@ const orbitPhase = ref(0);
 const hoverIdx = ref(-1);
 const orbitHoldFolderIndex = ref<number | null>(null);
 let orbitHoldTimer: ReturnType<typeof setTimeout> | null = null;
-// 只在 armOrOpenMobileFolder 內由實際點擊寫入，hover/pointerenter 一律不得碰它，
+// 只在 mobile folder activation 內由實際點擊寫入，hover/pointerenter 一律不得碰它，
 // 否則手機上同一次點擊裡 pointerenter 先跑一次 preview 會讓 click 誤判成「已經點過一次」。
 const mobileArmedFolderId = ref<string | null>(null);
 const selectedFolder = ref(0);
@@ -192,6 +195,22 @@ const { mHover, dragging, onDragStart, onDragMove, onDragEnd, consumeDidDrag } =
     isMoodboardOrbitTourActive.value ||
     (isMobile.value ? nearMobileFolder(point) : nearDeskFolder(point))
 );
+
+const { activateFolder, activateMobileFolder, activateFolderById, activateMobileFolderById } =
+  useMoodboardFolderActivation({
+    isFolderDeleteMode: () => isFolderDeleteMode.value,
+    consumeDidDrag,
+    getFolderId: (index) => moodboardStore.folders[index]?.id,
+    findFolderIndex: (folderId) =>
+      moodboardStore.folders.findIndex((folder) => folder.id === folderId),
+    getArmedFolderId: () => mobileArmedFolderId.value,
+    setArmedFolderId: (folderId) => {
+      mobileArmedFolderId.value = folderId;
+    },
+    requestDeleteFolder,
+    previewFolder,
+    openFolder
+  });
 /* ---- derived ---- */
 const stageStyle = computed<CSSProperties>(() => ({
   position: 'absolute',
@@ -643,55 +662,10 @@ watch(
   }
 );
 
-function onFolderClick(i: number) {
-  if (consumeDidDrag()) return;
-  if (isFolderDeleteMode.value) {
-    requestDeleteFolder(i);
-    return;
-  }
-  openFolder(i);
-}
-
-function openFolderById(folderId: string) {
-  const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
-  if (index !== -1) openFolder(index);
-}
-
-function armOrOpenMobileFolder(index: number) {
-  if (consumeDidDrag()) return;
-
-  const folder = moodboardStore.folders[index];
-  if (!folder) return;
-
-  if (isFolderDeleteMode.value) {
-    requestDeleteFolder(index);
-    return;
-  }
-
-  if (mobileArmedFolderId.value === folder.id) {
-    openFolder(index);
-    return;
-  }
-
-  mobileArmedFolderId.value = folder.id;
-  previewFolder(index);
-}
-
-function armOrOpenMobileFolderById(folderId: string) {
-  const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
-  if (index !== -1) armOrOpenMobileFolder(index);
-}
-
 function onSphereClick() {
-  if (consumeDidDrag()) return;
-
   const folder = sphereFolder.value;
   if (!folder) return;
-
-  const index = moodboardStore.folders.findIndex((candidate) => candidate.id === folder.id);
-  if (index === -1) return;
-
-  openFolder(index);
+  activateFolderById(folder.id, { deleteWhenActive: false });
 }
 
 let sphereHandle: SphereHandle | null = null;
@@ -877,7 +851,7 @@ onBeforeUnmount(() => {
               cursor: f.hasFolder ? 'pointer' : 'default',
               pointerEvents: f.hasFolder ? 'auto' : 'none'
             }"
-            @click="armOrOpenMobileFolder(f.i)"
+            @click="activateMobileFolder(f.i)"
           >
             <img
               :src="f.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
@@ -917,7 +891,7 @@ onBeforeUnmount(() => {
           <RouterLink
             data-testid="moodboard-empty-folder-preview-cta-mobile"
             to="/"
-            class="pointer-events-auto inline-flex rounded-full bg-[#d96643] px-7 py-3 font-semibold text-white transition hover:bg-[#e67550] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            class="pointer-events-auto inline-flex rounded-full bg-cta px-7 py-3 font-semibold text-white transition hover:bg-cta-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             {{ $t('moodboard.startExploring') }}
           </RouterLink>
@@ -1015,7 +989,7 @@ onBeforeUnmount(() => {
             :focus-preview="false"
             @preview="previewFolderById"
             @preview-end="leaveFolder"
-            @open="armOrOpenMobileFolderById"
+            @open="activateMobileFolderById"
           />
         </div>
 
@@ -1162,7 +1136,7 @@ onBeforeUnmount(() => {
             <RouterLink
               data-testid="moodboard-empty-folder-preview-cta"
               to="/"
-              class="pointer-events-auto inline-flex rounded-full bg-[#d96643] px-7 py-3 font-semibold text-white transition hover:bg-[#e67550] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              class="pointer-events-auto inline-flex rounded-full bg-cta px-7 py-3 font-semibold text-white transition hover:bg-cta-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               {{ $t('moodboard.startExploring') }}
             </RouterLink>
@@ -1190,7 +1164,7 @@ onBeforeUnmount(() => {
             }"
             @mouseenter="onFolderMouseEnter(fv.i)"
             @mouseleave="onFolderMouseLeave"
-            @click="onFolderClick(fv.i)"
+            @click="activateFolder(fv.i)"
           >
             <img
               :src="fv.active ? '/images/folder-active.png' : '/images/folder-idle.png'"
@@ -1382,7 +1356,7 @@ onBeforeUnmount(() => {
             :active-folder-id="highlightedFolderId"
             @preview="previewFolderById"
             @preview-end="leaveFolder"
-            @open="openFolderById"
+            @open="activateFolderById"
           />
         </div>
       </div>

@@ -86,7 +86,7 @@ function folderLabel(folder: MoodboardFolder): string {
   padding: 0;
   border: 0;
   background: transparent;
-  color: #f0ede6bd;
+  color: color-mix(in srgb, var(--color-text-primary) 74.12%, transparent);
   font: inherit;
   cursor: pointer;
   opacity: 0.5;
@@ -96,11 +96,11 @@ function folderLabel(folder: MoodboardFolder): string {
 }
 
 .folder-node:is(:hover, :focus-visible) {
-  filter: drop-shadow(0 0 7px #f0ede657);
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--color-text-primary) 34.12%, transparent));
 }
 
 .folder-node:not(.folder-node--active):is(:hover, :focus-visible) {
-  color: #f0ede6d6;
+  color: color-mix(in srgb, var(--color-text-primary) 83.92%, transparent);
   opacity: 0.76;
 }
 
@@ -110,14 +110,14 @@ function folderLabel(folder: MoodboardFolder): string {
   margin-left: -5px;
   flex: 0 0 auto;
   border-radius: 50%;
-  background: #f0ede6eb;
+  background: color-mix(in srgb, var(--color-text-primary) 92.16%, transparent);
 }
 
 .folder-node__connector {
   width: 42px;
   height: 1px;
   flex: 0 0 auto;
-  background: #f0ede6c2;
+  background: color-mix(in srgb, var(--color-text-primary) 76.08%, transparent);
 }
 
 .folder-node__label {
@@ -139,8 +139,8 @@ function folderLabel(folder: MoodboardFolder): string {
 
 .folder-node--active .folder-node__anchor {
   box-shadow:
-    0 0 0 1px #f0ede68c,
-    0 0 10px #f0ede62e;
+    0 0 0 1px color-mix(in srgb, var(--color-text-primary) 54.9%, transparent),
+    0 0 10px color-mix(in srgb, var(--color-text-primary) 18.04%, transparent);
   transform: scale(1.15);
 }
 
@@ -154,7 +154,7 @@ function folderLabel(folder: MoodboardFolder): string {
 
 .folder-node--active .folder-node__connector {
   width: 56px;
-  background: #f0ede6e6;
+  background: color-mix(in srgb, var(--color-text-primary) 90.2%, transparent);
 }
 
 @media (max-width: 768px) {
@@ -220,8 +220,8 @@ function folderLabel(folder: MoodboardFolder): string {
     height: 4px;
     margin-left: 0;
     box-shadow:
-      0 0 0 1px #f0ede68c,
-      0 0 10px #f0ede62e;
+      0 0 0 1px color-mix(in srgb, var(--color-text-primary) 54.9%, transparent),
+      0 0 10px color-mix(in srgb, var(--color-text-primary) 18.04%, transparent);
     transform: scale(1.25);
   }
 
