@@ -10,7 +10,11 @@ interface ConsultantProfile {
     label: string;
     percentage: number;
   }>;
-  consultantLabel: string;
+  // 選了設計領域才查得到對應顧問，未選之前是 null，顯示待配對提示。
+  consultantLabel: string | null;
+  // 顯示的是後端確認指派的顧問(true / 預設)還是表單即時預覽(false)。
+  // 預覽時 dt 標籤用「可能配對顧問」提醒可能與最終指派不同。
+  matchIsConfirmed?: boolean;
 }
 
 const props = withDefaults(
@@ -70,8 +74,12 @@ const { displayLabel } = useStyleTagLabel();
         </dd>
       </div>
       <div>
-        <dt>{{ $t('consult.matchedConsultant') }}</dt>
-        <dd>{{ profile.consultantLabel }}</dd>
+        <dt>
+          {{ $t(profile.matchIsConfirmed === false
+            ? 'consult.matchedConsultantPreview'
+            : 'consult.matchedConsultant') }}
+        </dt>
+        <dd>{{ profile.consultantLabel ?? $t('consult.matchedConsultantPending') }}</dd>
       </div>
     </dl>
 

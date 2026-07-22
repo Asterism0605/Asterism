@@ -14,6 +14,7 @@ interface BookingRow {
   contact_name: string | null;
   contact_email: string;
   contact_phone: string | null;
+  location: string | null;
 }
 
 // 顧問端清單：RLS(consultation_bookings_select_assigned)保證只讀得到被指派的預約，
@@ -22,7 +23,7 @@ export async function getAssignedBookings(consultantId: string): Promise<Consult
   const { data, error } = await getSupabase()
     .from('consultation_bookings')
     .select(
-      'id, status, method, consultation_date, time_slot, design_field, design_focus, notes, contact_name, contact_email, contact_phone'
+      'id, status, method, consultation_date, time_slot, design_field, design_focus, notes, contact_name, contact_email, contact_phone, location'
     )
     .eq('consultant_id', consultantId)
     .order('consultation_date', { ascending: true })
@@ -43,6 +44,21 @@ export async function getAssignedBookings(consultantId: string): Promise<Consult
     notes: row.notes ?? undefined,
     contactName: row.contact_name ?? undefined,
     contactEmail: row.contact_email,
-    contactPhone: row.contact_phone ?? undefined
+    contactPhone: row.contact_phone ?? undefined,
+    location: row.location ?? undefined
   }));
+}
+
+export async function setConsultationLocation(
+  bookingId: string,
+  location: string
+): Promise<void> {
+  const { error } = await getSupabase().rpc('set_consultation_location', {
+    p_booking_id: bookingId,
+    p_location: location
+  });
+
+  if (error) {
+    throw error;
+  }
 }

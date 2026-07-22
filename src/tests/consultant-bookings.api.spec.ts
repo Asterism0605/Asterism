@@ -12,7 +12,8 @@ const rows = [
     notes: null,
     contact_name: '王小明',
     contact_email: 'ming@example.com',
-    contact_phone: '0912345678'
+    contact_phone: '0912345678',
+    location: 'https://meet.example.com/b1'
   },
   {
     id: 'b2',
@@ -25,7 +26,8 @@ const rows = [
     notes: 'note',
     contact_name: null,
     contact_email: 'guest@example.com',
-    contact_phone: null
+    contact_phone: null,
+    location: null
   }
 ];
 
@@ -34,9 +36,10 @@ const order1 = vi.fn(() => ({ order: order2 }));
 const eq = vi.fn(() => ({ order: order1 }));
 const select = vi.fn(() => ({ eq }));
 const from = vi.fn(() => ({ select }));
-vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ from }) }));
+const rpc = vi.fn().mockResolvedValue({ error: null });
+vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ from, rpc }) }));
 
-import { getAssignedBookings } from '@/api/consultant-bookings.api';
+import { getAssignedBookings, setConsultationLocation } from '@/api/consultant-bookings.api';
 
 describe('consultant-bookings.api', () => {
   beforeEach(() => {
@@ -60,7 +63,8 @@ describe('consultant-bookings.api', () => {
       notes: undefined,
       contactName: '王小明',
       contactEmail: 'ming@example.com',
-      contactPhone: '0912345678'
+      contactPhone: '0912345678',
+      location: 'https://meet.example.com/b1'
     });
     expect(result[1].method).toBe('In-Person');
     expect(result[1].contactName).toBeUndefined();
@@ -77,5 +81,24 @@ describe('consultant-bookings.api', () => {
     order2.mockResolvedValue({ data: null, error: { message: 'boom' } });
 
     await expect(getAssignedBookings('consultant-1')).rejects.toEqual({ message: 'boom' });
+  });
+});
+
+describe('setConsultationLocation', () => {
+  beforeEach(() => {
+    rpc.mockResolvedValue({ error: null });
+  });
+
+  it('以正確參數呼叫 RPC', async () => {
+    await setConsultationLocation('b1', 'https://meet.example.com/new');
+    expect(rpc).toHaveBeenCalledWith('set_consultation_location', {
+      p_booking_id: 'b1',
+      p_location: 'https://meet.example.com/new'
+    });
+  });
+
+  it('RPC 回 error 時 throw', async () => {
+    rpc.mockResolvedValue({ error: { message: 'denied' } });
+    await expect(setConsultationLocation('b1', 'x')).rejects.toBeTruthy();
   });
 });

@@ -7,7 +7,11 @@ import {
   getConsultationBookingDetail
 } from '@/api/consultation.api';
 import { useAuthStore } from '@/stores/auth.store';
-import type { ConsultationBookingDetail, ConsultationCheckoutRequest } from '@/types/consultation';
+import type {
+  ConsultationBookingDetail,
+  ConsultationCheckoutRequest,
+  ConsultationSummary
+} from '@/types/consultation';
 
 export interface ConsultationBookingPayload {
   method: 'online' | 'in_person';
@@ -39,6 +43,8 @@ interface UseConsultationPaymentFlowReturn {
   checkoutErrorMessage: Ref<string>;
   isCheckoutSubmitting: ComputedRef<boolean>;
   paymentReturnStatus: Ref<PaymentReturnStatus>;
+  // 付款確認回來時後端實際指派到的顧問(真實資料，不是表單即時預覽那份)。
+  confirmedConsultant: Ref<ConsultationSummary | null>;
   handleSubmit: (payload: ConsultationBookingPayload) => Promise<void>;
   handleReset: () => void;
   restartBooking: () => Promise<void>;
@@ -71,15 +77,14 @@ export function useConsultationPaymentFlow(
   const checkoutStatus = ref<CheckoutStatus>('idle');
   const checkoutErrorMessage = ref('');
   const paymentReturnStatus = ref<PaymentReturnStatus>('idle');
+  const confirmedConsultant = ref<ConsultationSummary | null>(null);
   const paymentPollingAttempts = ref(0);
   let paymentPollingTimer: ReturnType<typeof window.setTimeout> | null = null;
 
   const accessToken = computed(() => authStore.session?.accessToken ?? '');
   const isCheckoutSubmitting = computed(() => checkoutStatus.value === 'loading');
 
-  function toCheckoutRequest(
-    payload: ConsultationBookingPayload
-  ): ConsultationCheckoutRequest {
+  function toCheckoutRequest(payload: ConsultationBookingPayload): ConsultationCheckoutRequest {
     return {
       method: payload.method,
       consultationDate: payload.date,
@@ -113,8 +118,8 @@ export function useConsultationPaymentFlow(
 
     const code =
       typeof error === 'object' && error !== null && 'response' in error
-        ? (error as { response?: { data?: { error?: { code?: unknown } } } }).response?.data
-            ?.error?.code
+        ? (error as { response?: { data?: { error?: { code?: unknown } } } }).response?.data?.error
+            ?.code
         : undefined;
     if (typeof code === 'string') {
       return checkoutErrorMessageForCode(code);
@@ -183,9 +188,7 @@ export function useConsultationPaymentFlow(
     clearCheckoutSessionState();
   }
 
-  function resolvePaymentReturnStatus(
-    detail: ConsultationBookingDetail
-  ): PaymentReturnStatus {
+  function resolvePaymentReturnStatus(detail: ConsultationBookingDetail): PaymentReturnStatus {
     if (detail.booking.status === 'confirmed' && detail.payment.status === 'paid') {
       return 'paid';
     }
@@ -247,6 +250,7 @@ export function useConsultationPaymentFlow(
 
       const status = resolvePaymentReturnStatus(response.data);
       paymentReturnStatus.value = status;
+      confirmedConsultant.value = response.data.consultant ?? null;
 
       if (isTerminalPaymentStatus(status)) {
         clearPaymentPolling();
@@ -291,14 +295,21 @@ export function useConsultationPaymentFlow(
       return;
     }
 
-    const queryBookingId =
-      typeof route.query.bookingId === 'string' ? route.query.bookingId : '';
-    const bookingId =
-      queryBookingId || sessionStorage.getItem(CHECKOUT_BOOKING_ID_KEY) || '';
+    const queryBookingId = typeof route.query.bookingId === 'string' ? route.query.bookingId : '';
+    const bookingId = queryBookingId || sessionStorage.getItem(CHECKOUT_BOOKING_ID_KEY) || '';
 
     if (!bookingId) {
       paymentReturnStatus.value = 'missing-booking-id';
       return;
+    }
+
+    if (!queryBookingId) {
+      const returnUrl = router.resolve({
+        path: route.path,
+        query: { ...route.query, bookingId },
+        hash: route.hash
+      }).fullPath;
+      window.history.replaceState(window.history.state, '', returnUrl);
     }
 
     paymentReturnStatus.value = paymentQuery === 'success' ? 'confirming' : 'canceled';
@@ -314,6 +325,7 @@ export function useConsultationPaymentFlow(
     clearCheckoutSessionState();
     paymentPollingAttempts.value = 0;
     paymentReturnStatus.value = 'idle';
+    confirmedConsultant.value = null;
     await router.replace({ path: '/consultant' });
   }
 
@@ -324,6 +336,7 @@ export function useConsultationPaymentFlow(
     checkoutErrorMessage,
     isCheckoutSubmitting,
     paymentReturnStatus,
+    confirmedConsultant,
     handleSubmit,
     handleReset,
     restartBooking
