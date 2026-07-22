@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { useMoodboardInteractionState } from '@/composables/useMoodboardInteractionState';
+import {
+  useMoodboardFolderActivation,
+  useMoodboardInteractionState
+} from '@/composables/useMoodboardInteractionState';
 
 describe('useMoodboardInteractionState', () => {
   it('starts idle with no delete mode, no select mode, no selected images', () => {
@@ -96,5 +99,55 @@ describe('useMoodboardInteractionState', () => {
     state.resetInteractionState();
     expect(state.isImageSelectMode.value).toBe(false);
     expect(state.selectedImageIds.value.size).toBe(0);
+  });
+});
+
+describe('useMoodboardFolderActivation', () => {
+  function createActivation(isFolderDeleteMode = false) {
+    let armedFolderId: string | null = null;
+    const calls: string[] = [];
+    const folders = ['folder-1', 'folder-2'];
+    const activation = useMoodboardFolderActivation({
+      isFolderDeleteMode: () => isFolderDeleteMode,
+      consumeDidDrag: () => false,
+      getFolderId: (index) => folders[index],
+      findFolderIndex: (folderId) => folders.indexOf(folderId),
+      getArmedFolderId: () => armedFolderId,
+      setArmedFolderId: (folderId) => {
+        armedFolderId = folderId;
+      },
+      requestDeleteFolder: (index) => calls.push(`delete:${index}`),
+      previewFolder: (index) => calls.push(`preview:${index}`),
+      openFolder: (index) => calls.push(`open:${index}`)
+    });
+
+    return { activation, calls };
+  }
+
+  it('routes index and id activation through the same open flow', () => {
+    const { activation, calls } = createActivation();
+
+    activation.activateFolder(0);
+    activation.activateFolderById('folder-2');
+
+    expect(calls).toEqual(['open:0', 'open:1']);
+  });
+
+  it('routes activation to deletion while folder delete mode is active', () => {
+    const { activation, calls } = createActivation(true);
+
+    activation.activateFolder(0);
+    activation.activateFolderById('folder-2', { deleteWhenActive: false });
+
+    expect(calls).toEqual(['delete:0']);
+  });
+
+  it('previews a mobile folder once, then opens it on the next activation', () => {
+    const { activation, calls } = createActivation();
+
+    activation.activateMobileFolderById('folder-1');
+    activation.activateMobileFolderById('folder-1');
+
+    expect(calls).toEqual(['preview:0', 'open:0']);
   });
 });

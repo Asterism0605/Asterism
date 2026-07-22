@@ -7,6 +7,65 @@ type InteractionMode =
   | { type: 'folder-delete' }
   | { type: 'image-select'; selectedImageIds: Set<string> };
 
+interface MoodboardFolderActivationOptions {
+  isFolderDeleteMode: () => boolean;
+  consumeDidDrag: () => boolean;
+  getFolderId: (index: number) => string | undefined;
+  findFolderIndex: (folderId: string) => number;
+  getArmedFolderId: () => string | null;
+  setArmedFolderId: (folderId: string) => void;
+  requestDeleteFolder: (index: number) => void;
+  previewFolder: (index: number) => void;
+  openFolder: (index: number) => void;
+}
+
+export function useMoodboardFolderActivation(options: MoodboardFolderActivationOptions) {
+  function activate(index: number, armFirst: boolean, deleteWhenActive: boolean) {
+    if (options.consumeDidDrag()) return;
+
+    const folderId = options.getFolderId(index);
+    if (!folderId) return;
+
+    if (options.isFolderDeleteMode()) {
+      if (deleteWhenActive) options.requestDeleteFolder(index);
+      return;
+    }
+
+    if (!armFirst || options.getArmedFolderId() === folderId) {
+      options.openFolder(index);
+      return;
+    }
+
+    options.setArmedFolderId(folderId);
+    options.previewFolder(index);
+  }
+
+  function activateFolder(index: number) {
+    activate(index, false, true);
+  }
+
+  function activateMobileFolder(index: number) {
+    activate(index, true, true);
+  }
+
+  function activateFolderById(folderId: string, settings = { deleteWhenActive: true }) {
+    const index = options.findFolderIndex(folderId);
+    if (index !== -1) activate(index, false, settings.deleteWhenActive);
+  }
+
+  function activateMobileFolderById(folderId: string) {
+    const index = options.findFolderIndex(folderId);
+    if (index !== -1) activate(index, true, true);
+  }
+
+  return {
+    activateFolder,
+    activateMobileFolder,
+    activateFolderById,
+    activateMobileFolderById
+  };
+}
+
 export function useMoodboardInteractionState(getSelectableImageIds: () => string[]) {
   const mode = ref<InteractionMode>({ type: 'idle' });
 
