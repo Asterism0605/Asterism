@@ -66,7 +66,7 @@ const cards = bands.flatMap((band, bandIndex) =>
         <RouterLink
           data-testid="moodboard-empty-cta"
           to="/"
-          class="mt-8 inline-flex rounded-full bg-[#d96643] px-7 py-3 font-semibold text-white transition hover:bg-[#e67550] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          class="mt-8 inline-flex rounded-full bg-cta px-7 py-3 font-semibold text-white transition hover:bg-cta-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           {{ $t('moodboard.startExploring') }}
         </RouterLink>
