@@ -186,6 +186,20 @@ describe('image.service', () => {
     );
   });
 
+  it('serves 480w/720w preview thumbnails with srcset for home concept images (#181)', async () => {
+    const images = await getHomeInspirationImages();
+
+    // 打包資料的概念圖都在 preview 白名單內，應全數改用縮圖。
+    expect(
+      images.every((image) => image.src.startsWith('/style-image/preview/'))
+    ).toBe(true);
+    expect(images[0].src).toMatch(/\/style-image\/preview\/.+-480\.webp$/);
+    expect(images[0].srcset).toMatch(/-480\.webp 480w, .+-720\.webp 720w$/);
+    // width/height 供 <img> 預留比例消 CLS。
+    expect(images[0].width).toBeGreaterThan(0);
+    expect(images[0].height).toBeGreaterThan(0);
+  });
+
   it('preserves the default home inspiration order without preferred styles', async () => {
     const defaultImages = await getHomeInspirationImages();
     const emptyPreferenceImages = await getHomeInspirationImages({ preferredStyles: [] });

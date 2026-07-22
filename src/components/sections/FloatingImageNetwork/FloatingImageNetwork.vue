@@ -6,7 +6,7 @@
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
-import { AMBIENT_DOTS, type ImageItem, type NodePosition } from './config';
+import { AMBIENT_DOTS, HOME_CARD_WIDTH, type ImageItem, type NodePosition } from './config';
 import {
   buildFloatingImageLayout,
   getConstellationSize,
@@ -33,6 +33,9 @@ const emit = defineEmits<{
   guideTargetReady: [];
 }>();
 
+const imageSizes = `(max-width: 768px) ${HOME_CARD_WIDTH.mobile}px, ${HOME_CARD_WIDTH.desktop}px`;
+const mobileCardWidthPx = `${HOME_CARD_WIDTH.mobile}px`;
+
 const containerRef = ref<HTMLElement | null>(null);
 const positions = ref<NodePosition[]>([]);
 const hoveredIndex = ref<number | null>(null);
@@ -46,6 +49,9 @@ const naturalAspects = new Map<string, string>();
 const isReady = ref(false);
 const loadedImageIndexes = ref<Set<number>>(new Set());
 const failedImageIndexes = ref<Set<number>>(new Set());
+// 縮圖（preview）載入失敗、已改載原圖 fallbackSrc 的卡片。用來在 template 端切掉
+// srcset、換 src，並當作只退一次的旗標（避免原圖也失敗時無限 fallback）。
+const fellBackImageIndexes = ref<Set<number>>(new Set());
 let loadedCount = 0;
 let hasEmittedImagesLoaded = false;
 let recomputeTimer: ReturnType<typeof setTimeout> | undefined;
@@ -130,6 +136,14 @@ function onImageLoad(index: number, src: string, event: Event) {
 }
 
 function onImageError(index: number): void {
+  // 縮圖第一次失敗且有原圖可退：改載原圖（template 會切掉 srcset），先不標記失敗，
+  // 等瀏覽器重新載原圖。只退一次——若原圖也失敗會再進來，此時已在 fellBack 集合裡，往下走標記失敗。
+  const image = visibleImages.value[index];
+  if (image?.fallbackSrc && !fellBackImageIndexes.value.has(index)) {
+    fellBackImageIndexes.value = new Set(fellBackImageIndexes.value).add(index);
+    return;
+  }
+
   const loadedIndexes = new Set(loadedImageIndexes.value);
   loadedIndexes.delete(index);
   loadedImageIndexes.value = loadedIndexes;
@@ -145,6 +159,7 @@ function startLoadCycle() {
   isReady.value = false;
   loadedImageIndexes.value = new Set();
   failedImageIndexes.value = new Set();
+  fellBackImageIndexes.value = new Set();
   loadedCount = 0;
   hasEmittedImagesLoaded = false;
   recomputeLayout();
@@ -315,7 +330,11 @@ onBeforeUnmount(() => {
       <div class="image-card__float relative z-10">
         <div class="image-card__frame">
           <img
-            :src="image.src"
+            :src="fellBackImageIndexes.has(i) ? image.fallbackSrc : image.src"
+            :srcset="fellBackImageIndexes.has(i) ? undefined : image.srcset"
+            :sizes="imageSizes"
+            :width="image.width"
+            :height="image.height"
             :alt="image.alt ?? ''"
             :loading="i === 0 ? 'eager' : 'lazy'"
             :fetchpriority="i === 0 ? 'high' : 'auto'"
@@ -409,7 +428,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .image-card {
-    width: min(var(--mobile-card-width, 132px), 36vw) !important;
+    width: min(v-bind(mobileCardWidthPx), 36vw) !important;
   }
 }
 
