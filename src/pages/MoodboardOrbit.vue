@@ -654,7 +654,14 @@ function onFolderClick(i: number) {
 
 function openFolderById(folderId: string) {
   const index = moodboardStore.folders.findIndex((folder) => folder.id === folderId);
-  if (index !== -1) openFolder(index);
+  if (index === -1) return;
+
+  if (isFolderDeleteMode.value) {
+    requestDeleteFolder(index);
+    return;
+  }
+
+  openFolder(index);
 }
 
 function armOrOpenMobileFolder(index: number) {
@@ -684,6 +691,7 @@ function armOrOpenMobileFolderById(folderId: string) {
 
 function onSphereClick() {
   if (consumeDidDrag()) return;
+  if (isFolderDeleteMode.value) return;
 
   const folder = sphereFolder.value;
   if (!folder) return;
