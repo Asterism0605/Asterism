@@ -1,46 +1,64 @@
 import { computed, ref } from 'vue';
 
-// 資料夾詳情頁的圖片多選跟資料夾列表頁的刪除模式，兩套各自獨立、不共用同一個狀態。
+// 資料夾詳情頁的圖片多選跟資料夾列表頁的刪除模式，兩套各自獨立、不共用同一個狀態，
+// 用 discriminated union 讓兩者在型別層級就互斥，所有切換都經過同一個 mode ref。
+type InteractionMode =
+  | { type: 'idle' }
+  | { type: 'folder-delete' }
+  | { type: 'image-select'; selectedImageIds: Set<string> };
+
 export function useMoodboardInteractionState(getSelectableImageIds: () => string[]) {
-  const isFolderDeleteMode = ref(false);
-  const isImageSelectMode = ref(false);
-  const selectedImageIds = ref<Set<string>>(new Set());
+  const mode = ref<InteractionMode>({ type: 'idle' });
+
+  const isFolderDeleteMode = computed(() => mode.value.type === 'folder-delete');
+  const isImageSelectMode = computed(() => mode.value.type === 'image-select');
+  const selectedImageIds = computed(() => {
+    const current = mode.value;
+    return current.type === 'image-select' ? current.selectedImageIds : new Set<string>();
+  });
 
   function toggleFolderDeleteMode() {
-    isFolderDeleteMode.value = !isFolderDeleteMode.value;
+    mode.value = mode.value.type === 'folder-delete' ? { type: 'idle' } : { type: 'folder-delete' };
   }
 
   function toggleImageSelectMode() {
-    isImageSelectMode.value = !isImageSelectMode.value;
-    selectedImageIds.value = new Set();
+    mode.value =
+      mode.value.type === 'image-select'
+        ? { type: 'idle' }
+        : { type: 'image-select', selectedImageIds: new Set() };
   }
 
   function toggleImageSelection(itemId: string) {
-    const next = new Set(selectedImageIds.value);
+    const current = mode.value;
+    if (current.type !== 'image-select') return;
+    const next = new Set(current.selectedImageIds);
     if (next.has(itemId)) next.delete(itemId);
     else next.add(itemId);
-    selectedImageIds.value = next;
+    mode.value = { type: 'image-select', selectedImageIds: next };
   }
 
   const isAllImagesSelected = computed(() => {
+    const current = mode.value;
+    if (current.type !== 'image-select') return false;
     const itemIds = getSelectableImageIds();
-    return itemIds.length > 0 && itemIds.every((itemId) => selectedImageIds.value.has(itemId));
+    return itemIds.length > 0 && itemIds.every((itemId) => current.selectedImageIds.has(itemId));
   });
 
   function toggleSelectAllImages() {
-    selectedImageIds.value = isAllImagesSelected.value
-      ? new Set()
-      : new Set(getSelectableImageIds());
+    const current = mode.value;
+    if (current.type !== 'image-select') return;
+    mode.value = {
+      type: 'image-select',
+      selectedImageIds: isAllImagesSelected.value ? new Set() : new Set(getSelectableImageIds())
+    };
   }
 
   function resetImageSelection() {
-    isImageSelectMode.value = false;
-    selectedImageIds.value = new Set();
+    if (mode.value.type === 'image-select') mode.value = { type: 'idle' };
   }
 
   function resetInteractionState() {
-    isFolderDeleteMode.value = false;
-    resetImageSelection();
+    mode.value = { type: 'idle' };
   }
 
   return {
