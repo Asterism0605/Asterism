@@ -16,8 +16,10 @@ const props = withDefaults(
     variant?: 'account' | 'consultant';
     /** 儲存地點失敗時,父層(ConsultantBookings)傳入的錯誤訊息。 */
     saveError?: string;
+    /** 地點儲存中:停用按鈕並顯示「儲存中」,避免連續點擊送出多個請求。 */
+    saving?: boolean;
   }>(),
-  { variant: 'account', saveError: '' }
+  { variant: 'account', saveError: '', saving: false }
 );
 
 const scope = computed(() =>
@@ -152,7 +154,7 @@ defineExpose({ playDateAnimation });
             <dd>{{ t(`consultantBookings.status.${reservation.status}`) }}</dd>
           </div>
           <div v-if="canEditLocation" class="consultation-details__location-edit">
-            <dt>
+            <dt :id="`location-label-${reservation.id}`">
               {{ isOnline ? t('consult.locationOnlineLabel') : t('consult.locationInPersonLabel') }}
             </dt>
             <dd>
@@ -161,6 +163,7 @@ defineExpose({ playDateAnimation });
                 data-testid="location-input"
                 type="text"
                 :maxlength="500"
+                :aria-labelledby="`location-label-${reservation.id}`"
                 :placeholder="isOnline
                   ? t('consult.locationOnlinePlaceholder')
                   : t('consult.locationInPersonPlaceholder')"
@@ -170,9 +173,10 @@ defineExpose({ playDateAnimation });
                 type="button"
                 data-testid="location-save"
                 class="consultation-details__location-save"
+                :disabled="saving"
                 @click="saveLocation"
               >
-                {{ t('consult.saveLocation') }}
+                {{ saving ? t('consult.savingLocation') : t('consult.saveLocation') }}
               </button>
               <p v-if="locationError" class="consultation-details__location-error">
                 {{ locationError }}
@@ -331,6 +335,10 @@ defineExpose({ playDateAnimation });
   color: inherit;
   font: inherit;
   cursor: pointer;
+}
+.consultation-details__location-save:disabled {
+  cursor: progress;
+  opacity: 0.6;
 }
 .consultation-details__location-error {
   margin: 6px 0 0;

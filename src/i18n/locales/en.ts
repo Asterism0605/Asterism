@@ -134,7 +134,12 @@ export default {
     intro2:
       "We've matched you with a consultant to help translate your Style DNA into a real design direction.",
     matchedConsultant: 'Matched consultant',
+    matchedConsultantPreview: 'Possible match',
     matchedConsultantPending: 'Matched once you pick a design field',
+    matchedConsultantNone: 'No consultant available yet',
+    matchedConsultantLoadError: "Couldn't load consultants, please try again.",
+    matchedConsultantUnavailable: 'Consultant info is temporarily unavailable.',
+    savingLocation: 'Saving…',
     needDna: 'We need a Style DNA result before matching a consultant.',
     retakeQuiz: 'Take Style DNA quiz',
     skip: 'Skip',

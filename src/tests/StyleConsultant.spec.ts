@@ -158,7 +158,8 @@ describe('StyleConsultant', () => {
     expect(wrapper.text()).toContain('Style DNA');
     expect(wrapper.text()).toContain('Y2K');
     expect(wrapper.text()).toContain('100%');
-    expect(wrapper.text()).toContain('Matched consultant');
+    // 未選領域＝即時預覽狀態,標籤顯示「可能配對顧問」而非「配對顧問」。
+    expect(wrapper.text()).toContain('Possible match');
     expect(wrapper.text()).not.toContain('Spatial Consultant · Mira Chen');
     expect(wrapper.find('[data-testid="consultant-style-dna-fallback"]').exists()).toBe(false);
 
@@ -166,6 +167,63 @@ describe('StyleConsultant', () => {
     await flushPromises();
 
     expect(wrapper.text()).toContain('Spatial Consultant · Mira Chen');
+  });
+
+  it('顧問清單載入失敗時顯示錯誤,不當成尚未配對', async () => {
+    fetchActiveConsultantsMock.mockRejectedValueOnce(new Error('boom'));
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    const styleDnaStore = useStyleDnaStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    styleDnaStore.completeQuiz([y2kAnswer], memberSession.user.id);
+    const router = createTestRouter();
+    await router.push('/consultant');
+    await router.isReady();
+
+    const wrapper = mountPage(router, pinia);
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("Couldn't load consultants");
+    expect(wrapper.text()).not.toContain('Matched once you pick a design field');
+  });
+
+  it('付款流程中沒有指派顧問時,不顯示「選擇設計領域後配對」而是暫時無法取得', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const authStore = useAuthStore();
+    const styleDnaStore = useStyleDnaStore();
+    authStore.session = memberSession;
+    authStore.user = memberSession.user;
+    styleDnaStore.completeQuiz([y2kAnswer], memberSession.user.id);
+    const router = createTestRouter();
+    // processing 狀態:表單已隱藏、選不了設計領域,不能再顯示待配對提示。
+    getBookingMock.mockResolvedValue({
+      success: true,
+      data: {
+        booking: {
+          id: 'booking-1',
+          status: 'pending_payment',
+          method: 'online',
+          consultationDate: '2026-07-10',
+          timeSlot: 'am',
+          contactEmail: 'member@example.com',
+          createdAt: '2026-07-07T00:00:00Z',
+          updatedAt: '2026-07-07T00:00:00Z'
+        },
+        payment: { status: 'pending', amount: 500, currency: 'TWD' }
+      },
+      error: null
+    });
+    await router.push('/consultant?payment=success&bookingId=booking-1');
+    await router.isReady();
+
+    const wrapper = mountPage(router, pinia);
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('Consultant info is temporarily unavailable');
+    expect(wrapper.text()).not.toContain('Matched once you pick a design field');
   });
 
   it('redirects unauthenticated checkout attempts to login without calling the API', async () => {

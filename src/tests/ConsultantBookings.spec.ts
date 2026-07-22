@@ -157,4 +157,28 @@ describe('ConsultantBookings', () => {
 
     expect(wrapper.text()).not.toMatch(/儲存失敗|Failed to save/);
   });
+
+  it('地點儲存中停用按鈕並顯示儲存中,避免連續點擊送出多個請求', async () => {
+    let resolveSave: () => void = () => {};
+    setConsultationLocation.mockImplementationOnce(
+      () => new Promise<void>((resolve) => { resolveSave = resolve; })
+    );
+    const wrapper = await mountPage();
+
+    await wrapper.get('[data-testid="location-input"]').setValue('https://example.com');
+    const saveButton = wrapper.get('[data-testid="location-save"]');
+    await saveButton.trigger('click');
+    await flushPromises();
+
+    // 儲存中:按鈕停用、文案變「儲存中」,再點也不會送出第二個請求。
+    expect((saveButton.element as HTMLButtonElement).disabled).toBe(true);
+    expect(saveButton.text()).toMatch(/儲存中|Saving/);
+    await saveButton.trigger('click');
+    expect(setConsultationLocation).toHaveBeenCalledTimes(1);
+
+    resolveSave();
+    await flushPromises();
+
+    expect((saveButton.element as HTMLButtonElement).disabled).toBe(false);
+  });
 });
