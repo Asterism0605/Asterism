@@ -1,5 +1,5 @@
 <template>
-  <section class="relative h-screen min-h-0 overflow-hidden text-text-primary">
+  <section class="relative h-screen min-h-0 overflow-hidden text-text-primary lg:overflow-visible">
     <div class="pointer-events-none absolute inset-0 opacity-70" aria-hidden="true">
       <span
         v-for="dot in 18"
@@ -28,7 +28,7 @@
           <img
             :src="heroImage"
             :alt="`${primaryStyle} style DNA hero image`"
-            class="relative z-50 h-full w-auto max-w-none translate-x-5 translate-y-4 object-contain drop-shadow-[0_28px_60px_rgba(0,0,0,0.5)] 
+            class="image-float-y relative z-50 h-full w-auto max-w-none translate-x-5 translate-y-4 object-contain drop-shadow-[0_28px_60px_rgba(0,0,0,0.5)]
             lg:h-[115vh] lg:max-h-none lg:max-w-none lg:translate-x-0 lg:translate-y-[200px]"
           />
 
@@ -69,7 +69,11 @@
                   @keydown.enter="openTagModal(annotation.label)"
                   @keydown.space.prevent="openTagModal(annotation.label)"
                 >
-                  {{ formatStyleLabel(displayLabel(annotation.label)) }}
+                  <ScrambleText
+                    :text="formatStyleLabel(displayLabel(annotation.label))"
+                    :duration="getAnnotationScrambleDuration(annotation.label)"
+                    :delay="annotationScrambleDelays[annotation.position]"
+                  />
                 </span>
               </p>
               <p class="mt-1 text-text-secondary">
@@ -82,41 +86,11 @@
     </div>
 
     <div
-      class="glass-panel font-title absolute bottom-0 left-0 z-20 h-[44vh] w-[74vw] rounded-none rounded-tr-[4.5rem] border-b-0 border-l-0 px-4 py-7 sm:px-12 
+      class="style-result-panel glass-panel font-title absolute bottom-0 left-0 z-20 h-[44vh] w-[74vw] rounded-none rounded-tr-[4.5rem] border-b-0 border-l-0 px-4 py-7 sm:px-12
       lg:flex lg:h-[26vh] lg:w-[92%] lg:items-center lg:px-[7.5rem] lg:py-0">
-      <div class="h-full lg:hidden">
+      <div class="h-full w-full">
         <slot name="mobile-panel" />
       </div>
-
-      <div class="style-score-grid hidden gap-5 lg:grid lg:w-[32rem] lg:grid-cols-3 lg:gap-0">
-        <div
-          v-for="style in styles"
-          :key="style.label"
-          class="flex min-h-[7.8rem] min-w-0 flex-col items-center justify-between text-center"
-        >
-          <div
-            class="flex h-[3.25rem] w-full cursor-pointer items-center justify-center outline-none"
-            :aria-label="t('dna.viewTagDetails', { tag: displayLabel(style.label) })"
-            role="button"
-            tabindex="0"
-            @click="openTagModal(style.label)"
-            @keydown.enter="openTagModal(style.label)"
-            @keydown.space.prevent="openTagModal(style.label)"
-          >
-            <p
-              class="w-full max-w-[calc(74vw-2rem)] whitespace-pre-line break-words text-center text-[13px] font-extralight leading-snug text-text-secondary lg:max-w-full lg:text-lg"
-            >
-              {{ formatStyleLabel(displayLabel(style.label)) }}
-            </p>
-          </div>
-          <p
-            class="relative block w-[4.4rem] text-center text-5xl font-extralight leading-none text-text-primary lg:w-[5.4rem] lg:text-6xl"
-          >
-            {{ style.percentage }}<span class="absolute bottom-1 left-full ml-1 text-lg text-text-secondary">%</span>
-          </p>
-        </div>
-      </div>
-
     </div>
 
     <StyleTagModal
@@ -128,13 +102,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import ScrambleText from '@/components/effects/ScrambleText.vue';
 import StyleTagModal from '@/components/feature/dna/StyleTagModal.vue';
 import { useI18n } from 'vue-i18n';
 import { useStyleTagLabel } from '@/composables/useStyleTagLabel';
 import type { StyleDnaAnnotation, StyleDnaScore } from '@/utils/computeStyleDnaResult';
 
-defineProps<{
+const props = defineProps<{
   primaryStyle: string;
   heroImage: string;
   styles: StyleDnaScore[];
@@ -144,6 +119,52 @@ defineProps<{
 const { displayLabel } = useStyleTagLabel();
 const { t } = useI18n();
 const activeTagLabel = ref<string | null>(null);
+const CJK_PATTERN = /[\p{Script=Han}]/u;
+const ANNOTATION_CJK_CHARACTER_DURATION_SECONDS = 0.12;
+const ANNOTATION_LATIN_DURATION_SECONDS = 1;
+const ANNOTATION_SCRAMBLE_GAP_SECONDS = 0.4;
+const annotationPositionOrder: StyleDnaAnnotation['position'][] = ['left', 'top-right', 'right'];
+
+function getAnnotationText(label: string): string {
+  return formatStyleLabel(displayLabel(label));
+}
+
+function getAnnotationScrambleDuration(label: string): number {
+  return CJK_PATTERN.test(getAnnotationText(label))
+    ? ANNOTATION_CJK_CHARACTER_DURATION_SECONDS
+    : ANNOTATION_LATIN_DURATION_SECONDS;
+}
+
+function getAnnotationAnimationSpan(label: string): number {
+  const text = getAnnotationText(label);
+
+  if (!CJK_PATTERN.test(text)) {
+    return ANNOTATION_LATIN_DURATION_SECONDS;
+  }
+
+  const characterCount = Array.from(text).filter((character) => character.trim().length > 0).length;
+  return Math.max(0, characterCount - 1) * ANNOTATION_CJK_CHARACTER_DURATION_SECONDS;
+}
+
+const annotationScrambleDelays = computed<Record<StyleDnaAnnotation['position'], number>>(() => {
+  const delays: Record<StyleDnaAnnotation['position'], number> = {
+    left: 0,
+    'top-right': 0,
+    right: 0
+  };
+  let nextDelay = 0;
+
+  annotationPositionOrder.forEach((position) => {
+    delays[position] = nextDelay;
+    const annotation = props.annotations.find((item) => item.position === position);
+
+    if (annotation) {
+      nextDelay += getAnnotationAnimationSpan(annotation.label) + ANNOTATION_SCRAMBLE_GAP_SECONDS;
+    }
+  });
+
+  return delays;
+});
 
 function openTagModal(label: string): void {
   activeTagLabel.value = label;
@@ -183,3 +204,16 @@ function formatStyleLabel(label: string): string {
   return words.length === 2 ? words.join('\n') : label;
 }
 </script>
+
+<style scoped>
+@media (min-width: 769px) {
+  .style-result-panel {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+</style>

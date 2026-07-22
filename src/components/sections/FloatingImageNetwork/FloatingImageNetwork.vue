@@ -300,7 +300,7 @@ onBeforeUnmount(() => {
       @click="handleCardClick(i)"
     >
       <ConstellationBackground
-        v-if="showConstellations"
+        v-if="showConstellations && isReady"
         data-testid="image-constellation"
         class-name="image-card__constellation absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         :active="hoveredIndex === i"
@@ -312,7 +312,7 @@ onBeforeUnmount(() => {
         :node-size="3.8"
         :spacing="52"
       />
-      <div class="image-card__float relative z-10">
+      <div class="image-card__float image-float-y relative z-10">
         <div class="image-card__frame">
           <img
             :src="image.src"
@@ -332,16 +332,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-@keyframes floatY {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
 .image-card {
   overflow: visible;
   transform-origin: center;
@@ -356,8 +346,6 @@ onBeforeUnmount(() => {
 }
 
 .image-card__float {
-  animation: floatY 4.3s ease-in-out infinite;
-  animation-delay: var(--float-delay, 0s);
   transition: scale 0.6s ease;
 }
 
@@ -414,10 +402,6 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .image-card__float {
-    animation-duration: 1ms;
-  }
-
   .image-card--guide-target .image-card__frame::after {
     animation: none;
   }

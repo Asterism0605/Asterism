@@ -43,6 +43,17 @@
   }
 }
 
+@keyframes imageFloatY {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
 @layer base {
   html {
     scrollbar-gutter: stable;
@@ -128,6 +139,17 @@ html:lang(zh-Hant) .zh-heading-spacing {
 }
 
 @layer components {
+  .image-float-y {
+    animation: imageFloatY 4.3s ease-in-out infinite;
+    animation-delay: var(--float-delay, 0s);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .image-float-y {
+      animation-duration: 1ms;
+    }
+  }
+
   /* ========== 字體系統 ========== */
   .text-display {
     font-size: var(--text-display);

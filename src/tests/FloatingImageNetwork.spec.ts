@@ -415,6 +415,15 @@ describe('FloatingImageNetwork', () => {
       props: { images: mockImages, layout: 'home', showConstellations: true }
     });
 
+    expect(wrapper.findAll('[data-testid="image-constellation"]')).toHaveLength(0);
+
+    for (const image of wrapper.findAll('img')) {
+      const element = image.element as HTMLImageElement;
+      Object.defineProperty(element, 'naturalWidth', { value: 800, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 600, configurable: true });
+      await image.trigger('load');
+    }
+
     const constellations = wrapper.findAll('[data-testid="image-constellation"]');
     const cards = wrapper.findAll('[data-testid="image-card"]');
 

@@ -23,11 +23,57 @@ const footerlessRouteNames = new Set([
 ]);
 const showHeader = computed(() => !headerlessRouteNames.has(String(route.name)));
 const showFooter = computed(() => !footerlessRouteNames.has(String(route.name)));
+const routeTransitionName = computed(() =>
+  route.name === 'home' && route.query.source === 'style-dna' ? 'style-dna-home' : undefined
+);
 </script>
 <template>
   <AppHeader v-if="showHeader" />
-  <RouterView />
+  <RouterView v-slot="{ Component, route: viewRoute }">
+    <Transition :name="routeTransitionName">
+      <component :is="Component" :key="viewRoute.fullPath" />
+    </Transition>
+  </RouterView>
   <AppFooter v-if="showFooter" />
   <AppToast />
   <UserTourPauseModal />
 </template>
+
+<style>
+.style-dna-home-leave-active {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--color-void);
+  transition: opacity 260ms ease;
+}
+
+.style-dna-home-leave-active
+  > section
+  > div
+  > :not(.result-personalized-message-layer) {
+  opacity: 0 !important;
+}
+
+.style-dna-home-enter-active {
+  transition: opacity 360ms ease 80ms;
+}
+
+.style-dna-home-leave-to {
+  opacity: 0;
+}
+
+.style-dna-home-enter-from {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .style-dna-home-leave-active,
+  .style-dna-home-enter-active {
+    transition-duration: 1ms;
+  }
+}
+</style>

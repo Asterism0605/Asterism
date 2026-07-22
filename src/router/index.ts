@@ -27,9 +27,24 @@ function getRouteImageId(value: string | string[]): string {
 
 const router = createRouter({
   history: createWebHistory(),
+  // 此處只控制路由切換完成後的捲動位置，不負責偵測 Style DNA 結果頁的下滑行為。
+  // `/style-dna/result` 的下滑門檻與 `router.push()` 寫在 StyleDnaResult.vue。
+  scrollBehavior(to, _from, savedPosition) {
+    if (
+      (to.name === 'home' && to.query.source === 'style-dna') ||
+      to.name === 'style-dna-result'
+    ) {
+      // 從 Style DNA 結果進入個人化首頁，或重新進入結果頁時，一律從頁面頂部開始。
+      return { top: 0 };
+    }
+
+    // 瀏覽器上一頁／下一頁時恢復原本位置；其他情況不主動改變捲動位置。
+    return savedPosition ?? undefined;
+  },
   routes: [
     {
       path: '/',
+      alias: '/home',
       name: 'home',
       component: Home
     },

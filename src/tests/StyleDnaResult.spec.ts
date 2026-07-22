@@ -34,21 +34,31 @@ const y2kAnswers: StyleDnaAnswer[] = [
 ];
 
 let pinia: ReturnType<typeof createPinia>;
+let wrapperCleanups: Array<() => void> = [];
 
 function mountStyleDnaResult() {
-  return mount(StyleDnaResult, {
+  const wrapper = mount(StyleDnaResult, {
     global: { plugins: [pinia] }
   });
+  wrapperCleanups.push(() => wrapper.unmount());
+  return wrapper;
 }
 
 describe('StyleDnaResult', () => {
   beforeEach(() => {
     pinia = createPinia();
     setActivePinia(pinia);
+    push.mockResolvedValue(undefined);
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
+    Object.defineProperty(window, 'innerHeight', { configurable: true, value: 800 });
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
   });
 
   afterEach(() => {
+    wrapperCleanups.forEach((cleanup) => cleanup());
+    wrapperCleanups = [];
     vi.useRealTimers();
+    vi.restoreAllMocks();
     push.mockReset();
     showToast.mockReset();
   });
@@ -69,7 +79,9 @@ describe('StyleDnaResult', () => {
     expect(wrapper.text()).toContain('Style DNA Complete');
     expect(wrapper.text()).toContain('Minimalism');
     expect(wrapper.text()).toContain('70%');
-    expect(wrapper.text()).toContain('Your homepage is now personalized based on your Style DNA.');
+    expect(wrapper.get('[data-testid="result-personalized-message-layer"]').attributes('data-active')).toBe(
+      'false'
+    );
     expect(wrapper.text()).toContain('Retake Quiz');
     expect(showToast).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -98,32 +110,144 @@ describe('StyleDnaResult', () => {
     expect(showToast).not.toHaveBeenCalled();
   });
 
-  it('routes the result CTAs to the personalized feed and quiz restart', async () => {
+  it('removes the start exploring CTA and keeps the quiz restart route', async () => {
     vi.useFakeTimers();
 
     const wrapper = mountStyleDnaResult();
 
     await vi.advanceTimersByTimeAsync(1600);
-    await wrapper.get('[data-testid="start-exploring"]').trigger('click');
+    expect(wrapper.find('[data-testid="start-exploring"]').exists()).toBe(false);
     await wrapper.get('[data-testid="retake-quiz"]').trigger('click');
 
-    expect(push).toHaveBeenNthCalledWith(1, { name: 'home', query: { source: 'style-dna' } });
-    expect(push).toHaveBeenNthCalledWith(2, { name: 'style-dna' });
+    expect(push).toHaveBeenCalledOnce();
+    expect(push).toHaveBeenCalledWith({ name: 'style-dna' });
   });
 
-  it('uses the sand wrapper without changing the primary CTA typography classes', async () => {
+  it('shows meteors after one viewport and routes after the message at two viewports', async () => {
     vi.useFakeTimers();
 
     const wrapper = mountStyleDnaResult();
-
     await vi.advanceTimersByTimeAsync(1600);
 
-    const startExploring = wrapper.get('[data-testid="start-exploring"]');
-
-    expect(startExploring.element.parentElement?.classList.contains('result-guide-submit')).toBe(
-      true
+    expect(wrapper.get('[data-testid="result-scroll-prompt"]').text()).toContain(
+      'Scroll down'
     );
-    expect(startExploring.classes()).toContain('text-sm');
-    expect(startExploring.classes()).toContain('tracking-[1px]');
+    expect(wrapper.get('[data-testid="result-scroll-prompt"]').classes()).toContain('left-1/2');
+    expect(wrapper.get('[data-testid="result-scroll-prompt"]').classes()).toContain('bottom-[20px]');
+    expect(wrapper.get('[data-testid="result-scroll-prompt"]').classes()).toContain('text-[14px]');
+    expect(wrapper.get('[data-testid="result-scroll-prompt"] svg').classes()).toContain('size-6');
+    expect(wrapper.get('[data-testid="result-scroll-track"]').classes()).toContain('right-[18px]');
+    expect(wrapper.get('[data-testid="result-scroll-track"]').classes()).toContain('top-1/2');
+    expect(wrapper.get('[data-testid="result-scroll-track"]').classes()).toContain('h-[25vh]');
+    expect(wrapper.get('[data-testid="result-scroll-track"]').classes()).toContain('-translate-y-1/2');
+    expect(wrapper.get('[data-testid="result-scroll-track"]').attributes('data-progress')).toBe(
+      '0.00'
+    );
+    expect(wrapper.get('[data-testid="result-scroll-track"]').attributes('data-hint-active')).toBe(
+      'true'
+    );
+    expect(wrapper.get('[data-testid="result-scroll-meteor"]').classes()).toContain('w-[2px]');
+    expect(wrapper.get('main').classes()).toContain('min-h-[351vh]');
+    expect(wrapper.get('main').classes()).toContain('bg-void');
+    expect(wrapper.get('main').classes()).not.toContain('bg-deep');
+    expect(wrapper.get('main > section').classes()).toContain('lg:relative');
+    expect(wrapper.get('main > section').classes()).toContain('lg:overflow-visible');
+    expect(wrapper.get('main > section > div').classes()).toContain('lg:overflow-visible');
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 799 });
+    window.dispatchEvent(new Event('scroll'));
+    expect(push).not.toHaveBeenCalled();
+    expect(wrapper.get('[data-testid="result-meteor-layer"]').attributes('data-active')).toBe(
+      'false'
+    );
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 800 });
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.get('[data-testid="result-meteor-layer"]').attributes('data-active')).toBe(
+      'false'
+    );
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 808 });
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.get('[data-testid="result-scroll-track"]').attributes('data-progress')).toBe(
+      '0.40'
+    );
+    expect(wrapper.get('[data-testid="result-scroll-track"]').attributes('data-hint-active')).toBe(
+      'false'
+    );
+    expect(wrapper.get('[data-testid="result-meteor-layer"]').attributes('data-active')).toBe(
+      'true'
+    );
+    expect(wrapper.get('.result-meteor').classes()).toContain('w-[2px]');
+    expect(wrapper.get('.result-meteor').classes()).toContain('bg-gradient-to-b');
+    expect(wrapper.findAll('.result-meteor')).toHaveLength(10);
+    expect(push).not.toHaveBeenCalled();
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 1199 });
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.get('[data-testid="result-meteor-layer"]').attributes('data-active')).toBe(
+      'true'
+    );
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 1200 });
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.get('[data-testid="result-meteor-layer"]').attributes('data-active')).toBe(
+      'false'
+    );
+    expect(
+      wrapper.get('[data-testid="result-personalized-message-layer"]').attributes('data-active')
+    ).toBe('false');
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 1208 });
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+    expect(
+      wrapper.get('[data-testid="result-personalized-message-layer"]').attributes('data-active')
+    ).toBe('true');
+    expect(wrapper.get('[data-testid="result-personalized-message-layer"] h1').classes()).toContain(
+      'text-h1'
+    );
+    expect(wrapper.get('[data-testid="result-personalized-message-layer"] h1').classes()).toContain(
+      'font-title'
+    );
+    expect(wrapper.get('[data-testid="result-personalized-message-layer"] h1').classes()).toContain(
+      'font-light'
+    );
+    expect(
+      wrapper.findAll('.result-personalized-message-line').map((line) => line.text())
+    ).toEqual(['Your Homepage', 'is now personalized', 'based on', 'Your Style DNA']);
+    expect(push).not.toHaveBeenCalled();
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 1599 });
+    window.dispatchEvent(new Event('scroll'));
+    expect(push).not.toHaveBeenCalled();
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 1600 });
+    window.dispatchEvent(new Event('scroll'));
+    expect(push).not.toHaveBeenCalled();
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 1800 });
+    window.dispatchEvent(new Event('scroll'));
+    expect(
+      wrapper.get('[data-testid="result-personalized-message-layer"] h1').attributes('style')
+    ).toContain('opacity: 0.5');
+    expect(push).not.toHaveBeenCalled();
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 2000 });
+    window.dispatchEvent(new Event('scroll'));
+    expect(push).not.toHaveBeenCalled();
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 2008 });
+    window.dispatchEvent(new Event('scroll'));
+    await Promise.resolve();
+
+    expect(push).toHaveBeenCalledTimes(1);
+    expect(push).toHaveBeenCalledWith({ path: '/home', query: { source: 'style-dna' } });
+    expect(window.scrollTo).not.toHaveBeenCalled();
   });
+
 });
