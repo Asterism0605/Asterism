@@ -75,18 +75,6 @@ const { displayLabel } = useStyleTagLabel();
       </div>
     </dl>
 
-    <div v-else class="consultant-summary__fallback" data-testid="consultant-style-dna-fallback">
-      <p>{{ $t('consult.needDna') }}</p>
-      <div class="consultant-summary__actions">
-        <RouterLink
-          class="consultant-summary__button consultant-summary__button--primary"
-          to="/style-dna"
-        >
-          {{ $t('consult.retakeQuiz') }}
-        </RouterLink>
-        <button class="consultant-summary__button" type="button">{{ $t('consult.skip') }}</button>
-      </div>
-    </div>
   </section>
 </template>
 
@@ -185,57 +173,6 @@ const { displayLabel } = useStyleTagLabel();
   color: var(--color-text-secondary);
   font-family: var(--font-family-mono);
   font-size: var(--text-mono);
-}
-
-.consultant-summary__fallback {
-  max-width: 560px;
-  display: grid;
-  gap: 18px;
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #ffffff1a;
-  border-radius: 8px;
-  background: #ffffff0b;
-  color: #f0ede6c7;
-}
-
-.consultant-summary__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.consultant-summary__button {
-  display: inline-flex;
-  min-height: 38px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #ffffff33;
-  border-radius: 9999px;
-  padding: 8px 18px;
-  color: var(--color-text-primary);
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition:
-    background 200ms ease,
-    border-color 200ms ease,
-    opacity 200ms ease;
-}
-
-.consultant-summary__button:hover {
-  border-color: #ffffff57;
-  background: #ffffff0f;
-}
-
-.consultant-summary__button--primary {
-  border-color: transparent;
-  background: var(--color-stellar-red);
-}
-
-.consultant-summary__button--primary:hover {
-  border-color: transparent;
-  background: var(--color-stellar-red);
-  opacity: 0.9;
 }
 
 @media (max-width: 720px) {

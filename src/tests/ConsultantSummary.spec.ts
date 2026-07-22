@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import ConsultantSummary from '@/components/feature/consultant/ConsultantSummary.vue'
 
 describe('ConsultantSummary', () => {
-  it('shows a Style DNA CTA without rendering a profile when the quiz is incomplete', () => {
+  it('does not render a Style DNA summary when the quiz is incomplete', () => {
     const wrapper = mount(ConsultantSummary, {
       props: {
         status: 'missing-result'
@@ -18,9 +18,10 @@ describe('ConsultantSummary', () => {
       }
     })
 
-    expect(wrapper.text()).toContain('We need a Style DNA result')
-    expect(wrapper.get('a[href="/style-dna"]').text()).toContain('Take Style DNA quiz')
     expect(wrapper.find('.consultant-summary__profile').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="consultant-style-dna-fallback"]').exists()).toBe(false)
+    expect(wrapper.text()).not.toContain('We need a Style DNA result')
+    expect(wrapper.text()).not.toContain('Take Style DNA quiz')
     expect(wrapper.text()).not.toContain('Matched consultant')
   })
 

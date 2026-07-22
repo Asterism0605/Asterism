@@ -100,8 +100,8 @@ describe('StyleConsultant', () => {
 
     const wrapper = mountPage(router, pinia);
 
-    expect(wrapper.text()).toContain('We need a Style DNA result');
-    expect(wrapper.text()).toContain('Take Style DNA quiz');
+    expect(wrapper.text()).not.toContain('We need a Style DNA result');
+    expect(wrapper.text()).not.toContain('Take Style DNA quiz');
     expect(wrapper.text()).not.toContain('Log In');
     expect(wrapper.text()).not.toContain('Create Account');
     expect(wrapper.text()).not.toContain('Luminous Minimalism');
@@ -109,7 +109,7 @@ describe('StyleConsultant', () => {
     expect(wrapper.get('.style-consultant').attributes('data-source-image-id')).toBeUndefined();
   });
 
-  it('renders the quiz fallback for authenticated users without Style DNA result data', async () => {
+  it('does not render a Style DNA summary for authenticated users without result data', async () => {
     const pinia = createPinia();
     setActivePinia(pinia);
     const authStore = useAuthStore();
@@ -122,8 +122,8 @@ describe('StyleConsultant', () => {
 
     const wrapper = mountPage(router, pinia);
 
-    expect(wrapper.text()).toContain('We need a Style DNA result');
-    expect(wrapper.text()).toContain('Take Style DNA quiz');
+    expect(wrapper.text()).not.toContain('We need a Style DNA result');
+    expect(wrapper.text()).not.toContain('Take Style DNA quiz');
     expect(wrapper.text()).not.toContain('Luminous Minimalism');
     expect(wrapper.text()).not.toContain('Matched consultant');
     expect(wrapper.get('.style-consultant').attributes('data-source-image-id')).toBe(
