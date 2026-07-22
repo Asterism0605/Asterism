@@ -168,10 +168,13 @@ export async function deleteMoodboardItems({
   itemIds,
   folderId
 }: DeleteMoodboardItemsInput): Promise<void> {
+  // 去重：.in() 對重複 id 只會命中一次，重複值會讓下面的筆數比對誤判成部分刪除失敗。
+  const uniqueItemIds = Array.from(new Set(itemIds));
+
   const { data, error } = await getSupabase()
     .from('moodboard_items')
     .delete()
-    .in('id', itemIds)
+    .in('id', uniqueItemIds)
     .eq('folder_id', folderId)
     .select('id');
 
@@ -179,7 +182,7 @@ export async function deleteMoodboardItems({
     throw error;
   }
 
-  if (!data || data.length !== itemIds.length) {
+  if (!data || data.length !== uniqueItemIds.length) {
     throw new Error('Moodboard items were not deleted.');
   }
 }
