@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useStyleTagLabel } from '@/composables/useStyleTagLabel';
 
 type ConsultantSummaryStatus = 'missing-result' | 'ready';
@@ -39,6 +40,7 @@ const effectiveStatus = computed<ConsultantSummaryStatus>(() => {
 
 const canShowProfile = computed(() => effectiveStatus.value === 'ready' && props.profile !== null);
 
+const { locale } = useI18n();
 const { displayLabel } = useStyleTagLabel();
 </script>
 
@@ -46,7 +48,12 @@ const { displayLabel } = useStyleTagLabel();
   <section class="consultant-summary">
     <div>
       <p class="consultant-summary__eyebrow">{{ $t('consult.eyebrow') }}</p>
-      <h1 class="consultant-summary__title">{{ $t('consult.title') }}</h1>
+      <h1
+        class="consultant-summary__title"
+        :class="locale === 'zh' ? 'consultant-summary__title--zh' : 'consultant-summary__title--en'"
+      >
+        {{ $t('consult.title') }}
+      </h1>
     </div>
 
     <div class="consultant-summary__copy">
@@ -111,9 +118,16 @@ const { displayLabel } = useStyleTagLabel();
 
 .consultant-summary__title {
   font-size: clamp(2.5rem, 7vw, 5.75rem);
-  font-weight: 200;
   line-height: 1.1;
   letter-spacing: 0;
+}
+
+.consultant-summary__title--en {
+  font-weight: 200;
+}
+
+.consultant-summary__title--zh {
+  font-weight: 100;
 }
 
 .consultant-summary__copy {

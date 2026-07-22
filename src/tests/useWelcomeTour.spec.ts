@@ -4,15 +4,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useWelcomeTour } from '@/composables/guide/useWelcomeTour';
 
 const WelcomeTourHarness = defineComponent({
-  setup() {
-    return useWelcomeTour('user-1');
+  props: {
+    userId: {
+      type: String,
+      default: 'user-1'
+    }
   },
-  template: '<div />'
-});
-
-const OtherUserWelcomeTourHarness = defineComponent({
-  setup() {
-    return useWelcomeTour('user-2');
+  setup(props) {
+    return useWelcomeTour(props.userId);
   },
   template: '<div />'
 });
@@ -132,7 +131,7 @@ describe('useWelcomeTour', () => {
 
   it('does not apply a welcome state event to a different user', async () => {
     const firstUser = mount(WelcomeTourHarness);
-    const secondUser = mount(OtherUserWelcomeTourHarness);
+    const secondUser = mount(WelcomeTourHarness, { props: { userId: 'user-2' } });
 
     firstUser.vm.complete();
     await secondUser.vm.$nextTick();

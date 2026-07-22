@@ -2,7 +2,7 @@
 export default {
   nav: {
     login: 'Log in',
-    signup: 'Sign Up'
+    signup: 'Sign up'
   },
   auth: {
     loginTitle: 'Login',
@@ -66,7 +66,8 @@ export default {
     saveFailed: 'Failed to save. Please try again.',
     folderLimit: 'You have reached the maximum of 10 folders.',
     folderImageLimit: 'Each folder can hold up to 20 images.',
-    folderCleanupFailed: 'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
+    folderCleanupFailed:
+      'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
     folderCreatedAndSaved: 'Folder created and image saved.',
     deleteFolderFailed: 'Failed to delete the folder. Please try again.',
     deleteImageFailed: 'Failed to delete the image. Please try again.',
@@ -265,8 +266,12 @@ export default {
     photoOn: 'on {date}',
     photoBy: 'by',
     consultStylist: 'CONSULT STYLIST',
+    consultStylistBracket: 'Consult Stylist',
     addToMoodboard: 'ADD TO MOODBOARD',
+    addToMoodboardSpread: 'Add to Moodboard',
+    createNewFolder: 'Create New Folder',
     saveToFolder: 'SAVE TO FOLDER',
+    saveToFolderMenu: 'Save to Folder',
     similar: 'Similar',
     return: 'Return',
     notFoundEyebrow: 'Image not found',
@@ -299,7 +304,20 @@ export default {
     openFolderAria: 'Open folder',
     folderSelected: 'My Folders',
     folderEmptySuffix: '(Empty)',
-    openImageDetailAria: 'View image detail'
+    openImageDetailAria: 'View image detail',
+    folderDeleteToggleAria: 'Toggle folder delete icons',
+    imageDeleteToggleAria: 'Toggle image select mode',
+    selectImagesDone: "I'm done selecting",
+    selectImageAria: 'Select image',
+    deselectImageAria: 'Deselect image',
+    selectAllImages: 'Select all',
+    deselectAllImages: 'Deselect all',
+    filterByStyles: 'Filter by Styles',
+    filterByFields: 'Filter by Fields',
+    filterByHeading: 'Filter by',
+    filterGroupStyles: 'Styles',
+    filterGroupFields: 'Fields',
+    resetFilters: 'Reset'
   },
   userTour: {
     progress: '{current} / {total}',
@@ -337,19 +355,23 @@ export default {
     steps: {
       homeOverview: {
         title: 'Explore the inspiration map',
-        description: 'The homepage is an inspiration map. Every image can open a new path to explore.'
+        description:
+          'The homepage is an inspiration map. Every image can open a new path to explore.'
       },
       homeImage: {
         title: 'Open an inspiration image',
-        description: 'Select the highlighted image to see how its style extends across everyday settings.'
+        description:
+          'Select the highlighted image to see how its style extends across everyday settings.'
       },
       spreadRelatedGroup: {
         title: 'One style, across different areas of life',
-        description: 'These four mediums show how the same style appears across different areas of life.'
+        description:
+          'These four mediums show how the same style appears across different areas of life.'
       },
       spreadRelatedImage: {
         title: 'Explore more deeply',
-        description: 'Select the highlighted image to explore a more specific theme and similar ideas.'
+        description:
+          'Select the highlighted image to explore a more specific theme and similar ideas.'
       },
       detailThumbnail: {
         title: 'Switch related images',
@@ -367,6 +389,34 @@ export default {
       detailSave: {
         title: 'Save to a Moodboard',
         description: 'Open the save menu to use an existing folder or create a new Moodboard.'
+      },
+      moodboardImages: {
+        title: 'Your saved inspiration',
+        description: 'Your saved images come together here as a personal inspiration collection.'
+      },
+      moodboardDirectory: {
+        title: 'Browse all folders',
+        description:
+          'Use this directory to see every saved folder. Hover over a folder to preview its 3D image sphere, then select it to open the folder.',
+        mobileDescription:
+          'Use this directory to see every saved folder. Tap a folder to preview it, then tap it again to open the folder.'
+      },
+      moodboardOrbit: {
+        title: 'Move through your folders',
+        description: 'Drag the orbit to browse the folders around your inspiration collection.'
+      },
+      moodboardFolder: {
+        title: 'Open a folder',
+        description: 'Select a folder that contains saved images to view its collection.'
+      },
+      moodboardFilters: {
+        title: 'Refine your collection',
+        description:
+          'Inside a folder, you can filter saved images by fields or style. Apply either filter in any order, or combine both to see images that match both conditions.'
+      },
+      moodboardTourControl: {
+        title: 'Your tour is always within reach',
+        description: 'Use this icon anytime to pause, continue, or restart the website tour.'
       }
     },
     transition: {
@@ -377,12 +427,20 @@ export default {
         'Next, see how the inspiration you saved can become your own visual direction in Moodboard.',
       proceed: 'Go to Moodboard',
       later: 'Continue later'
+    },
+    moodboardCompletion: {
+      title: 'Your Moodboard tour is complete',
+      description: 'You now know how to browse, organize, and refine your saved inspiration.',
+      nextDescription: 'You can revisit the tour anytime, or keep shaping this collection.',
+      exploreStyleDna: 'Explore my style DNA',
+      stay: 'Continue organizing inspiration'
     }
   },
   home: {
     guestHint: 'Sign up or log in to keep exploring',
     tour: {
-      description: 'uses visual exploration to organize your inspiration and turn it into practical style directions.',
+      description:
+        'uses visual exploration to organize your inspiration and turn it into practical style directions.',
       startTour: 'Start Tour',
       exploreOnMyOwn: 'Explore on my own'
     },
@@ -411,7 +469,8 @@ export default {
     searching: 'Searching…',
     uploadedAlt: 'Your uploaded photo',
     yourPhoto: 'Your Photo',
-    noMatch: 'No sufficiently similar style found. Try a photo of an outfit, interior space, building exterior, or graphic design piece instead.',
+    noMatch:
+      'No sufficiently similar style found. Try a photo of an outfit, interior space, building exterior, or graphic design piece instead.',
     invalidFileType: 'Please upload a JPG, PNG, or WebP image.',
     fileTooLarge: 'Image must be under 10MB.',
     modelDownloadFailed: 'Model download failed. Please check your connection and try again.',
@@ -420,12 +479,14 @@ export default {
   playground: {
     eyebrow: 'Component Playground',
     title: 'Asterism overlay and constellation effects',
-    description: 'Hover the image tiles to reveal the constellation background, then open the modal to check the glass dialog layer in context.',
+    description:
+      'Hover the image tiles to reveal the constellation background, then open the modal to check the glass dialog layer in context.',
     openLimitModal: 'Open Limit Modal',
     previewOverlay: 'Preview Overlay',
     ghostButton: 'Ghost Button',
     activeSelection: 'Active selection',
-    activeDescription: 'The active card feeds the shared profile preview and keeps the palette and tag examples mounted with realistic neighboring content.',
+    activeDescription:
+      'The active card feeds the shared profile preview and keeps the palette and tag examples mounted with realistic neighboring content.',
     photographerRole: 'Photographer / Object studies',
     itemOneTitle: 'Chrome noir chair',
     itemOneCategory: 'Object',

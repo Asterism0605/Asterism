@@ -10,7 +10,7 @@ const props = withDefaults(
     size?: number;
     iconSize?: number;
   }>(),
-  { ariaLabel: undefined, size: 20, iconSize: 16 }
+  { style: undefined, ariaLabel: undefined, size: 20, iconSize: 16 }
 );
 
 const emit = defineEmits<{

@@ -2,13 +2,11 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import {
   Bookmark,
-  BookmarkPlus,
-  ChevronDown,
-  ChevronRight,
-  FolderPlus,
   LoaderCircle,
   User
 } from '@lucide/vue';
+import ScrambleText from '@/components/effects/ScrambleText.vue';
+import BracketDropdown from '@/components/ui/BracketDropdown.vue';
 import Button from '@/components/ui/Button.vue';
 
 interface FolderItem {
@@ -22,6 +20,7 @@ interface Props {
   saved?: boolean;
   disabled?: boolean;
   spread?: boolean;
+  bracket?: boolean;
   folders?: FolderItem[];
   justSavedFolderId?: string | null;
   canSave?: boolean;
@@ -47,8 +46,11 @@ const emit = defineEmits<{
 const isOpen = ref(false);
 const showFolderList = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
+const moodboardScramble = ref<InstanceType<typeof ScrambleText> | null>(null);
+const consultScramble = ref<InstanceType<typeof ScrambleText> | null>(null);
 
 const isBusy = computed(() => props.disabled || props.justSavedFolderId !== null);
+const usesBracketButton = computed(() => props.spread || props.bracket);
 
 function toggleDropdown() {
   if (!props.canSave) {
@@ -59,6 +61,26 @@ function toggleDropdown() {
   isOpen.value = !isOpen.value;
   showFolderList.value = false;
   if (isOpen.value) emit('opened');
+}
+
+function playMoodboardScramble() {
+  if (usesBracketButton.value) moodboardScramble.value?.play();
+}
+
+function playMoodboardScrambleOnFocus(event: FocusEvent) {
+  if ((event.currentTarget as HTMLElement).matches(':focus-visible')) {
+    playMoodboardScramble();
+  }
+}
+
+function playConsultScramble() {
+  if (props.bracket) consultScramble.value?.play();
+}
+
+function playConsultScrambleOnFocus(event: FocusEvent) {
+  if ((event.currentTarget as HTMLElement).matches(':focus-visible')) {
+    playConsultScramble();
+  }
 }
 
 function handleOutsideClick(event: MouseEvent) {
@@ -104,27 +126,71 @@ onBeforeUnmount(() => {
   <div ref="containerRef" class="relative inline-block">
     <Button
       v-if="props.variant === 'consult'"
-      variant="primary"
-      class="w-full !px-3 !py-3 md:!px-4 md:!py-4"
+      :variant="props.bracket ? 'bracket' : 'primary'"
+      class="w-full"
+      :class="props.bracket ? '' : 'px-3 py-3 md:px-4 md:py-4'"
+      @mouseenter="playConsultScramble"
+      @focus="playConsultScrambleOnFocus"
       @click="emit('consult')"
     >
       <span
-        class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest"
+        class="flex items-center justify-center gap-1 md:gap-2"
+        :class="
+          props.bracket
+            ? 'font-title text-xs font-medium tracking-normal md:text-sm'
+            : 'font-mono text-xs uppercase tracking-widest md:text-sm'
+        "
       >
-        <User class="w-4 h-4 md:w-5.5 md:h-5.5" aria-hidden="true" />
-        {{ $t('image.consultStylist') }}
+        <User
+          :class="props.bracket ? 'relative -top-[2px] size-4' : 'h-4 w-4 md:h-5.5 md:w-5.5'"
+          aria-hidden="true"
+        />
+        <span
+          :class="
+            props.bracket
+              ? 'relative inline-block border-b border-white/80 pb-1 leading-none'
+              : ''
+          "
+        >
+          <template v-if="props.bracket">
+            <span class="sr-only">
+              {{ $t('image.consultStylistBracket') }}
+            </span>
+            <span class="invisible" aria-hidden="true">
+              {{ $t('image.consultStylistBracket') }}
+            </span>
+            <ScrambleText
+              ref="consultScramble"
+              aria-hidden="true"
+              class="absolute inset-0 whitespace-nowrap"
+              :text="$t('image.consultStylistBracket')"
+              chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+              :duration="0.7"
+              :speed="0.18"
+              :autoplay="false"
+            />
+          </template>
+          <template v-else>{{ $t('image.consultStylist') }}</template>
+        </span>
       </span>
     </Button>
     <template v-else>
       <Button
-        variant="secondary"
-        class="w-full !px-3 !py-3 md:!px-4 md:!py-4"
-        :class="props.spread ? 'bg-black hover:!bg-dropdown' : ''"
+        :variant="usesBracketButton ? 'bracket' : 'secondary'"
+        class="w-full disabled:cursor-not-allowed disabled:opacity-50"
+        :class="usesBracketButton ? 'h-10! px-4! py-0!' : 'px-3! py-3! md:px-4! md:py-4!'"
         :disabled="props.disabled"
+        @mouseenter="playMoodboardScramble"
+        @focus="playMoodboardScrambleOnFocus"
         @click="toggleDropdown()"
       >
         <span
-          class="flex items-center justify-center gap-1 md:gap-2 font-mono text-xs md:text-sm uppercase tracking-widest"
+          class="flex items-center justify-center gap-1 md:gap-2"
+          :class="
+            usesBracketButton
+              ? 'font-title text-sm font-medium tracking-normal'
+              : 'font-mono text-xs uppercase tracking-widest md:text-sm'
+          "
         >
           <LoaderCircle
             v-if="props.disabled"
@@ -133,86 +199,115 @@ onBeforeUnmount(() => {
           />
           <Bookmark
             v-else
-            class="w-4 h-4 md:w-5.5 md:h-5.5"
+            class="w-4 h-4 md:w-4 md:h-4"
+            :class="usesBracketButton ? 'relative -top-[2px]' : ''"
+            :stroke-width="1.5"
             :fill="props.saved ? 'currentColor' : 'none'"
             aria-hidden="true"
           />
-          {{ $t('image.addToMoodboard') }}
+          <span
+            :class="
+              usesBracketButton
+                ? 'relative inline-block border-b border-white/80 pb-1 leading-none'
+                : ''
+            "
+          >
+            <template v-if="usesBracketButton">
+              <span class="sr-only">
+                {{ $t('image.addToMoodboardSpread') }}
+              </span>
+              <span class="invisible" aria-hidden="true">{{
+                $t('image.addToMoodboardSpread')
+              }}</span>
+              <ScrambleText
+                ref="moodboardScramble"
+                aria-hidden="true"
+                class="absolute inset-0 whitespace-nowrap"
+                :text="$t('image.addToMoodboardSpread')"
+                chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+                :duration="0.7"
+                :speed="0.18"
+                :autoplay="false"
+              />
+            </template>
+            <template v-else>{{ $t('image.addToMoodboard') }}</template>
+          </span>
         </span>
       </Button>
     </template>
 
-    <div
+    <BracketDropdown
       v-if="isOpen && props.variant === 'bookmark'"
-      class="absolute z-10 w-40 overflow-visible rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
+      class="absolute z-10"
+      :connector="props.spread"
+      :surface="props.bracket && !props.spread ? 'panel' : 'void'"
       :class="
         props.spread
-          ? props.folders.length === 0
-            ? 'left-0 top-full mt-2 md:left-full md:top-0 md:mt-0 md:ml-2'
-            : 'left-0 top-full mt-2 md:left-full md:top-[-50px] md:mt-0 md:ml-2'
-          : 'left-0 top-full mt-2'
+          ? 'left-0 top-full mt-[10px] w-full! md:left-full md:top-1/2 md:mt-0 md:ml-10 md:-translate-y-1/2'
+          : 'left-0 top-full mt-2 w-full!'
       "
     >
       <button
         type="button"
-        class="flex w-full cursor-pointer items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
+        data-bracket-dropdown-item
         @click="
           emit('create-folder');
           isOpen = false;
         "
       >
-        <FolderPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span class="flex-1 min-w-0 text-center md:text-left">{{
-          $t('moodboard.createFolderTitle')
-        }}</span>
+        <slot name="create-folder-icon" />
+        {{ $t('image.createNewFolder') }}
       </button>
 
       <template v-if="props.folders.length > 0">
-        <div class="mx-4 h-px bg-white/10" />
+        <span data-bracket-dropdown-divider aria-hidden="true" />
         <div class="relative">
           <button
             type="button"
-            class="flex w-full cursor-pointer items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 md:justify-start md:px-3 md:py-2.5"
+            data-bracket-dropdown-item
             @click.stop="showFolderList = !showFolderList"
           >
-            <BookmarkPlus class="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span class="flex-1 min-w-0 text-center md:text-left">{{ $t('image.saveToFolder') }}</span>
-            <template v-if="props.spread">
-              <ChevronDown class="ml-auto h-4 w-4 shrink-0 md:hidden" aria-hidden="true" />
-              <ChevronRight class="ml-auto hidden h-4 w-4 shrink-0 md:block" aria-hidden="true" />
-            </template>
-            <ChevronDown v-else class="ml-auto h-4 w-4 shrink-0" aria-hidden="true" />
+            <slot name="save-folder-icon" />
+            {{ $t('image.saveToFolderMenu') }}
           </button>
 
-          <div
+          <BracketDropdown
             v-if="showFolderList"
-            class="absolute z-20 w-40 overflow-hidden rounded-xl border border-white/20 bg-dropdown/95 shadow-lg backdrop-blur-md"
+            class="absolute z-20"
+            :connector="props.spread"
+            connector-align="first-item"
+            :max-visible-items="5"
+            :surface="props.bracket && !props.spread ? 'panel' : 'void'"
             :class="
               props.spread
-                ? 'left-0 top-full mt-2 md:left-full md:top-0 md:mt-0 md:ml-2'
-                : 'left-0 top-full mt-2'
+                ? 'left-0 top-full mt-[10px] w-full! md:left-full md:top-0 md:mt-0 md:ml-10'
+                : 'left-0 top-full mt-2 w-full!'
             "
           >
-            <button
-              v-for="folder in props.folders"
-              :key="folder.id"
-              type="button"
-              class="flex w-full cursor-pointer items-center justify-center gap-2 px-2 py-2 text-left font-mono text-xs font-semibold uppercase tracking-widest text-text-primary transition-all duration-200 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50 md:justify-start md:px-3 md:py-2.5"
-              :disabled="isBusy"
-              @click.stop="handleSaveToFolderClick(folder)"
-            >
-              <Bookmark
-                class="h-4 w-4 shrink-0"
-                :fill="folder.saved ? 'currentColor' : 'none'"
-                aria-hidden="true"
-              />
-              <span class="flex-1 min-w-0 truncate text-center md:text-left">
-                {{ props.justSavedFolderId === folder.id ? '✓ Saved' : folder.name }}
-              </span>
-            </button>
-          </div>
+            <template v-for="(folder, index) in props.folders" :key="folder.id">
+              <span v-if="index > 0" data-bracket-dropdown-divider aria-hidden="true" />
+              <button
+                type="button"
+                data-bracket-dropdown-item
+                data-leading-icon
+                :disabled="isBusy"
+                :aria-pressed="folder.saved"
+                @click.stop="handleSaveToFolderClick(folder)"
+              >
+                <Bookmark
+                  class="mr-2 h-4 w-4 shrink-0"
+                  :stroke-width="1.5"
+                  :fill="folder.saved ? 'currentColor' : 'none'"
+                  aria-hidden="true"
+                />
+                <span class="min-w-0 whitespace-normal break-words text-left">
+                  {{ props.justSavedFolderId === folder.id ? '✓ Saved' : folder.name }}
+                </span>
+              </button>
+            </template>
+          </BracketDropdown>
         </div>
       </template>
-    </div>
+    </BracketDropdown>
   </div>
 </template>

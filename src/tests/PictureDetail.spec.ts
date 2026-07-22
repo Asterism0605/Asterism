@@ -39,7 +39,8 @@ vi.mock('@/components/feature/guide/TourTransition.vue', () => ({
   default: {
     props: ['title', 'description', 'proceedLabel', 'laterLabel'],
     emits: ['proceed', 'later'],
-    template: '<div data-testid="tour-transition" />'
+    template:
+      '<div data-testid="tour-transition"><button data-testid="tour-transition-proceed" @click="$emit(\'proceed\')" /><button data-testid="tour-transition-later" @click="$emit(\'later\')" /></div>'
   }
 }))
 
@@ -63,6 +64,7 @@ const testSavedImage: SavedImage = {
   title: 'Saved image',
   styleGroup: 'y2k',
   style: [],
+  medium: null,
   createdAt: '2026-07-05T00:00:00.000Z'
 }
 
@@ -154,7 +156,7 @@ describe('PictureDetail', () => {
     expect(wrapper.find('a[target="_blank"]').exists()).toBe(false);
   });
 
-  it('儲存進行中時停用 ADD TO MOODBOARD，完成後重新啟用', async () => {
+  it('儲存進行中時停用 Add to Moodboard，完成後重新啟用', async () => {
     let resolve!: (image: SavedImage) => void
     vi.mocked(addItem).mockImplementationOnce(
       () =>
@@ -164,9 +166,9 @@ describe('PictureDetail', () => {
     )
     const { wrapper } = await mountPictureDetail()
 
-    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))
+    const addBtn = wrapper.get('[data-tour="detail-save"] > button')
     await addBtn!.trigger('click')
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'))
     await saveBtn!.trigger('click')
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test')
     await folderBtn!.trigger('click')
@@ -280,13 +282,13 @@ describe('PictureDetail', () => {
     rects.mockRestore()
   })
 
-  it('點擊 SAVE TO FOLDER 時以目前圖片 id 呼叫 addItem', async () => {
+  it('點擊 Save to Folder 時以目前圖片 id 呼叫 addItem', async () => {
     const { wrapper, folderId } = await mountPictureDetail()
 
-    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))
+    const addBtn = wrapper.get('[data-tour="detail-save"] > button')
     await addBtn!.trigger('click')
 
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'))
     await saveBtn!.trigger('click')
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test')
     await folderBtn!.trigger('click')
@@ -301,10 +303,10 @@ describe('PictureDetail', () => {
     })
     const { wrapper } = await mountPictureDetail()
 
-    const addBtn = wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))
+    const addBtn = wrapper.get('[data-tour="detail-save"] > button')
     await addBtn!.trigger('click')
 
-    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))
+    const saveBtn = wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'))
     await saveBtn!.trigger('click')
     const folderBtn = wrapper.findAll('button').find((b) => b.text() === 'test')
     await folderBtn!.trigger('click')
@@ -318,7 +320,7 @@ describe('PictureDetail', () => {
 
     const consultBtn = wrapper
       .findAll('button')
-      .find((button) => button.text().includes('CONSULT STYLIST'))
+      .find((button) => button.text().includes('Consult Stylist'))
     await consultBtn!.trigger('click')
     await flushPromises()
 
@@ -332,8 +334,8 @@ describe('PictureDetail', () => {
     tour.advance('detail-save', 'y2k-main-001')
 
     const { wrapper, folderId } = await mountPictureDetail()
-    await wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))!.trigger('click')
-    await wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))!.trigger('click')
+    await wrapper.get('[data-tour="detail-save"] > button').trigger('click')
+    await wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'))!.trigger('click')
     await wrapper.findAll('button').find((b) => b.text() === 'test')!.trigger('click')
     await flushPromises()
 
@@ -364,6 +366,39 @@ describe('PictureDetail', () => {
     expect(wrapper.find('[data-testid="tour-transition"]').exists()).toBe(true)
   })
 
+  it('starts Moodboard Chapter 2 only from the transition proceed action', async () => {
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.completeChapter('exploration')
+    const { router, wrapper } = await mountPictureDetail()
+
+    await wrapper.get('[data-testid="tour-transition-proceed"]').trigger('click')
+    await flushPromises()
+
+    expect(router.currentRoute.value.name).toBe('moodboard')
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'active',
+      currentChapter: 'moodboard',
+      step: 'moodboard-images'
+    })
+  })
+
+  it('keeps Moodboard Chapter 2 paused when continuing later', async () => {
+    const tour = useUserTour('user-1')
+    tour.start('y2k-main-001')
+    tour.completeChapter('exploration')
+    const { router, wrapper } = await mountPictureDetail()
+
+    await wrapper.get('[data-testid="tour-transition-later"]').trigger('click')
+
+    expect(router.currentRoute.value.name).toBe('picture-detail')
+    expect(JSON.parse(localStorage.getItem('asterism:tour:core:user-1') ?? '{}')).toMatchObject({
+      status: 'paused',
+      currentChapter: 'moodboard',
+      step: 'moodboard-images'
+    })
+  })
+
   it('does not complete exploration when saving fails', async () => {
     vi.mocked(addItem).mockRejectedValueOnce(new Error('save failed'))
     const tour = useUserTour('user-1')
@@ -371,8 +406,8 @@ describe('PictureDetail', () => {
     tour.advance('detail-save', 'y2k-main-001')
 
     const { wrapper } = await mountPictureDetail()
-    await wrapper.findAll('button').find((b) => b.text().includes('ADD TO MOODBOARD'))!.trigger('click')
-    await wrapper.findAll('button').find((b) => b.text().includes('SAVE TO FOLDER'))!.trigger('click')
+    await wrapper.get('[data-tour="detail-save"] > button').trigger('click')
+    await wrapper.findAll('button').find((b) => b.text().includes('Save to Folder'))!.trigger('click')
     await wrapper.findAll('button').find((b) => b.text() === 'test')!.trigger('click')
     await flushPromises()
 
@@ -389,7 +424,7 @@ describe('PictureDetail', () => {
 
     const consultBtn = wrapper
       .findAll('button')
-      .find((button) => button.text().includes('CONSULT STYLIST'))
+      .find((button) => button.text().includes('Consult Stylist'))
     await consultBtn!.trigger('click')
     await flushPromises()
 
@@ -402,10 +437,7 @@ describe('PictureDetail', () => {
   it('routes unauthenticated moodboard clicks to login with the current image target', async () => {
     const { router, wrapper } = await mountPictureDetail('y2k-main-001', false)
 
-    const addButton = wrapper
-      .findAll('button')
-      .find((button) => button.text().includes('ADD TO MOODBOARD'))
-    await addButton!.trigger('click')
+    await wrapper.get('[data-tour="detail-save"] > button').trigger('click')
     await flushPromises()
 
     expect(router.currentRoute.value.name).toBe('login')
@@ -420,7 +452,7 @@ describe('PictureDetail', () => {
     const { wrapper } = await mountPictureDetail()
     await flushPromises()
 
-    expect(wrapper.text()).toContain('SAVE TO NEW FOLDER')
+    expect(wrapper.text()).toContain('Create New Folder')
     expect(localStorage.getItem('asterism:pending-moodboard-action')).toBeNull()
   })
 
@@ -517,7 +549,7 @@ describe('PictureDetail', () => {
     expect(router.currentRoute.value.name).toBe('image-search')
   })
 
-  it('重開 SAVE TO NEW FOLDER modal 後 input 不再 disabled', async () => {
+  it('重開 Create New Folder modal 後 input 不再 disabled', async () => {
     vi.useFakeTimers();
     const router = createRouter({
       history: createMemoryHistory(),
@@ -543,8 +575,8 @@ describe('PictureDetail', () => {
       const findBtn = (text: string) =>
         wrapper.findAll('button').find((b) => b.text().includes(text))!;
 
-      await findBtn('ADD TO MOODBOARD').trigger('click');
-      await findBtn('SAVE TO NEW FOLDER').trigger('click');
+      await wrapper.get('[data-tour="detail-save"] > button').trigger('click');
+      await findBtn('Create New Folder').trigger('click');
       await flushPromises();
 
       const input = document.querySelector('input') as HTMLInputElement;
@@ -560,8 +592,8 @@ describe('PictureDetail', () => {
       vi.advanceTimersByTime(800);
       await flushPromises();
 
-      await findBtn('ADD TO MOODBOARD').trigger('click');
-      await findBtn('SAVE TO NEW FOLDER').trigger('click');
+      await wrapper.get('[data-tour="detail-save"] > button').trigger('click');
+      await findBtn('Create New Folder').trigger('click');
       await flushPromises();
 
       expect((document.querySelector('input') as HTMLInputElement).disabled).toBe(false);
@@ -624,7 +656,7 @@ describe('PictureDetail', () => {
     })
   })
 
-  it('送出 SAVE TO NEW FOLDER 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
+  it('送出 Create New Folder 時，以新資料夾 id 與目前圖片 id 呼叫 addItem', async () => {
     vi.mocked(createFolder).mockResolvedValueOnce({
       ...testFolder,
       id: 'new-folder-id',
@@ -654,8 +686,8 @@ describe('PictureDetail', () => {
       const findBtn = (text: string) =>
         wrapper.findAll('button').find((b) => b.text().includes(text))!
 
-      await findBtn('ADD TO MOODBOARD').trigger('click')
-      await findBtn('SAVE TO NEW FOLDER').trigger('click')
+      await wrapper.get('[data-tour="detail-save"] > button').trigger('click')
+      await findBtn('Create New Folder').trigger('click')
       await flushPromises()
 
       const input = document.querySelector('input') as HTMLInputElement
@@ -692,8 +724,8 @@ describe('PictureDetail', () => {
       const findBtn = (text: string) =>
         wrapper.findAll('button').find((b) => b.text().includes(text))!
 
-      await findBtn('ADD TO MOODBOARD').trigger('click')
-      await findBtn('SAVE TO NEW FOLDER').trigger('click')
+      await wrapper.get('[data-tour="detail-save"] > button').trigger('click')
+      await findBtn('Create New Folder').trigger('click')
       await flushPromises()
 
       const input = document.querySelector('input') as HTMLInputElement
@@ -715,7 +747,7 @@ describe('PictureDetail', () => {
     }
   })
 
-  it('重開 SAVE TO NEW FOLDER modal 後 input 不再 disabled', async () => {
+  it('重開 Create New Folder modal 後 input 不再 disabled', async () => {
     vi.useFakeTimers()
     const { wrapper } = await mountPictureDetail('y2k-main-001', true, { attachTo: document.body })
 
@@ -723,8 +755,8 @@ describe('PictureDetail', () => {
       const findBtn = (text: string) =>
         wrapper.findAll('button').find((b) => b.text().includes(text))!
 
-      await findBtn('ADD TO MOODBOARD').trigger('click')
-      await findBtn('SAVE TO NEW FOLDER').trigger('click')
+      await wrapper.get('[data-tour="detail-save"] > button').trigger('click')
+      await findBtn('Create New Folder').trigger('click')
       await flushPromises()
 
       const input = document.querySelector('input') as HTMLInputElement
@@ -740,8 +772,8 @@ describe('PictureDetail', () => {
       vi.advanceTimersByTime(800)
       await flushPromises()
 
-      await findBtn('ADD TO MOODBOARD').trigger('click')
-      await findBtn('SAVE TO NEW FOLDER').trigger('click')
+      await wrapper.get('[data-tour="detail-save"] > button').trigger('click')
+      await findBtn('Create New Folder').trigger('click')
       await flushPromises()
 
       expect((document.querySelector('input') as HTMLInputElement).disabled).toBe(false)

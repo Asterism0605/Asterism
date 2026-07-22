@@ -7,13 +7,16 @@ export const TOOLTIP_GAP = 32;
 export const VIEWPORT_MARGIN = 16;
 export const TOOLTIP_SPACE_THRESHOLD = 48;
 
-interface UserTourStepDefinition {
+export interface UserTourStepDefinition {
   selector: string;
   titleKey: string;
   descriptionKey: string;
+  mobileDescriptionKey?: string;
   progress: number;
+  total?: number;
   previousStep?: UserTourStep;
   nextStep?: UserTourStep;
+  completeTour?: boolean;
   side?: Side;
   align?: Alignment;
   allowInteraction?: boolean;
@@ -96,5 +99,72 @@ export const USER_TOUR_STEPS: Partial<Record<UserTourStep, UserTourStepDefinitio
     allowInteraction: true,
     side: 'left',
     align: 'center'
+  },
+  'moodboard-images': {
+    selector: '[data-tour="moodboard-images"]',
+    titleKey: 'userTour.steps.moodboardImages.title',
+    descriptionKey: 'userTour.steps.moodboardImages.description',
+    progress: 1,
+    total: 6,
+    nextStep: 'moodboard-directory',
+    side: 'left',
+    align: 'center'
+  },
+  'moodboard-directory': {
+    selector: '[data-tour="moodboard-directory"]',
+    titleKey: 'userTour.steps.moodboardDirectory.title',
+    descriptionKey: 'userTour.steps.moodboardDirectory.description',
+    mobileDescriptionKey: 'userTour.steps.moodboardDirectory.mobileDescription',
+    progress: 2,
+    total: 6,
+    previousStep: 'moodboard-images',
+    nextStep: 'moodboard-orbit',
+    side: 'right',
+    align: 'start'
+  },
+  'moodboard-orbit': {
+    selector: '[data-tour="moodboard-orbit"]',
+    titleKey: 'userTour.steps.moodboardOrbit.title',
+    descriptionKey: 'userTour.steps.moodboardOrbit.description',
+    progress: 3,
+    total: 6,
+    previousStep: 'moodboard-directory',
+    nextStep: 'moodboard-folder',
+    allowInteraction: true,
+    side: 'top',
+    align: 'center'
+  },
+  'moodboard-folder': {
+    selector: '[data-tour="moodboard-orbit-folder"]',
+    titleKey: 'userTour.steps.moodboardFolder.title',
+    descriptionKey: 'userTour.steps.moodboardFolder.description',
+    progress: 4,
+    total: 6,
+    previousStep: 'moodboard-orbit',
+    allowInteraction: true,
+    side: 'bottom',
+    align: 'center'
+  },
+  'moodboard-filters': {
+    selector: '[data-tour="moodboard-filters"]',
+    titleKey: 'userTour.steps.moodboardFilters.title',
+    descriptionKey: 'userTour.steps.moodboardFilters.description',
+    progress: 5,
+    total: 6,
+    previousStep: 'moodboard-folder',
+    nextStep: 'moodboard-tour-control',
+    side: 'top',
+    align: 'center'
+  },
+  'moodboard-tour-control': {
+    selector: '[data-tour="moodboard-tour-control"]',
+    titleKey: 'userTour.steps.moodboardTourControl.title',
+    descriptionKey: 'userTour.steps.moodboardTourControl.description',
+    progress: 6,
+    total: 6,
+    previousStep: 'moodboard-filters',
+    completeTour: true,
+    side: 'bottom',
+    align: 'end'
   }
 };

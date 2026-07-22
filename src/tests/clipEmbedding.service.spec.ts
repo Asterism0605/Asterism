@@ -7,10 +7,21 @@ import {
   loadClipModel,
   resetClipModel
 } from '@/services/clipEmbedding.service';
-import { pipeline } from '@huggingface/transformers';
 
-const mockExtractor = vi.fn();
-const pipelineMock = vi.mocked(pipeline) as any;
+type MockExtractor = (input: string) => Promise<{ data: ArrayLike<number> }>;
+type PipelineMock = (
+  task: string,
+  model?: string,
+  options?: Record<string, unknown>
+) => Promise<MockExtractor>;
+
+const { mockExtractor, pipelineMock } = vi.hoisted(() => {
+  const mockExtractor = vi.fn<MockExtractor>();
+  const pipelineMock = vi.fn<PipelineMock>();
+  return { mockExtractor, pipelineMock };
+});
+
+vi.mock('@huggingface/transformers', () => ({ pipeline: pipelineMock }));
 
 describe('clipEmbedding.service', () => {
   beforeEach(() => {

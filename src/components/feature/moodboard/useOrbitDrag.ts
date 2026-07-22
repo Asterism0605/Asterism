@@ -55,7 +55,6 @@ export function useOrbitDrag(
     if (!el) return
     dragRect = el.getBoundingClientRect()
     const p = evtPoint(e)
-    // 只有落在資料夾附近才起拖，避免整個版面（含軌道弧線空白處）都能拖。
     if (!canStartAt(p)) {
       dragRect = null
       return
@@ -86,7 +85,8 @@ export function useOrbitDrag(
   }
 
   function onDragEnd(e?: PointerEvent) {
-    if (activePointerId !== null && e && e.pointerId !== activePointerId) return
+    if (activePointerId !== null && e && e.pointerId !== activePointerId) return false
+    const endedWithDrag = dragStart !== null && didDrag
     if (dragRaf) {
       window.cancelAnimationFrame(dragRaf)
       dragRaf = 0
@@ -100,6 +100,7 @@ export function useOrbitDrag(
     dragRect = null
     activePointerId = null
     captureTarget = null
+    return endedWithDrag
   }
 
   function consumeDidDrag(): boolean {
