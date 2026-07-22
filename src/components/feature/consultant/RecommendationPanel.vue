@@ -44,6 +44,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   submit: [payload: BookingPayload];
   reset: [];
+  designFieldChange: [value: string];
 }>();
 
 const { t } = useI18n();
@@ -245,6 +246,9 @@ watch([() => form.date, unavailableTimeSlots], () => {
     form.timeSlot = '';
   }
 });
+
+// 讓父層(StyleConsultant)即時知道選了哪個設計領域，去查對應顧問做預覽配對顯示。
+watch(() => form.designField, (value) => emit('designFieldChange', value), { immediate: true });
 
 onMounted(() => {
   document.addEventListener('pointerdown', handlePanelPointerDown);

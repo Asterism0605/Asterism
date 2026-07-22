@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import ConstellationBackground from '@/components/effects/ConstellationBackground.vue';
@@ -8,7 +8,12 @@ import ConsultantSummary from '@/components/feature/consultant/ConsultantSummary
 import RecommendationPanel from '@/components/feature/consultant/RecommendationPanel.vue';
 import { useConsultationPaymentFlow } from '@/composables/useConsultationPaymentFlow';
 import type { PaymentReturnStatus } from '@/composables/useConsultationPaymentFlow';
-import { matchConsultantByStyleTag } from '@/services/consultant-match.service';
+import {
+  loadActiveConsultants,
+  matchConsultantByDesignField,
+  type ConsultantLoadStatus,
+  type ConsultantRow
+} from '@/services/consultant.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 
@@ -17,7 +22,10 @@ interface ConsultantProfile {
     label: string;
     percentage: number;
   }>;
-  consultantLabel: string;
+  consultantLabel: string | null;
+  // 顯示的顧問是後端已確認指派的（true）還是表單即時預覽的（false）。
+  // 預覽時標籤用「可能配對顧問」，確認後才用「配對顧問」。
+  matchIsConfirmed: boolean;
 }
 
 const PAYMENT_RETURN_COPY = {
@@ -67,21 +75,25 @@ const styleDnaStore = useStyleDnaStore();
 const route = useRoute();
 const { t } = useI18n();
 
-const profile = computed<ConsultantProfile | null>(() => {
-  const result = styleDnaStore.currentResult;
+// 顧問清單只在掛載時抓一次(is_active 名單不會在同一次頁面停留期間變動)，
+// 表單選設計領域時純前端查表配對，不用每次都打一次 API。
+const consultants = ref<ConsultantRow[]>([]);
+const selectedDesignField = ref('');
+// 空的 consultants 陣列有兩種可能：還沒載入完 / 載入失敗。用 loadStatus 區分，
+// 避免把「載入失敗」畫成「尚未配對」，讓使用者以為只是在等操作。
+const loadStatus = ref<ConsultantLoadStatus>('idle');
 
-  if (!authStore.isAuthenticated || !result) {
-    return null;
+onMounted(async () => {
+  loadStatus.value = 'loading';
+  try {
+    consultants.value = await loadActiveConsultants();
+    loadStatus.value = 'success';
+  } catch (e) {
+    loadStatus.value = 'error';
+    console.warn('[consultant] fetch active consultants failed:', e);
   }
+});
 
-  return {
-    styleDna: result.styles,
-    consultantLabel: matchConsultantByStyleTag(result)
-  };
-});
-const summaryStatus = computed(() => {
-  return profile.value ? 'ready' : 'missing-result';
-});
 const sourceImageId = computed(() => {
   const rawSourceImageId = route.query.sourceImageId;
 
@@ -94,10 +106,55 @@ const {
   checkoutErrorMessage,
   isCheckoutSubmitting,
   paymentReturnStatus,
+  confirmedConsultant,
   handleSubmit,
   handleReset,
   restartBooking
 } = useConsultationPaymentFlow(sourceImageId);
+
+const matchedConsultant = computed(() =>
+  matchConsultantByDesignField(selectedDesignField.value, consultants.value)
+);
+
+const profile = computed<ConsultantProfile | null>(() => {
+  const result = styleDnaStore.currentResult;
+
+  if (!authStore.isAuthenticated || !result) {
+    return null;
+  }
+
+  return {
+    styleDna: result.styles,
+    consultantLabel: consultantLabel.value,
+    matchIsConfirmed: Boolean(confirmedConsultant.value)
+  };
+});
+
+// 顧問標籤依狀態顯示,涵蓋 reviewer 指出的多種情境:
+// 1. 後端已確認指派 → 顯示真正的顧問(不限 paid,只要 API 回了 confirmedConsultant)。
+// 2. 付款流程中但沒有顧問資料 → 表單已隱藏、選不了領域,不能顯示「選擇設計領域後配對」。
+// 3. 顧問清單載入失敗 → 明確錯誤,不要假裝在等操作。
+// 4. 尚未選設計領域 → null,交給 ConsultantSummary 顯示待配對文案。
+// 5. 選了領域但查無對應 active 顧問 → 明確「沒有可配對顧問」。
+// 6. 一般情況 → 表單即時預覽配對(標籤會標成「可能配對顧問」)。
+const consultantLabel = computed<string | null>(() => {
+  if (confirmedConsultant.value) {
+    return confirmedConsultant.value.displayName;
+  }
+  if (paymentReturnStatus.value !== 'idle') {
+    return t('consult.matchedConsultantUnavailable');
+  }
+  if (loadStatus.value === 'error') {
+    return t('consult.matchedConsultantLoadError');
+  }
+  if (!selectedDesignField.value) {
+    return null;
+  }
+  return matchedConsultant.value?.displayName ?? t('consult.matchedConsultantNone');
+});
+const summaryStatus = computed(() => {
+  return profile.value ? 'ready' : 'missing-result';
+});
 const paymentReturnCopy = computed(() => {
   if (paymentReturnStatus.value === 'idle') {
     return null;
@@ -146,6 +203,7 @@ const paymentReturnCopy = computed(() => {
           v-if="paymentReturnCopy"
           :title="paymentReturnCopy.title"
           :description="paymentReturnCopy.description"
+          :show-my-bookings-link="paymentReturnStatus === 'paid'"
           @restart="restartBooking"
         />
 
@@ -156,6 +214,7 @@ const paymentReturnCopy = computed(() => {
           :submitting="isCheckoutSubmitting"
           @submit="handleSubmit"
           @reset="handleReset"
+          @design-field-change="selectedDesignField = $event"
         />
 
         <p v-if="checkoutErrorMessage" class="style-consultant__confirmation" role="alert">

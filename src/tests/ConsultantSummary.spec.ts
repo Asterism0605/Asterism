@@ -49,4 +49,19 @@ describe('ConsultantSummary', () => {
     expect(wrapper.text()).toContain('Spatial Consultant · Mira Chen')
     expect(wrapper.find('[data-testid="consultant-style-dna-fallback"]').exists()).toBe(false)
   })
+
+  it('shows a pending placeholder instead of a consultant name when nothing is matched yet', () => {
+    const wrapper = mount(ConsultantSummary, {
+      props: {
+        status: 'ready',
+        profile: {
+          styleDna: [{ label: 'Luminous Minimalism', percentage: 54 }],
+          consultantLabel: null,
+        },
+      },
+    })
+
+    expect(wrapper.text()).toContain('Matched consultant')
+    expect(wrapper.text()).not.toContain('Spatial Consultant')
+  })
 })

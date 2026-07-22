@@ -119,6 +119,36 @@ describe('FloatingImageNetwork', () => {
     expect(imgs[1].attributes('src')).toBe('/img2.jpg');
   });
 
+  it('falls back to the original image when a preview thumbnail fails, without re-looping', async () => {
+    const wrapper = mount(FloatingImageNetwork, {
+      props: {
+        images: [
+          {
+            src: '/style-image/preview/pic-480.webp',
+            srcset: '/style-image/preview/pic-480.webp 480w, /style-image/preview/pic-720.webp 720w',
+            fallbackSrc: '/style-image/pic.webp',
+            alt: 'pic'
+          }
+        ]
+      }
+    });
+
+    const img = wrapper.find('img');
+    expect(img.attributes('src')).toBe('/style-image/preview/pic-480.webp');
+    expect(img.attributes('srcset')).toBeTruthy();
+
+    // 縮圖失敗：改載原圖、切掉 srcset，且此時還不算「失敗」（等原圖再試）。
+    await img.trigger('error');
+    expect(img.attributes('src')).toBe('/style-image/pic.webp');
+    expect(img.attributes('srcset')).toBeUndefined();
+    expect(wrapper.find('[data-testid="image-card"]').attributes('data-guide-image-error')).toBeUndefined();
+
+    // 原圖也失敗：不再 fallback（src 維持原圖），此時才標記失敗。
+    await img.trigger('error');
+    expect(img.attributes('src')).toBe('/style-image/pic.webp');
+    expect(wrapper.find('[data-testid="image-card"]').attributes('data-guide-image-error')).toBe('true');
+  });
+
   it('renders all provided images without a hardcoded cap', () => {
     const sevenImages = Array.from({ length: 7 }, (_, i) => ({
       src: `/img${i}.jpg`,

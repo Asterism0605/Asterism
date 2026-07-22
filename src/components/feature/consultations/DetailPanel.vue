@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
+import Button from '@/components/ui/Button.vue';
 import type { AccountConsultation, ConsultantBookingItem } from '@/types/account-consultation';
 import { formatConsultationDisplayValue } from '@/utils/consultation-display';
+import { isHttpUrl } from '@/utils/http-url';
 import ConsultationList from './ConsultationList.vue';
 
 const props = withDefaults(
@@ -13,8 +15,12 @@ const props = withDefaults(
     showAll: boolean;
     /** consultant:多渲染客戶聯絡資訊與狀態標籤,i18n 走 consultantBookings。 */
     variant?: 'account' | 'consultant';
+    /** 儲存地點失敗時,父層(ConsultantBookings)傳入的錯誤訊息。 */
+    saveError?: string;
+    /** 地點儲存中:停用按鈕並顯示「儲存中」,避免連續點擊送出多個請求。 */
+    saving?: boolean;
   }>(),
-  { variant: 'account' }
+  { variant: 'account', saveError: '', saving: false }
 );
 
 const scope = computed(() =>
@@ -23,6 +29,7 @@ const scope = computed(() =>
 
 const emit = defineEmits<{
   toggleView: [];
+  updateLocation: [value: string];
 }>();
 
 const { t } = useI18n();
@@ -39,6 +46,31 @@ function displayDate(date: string): string {
 
 function playDateAnimation(): void {
   dateScramble.value?.play();
+}
+
+const isOnline = computed(() => props.reservation.method === 'Online');
+
+const isConfirmed = computed(() => props.reservation.status === 'confirmed');
+const canEditLocation = computed(() => props.variant === 'consultant' && isConfirmed.value);
+const locationInput = ref(props.reservation.location ?? '');
+const locationError = ref('');
+
+watch(
+  () => props.reservation.id,
+  () => {
+    locationInput.value = props.reservation.location ?? '';
+    locationError.value = '';
+  }
+);
+
+function saveLocation(): void {
+  const value = locationInput.value.trim();
+  if (isOnline.value && value !== '' && !isHttpUrl(value)) {
+    locationError.value = t('consult.locationInvalidUrl');
+    return;
+  }
+  locationError.value = '';
+  emit('updateLocation', value);
 }
 
 defineExpose({ playDateAnimation });
@@ -78,7 +110,23 @@ defineExpose({ playDateAnimation });
       <dl class="consultation-details">
         <div>
           <dt>{{ t('consult.method') }}</dt>
-          <dd>{{ displayValue(reservation.method) }}</dd>
+          <dd>
+            {{ displayValue(reservation.method) }}
+            <template v-if="reservation.location">
+              /
+              <a
+                v-if="isOnline && isHttpUrl(reservation.location)"
+                :href="reservation.location"
+                target="_blank"
+                rel="noopener noreferrer"
+                >{{ reservation.location }}</a
+              >
+              <span v-else>{{ reservation.location }}</span>
+            </template>
+            <span v-else-if="variant === 'account'" class="consultation-details__pending">
+              {{ t('consult.locationPending') }}
+            </span>
+          </dd>
         </div>
         <div>
           <dt>{{ t('consult.designField') }}</dt>
@@ -104,6 +152,42 @@ defineExpose({ playDateAnimation });
           <div>
             <dt>{{ t('consultantBookings.statusLabel') }}</dt>
             <dd>{{ t(`consultantBookings.status.${reservation.status}`) }}</dd>
+          </div>
+          <div v-if="canEditLocation" class="consultation-details__location-edit">
+            <dt :id="`location-label-${reservation.id}`">
+              {{ isOnline ? t('consult.locationOnlineLabel') : t('consult.locationInPersonLabel') }}
+            </dt>
+            <dd>
+              <input
+                v-model="locationInput"
+                data-testid="location-input"
+                type="text"
+                :maxlength="500"
+                :aria-labelledby="`location-label-${reservation.id}`"
+                :placeholder="
+                  isOnline
+                    ? t('consult.locationOnlinePlaceholder')
+                    : t('consult.locationInPersonPlaceholder')
+                "
+                class="consultation-details__location-input"
+              />
+              <Button
+                type="button"
+                data-testid="location-save"
+                class="mt-2"
+                variant="secondary"
+                :disabled="saving"
+                @click="saveLocation"
+              >
+                {{ saving ? t('consult.savingLocation') : t('consult.saveLocation') }}
+              </Button>
+              <p v-if="locationError" class="consultation-details__location-error">
+                {{ locationError }}
+              </p>
+              <p v-if="saveError" class="consultation-details__location-error">
+                {{ saveError }}
+              </p>
+            </dd>
           </div>
         </template>
       </dl>
@@ -173,7 +257,12 @@ defineExpose({ playDateAnimation });
 .consultation-details {
   display: grid;
   gap: 17px;
-  margin: 30px 0 0;
+  max-height: 280px;
+  margin-top: 22px;
+  overflow: hidden auto;
+  padding-right: 8px;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
 }
 
 .consultation-details div {
@@ -210,7 +299,7 @@ defineExpose({ playDateAnimation });
 
 .details-panel--consultant {
   height: auto;
-  min-height: 500px;
+  max-height: 500px;
 }
 
 @media (max-width: 768px) {
@@ -229,5 +318,25 @@ defineExpose({ playDateAnimation });
     padding: 32px 9vw 38px;
     transform: none;
   }
+}
+
+.consultation-details__pending {
+  color: #f0ede680;
+  font-size: 13px;
+}
+
+.consultation-details__location-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #f0ede633;
+  border-radius: 8px;
+  background: #ffffff0a;
+  color: inherit;
+  font: inherit;
+}
+.consultation-details__location-error {
+  margin: 6px 0 0;
+  color: var(--color-stellar-red, #e5484d);
+  font-size: 13px;
 }
 </style>

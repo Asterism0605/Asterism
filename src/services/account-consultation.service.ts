@@ -11,7 +11,8 @@ function toAccountConsultation(booking: MyConsultationBooking): AccountConsultat
     method: booking.method === 'online' ? 'Online' : 'In-Person',
     designField: booking.designField,
     designFocus: booking.designFocus,
-    notes: booking.notes
+    notes: booking.notes,
+    location: booking.location
   };
 }
 

@@ -13,6 +13,8 @@
   --color-text-secondary: #8a8880;
   --color-stellar-red: #c45c3a;
   --color-gold-dim: #a8893a;
+  --color-cta: #d96643;
+  --color-cta-hover: #e67550;
 
   /* 字體族群 */
   --font-family-title: 'Fustat', 'Noto Sans TC', sans-serif;

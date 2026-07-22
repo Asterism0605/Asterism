@@ -1,23 +1,38 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import Button from '@/components/ui/Button.vue';
 
 defineProps<{
   title: string;
   description: string;
+  // 只有真的付款成功確認過,才讓使用者跳去「我的預約」看這筆——processing/failed
+  // 這些中間狀態還沒有一筆確定存在的預約可看。
+  showMyBookingsLink?: boolean;
 }>();
 
 const emit = defineEmits<{
   restart: [];
 }>();
+
+const router = useRouter();
+
+function goToMyBookings(): void {
+  void router.push('/account/consultations');
+}
 </script>
 
 <template>
   <section class="consultation-payment-result" role="status">
     <h2>{{ title }}</h2>
     <p>{{ description }}</p>
-    <Button type="button" variant="secondary" @click="emit('restart')">
-      {{ $t('consult.bookAgain') }}
-    </Button>
+    <div class="consultation-payment-result__actions">
+      <Button v-if="showMyBookingsLink" type="button" @click="goToMyBookings">
+        {{ $t('consult.viewMyBookings') }}
+      </Button>
+      <Button type="button" variant="secondary" @click="emit('restart')">
+        {{ $t('consult.bookAgain') }}
+      </Button>
+    </div>
   </section>
 </template>
 
@@ -42,7 +57,9 @@ const emit = defineEmits<{
   line-height: 1.6;
 }
 
-.consultation-payment-result :deep(button) {
-  justify-self: start;
+.consultation-payment-result__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
 }
 </style>

@@ -324,6 +324,22 @@ describe('RecommendationPanel', () => {
     expect(wrapper.emitted('submit')).toHaveLength(1);
   });
 
+  it('emits designFieldChange live as the design field is picked and reset', async () => {
+    const wrapper = mountPanel();
+
+    expect(wrapper.emitted('designFieldChange')?.at(-1)).toEqual(['']);
+
+    await pickDropdownOption(wrapper, 1, 'Interior Design');
+
+    expect(wrapper.emitted('designFieldChange')?.at(-1)).toEqual(['interior']);
+
+    const resetButton = wrapper.findAll('button').find((button) => button.text() === 'Reset');
+    expect(resetButton).toBeTruthy();
+    await resetButton!.trigger('click');
+
+    expect(wrapper.emitted('designFieldChange')?.at(-1)).toEqual(['']);
+  });
+
   it('renders date choices in a monthly date picker', async () => {
     const wrapper = mountPanel();
 

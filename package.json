@@ -1,7 +1,7 @@
 {
   "name": "asterism",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,9 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
     "format": "prettier --write src/",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "previews:generate": "node scripts/generate-home-previews.mjs",
+    "previews:check": "node scripts/generate-home-previews.mjs --check"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.2.0",
@@ -40,6 +42,7 @@
     "eslint-plugin-vue": "^9.27.0",
     "jsdom": "^29.1.1",
     "prettier": "^3.3.3",
+    "sharp": "^0.35.3",
     "tailwindcss": "^4.0.0",
     "typescript": "~6.0.2",
     "vite": "^8.0.12",

@@ -1011,6 +1011,102 @@ describe('MoodboardOrbit', () => {
       expect(router.currentRoute.value.path).toBe('/moodboard');
       expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(true);
     });
+
+    it('desktop 在刪除模式下點擊側邊目錄清單項目，效果等同點擊資料夾圖示：開啟確認彈窗且不會進入資料夾', async () => {
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="folder-directory-item-folder-1"]').trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard');
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(true);
+    });
+
+    it('desktop 在刪除模式下點擊中央圖片球沒有作用：不開彈窗也不會進入資料夾', async () => {
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+      await flushPromises();
+
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
+      const sphereClick = initSphere.mock.calls.at(-1)?.[4] as (() => void) | undefined;
+      sphereClick?.();
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard');
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(false);
+    });
+
+    it('mobile 在刪除模式下點擊中央圖片球沒有作用：不開彈窗也不會進入資料夾', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      patchFolders();
+      const { wrapper, router } = await mountMoodboard();
+
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
+      await wrapper.get('[data-testid="moodboard-mobile-photo"]').trigger('click');
+      await flushPromises();
+
+      expect(router.currentRoute.value.path).toBe('/moodboard');
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(false);
+    });
+
+    it('mobile 在刪除模式下點擊目錄清單項目：預覽會先切到該資料夾，同時開啟確認彈窗', async () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        configurable: true,
+        writable: true
+      });
+      useAuthStore().$patch({
+        user: {
+          id: 'user-1',
+          email: 'user@example.com',
+          displayName: 'User',
+          isAdmin: false,
+          createdAt: '2026-07-01T00:00:00.000Z'
+        }
+      });
+      const store = useMoodboardStore();
+      store.$patch({
+        status: 'success',
+        loadedProfileId: 'user-1',
+        folders: [
+          {
+            id: 'folder-1',
+            name: 'Studio',
+            createdAt: '2026-07-06T00:00:00.000Z',
+            images: [savedImage('saved-1')]
+          },
+          {
+            id: 'folder-2',
+            name: 'Garden',
+            createdAt: '2026-07-04T00:00:00.000Z',
+            images: [savedImage('saved-2')]
+          }
+        ]
+      });
+      const { wrapper } = await mountMoodboard();
+      await flushPromises();
+
+      expect(wrapper.get('[data-testid="folder-directory-item-folder-1"]').classes()).toContain(
+        'folder-node--active'
+      );
+
+      await wrapper.get('[data-testid="moodboard-folder-delete-toggle"]').trigger('click');
+      const folder2Item = wrapper.get('[data-testid="folder-directory-item-folder-2"]');
+      await folder2Item.trigger('pointerenter');
+      await folder2Item.trigger('click');
+      await flushPromises();
+
+      expect(wrapper.get('[data-testid="folder-directory-item-folder-2"]').classes()).toContain(
+        'folder-node--active'
+      );
+      expect(wrapper.find('[data-testid="delete-folder-confirm"]').exists()).toBe(true);
+    });
   });
 
   describe('delete image flow', () => {
