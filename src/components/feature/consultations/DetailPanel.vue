@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ScrambleText from '@/components/effects/ScrambleText.vue';
+import Button from '@/components/ui/Button.vue';
 import type { AccountConsultation, ConsultantBookingItem } from '@/types/account-consultation';
 import { formatConsultationDisplayValue } from '@/utils/consultation-display';
 import { isHttpUrl } from '@/utils/http-url';
@@ -50,9 +51,7 @@ function playDateAnimation(): void {
 const isOnline = computed(() => props.reservation.method === 'Online');
 
 const isConfirmed = computed(() => props.reservation.status === 'confirmed');
-const canEditLocation = computed(
-  () => props.variant === 'consultant' && isConfirmed.value
-);
+const canEditLocation = computed(() => props.variant === 'consultant' && isConfirmed.value);
 const locationInput = ref(props.reservation.location ?? '');
 const locationError = ref('');
 
@@ -120,7 +119,8 @@ defineExpose({ playDateAnimation });
                 :href="reservation.location"
                 target="_blank"
                 rel="noopener noreferrer"
-              >{{ reservation.location }}</a>
+                >{{ reservation.location }}</a
+              >
               <span v-else>{{ reservation.location }}</span>
             </template>
             <span v-else-if="variant === 'account'" class="consultation-details__pending">
@@ -164,20 +164,23 @@ defineExpose({ playDateAnimation });
                 type="text"
                 :maxlength="500"
                 :aria-labelledby="`location-label-${reservation.id}`"
-                :placeholder="isOnline
-                  ? t('consult.locationOnlinePlaceholder')
-                  : t('consult.locationInPersonPlaceholder')"
+                :placeholder="
+                  isOnline
+                    ? t('consult.locationOnlinePlaceholder')
+                    : t('consult.locationInPersonPlaceholder')
+                "
                 class="consultation-details__location-input"
               />
-              <button
+              <Button
                 type="button"
                 data-testid="location-save"
-                class="consultation-details__location-save"
+                class="mt-2"
+                variant="secondary"
                 :disabled="saving"
                 @click="saveLocation"
               >
                 {{ saving ? t('consult.savingLocation') : t('consult.saveLocation') }}
-              </button>
+              </Button>
               <p v-if="locationError" class="consultation-details__location-error">
                 {{ locationError }}
               </p>
@@ -254,7 +257,12 @@ defineExpose({ playDateAnimation });
 .consultation-details {
   display: grid;
   gap: 17px;
-  margin: 30px 0 0;
+  max-height: 280px;
+  margin-top: 22px;
+  overflow: hidden auto;
+  padding-right: 8px;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
 }
 
 .consultation-details div {
@@ -291,7 +299,7 @@ defineExpose({ playDateAnimation });
 
 .details-panel--consultant {
   height: auto;
-  min-height: 500px;
+  max-height: 500px;
 }
 
 @media (max-width: 768px) {
@@ -325,20 +333,6 @@ defineExpose({ playDateAnimation });
   background: #ffffff0a;
   color: inherit;
   font: inherit;
-}
-.consultation-details__location-save {
-  margin-top: 8px;
-  padding: 6px 14px;
-  border: 1px solid #f0ede644;
-  border-radius: 9999px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-.consultation-details__location-save:disabled {
-  cursor: progress;
-  opacity: 0.6;
 }
 .consultation-details__location-error {
   margin: 6px 0 0;
