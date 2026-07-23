@@ -29,9 +29,9 @@ const routeTransitionName = computed(() =>
 </script>
 <template>
   <AppHeader v-if="showHeader" />
-  <RouterView v-slot="{ Component, route: viewRoute }">
+  <RouterView v-slot="{ Component }">
     <Transition :name="routeTransitionName">
-      <component :is="Component" :key="viewRoute.fullPath" />
+      <component :is="Component" />
     </Transition>
   </RouterView>
   <AppFooter v-if="showFooter" />

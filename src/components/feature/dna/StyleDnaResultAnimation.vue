@@ -28,6 +28,9 @@ interface ResultMeteor {
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits<{
+  baseOpacityChange: [opacity: number];
+}>();
 
 const HERO_IMAGE = '/images/astronaut-dna.png';
 const METEOR_SCROLL_THRESHOLD_VIEWPORTS = 0.6;
@@ -143,6 +146,12 @@ let resultScrollOriginY = 0;
 let scrollPromptAnimation: gsap.core.Tween | null = null;
 let scrollProgressHintAnimation: gsap.core.Tween | null = null;
 let personalizedMessageSplitText: SplitText | null = null;
+let animationFrameId: number | null = null;
+let reducedMotionMediaQuery: MediaQueryList | null = null;
+let prefersReducedMotion = false;
+let meteorElements: HTMLElement[] = [];
+let transitionImageElements: HTMLElement[] = [];
+let transitionImageTravelDistances: number[] = [];
 
 function createPersonalizedMessageSplitText(): void {
   if (!personalizedMessage.value) {
@@ -187,7 +196,7 @@ function startScrollProgressHintAnimation(): void {
     scrollProgressHintAnimation ||
     !scrollProgressTrack.value ||
     !scrollProgressMeteor.value ||
-    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    prefersReducedMotion
   ) {
     return;
   }
@@ -236,11 +245,19 @@ function updateScrollProgressMeteor(viewportProgress: number): void {
 }
 
 function updateScrollPrompt(viewportProgress: number): void {
-  if (viewportProgress <= METEOR_SCROLL_THRESHOLD_VIEWPORTS || !scrollPrompt.value) {
+  if (!scrollPrompt.value) {
+    return;
+  }
+
+  if (viewportProgress <= METEOR_SCROLL_THRESHOLD_VIEWPORTS) {
+    if (!scrollPromptAnimation) {
+      startScrollPromptAnimation();
+    }
     return;
   }
 
   scrollPromptAnimation?.kill();
+  scrollPromptAnimation = null;
   gsap.set(scrollPrompt.value, { autoAlpha: 0 });
 }
 
@@ -256,13 +273,11 @@ function updateMeteorScrollAnimation(viewportProgress: number): void {
   const isActive =
     viewportProgress > METEOR_SCROLL_THRESHOLD_VIEWPORTS &&
     viewportProgress < METEOR_SCROLL_END_VIEWPORTS;
-  const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const meteors = meteorLayer.value.querySelectorAll<HTMLElement>('.result-meteor');
 
   hasMeteorStarted.value = isActive;
   gsap.set(meteorLayer.value, { autoAlpha: isActive ? 1 : 0 });
 
-  meteors.forEach((meteor, index) => {
+  meteorElements.forEach((meteor, index) => {
     const meteorConfig = RESULT_METEORS[index];
     const distanceMultiplier = meteorConfig?.motionMultiplier ?? 1 + index * 0.1;
     const opacityMultiplier =
@@ -291,7 +306,6 @@ function updatePersonalizedMessageAnimation(viewportProgress: number): void {
       (ROUTE_TRANSITION_END_VIEWPORTS - ROUTE_TRANSITION_START_VIEWPORTS)
   );
   const isActive = viewportProgress > MESSAGE_SCROLL_START_VIEWPORTS;
-  const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const exitOffset = -28 * routeTransitionProgress;
   const messageLines = personalizedMessageSplitText.lines;
   hasPersonalizedMessageStarted.value = isActive;
@@ -335,20 +349,12 @@ function updateTransitionImageAnimation(viewportProgress: number): void {
     transitionImages.value.length > 0 &&
     messageProgress > firstImageRevealStart &&
     viewportProgress <= HOME_NAVIGATION_THRESHOLD_VIEWPORTS;
-  const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const imageElements =
-    transitionImageLayer.value.querySelectorAll<HTMLElement>('.result-transition-image');
 
   hasTransitionImagesStarted.value = isActive;
 
-  imageElements.forEach((image, index) => {
-    const initialYOffset =
-      Number.parseFloat(
-        window
-          .getComputedStyle(image)
-          .getPropertyValue('--transition-image-initial-y')
-      ) || 0;
-    const travelDistance = window.innerHeight + image.offsetHeight + initialYOffset;
+  transitionImageElements.forEach((image, index) => {
+    const travelDistance =
+      transitionImageTravelDistances[index] ?? window.innerHeight + image.offsetHeight;
     const imageRevealStart = (index * 2 + 1) * INTERLEAVE_ITEM_STAGGER;
     const imageRevealProgress = prefersReducedMotion
       ? Number(messageProgress > imageRevealStart)
@@ -357,20 +363,20 @@ function updateTransitionImageAnimation(viewportProgress: number): void {
         );
 
     gsap.set(image, {
-      autoAlpha: imageRevealProgress,
+      autoAlpha: imageRevealProgress * (prefersReducedMotion ? 1 - transitionProgress : 1),
       y: prefersReducedMotion ? 0 : -transitionProgress * travelDistance
     });
   });
 }
 
-function handleResultScroll(): void {
-  if (isRouteTransitioning.value) {
-    return;
-  }
-
+function updateResultAnimation(): void {
   const scrollDistance = Math.max(0, window.scrollY - resultScrollOriginY);
   const viewportProgress = scrollDistance / window.innerHeight;
 
+  emit(
+    'baseOpacityChange',
+    1 - clampScrollProgress(viewportProgress / METEOR_SCROLL_THRESHOLD_VIEWPORTS)
+  );
   updateScrollPrompt(viewportProgress);
   updateScrollProgressMeteor(viewportProgress);
   updateMeteorScrollAnimation(viewportProgress);
@@ -382,12 +388,69 @@ function handleResultScroll(): void {
   }
 }
 
+function handleResultScroll(): void {
+  if (isRouteTransitioning.value) {
+    return;
+  }
+
+  if (import.meta.env.MODE === 'test') {
+    updateResultAnimation();
+    return;
+  }
+
+  if (animationFrameId !== null) {
+    return;
+  }
+
+  animationFrameId = -1;
+  const requestedFrameId = window.requestAnimationFrame(() => {
+    animationFrameId = null;
+    updateResultAnimation();
+  });
+
+  if (animationFrameId !== null) {
+    animationFrameId = requestedFrameId;
+  }
+}
+
+function refreshTransitionImageMetrics(): void {
+  if (!transitionImageLayer.value) {
+    transitionImageElements = [];
+    transitionImageTravelDistances = [];
+    return;
+  }
+
+  transitionImageElements = Array.from(
+    transitionImageLayer.value.querySelectorAll<HTMLElement>('.result-transition-image')
+  );
+  transitionImageTravelDistances = transitionImageElements.map((image) => {
+    const initialYOffset =
+      Number.parseFloat(
+        window.getComputedStyle(image).getPropertyValue('--transition-image-initial-y')
+      ) || 0;
+
+    return window.innerHeight + image.offsetHeight + initialYOffset;
+  });
+}
+
+function refreshAnimationMeasurements(): void {
+  meteorElements = meteorLayer.value
+    ? Array.from(meteorLayer.value.querySelectorAll<HTMLElement>('.result-meteor'))
+    : [];
+  refreshTransitionImageMetrics();
+}
+
+function handleReducedMotionChange(event: MediaQueryListEvent): void {
+  prefersReducedMotion = event.matches;
+  handleResultScroll();
+}
+
 function startScrollPromptAnimation(): void {
   if (!scrollPrompt.value) {
     return;
   }
 
-  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+  if (prefersReducedMotion) {
     gsap.set(scrollPrompt.value, { autoAlpha: 1 });
     return;
   }
@@ -408,6 +471,11 @@ function startScrollPromptAnimation(): void {
 }
 
 onMounted(() => {
+  reducedMotionMediaQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)') ?? null;
+  prefersReducedMotion = reducedMotionMediaQuery?.matches ?? false;
+  reducedMotionMediaQuery?.addEventListener('change', handleReducedMotionChange);
+  window.addEventListener('resize', refreshAnimationMeasurements);
+
   if (window.scrollY > 0) {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }
@@ -415,6 +483,7 @@ onMounted(() => {
   window.addEventListener('scroll', handleResultScroll, { passive: true });
 
   void nextTick(() => {
+    refreshAnimationMeasurements();
     createPersonalizedMessageSplitText();
     startScrollPromptAnimation();
     startScrollProgressHintAnimation();
@@ -423,12 +492,22 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleResultScroll);
+  window.removeEventListener('resize', refreshAnimationMeasurements);
+  reducedMotionMediaQuery?.removeEventListener('change', handleReducedMotionChange);
+  if (animationFrameId !== null && animationFrameId >= 0) {
+    window.cancelAnimationFrame(animationFrameId);
+  }
   scrollPromptAnimation?.kill();
   scrollProgressHintAnimation?.kill();
   personalizedMessageSplitText?.revert();
   scrollPromptAnimation = null;
   scrollProgressHintAnimation = null;
   personalizedMessageSplitText = null;
+  animationFrameId = null;
+  reducedMotionMediaQuery = null;
+  meteorElements = [];
+  transitionImageElements = [];
+  transitionImageTravelDistances = [];
 });
 </script>
 
@@ -504,6 +583,7 @@ onBeforeUnmount(() => {
             loading="eager"
             decoding="async"
             class="block h-auto w-full"
+            @load="refreshTransitionImageMetrics"
           />
         </div>
       </div>

@@ -152,7 +152,7 @@ html:lang(zh-Hant) .zh-heading-spacing {
 
   @media (prefers-reduced-motion: reduce) {
     .image-float-y {
-      animation-duration: 1ms;
+      animation: none;
     }
   }
 

@@ -176,7 +176,7 @@ function closeTagModal(): void {
 
 const annotationPositionClasses: Record<StyleDnaAnnotation['position'], string> = {
   left:
-    'left-[calc(-12vw-20px)] top-[38%] sm:left-[6vw] lg:left-[16%] lg:top-[42%] lg:-translate-x-1/2',
+    'left-[calc(-12vw-40px)] top-[38%] lg:left-[16%] lg:top-[42%] lg:-translate-x-1/2',
   right:
     'left-[calc(-2vw-30px)] top-[65%] lg:left-auto lg:right-[3%] lg:top-[58%] lg:bottom-auto',
   'top-right': 'right-[2.25rem] top-[1%] sm:right-[1.5rem] lg:right-[7%] lg:top-[24%]'

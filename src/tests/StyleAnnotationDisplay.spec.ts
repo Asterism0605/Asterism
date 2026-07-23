@@ -87,7 +87,8 @@ describe('StyleAnnotationDisplay', () => {
     expect(lowerTails[0].classes()).toContain('lg:block')
     expect(lowerTails[1].classes()).toContain('origin-left')
     expect(lowerTails[1].classes()).toContain('lg:hidden')
-    expect(annotationNodes[0].classes()).toContain('left-[calc(-12vw-20px)]')
+    expect(annotationNodes[0].classes()).toContain('left-[calc(-12vw-40px)]')
+    expect(annotationNodes[0].classes()).not.toContain('sm:left-[6vw]')
     expect(annotationNodes[1].classes()).toContain('left-[calc(-2vw-30px)]')
   })
 

@@ -70,6 +70,7 @@ describe('StyleDnaResult', () => {
     wrapperCleanups = [];
     vi.useRealTimers();
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
     push.mockReset();
     showToast.mockReset();
   });
@@ -251,7 +252,7 @@ describe('StyleDnaResult', () => {
       'true'
     );
     expect(wrapper.get('[data-testid="result-scroll-meteor"]').classes()).toContain('w-[2px]');
-    expect(wrapper.get('main').classes()).toContain('min-h-[750vh]');
+    expect(wrapper.get('main').classes()).toContain('min-h-[760vh]');
     expect(wrapper.get('main').classes()).toContain('bg-void');
     expect(wrapper.get('main').classes()).not.toContain('bg-deep');
     expect(wrapper.get('main > section').classes()).toContain('lg:relative');
@@ -275,6 +276,13 @@ describe('StyleDnaResult', () => {
     Object.defineProperty(window, 'scrollY', { configurable: true, value: 488 });
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
+    expect(wrapper.get('[data-testid="result-base-layer"]').attributes('style')).toContain(
+      'opacity: 0'
+    );
+    expect(wrapper.get('[data-testid="result-base-layer"]').attributes()).toHaveProperty('inert');
+    expect(wrapper.get('[data-testid="result-base-layer"]').classes()).toContain(
+      'pointer-events-none'
+    );
     expect(wrapper.get('[data-testid="result-scroll-track"]').attributes('data-progress')).toBe(
       '0.09'
     );
@@ -292,9 +300,20 @@ describe('StyleDnaResult', () => {
     expect(wrapper.findAll('.result-meteor')).toHaveLength(13);
     expect(push).not.toHaveBeenCalled();
 
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.get('[data-testid="result-base-layer"]').attributes('style')).toContain(
+      'opacity: 1'
+    );
+    expect(wrapper.get('[data-testid="result-base-layer"]').attributes()).not.toHaveProperty(
+      'inert'
+    );
+
     Object.defineProperty(window, 'scrollY', { configurable: true, value: 920 });
     window.dispatchEvent(new Event('scroll'));
     await wrapper.vm.$nextTick();
+
     for (const meteorId of ['center-upper', 'center-middle', 'center-lower']) {
       const meteorStyle = wrapper.get(`[data-meteor-id="${meteorId}"]`).attributes('style') ?? '';
       const opacity = Number(meteorStyle.match(/opacity:\s*([^;]+)/)?.[1]);
@@ -408,6 +427,50 @@ describe('StyleDnaResult', () => {
     expect(push).toHaveBeenCalledTimes(1);
     expect(push).toHaveBeenCalledWith({ path: '/home', query: { source: 'style-dna' } });
     expect(window.scrollTo).not.toHaveBeenCalled();
+  });
+
+  it('fades transition images out for users who prefer reduced motion', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal(
+      'matchMedia',
+      vi.fn().mockReturnValue({
+        matches: true,
+        media: '(prefers-reduced-motion: reduce)',
+        onchange: null,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        dispatchEvent: vi.fn()
+      })
+    );
+
+    const store = useStyleDnaStore();
+    store.completeQuiz(threeY2kAnswers);
+
+    const wrapper = mountStyleDnaResult();
+    await vi.advanceTimersByTimeAsync(1600);
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 3680 });
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+    const visibleImageOpacity = Number(
+      wrapper
+        .get('[data-testid="result-transition-image"]')
+        .attributes('style')
+        ?.match(/opacity:\s*([^;]+)/)?.[1]
+    );
+    expect(visibleImageOpacity).toBeGreaterThan(0.9);
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 4800 });
+    window.dispatchEvent(new Event('scroll'));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.get('[data-testid="result-transition-image"]').attributes('style')).toContain(
+      'opacity: 0'
+    );
+    expect(wrapper.get('[data-testid="result-transition-image"]').attributes('style')).toMatch(
+      /translate\(0(?:px)?, 0(?:px)?\)/
+    );
   });
 
 });
