@@ -39,7 +39,11 @@ describe('StyleAnnotationDisplay', () => {
     expect(hero.classes()).toContain('lg:h-[115vh]')
     expect(hero.classes()).toContain('lg:max-h-none')
     expect(hero.classes()).toContain('lg:translate-y-[200px]')
-    expect(wrapper.get('.style-result-panel').classes()).toContain('glass-panel')
+    const resultPanel = wrapper.get('.style-result-panel')
+    expect(resultPanel.classes()).toContain('glass-panel')
+    expect(resultPanel.classes()).toContain('top-[15rem]')
+    expect(resultPanel.classes()).toContain('w-[9rem]')
+    expect(resultPanel.classes()).toContain('lg:bottom-0')
 
     const normalizedText = wrapper.text().replace(/\s+/g, ' ')
 
@@ -77,6 +81,14 @@ describe('StyleAnnotationDisplay', () => {
       expect(content.text()).toContain(annotations[index].label)
       expect(content.text()).toContain(annotations[index].value)
     })
+
+    const lowerTails = annotationNodes[1].findAll('.style-annotation__tail')
+    expect(lowerTails).toHaveLength(2)
+    expect(lowerTails[0].classes()).toContain('lg:block')
+    expect(lowerTails[1].classes()).toContain('origin-left')
+    expect(lowerTails[1].classes()).toContain('lg:hidden')
+    expect(annotationNodes[0].classes()).toContain('left-[calc(-12vw-20px)]')
+    expect(annotationNodes[1].classes()).toContain('left-[calc(-2vw-30px)]')
   })
 
   it('does not render a decorative bottom line beneath the style score panel', () => {

@@ -40,7 +40,6 @@ const HOME_NAVIGATION_THRESHOLD_VIEWPORTS = 6.5;
 const INTERLEAVE_ITEM_STAGGER = 0.12;
 const INTERLEAVE_REVEAL_DURATION = 0.28;
 const RESULT_TRANSITION_IMAGE_LIMIT = 3;
-const TRANSITION_IMAGE_INITIAL_Y = 72;
 const RESULT_METEORS: ResultMeteor[] = [
   { id: 'right-upper', positionClass: 'top-[18%] left-[78%] h-[clamp(120px,18vh,260px)]', appearanceClass: 'via-text-primary/85 shadow-[0_0_14px_rgb(240_237_230_/_55%)]' },
   { id: 'right-middle', positionClass: 'top-[42%] left-[62%] h-[clamp(90px,14vh,210px)]', appearanceClass: 'via-text-primary/70 shadow-[0_0_12px_rgb(240_237_230_/_45%)]' },
@@ -343,7 +342,13 @@ function updateTransitionImageAnimation(viewportProgress: number): void {
   hasTransitionImagesStarted.value = isActive;
 
   imageElements.forEach((image, index) => {
-    const travelDistance = window.innerHeight + image.offsetHeight + TRANSITION_IMAGE_INITIAL_Y;
+    const initialYOffset =
+      Number.parseFloat(
+        window
+          .getComputedStyle(image)
+          .getPropertyValue('--transition-image-initial-y')
+      ) || 0;
+    const travelDistance = window.innerHeight + image.offsetHeight + initialYOffset;
     const imageRevealStart = (index * 2 + 1) * INTERLEAVE_ITEM_STAGGER;
     const imageRevealProgress = prefersReducedMotion
       ? Number(messageProgress > imageRevealStart)
@@ -353,9 +358,7 @@ function updateTransitionImageAnimation(viewportProgress: number): void {
 
     gsap.set(image, {
       autoAlpha: imageRevealProgress,
-      y: prefersReducedMotion
-        ? 0
-        : TRANSITION_IMAGE_INITIAL_Y - transitionProgress * travelDistance
+      y: prefersReducedMotion ? 0 : -transitionProgress * travelDistance
     });
   });
 }
@@ -442,7 +445,7 @@ onBeforeUnmount(() => {
 
   <div
     ref="scrollProgressTrack"
-    class="pointer-events-none fixed top-1/2 right-[18px] z-[95] h-[25vh] w-[20px] -translate-y-1/2"
+    class="pointer-events-none fixed top-1/2 right-[18px] z-[95] hidden h-[25vh] w-[20px] -translate-y-1/2 lg:block"
     data-testid="result-scroll-track"
     :data-progress="scrollProgressRatio.toFixed(2)"
     :data-hint-active="isScrollProgressHintActive ? 'true' : 'false'"
@@ -485,22 +488,24 @@ onBeforeUnmount(() => {
       :key="image.id"
       class="result-transition-image absolute"
       :class="{
-        'left-[5vw] top-[16vh] w-[34vw] lg:left-[7vw] lg:top-[18vh] lg:w-[18vw]': index === 0,
-        'right-[5vw] top-[28vh] w-[32vw] lg:right-[8vw] lg:top-[5vh] lg:w-[16vw]': index === 1,
-        'bottom-[8vh] left-[32vw] w-[36vw] lg:bottom-[-10vh] lg:left-[65vw] lg:w-[17vw]': index === 2
+        'left-[5vw] top-[5vh] w-[34vw] lg:left-[7vw] lg:top-[18vh] lg:w-[18vw]': index === 0,
+        'right-[5vw] top-[57vh] w-[32vw] lg:right-[8vw] lg:top-[5vh] lg:w-[16vw]': index === 1,
+        'bottom-[8vh] left-[10vw] w-[36vw] lg:bottom-[-10vh] lg:left-[65vw] lg:w-[17vw]': index === 2
       }"
       data-testid="result-transition-image"
     >
-      <div
-        class="image-float-y overflow-hidden rounded-[4px] border border-text-primary/10 shadow-[0_18px_60px_rgb(0_0_0_/_45%)]"
-      >
-        <img
-          :src="image.src"
-          :alt="image.alt"
-          loading="eager"
-          decoding="async"
-          class="block h-auto w-full"
-        />
+      <div class="result-transition-image__content">
+        <div
+          class="image-float-y overflow-hidden rounded-[4px] border border-text-primary/10 shadow-[0_18px_60px_rgb(0_0_0_/_45%)]"
+        >
+          <img
+            :src="image.src"
+            :alt="image.alt"
+            loading="eager"
+            decoding="async"
+            class="block h-auto w-full"
+          />
+        </div>
       </div>
     </figure>
   </div>
@@ -525,3 +530,13 @@ onBeforeUnmount(() => {
     </h1>
   </div>
 </template>
+
+<style scoped>
+.result-transition-image {
+  --transition-image-initial-y: 72px;
+}
+
+.result-transition-image__content {
+  transform: translateY(var(--transition-image-initial-y));
+}
+</style>

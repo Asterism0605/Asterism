@@ -89,8 +89,8 @@ onBeforeUnmount(() => {
           :annotations="result.annotations"
         >
           <template #mobile-panel>
-            <div class="flex h-full flex-col justify-center pr-5 lg:w-full lg:pr-0">
-              <p class="mb-4 inline-flex items-center gap-2.5 text-xs font-medium text-text-primary lg:hidden">
+            <div class="flex flex-col items-start lg:h-full lg:w-full lg:justify-center lg:pr-0">
+              <p class="ml-3 inline-flex items-center gap-2.5 whitespace-nowrap text-xs font-medium text-text-primary lg:hidden">
                 <span>{{ $t('dna.complete') }}</span>
                 <span
                   class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
                 <Button
                   type="button"
                   variant="secondary"
-                  class="min-w-[11.5rem] px-7 py-2.5 text-sm active:bg-text-primary active:text-deep lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
+                  class="w-[9rem] min-w-0 px-5 py-2.5 text-sm active:bg-text-primary active:text-deep lg:w-auto lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
                   data-testid="retake-quiz"
                   @click="retakeQuiz"
                 >

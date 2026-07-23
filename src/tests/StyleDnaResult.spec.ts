@@ -242,6 +242,8 @@ describe('StyleDnaResult', () => {
     expect(wrapper.get('[data-testid="result-scroll-track"]').classes()).toContain('top-1/2');
     expect(wrapper.get('[data-testid="result-scroll-track"]').classes()).toContain('h-[25vh]');
     expect(wrapper.get('[data-testid="result-scroll-track"]').classes()).toContain('-translate-y-1/2');
+    expect(wrapper.get('[data-testid="result-scroll-track"]').classes()).toContain('hidden');
+    expect(wrapper.get('[data-testid="result-scroll-track"]').classes()).toContain('lg:block');
     expect(wrapper.get('[data-testid="result-scroll-track"]').attributes('data-progress')).toBe(
       '0.00'
     );

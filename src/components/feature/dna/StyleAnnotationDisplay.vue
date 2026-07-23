@@ -46,13 +46,13 @@
               <span
                 v-if="annotation.position !== 'left'"
                 class="style-annotation__tail mr-[-1px] mt-px block h-px w-9 origin-right bg-text-primary/80"
-                :class="annotationTailClasses[annotation.position]"
+                :class="annotation.position === 'right' ? 'hidden rotate-[-42deg] lg:block' : 'rotate-[-42deg]'"
               />
               <span class="style-annotation__line h-0.5 flex-1 bg-text-primary/80" />
               <span
-                v-if="annotation.position === 'left'"
+                v-if="annotation.position === 'left' || annotation.position === 'right'"
                 class="style-annotation__tail ml-[-1px] mt-px block h-px w-9 origin-left bg-text-primary/80"
-                :class="annotationTailClasses[annotation.position]"
+                :class="annotation.position === 'right' ? 'rotate-[42deg] lg:hidden' : 'rotate-[42deg]'"
               />
             </div>
             <div
@@ -86,8 +86,8 @@
     </div>
 
     <div
-      class="style-result-panel glass-panel font-title absolute bottom-0 left-0 z-20 h-[44vh] w-[74vw] rounded-none rounded-tr-[4.5rem] border-b-0 border-l-0 px-4 py-7 sm:px-12
-      lg:flex lg:h-[26vh] lg:w-[92%] lg:items-center lg:px-[7.5rem] lg:py-0">
+      class="style-result-panel glass-panel font-title absolute left-5 top-[15rem] z-20 h-auto w-[9rem] rounded-none border-0 px-0 py-0
+      lg:bottom-0 lg:left-0 lg:top-auto lg:flex lg:h-[26vh] lg:w-[92%] lg:items-center lg:px-[7.5rem] lg:py-0">
       <div class="h-full w-full">
         <slot name="mobile-panel" />
       </div>
@@ -175,26 +175,22 @@ function closeTagModal(): void {
 }
 
 const annotationPositionClasses: Record<StyleDnaAnnotation['position'], string> = {
-  left: 'left-[-12vw] top-[28%] sm:left-[6vw] lg:left-[16%] lg:top-[42%] lg:-translate-x-1/2',
-  right: 'right-[3rem] bottom-[-8.5%] sm:right-[1.5rem] lg:right-[3%] lg:top-[58%] lg:bottom-auto',
+  left:
+    'left-[calc(-12vw-20px)] top-[38%] sm:left-[6vw] lg:left-[16%] lg:top-[42%] lg:-translate-x-1/2',
+  right:
+    'left-[calc(-2vw-30px)] top-[65%] lg:left-auto lg:right-[3%] lg:top-[58%] lg:bottom-auto',
   'top-right': 'right-[2.25rem] top-[1%] sm:right-[1.5rem] lg:right-[7%] lg:top-[24%]'
 };
 
 const annotationLineClasses: Record<StyleDnaAnnotation['position'], string> = {
   left: 'justify-start',
-  right: 'justify-end',
+  right: 'justify-start lg:justify-end',
   'top-right': 'justify-end'
-};
-
-const annotationTailClasses: Record<StyleDnaAnnotation['position'], string> = {
-  left: 'rotate-[42deg]',
-  right: 'rotate-[42deg] lg:rotate-[-42deg]',
-  'top-right': 'rotate-[-42deg]'
 };
 
 const annotationContentClasses: Record<StyleDnaAnnotation['position'], string> = {
   left: 'text-left',
-  right: 'pr-1 text-right',
+  right: 'text-left lg:pr-1 lg:text-right',
   'top-right': 'text-right'
 };
 
@@ -206,6 +202,16 @@ function formatStyleLabel(label: string): string {
 </script>
 
 <style scoped>
+@media (max-width: 768px) {
+  .style-result-panel {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 @media (min-width: 769px) {
   .style-result-panel {
     border: none;
