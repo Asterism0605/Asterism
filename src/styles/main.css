@@ -73,15 +73,19 @@
     line-height: 1.5;
   }
 
-  /* 首頁只隱藏 scrollbar 外觀，保留滾輪、觸控與鍵盤捲動。 */
+  /* 指定頁面只隱藏 scrollbar 外觀，保留滾輪、觸控與鍵盤捲動。 */
   html.home-scrollbar-hidden,
-  html.home-scrollbar-hidden body {
+  html.home-scrollbar-hidden body,
+  html.style-dna-result-scrollbar-hidden,
+  html.style-dna-result-scrollbar-hidden body {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
 
   html.home-scrollbar-hidden::-webkit-scrollbar,
-  html.home-scrollbar-hidden body::-webkit-scrollbar {
+  html.home-scrollbar-hidden body::-webkit-scrollbar,
+  html.style-dna-result-scrollbar-hidden::-webkit-scrollbar,
+  html.style-dna-result-scrollbar-hidden body::-webkit-scrollbar {
     display: none;
     width: 0;
     height: 0;

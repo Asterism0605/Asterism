@@ -34,7 +34,6 @@ const router = createRouter({
       (to.name === 'home' && to.query.source === 'style-dna') ||
       to.name === 'style-dna-result'
     ) {
-      // 從 Style DNA 結果進入個人化首頁，或重新進入結果頁時，一律從頁面頂部開始。
       return { top: 0 };
     }
 
