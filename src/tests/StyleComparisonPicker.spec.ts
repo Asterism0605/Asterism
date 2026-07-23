@@ -15,32 +15,61 @@ const rightOption: StyleDnaOption = {
   weights: { Cyberpunk: 1 }
 }
 
-function mountPicker(questionIndex = 0, totalQuestions = 12) {
+function mountPicker(progressCurrent = 1, totalQuestions = 12, canSkip = true) {
   return mount(StyleComparisonPicker, {
     props: {
       leftOption,
       rightOption,
       selectedId: null,
-      questionIndex,
-      totalQuestions
+      positionIndex: progressCurrent - 1,
+      progressCurrent,
+      totalQuestions,
+      canSkip
     }
   })
 }
 
-describe('StyleComparisonPicker progress indicator', () => {
-  it('shows the current question number and total on the same line as the hint', () => {
-    const wrapper = mountPicker(0, 12)
+describe('StyleComparisonPicker', () => {
+  it('shows the picker hint without a visible numeric progress indicator', () => {
+    const wrapper = mountPicker(1, 12)
 
     const instruction = wrapper.get('.instruction')
     expect(instruction.text()).toContain('Click one image to continue')
-    expect(wrapper.get('.instruction-progress__current').text()).toBe('1')
-    expect(wrapper.get('.instruction-progress__total').text()).toBe('12')
+    expect(wrapper.find('.instruction-progress').exists()).toBe(false)
+    expect(wrapper.get('.desktop-progress').attributes('style')).toContain('--desktop-progress: 0')
+    expect(wrapper.get('[role="status"]').text()).toContain('Quiz progress: 1 / 12')
   })
 
-  it('increments the displayed progress as questionIndex advances', () => {
-    const wrapper = mountPicker(4, 12)
+  it('emits skip while the skip action is available', async () => {
+    const wrapper = mountPicker()
 
-    expect(wrapper.get('.instruction-progress__current').text()).toBe('5')
-    expect(wrapper.get('.instruction-progress__total').text()).toBe('12')
+    const skipButton = wrapper.get('[data-testid="style-dna-skip"]')
+    expect(skipButton.text()).toBe('show me another pair')
+    expect(skipButton.attributes('disabled')).toBeUndefined()
+
+    await skipButton.trigger('click')
+    expect(wrapper.emitted('skip')).toHaveLength(1)
+  })
+
+  it('selects an option only when its image is clicked', async () => {
+    const wrapper = mountPicker()
+    const leftChoice = wrapper.get('.choice--left')
+
+    expect(leftChoice.element.tagName).toBe('DIV')
+    await leftChoice.trigger('click')
+    expect(wrapper.emitted('select')).toBeUndefined()
+
+    const imageButton = leftChoice.get('.image-card')
+    expect(imageButton.element.tagName).toBe('BUTTON')
+    await imageButton.trigger('click')
+    expect(wrapper.emitted('select')).toEqual([['opt-a']])
+  })
+
+  it('disables the skip action and explains when the limit is reached', () => {
+    const wrapper = mountPicker(1, 12, false)
+    const skipButton = wrapper.get('[data-testid="style-dna-skip"]')
+
+    expect(skipButton.text()).toBe('Skip limit reached')
+    expect(skipButton.attributes('disabled')).toBeDefined()
   })
 })

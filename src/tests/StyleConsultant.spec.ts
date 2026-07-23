@@ -60,6 +60,7 @@ describe('StyleConsultant', () => {
       history: createMemoryHistory(),
       routes: [
         { path: '/consultant', name: 'consultant', component: StyleConsultant },
+        { path: '/style-dna', name: 'style-dna', component: { template: '<div />' } },
         { path: '/login', name: 'login', component: { template: '<div />' } }
       ]
     });
@@ -95,7 +96,7 @@ describe('StyleConsultant', () => {
     );
   });
 
-  it('does not show mock Style DNA for unauthenticated visitors', async () => {
+  it('shows the DNA quiz CTA and consultant panel for unauthenticated visitors', async () => {
     const pinia = createPinia();
     setActivePinia(pinia);
     const router = createTestRouter();
@@ -105,8 +106,9 @@ describe('StyleConsultant', () => {
 
     const wrapper = mountPage(router, pinia);
 
-    expect(wrapper.text()).toContain('We need a Style DNA result');
     expect(wrapper.text()).toContain('Take Style DNA quiz');
+    expect(wrapper.text()).toContain('Possible match');
+    expect(wrapper.text()).toContain('Matched once you pick a design field');
     expect(wrapper.text()).not.toContain('Log In');
     expect(wrapper.text()).not.toContain('Create Account');
     expect(wrapper.text()).not.toContain('Luminous Minimalism');
@@ -114,7 +116,10 @@ describe('StyleConsultant', () => {
     expect(wrapper.get('.style-consultant').attributes('data-source-image-id')).toBeUndefined();
   });
 
-  it('renders the quiz fallback for authenticated users without Style DNA result data', async () => {
+  it('keeps the consultant panel and links to the DNA quiz when result data is missing', async () => {
+    fetchActiveConsultantsMock.mockResolvedValueOnce([
+      { id: 'consultant-1', displayName: 'Spatial Consultant · Mira Chen', specialty: 'spatial' }
+    ]);
     const pinia = createPinia();
     setActivePinia(pinia);
     const authStore = useAuthStore();
@@ -126,14 +131,23 @@ describe('StyleConsultant', () => {
     await router.isReady();
 
     const wrapper = mountPage(router, pinia);
+    await flushPromises();
 
-    expect(wrapper.text()).toContain('We need a Style DNA result');
     expect(wrapper.text()).toContain('Take Style DNA quiz');
     expect(wrapper.text()).not.toContain('Luminous Minimalism');
-    expect(wrapper.text()).not.toContain('Matched consultant');
+    expect(wrapper.text()).toContain('Possible match');
+    expect(wrapper.text()).toContain('Matched once you pick a design field');
     expect(wrapper.get('.style-consultant').attributes('data-source-image-id')).toBe(
       'not-a-real-image'
     );
+
+    wrapper.getComponent({ name: 'RecommendationPanel' }).vm.$emit('designFieldChange', 'interior');
+    await flushPromises();
+    expect(wrapper.text()).toContain('Spatial Consultant · Mira Chen');
+
+    await wrapper.get('[data-testid="consultant-style-dna-cta"]').trigger('click');
+    await flushPromises();
+    expect(router.currentRoute.value.name).toBe('style-dna');
   });
 
   it('shows a pending placeholder until a design field is chosen, then matches live', async () => {

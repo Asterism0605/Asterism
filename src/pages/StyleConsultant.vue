@@ -116,15 +116,11 @@ const matchedConsultant = computed(() =>
   matchConsultantByDesignField(selectedDesignField.value, consultants.value)
 );
 
-const profile = computed<ConsultantProfile | null>(() => {
-  const result = styleDnaStore.currentResult;
-
-  if (!authStore.isAuthenticated || !result) {
-    return null;
-  }
+const profile = computed<ConsultantProfile>(() => {
+  const result = authStore.isAuthenticated ? styleDnaStore.currentResult : null;
 
   return {
-    styleDna: result.styles,
+    styleDna: result?.styles ?? [],
     consultantLabel: consultantLabel.value,
     matchIsConfirmed: Boolean(confirmedConsultant.value)
   };
@@ -151,9 +147,6 @@ const consultantLabel = computed<string | null>(() => {
     return null;
   }
   return matchedConsultant.value?.displayName ?? t('consult.matchedConsultantNone');
-});
-const summaryStatus = computed(() => {
-  return profile.value ? 'ready' : 'missing-result';
 });
 const paymentReturnCopy = computed(() => {
   if (paymentReturnStatus.value === 'idle') {
@@ -196,7 +189,7 @@ const paymentReturnCopy = computed(() => {
     </div>
 
     <section class="style-consultant__content">
-      <ConsultantSummary :profile="profile" :status="summaryStatus" />
+      <ConsultantSummary :profile="profile" />
 
       <div class="style-consultant__booking">
         <ConsultationPaymentResult

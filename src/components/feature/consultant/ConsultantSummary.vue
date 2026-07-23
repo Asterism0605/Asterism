@@ -3,8 +3,6 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStyleTagLabel } from '@/composables/useStyleTagLabel';
 
-type ConsultantSummaryStatus = 'missing-result' | 'ready';
-
 interface ConsultantProfile {
   styleDna: Array<{
     label: string;
@@ -19,26 +17,14 @@ interface ConsultantProfile {
 
 const props = withDefaults(
   defineProps<{
-    status?: ConsultantSummaryStatus;
     profile?: ConsultantProfile | null;
-    hasSourceData?: boolean;
   }>(),
   {
-    status: undefined,
-    profile: null,
-    hasSourceData: false
+    profile: null
   }
 );
 
-const effectiveStatus = computed<ConsultantSummaryStatus>(() => {
-  if (props.status) {
-    return props.status;
-  }
-
-  return props.hasSourceData && props.profile ? 'ready' : 'missing-result';
-});
-
-const canShowProfile = computed(() => effectiveStatus.value === 'ready' && props.profile !== null);
+const hasStyleDnaResult = computed(() => Boolean(props.profile?.styleDna.length));
 
 const { locale } = useI18n();
 const { displayLabel } = useStyleTagLabel();
@@ -61,10 +47,10 @@ const { displayLabel } = useStyleTagLabel();
       <p>{{ $t('consult.intro2') }}</p>
     </div>
 
-    <dl v-if="canShowProfile && profile" class="consultant-summary__profile">
+    <dl class="consultant-summary__profile">
       <div>
         <dt>Style DNA</dt>
-        <dd>
+        <dd v-if="hasStyleDnaResult && profile">
           <ol class="consultant-summary__dna-list">
             <li v-for="style in profile.styleDna" :key="style.label">
               <span>{{ displayLabel(style.label) }}</span>
@@ -72,29 +58,26 @@ const { displayLabel } = useStyleTagLabel();
             </li>
           </ol>
         </dd>
+        <dd v-else data-testid="consultant-style-dna-fallback">
+          <RouterLink
+            :to="{ name: 'style-dna' }"
+            class="inline-flex min-h-10 items-center justify-center rounded-full border border-text-primary/30 px-4 py-2 text-center text-sm text-text-primary transition-colors hover:border-text-primary/70 hover:bg-text-primary/10"
+            data-testid="consultant-style-dna-cta"
+          >
+            {{ $t('consult.takeDnaQuiz') }}
+          </RouterLink>
+        </dd>
       </div>
       <div>
         <dt>
-          {{ $t(profile.matchIsConfirmed === false
+          {{ $t(profile?.matchIsConfirmed === false
             ? 'consult.matchedConsultantPreview'
             : 'consult.matchedConsultant') }}
         </dt>
-        <dd>{{ profile.consultantLabel ?? $t('consult.matchedConsultantPending') }}</dd>
+        <dd>{{ profile?.consultantLabel ?? $t('consult.matchedConsultantPending') }}</dd>
       </div>
     </dl>
 
-    <div v-else class="consultant-summary__fallback" data-testid="consultant-style-dna-fallback">
-      <p>{{ $t('consult.needDna') }}</p>
-      <div class="consultant-summary__actions">
-        <RouterLink
-          class="consultant-summary__button consultant-summary__button--primary"
-          to="/style-dna"
-        >
-          {{ $t('consult.retakeQuiz') }}
-        </RouterLink>
-        <button class="consultant-summary__button" type="button">{{ $t('consult.skip') }}</button>
-      </div>
-    </div>
   </section>
 </template>
 
@@ -193,57 +176,6 @@ const { displayLabel } = useStyleTagLabel();
   color: var(--color-text-secondary);
   font-family: var(--font-family-mono);
   font-size: var(--text-mono);
-}
-
-.consultant-summary__fallback {
-  max-width: 560px;
-  display: grid;
-  gap: 18px;
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #ffffff1a;
-  border-radius: 8px;
-  background: #ffffff0b;
-  color: #f0ede6c7;
-}
-
-.consultant-summary__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.consultant-summary__button {
-  display: inline-flex;
-  min-height: 38px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #ffffff33;
-  border-radius: 9999px;
-  padding: 8px 18px;
-  color: var(--color-text-primary);
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition:
-    background 200ms ease,
-    border-color 200ms ease,
-    opacity 200ms ease;
-}
-
-.consultant-summary__button:hover {
-  border-color: #ffffff57;
-  background: #ffffff0f;
-}
-
-.consultant-summary__button--primary {
-  border-color: transparent;
-  background: var(--color-stellar-red);
-}
-
-.consultant-summary__button--primary:hover {
-  border-color: transparent;
-  background: var(--color-stellar-red);
-  opacity: 0.9;
 }
 
 @media (max-width: 720px) {

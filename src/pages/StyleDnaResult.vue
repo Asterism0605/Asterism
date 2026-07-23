@@ -6,28 +6,27 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import DnaLoadingState from '@/components/feature/dna/DnaLoadingState.vue';
 import StyleAnnotationDisplay from '@/components/feature/dna/StyleAnnotationDisplay.vue';
+import StyleDnaResultAnimation from '@/components/feature/dna/StyleDnaResultAnimation.vue';
 import Button from '@/components/ui/Button.vue';
 import { showToast } from '@/composables/useToast';
 import { useStyleDnaStore } from '@/stores/style-dna.store';
 
-const { result } = storeToRefs(useStyleDnaStore());
-
-const HERO_IMAGE = '/images/astronaut-dna.png';
-const isLoading = ref(true);
+const { answers, result } = storeToRefs(useStyleDnaStore());
 const router = useRouter();
 const { t } = useI18n();
 
+const HERO_IMAGE = '/images/astronaut-dna.png';
+const RESULT_SCROLLBAR_HIDDEN_CLASS = 'style-dna-result-scrollbar-hidden';
+const isLoading = ref(true);
+const resultBaseOpacity = ref(1);
 let loadingTimer: ReturnType<typeof window.setTimeout> | null = null;
-
-function startExploring(): void {
-  void router.push({ name: 'home', query: { source: 'style-dna' } });
-}
 
 function retakeQuiz(): void {
   void router.push({ name: 'style-dna' });
 }
 
 onMounted(() => {
+  document.documentElement.classList.add(RESULT_SCROLLBAR_HIDDEN_CLASS);
   loadingTimer = window.setTimeout(() => {
     isLoading.value = false;
 
@@ -37,15 +36,15 @@ onMounted(() => {
         message: t('dna.sampleResultNotice'),
         actionText: t('dna.retakeQuiz'),
         duration: 5000,
-        onAction: () => {
-          retakeQuiz();
-        }
+        onAction: retakeQuiz
       });
     }
   }, 1500);
 });
 
 onBeforeUnmount(() => {
+  document.documentElement.classList.remove(RESULT_SCROLLBAR_HIDDEN_CLASS);
+
   if (loadingTimer) {
     window.clearTimeout(loadingTimer);
   }
@@ -55,130 +54,88 @@ onBeforeUnmount(() => {
 <template>
   <DnaLoadingState v-if="isLoading" />
 
-  <main v-else class="h-screen overflow-hidden bg-deep p-0 text-text-primary">
-    <section class="h-screen overflow-hidden">
-      <div class="relative h-screen overflow-hidden bg-void">
+  <main v-else class="relative min-h-[760vh] bg-void p-0 text-text-primary">
+    <section class="sticky top-0 h-screen overflow-hidden lg:relative lg:top-auto lg:overflow-visible">
+      <div class="relative h-screen overflow-hidden bg-void lg:overflow-visible">
         <div
-          class="absolute left-6 top-[4.375rem] z-[70] max-w-[16.5rem] 
-          lg:left-[7.5rem] lg:top-[5.25rem] lg:max-w-[min(34rem,42vw)]"
+          class="result-base-layer absolute inset-0"
+          :class="{ 'pointer-events-none': resultBaseOpacity === 0 }"
+          data-testid="result-base-layer"
+          :inert="resultBaseOpacity === 0 ? true : undefined"
+          :style="{ opacity: resultBaseOpacity }"
         >
-          <p
-            class="mb-3 hidden items-center gap-2.5 text-xs font-medium text-text-secondary 
-            lg:mb-7 lg:inline-flex lg:gap-3"
-          >
-            <span
-              class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
-              aria-hidden="true"
-            >
-              <Check class="size-2.5" :stroke-width="2.4" />
-            </span>
-            <span>{{ $t('dna.complete') }}</span>
-          </p>
-
-          <h1
-            class="translate-y-7 font-title text-[3.2rem] font-extralight leading-[1.12] text-text-primary 
-            lg:translate-y-0 lg:text-display lg:leading-[1.02]">
-            {{ $t('dna.resultYour') }}<br/>
-            <span class="whitespace-nowrap">Style DNA</span>
-          </h1>
-
-          <div 
-            class="hidden 
-            lg:mt-10 lg:block">
-            <p class="mt-3 max-w-[15.5rem] text-xs font-medium leading-relaxed text-text-secondary lg:mt-4 lg:max-w-[34rem] lg:text-sm">
-              {{ $t('dna.homepagePersonalized') }}
-            </p>
-          </div>
-
           <div
-            class="hidden flex-wrap items-center gap-x-5 gap-y-3 
-            lg:mt-11 lg:flex lg:-translate-y-5 lg:gap-x-8 lg:gap-y-4">
-            <span class="result-guide-submit">
-              <Button
-                type="button"
-                variant="secondary"
-                class="min-w-[11.5rem] px-7 py-2.5 text-sm tracking-[1px]
-                lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
-                data-testid="start-exploring"
-                @click="startExploring">
-                {{ $t('dna.startExploring') }}
-              </Button>
-            </span>
+            class="absolute left-6 top-[4.375rem] z-[70] max-w-[16.5rem]
+            lg:left-[7.5rem] lg:top-[134px] lg:max-w-[min(34rem,42vw)]"
+          >
+            <p
+              class="mb-3 hidden items-center gap-2.5 text-xs font-medium text-text-secondary
+              lg:mb-7 lg:inline-flex lg:gap-3"
+            >
+              <span
+                class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
+                aria-hidden="true"
+              >
+                <Check class="size-2.5" :stroke-width="2.4" />
+              </span>
+              <span>{{ $t('dna.complete') }}</span>
+            </p>
 
-            <Button
-              type="button"
-              variant="secondary"
-              class="min-w-[11.5rem] px-7 py-2.5 text-sm 
-              lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
-              data-testid="retake-quiz"
-              @click="retakeQuiz">
-              {{ $t('dna.retakeQuiz') }}
-            </Button>
+            <h1
+              class="translate-y-7 font-title text-[3.2rem] font-extralight leading-[1.12] text-text-primary
+              lg:translate-y-0 lg:text-display lg:leading-[1.02]"
+            >
+              {{ $t('dna.resultYour') }}<br />
+              <span class="whitespace-nowrap">Style DNA</span>
+            </h1>
           </div>
-        </div>
 
-        <StyleAnnotationDisplay
-          :primary-style="result.primaryStyle"
-          :hero-image="HERO_IMAGE"
-          :styles="result.styles"
-          :annotations="result.annotations"
-        >
-          <template #mobile-panel>
-            <div class="flex h-full flex-col justify-center pr-5">
-              <p class="mb-4 inline-flex items-center gap-2.5 text-xs font-medium text-text-primary">
-                <span>{{ $t('dna.complete') }}</span>
-                <span
-                  class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
-                  aria-hidden="true"
-                >
-                  <Check class="size-2.5" :stroke-width="2.4" />
-                </span>
-              </p>
+          <StyleAnnotationDisplay
+            :primary-style="result.primaryStyle"
+            :hero-image="HERO_IMAGE"
+            :styles="result.styles"
+            :annotations="result.annotations"
+          >
+            <template #mobile-panel>
+              <div class="flex flex-col items-start lg:h-full lg:w-full lg:justify-center lg:pr-0">
+                <p class="ml-3 inline-flex items-center gap-2.5 whitespace-nowrap text-xs font-medium text-text-primary lg:hidden">
+                  <span>{{ $t('dna.complete') }}</span>
+                  <span
+                    class="inline-flex size-4 items-center justify-center rounded-full border border-text-secondary/80 text-text-primary"
+                    aria-hidden="true"
+                  >
+                    <Check class="size-2.5" :stroke-width="2.4" />
+                  </span>
+                </p>
 
-              <p class="max-w-[15rem] text-xs font-medium leading-relaxed text-text-secondary">
-                {{ $t('dna.homepagePersonalized') }}
-              </p>
-
-              <div class="mt-5 flex flex-col items-start gap-3">
-                <span class="result-guide-submit">
+                <div class="mt-5 flex flex-col items-start gap-3 lg:mt-8 lg:flex-row lg:items-center lg:gap-x-8 lg:gap-y-4">
                   <Button
                     type="button"
                     variant="secondary"
-                    class="min-w-[11.5rem] px-7 py-2.5 text-sm tracking-[1px]"
-                    data-testid="start-exploring"
-                    @click="startExploring"
+                    class="w-[9rem] min-w-0 px-5 py-2.5 text-sm active:bg-text-primary active:text-deep lg:w-auto lg:min-w-[13.5rem] lg:px-9 lg:py-3 lg:text-base"
+                    data-testid="retake-quiz"
+                    @click="retakeQuiz"
                   >
-                    {{ $t('dna.startExploring') }}
+                    {{ $t('dna.retakeQuiz') }}
                   </Button>
-                </span>
-
-                <Button
-                  type="button"
-                  variant="secondary"
-                  class="min-w-[11.5rem] px-7 py-2.5 text-sm active:bg-text-primary active:text-deep"
-                  data-testid="retake-quiz"
-                  @click="retakeQuiz"
-                >
-                  {{ $t('dna.retakeQuiz') }}
-                </Button>
+                </div>
               </div>
-            </div>
-          </template>
-        </StyleAnnotationDisplay>
+            </template>
+          </StyleAnnotationDisplay>
+        </div>
+
+        <StyleDnaResultAnimation
+          :answers="answers"
+          :result="result"
+          @base-opacity-change="resultBaseOpacity = $event"
+        />
       </div>
     </section>
   </main>
 </template>
 
 <style scoped>
-.result-guide-submit :deep(button) {
-  border: none;
-  background: var(--color-text-secondary);
-  color: var(--color-text-primary);
-}
-
-.result-guide-submit :deep(button:hover) {
-  background: var(--color-text-secondary);
-  opacity: 0.85;
+.result-base-layer {
+  will-change: opacity;
 }
 </style>

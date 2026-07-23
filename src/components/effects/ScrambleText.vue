@@ -36,7 +36,7 @@ function cleanupAnimation(): void {
   splitText.value = null;
 }
 
-function playCjkReveal(): void {
+function playCjkTypewriter(): void {
   if (!element.value) return;
 
   splitText.value = SplitText.create(element.value, {
@@ -45,21 +45,14 @@ function playCjkReveal(): void {
   });
 
   const characters = splitText.value.chars;
-  const characterDuration = Math.min(0.4, props.duration * 0.45);
-  const stagger =
-    characters.length > 1
-      ? Math.max(0.035, (props.duration - characterDuration) / (characters.length - 1))
-      : 0;
+  const timeline = gsap.timeline({ delay: props.delay });
 
-  animation.value = gsap.from(characters, {
-    autoAlpha: 0,
-    y: 4,
-    filter: 'blur(5px)',
-    duration: characterDuration,
-    delay: props.delay,
-    stagger,
-    ease: 'power2.out'
+  gsap.set(characters, { autoAlpha: 0 });
+  characters.forEach((character, index) => {
+    timeline.set(character, { autoAlpha: 1 }, index * props.duration);
   });
+
+  animation.value = timeline;
 }
 
 function play(): void {
@@ -69,7 +62,7 @@ function play(): void {
   element.value.textContent = String(props.text);
 
   if (usesCjkReveal.value) {
-    playCjkReveal();
+    playCjkTypewriter();
     return;
   }
 
