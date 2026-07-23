@@ -1,0 +1,7580 @@
+[
+  {
+    "id": "ftdp-main-001",
+    "url": "/style-image/style1-main.webp",
+    "title": "Neo Tokyo 團體概念視覺照",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#0A0D1B",
+        "#172040",
+        "#26356F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-main-002",
+    "url": "/style-image/style1-main-1.webp",
+    "title": "未來科技數位迷幻概念主視覺 1",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#03121F",
+        "#1A394B",
+        "#BACBDE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-main-003",
+    "url": "/style-image/style1-main-2.webp",
+    "title": "未來科技數位迷幻概念主視覺 2",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#101431",
+        "#143188",
+        "#C6BBCB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-main-004",
+    "url": "/style-image/style1-main-3.webp",
+    "title": "未來科技數位迷幻概念主視覺 3",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#03193C",
+        "#163C70",
+        "#6E7CB5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-main-005",
+    "url": "/style-image/style1-main-4.webp",
+    "title": "未來科技數位迷幻概念主視覺 4",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#171921",
+        "#444D6E",
+        "#767DA6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-001",
+    "url": "/style-image/style1-graphic.webp",
+    "title": "Neo Tokyo 視覺設計套組",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+        "#0D0B13",
+        "#252644",
+        "#4E4578"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-brand-001",
+    "url": "/style-image/style1-graphic1.webp",
+    "title": "Nexora Protocol 品牌識別",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#08090B",
+        "#202225",
+        "#32343A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-poster-001",
+    "url": "/style-image/style1-graphic2.webp",
+    "title": "Neon Paradox 音樂節海報",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#171522",
+        "#403852",
+        "#74616F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-editorial-001",
+    "url": "/style-image/style1-graphic3.webp",
+    "title": "Datawave 未來城市雜誌版面",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#080A13",
+        "#12192B",
+        "#1D2954"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-outfit-001",
+    "url": "/style-image/style1-outfit.webp",
+    "title": "霓虹護目鏡未來穿搭",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+        "#080D1C",
+        "#202C49",
+        "#545676"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-outfit-top-001",
+    "url": "/style-image/style1-outfit1.webp",
+    "title": "資料錯位機能上衣",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#1F2027",
+        "#3A3D46",
+        "#666974"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-outfit-bottom-001",
+    "url": "/style-image/style1-outfit2.webp",
+    "title": "黑色機能寬版長褲",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#101217",
+        "#575960",
+        "#6B6D75"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-outfit-dress-001",
+    "url": "/style-image/style1-outfit3.webp",
+    "title": "虹彩資料流長洋裝",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress Focus",
+    "colorPalette": [
+        "#989EA9",
+        "#BAC0CB",
+        "#D8DEE7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-outfit-accessory-001",
+    "url": "/style-image/style1-outfit4.webp",
+    "title": "Hazard4 數位機能肩背包",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Techwear",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#262E48",
+        "#434A62",
+        "#606784"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-interior-001",
+    "url": "/style-image/style1-interior.webp",
+    "title": "深色資料光廊室內空間",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+        "#0A0A13",
+        "#1F1D2C",
+        "#39374B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-interior-lighting-001",
+    "url": "/style-image/style1-interior1.webp",
+    "title": "粉藍霓虹幾何立燈",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#35383D",
+        "#5B646C",
+        "#B8A2B6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-interior-table-001",
+    "url": "/style-image/style1-interior2.webp",
+    "title": "黑色低座科技茶几",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+        "#272524",
+        "#B3AEA7",
+        "#C5C0BB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-interior-wall-paint-001",
+    "url": "/style-image/style1-interior3.webp",
+    "title": "資料流霓虹牆面設計",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#3A3D44",
+        "#5A555B",
+        "#827778"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-interior-chair-001",
+    "url": "/style-image/style1-interior4.webp",
+    "title": "黑色模組化未來休閒椅",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Futurism",
+      "Cyberpunk",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+        "#8D8A89",
+        "#A6A4A2",
+        "#C1BFBE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-architecture-001",
+    "url": "/style-image/style1-architecture.webp",
+    "title": "Neo Tokyo LED 建築外觀",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+        "#19112B",
+        "#22305C",
+        "#0E5A98"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-architecture-window-001",
+    "url": "/style-image/style1-architecture1.webp",
+    "title": "未來城市景觀窗框",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+        "#11141B",
+        "#5E6679",
+        "#8691A8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-architecture-staircase-001",
+    "url": "/style-image/style1-architecture2.webp",
+    "title": "藍紫霓虹螺旋樓梯",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+        "#0B123E",
+        "#30376F",
+        "#6669C7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-architecture-facade-001",
+    "url": "/style-image/style1-architecture3.webp",
+    "title": "穿孔 LED 數位建築立面",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#0C163C",
+        "#384CA8",
+        "#576CCB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-architecture-entrance-001",
+    "url": "/style-image/style1-architecture4.webp",
+    "title": "桃紅霓虹建築入口",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo",
+      "Glitch Art"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#120C10",
+        "#352228",
+        "#612E30"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-main-001",
+    "url": "/style-image/style2-main.webp",
+    "title": "Cloud9 團體概念視覺照",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#AEA1AE",
+        "#88B0E0",
+        "#CAD1E6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-main-002",
+    "url": "/style-image/style2-main-1.webp",
+    "title": "Y2K網路美學概念主視覺 1",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#BDA9AF",
+        "#D0C7D1",
+        "#ECE7F2"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-main-003",
+    "url": "/style-image/style2-main-2.webp",
+    "title": "Y2K網路美學概念主視覺 2",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#181F32",
+        "#D4BABB",
+        "#CED6F3"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-main-004",
+    "url": "/style-image/style2-main-3.webp",
+    "title": "Y2K網路美學概念主視覺 3",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#A4C7F4",
+        "#C6CDE9",
+        "#DAE5FB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-main-005",
+    "url": "/style-image/style2-main-4.webp",
+    "title": "Y2K網路美學概念主視覺 4",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#8EA1B5",
+        "#CDBCBB",
+        "#C9DEEB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-001",
+    "url": "/style-image/style2-graphic.webp",
+    "title": "Cloud9 鍍鉻專輯海報",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "McBling"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+        "#7E97D5",
+        "#A8B2DD",
+        "#CDD5F0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-poster-001",
+    "url": "/style-image/style2-graphic1.webp",
+    "title": "H2O 透明泡泡寫真卡",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "McBling"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#332B3F",
+        "#9D95AF",
+        "#C5BFCB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-editorial-001",
+    "url": "/style-image/style2-graphic2.webp",
+    "title": "Bubble Era 專輯內頁設計",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "McBling"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#A1ADD8",
+        "#C4CCE5",
+        "#E6E7ED"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-brand-001",
+    "url": "/style-image/style2-graphic3.webp",
+    "title": "Cloud9 品牌識別套組",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "McBling"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#B8B9CC",
+        "#CECBE0",
+        "#E5E1EF"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-packaging-001",
+    "url": "/style-image/style2-graphic4.webp",
+    "title": "Lip Glaze 泡泡糖未來包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "McBling"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#A78BAD",
+        "#BFABC6",
+        "#E0CFE0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-001",
+    "url": "/style-image/style2-outfit.webp",
+    "title": "粉紫金屬感偶像穿搭",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+        "#5A85BA",
+        "#85A8D3",
+        "#B8C7E4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-accessory-001",
+    "url": "/style-image/style2-outfit1.webp",
+    "title": "水晶蝴蝶心形耳環",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#767681",
+        "#BAB4CC",
+        "#E1E3EB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-top-001",
+    "url": "/style-image/style2-outfit2.webp",
+    "title": "虹彩 PVC 蝴蝶馬甲",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#B1A8D0",
+        "#CBC6E6",
+        "#F4F2F5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-bottom-001",
+    "url": "/style-image/style2-outfit3.webp",
+    "title": "虹彩鍊飾百褶短裙",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#B4A7D5",
+        "#CCC0E5",
+        "#F8F8F8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-001",
+    "url": "/style-image/style2-interior.webp",
+    "title": "天空景觀泡泡未來臥室",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+        "#8E8EBD",
+        "#A9AAD2",
+        "#90C1E9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-chair-001",
+    "url": "/style-image/style2-interior1.webp",
+    "title": "鍍鉻紫光蛋形休閒椅",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+        "#A898BB",
+        "#D2C6E1",
+        "#F6F4F4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-wall-paint-001",
+    "url": "/style-image/style2-interior2-1.webp",
+    "title": "柔紫高光未來室內牆面",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#857DA7",
+        "#BBA3C6",
+        "#EDCDDD"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-wall-paint-002",
+    "url": "/style-image/style2-interior2-2.webp",
+    "title": "Bubblegum Chrome 室內漆包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#D1B8D6",
+        "#E6DDEC",
+        "#F6F6F6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-table-001",
+    "url": "/style-image/style2-interior3.webp",
+    "title": "紫光液態鍍鉻茶几",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism",
+      "Y2K"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+        "#C1ACCD",
+        "#D8C9DF",
+        "#E7E5E6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-001",
+    "url": "/style-image/style2-architecture.webp",
+    "title": "粉藍虹彩未來建築外觀",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+        "#689BCF",
+        "#B1B4DA",
+        "#E5DBED"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-facade-001",
+    "url": "/style-image/style2-architecture1.webp",
+    "title": "玻璃粉藍建築立面細節",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#7DA9D4",
+        "#CBC5D3",
+        "#EEE7EB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-entrance-001",
+    "url": "/style-image/style2-architecture2.webp",
+    "title": "虹彩柱廊入口空間",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#737286",
+        "#B9B5C8",
+        "#D6D2E0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-staircase-001",
+    "url": "/style-image/style2-architecture3.webp",
+    "title": "粉色虹彩螺旋樓梯",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+        "#C6A4AD",
+        "#AEAACC",
+        "#D7B9C3"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-window-001",
+    "url": "/style-image/style2-architecture4.webp",
+    "title": "海景透明鍍鉻方窗",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+        "#8A807C",
+        "#A6999C",
+        "#E9DFEF"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-main-001",
+    "url": "/style-image/style3-main.webp",
+    "title": "金色古典宮廷團體概念視覺照",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "colorPalette": [
+        "#0B0D0F",
+        "#3E2D21",
+        "#A77D57"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-main-002",
+    "url": "/style-image/style3-main-1.webp",
+    "title": "華麗裝飾藝術概念主視覺 1",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "colorPalette": [
+        "#19110A",
+        "#B9926F",
+        "#CFB39C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-main-003",
+    "url": "/style-image/style3-main-2.webp",
+    "title": "華麗裝飾藝術概念主視覺 2",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "colorPalette": [
+        "#150D09",
+        "#402D20",
+        "#6B5241"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-main-004",
+    "url": "/style-image/style3-main-3.webp",
+    "title": "華麗裝飾藝術概念主視覺 3",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "colorPalette": [
+        "#503621",
+        "#6D5139",
+        "#8D6F56"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-main-005",
+    "url": "/style-image/style3-main-4.webp",
+    "title": "華麗裝飾藝術概念主視覺 4",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "colorPalette": [
+        "#19150D",
+        "#896036",
+        "#CCAC91"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-graphic-001",
+    "url": "/style-image/style3-graphic.webp",
+    "title": "Maison Opaline 奢華品牌視覺套組",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+        "#A89E94",
+        "#C5B9B0",
+        "#D5CDC8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-graphic-packaging-001",
+    "url": "/style-image/style3-graphic1.webp",
+    "title": "The Royal 金紋包裝設計",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#785B32",
+        "#A88A61",
+        "#EAE0D5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-graphic-brand-001",
+    "url": "/style-image/style3-graphic2.webp",
+    "title": "Opulence Atelier 品牌識別",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#292621",
+        "#B9AA9A",
+        "#DBD0C5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-graphic-poster-001",
+    "url": "/style-image/style3-graphic3.webp",
+    "title": "Maison Opaline 裝飾藝術海報",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#B59976",
+        "#D8C5AE",
+        "#EDE0D1"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-graphic-editorial-001",
+    "url": "/style-image/style3-graphic4.webp",
+    "title": "Maison Opaline 古典雜誌版面",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#BCAD9F",
+        "#D3C7BC",
+        "#E9E2DB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-001",
+    "url": "/style-image/style3-outfit.webp",
+    "title": "黑金奢華裝飾穿搭",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+        "#150E07",
+        "#39250E",
+        "#654B30"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-top-001",
+    "url": "/style-image/style3-outfit1.webp",
+    "title": "黑色單肩金扣上衣",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#0F0C09",
+        "#BFAA94",
+        "#D6C5B5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-bottom-001",
+    "url": "/style-image/style3-outfit2.webp",
+    "title": "黑色金扣寬版長褲",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#120D08",
+        "#3B2D1F",
+        "#604D39"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-dress-001",
+    "url": "/style-image/style3-outfit3.webp",
+    "title": "象牙金紋不對稱洋裝",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress Focus",
+    "colorPalette": [
+        "#947A5B",
+        "#BBA288",
+        "#CFBCAA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-accessory-001",
+    "url": "/style-image/style3-outfit4.webp",
+    "title": "黑金幾何寬版手環",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#130E08",
+        "#372817",
+        "#E3CFB4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-interior-001",
+    "url": "/style-image/style3-interior.webp",
+    "title": "金飾洛可可奢華客廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+        "#AC9981",
+        "#C9B8A6",
+        "#DFD4C8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-interior-lighting-001",
+    "url": "/style-image/style3-interior1.webp",
+    "title": "金色水晶古典吊燈",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#9D8265",
+        "#AF967E",
+        "#BDAA96"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-interior-table-001",
+    "url": "/style-image/style3-interior2.webp",
+    "title": "黑金大理石裝飾圓桌",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+        "#8F714B",
+        "#AF997C",
+        "#C5B8A8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-interior-chair-001",
+    "url": "/style-image/style3-interior3.webp",
+    "title": "淡藍金邊貝殼扶手椅",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+        "#7D6F59",
+        "#A29483",
+        "#C6BBB1"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-interior-wall-paint-001",
+    "url": "/style-image/style3-interior4.webp",
+    "title": "花卉金框古典牆面",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#9D8C71",
+        "#B5A690",
+        "#EAE2D5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-architecture-001",
+    "url": "/style-image/style3-architecture.webp",
+    "title": "白金裝飾藝術豪宅外觀",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+        "#7D644A",
+        "#B39475",
+        "#D4C0AB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-architecture-entrance-001",
+    "url": "/style-image/style3-architecture1.webp",
+    "title": "金色雕花豪宅入口",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#664A26",
+        "#8D7254",
+        "#B4987D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-architecture-staircase-001",
+    "url": "/style-image/style3-architecture2.webp",
+    "title": "金飾大理石旋轉樓梯",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+        "#866441",
+        "#A68464",
+        "#C4AC95"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-architecture-window-001",
+    "url": "/style-image/style3-architecture3.webp",
+    "title": "金色扇形裝飾落地窗",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+        "#927C63",
+        "#B5A18A",
+        "#EEEBE8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-architecture-facade-001",
+    "url": "/style-image/style3-architecture4.webp",
+    "title": "白金大理石建築立面",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Maximalism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#9D8878",
+        "#BBACA4",
+        "#D4CFCF"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-main-001",
+    "url": "/style-image/style4-main.webp",
+    "title": "極簡結構現代系列主視覺",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+        "#131B1E",
+        "#71716B",
+        "#D0CBC4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-main-002",
+    "url": "/style-image/style4-main-1.webp",
+    "title": "極簡結構現代概念主視覺 1",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+        "#1B2120",
+        "#D1BFB0",
+        "#E5DED6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-main-003",
+    "url": "/style-image/style4-main-2.webp",
+    "title": "極簡結構現代概念主視覺 2",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+        "#423E43",
+        "#AFA098",
+        "#D5D5D3"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-main-004",
+    "url": "/style-image/style4-main-3.webp",
+    "title": "極簡結構現代概念主視覺 3",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+        "#CABFB6",
+        "#DFD7D1",
+        "#F2EFEC"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-main-005",
+    "url": "/style-image/style4-main-4.webp",
+    "title": "極簡結構現代概念主視覺 4",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+        "#755F51",
+        "#A28877",
+        "#B9A699"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-graphic-001",
+    "url": "/style-image/style4-graphic.webp",
+    "title": "極簡結構現代平面設計代表圖",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+        "#ABA296",
+        "#C6BEB6",
+        "#E4E0DC"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-graphic-editorial-001",
+    "url": "/style-image/style4-graphic1.webp",
+    "title": "極簡結構現代編輯版面平面設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#B1A9A0",
+        "#D0CAC7",
+        "#E6E2E0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-graphic-packaging-001",
+    "url": "/style-image/style4-graphic2.webp",
+    "title": "極簡結構現代包裝平面設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#A79E93",
+        "#CBC3BB",
+        "#DED8D3"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-graphic-brand-001",
+    "url": "/style-image/style4-graphic3.webp",
+    "title": "極簡結構現代品牌識別平面設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#B9B0A3",
+        "#CCC5BD",
+        "#E2DEDA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-graphic-poster-001",
+    "url": "/style-image/style4-graphic4.webp",
+    "title": "極簡結構現代海報平面設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Swiss Design",
+      "Modernism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#665B50",
+        "#C0B8AF",
+        "#DFD8D0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-outfit-001",
+    "url": "/style-image/style4-outfit.webp",
+    "title": "極簡結構現代穿搭代表圖",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+        "#BAB1A6",
+        "#CCC4BA",
+        "#E0D6C9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-outfit-top-001",
+    "url": "/style-image/style4-outfit1.webp",
+    "title": "極簡結構現代上身單品穿搭",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#988A7C",
+        "#D2C6B9",
+        "#E6E0D7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-outfit-bottom-001",
+    "url": "/style-image/style4-outfit2.webp",
+    "title": "極簡結構現代下身單品穿搭",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#484645",
+        "#88827D",
+        "#E4DDD6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-outfit-dress-001",
+    "url": "/style-image/style4-outfit3.webp",
+    "title": "極簡結構現代洋裝穿搭",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress Focus",
+    "colorPalette": [
+        "#A29486",
+        "#B4AA9F",
+        "#CDC1B4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-outfit-accessory-001",
+    "url": "/style-image/style4-outfit4.webp",
+    "title": "極簡結構現代配件穿搭",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#7E7265",
+        "#988878",
+        "#C3B6A7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-interior-001",
+    "url": "/style-image/style4-interior.webp",
+    "title": "極簡結構現代室內設計代表圖",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+        "#A4988B",
+        "#BCB2A7",
+        "#D3CDC7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-interior-wall-paint-001",
+    "url": "/style-image/style4-interior1.webp",
+    "title": "極簡結構現代牆面色彩室內設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#97816A",
+        "#B8A591",
+        "#CDBDAD"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-interior-chair-001",
+    "url": "/style-image/style4-interior2.webp",
+    "title": "極簡結構現代椅款室內設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+        "#937F6A",
+        "#AD9C8B",
+        "#C7BCB1"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-interior-table-001",
+    "url": "/style-image/style4-interior3.webp",
+    "title": "極簡結構現代桌几室內設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+        "#B7AEA5",
+        "#D1CBC5",
+        "#EFEDEA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-interior-lighting-001",
+    "url": "/style-image/style4-interior4.webp",
+    "title": "極簡結構現代燈光室內設計",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Scandinavian",
+      "Quiet Luxury",
+      "Modernism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#2C1706",
+        "#432A11",
+        "#6E4B29"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-001",
+    "url": "/style-image/style4-architecture.webp",
+    "title": "極簡結構現代建築代表圖",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+        "#3A3A35",
+        "#B2B0AE",
+        "#D5D3D2"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-staircase-001",
+    "url": "/style-image/style4-architecture1.webp",
+    "title": "極簡結構現代樓梯建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+        "#6C5C4C",
+        "#8A7B6B",
+        "#ABA195"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-facade-001",
+    "url": "/style-image/style4-architecture2.webp",
+    "title": "極簡結構現代立面建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#252015",
+        "#7E7C7C",
+        "#DBDEE5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-entrance-001",
+    "url": "/style-image/style4-architecture3.webp",
+    "title": "極簡結構現代入口建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#1F150B",
+        "#5B3B20",
+        "#645A55"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-window-001",
+    "url": "/style-image/style4-architecture4.webp",
+    "title": "極簡結構現代窗景建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+        "#1A1B1C",
+        "#6C6751",
+        "#DAD9D7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-main-001",
+    "url": "/style-image/style5-main.webp",
+    "title": "大地有機人文系列主視覺",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+        "#756951",
+        "#9F8E7A",
+        "#BAAD9D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-main-002",
+    "url": "/style-image/style5-main-1.webp",
+    "title": "大地有機人文概念主視覺 1",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+        "#A28D74",
+        "#C6B29D",
+        "#E3D9CA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-main-003",
+    "url": "/style-image/style5-main-2.webp",
+    "title": "大地有機人文概念主視覺 2",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+        "#584435",
+        "#796759",
+        "#988A80"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-main-004",
+    "url": "/style-image/style5-main-3.webp",
+    "title": "大地有機人文概念主視覺 3",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+        "#362413",
+        "#664E35",
+        "#8C7358"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-main-005",
+    "url": "/style-image/style5-main-4.webp",
+    "title": "大地有機人文概念主視覺 4",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+        "#21180F",
+        "#624C32",
+        "#B3A087"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-graphic-001",
+    "url": "/style-image/style5-graphic.webp",
+    "title": "大地有機人文平面設計代表圖",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+        "#7A6C5A",
+        "#A29384",
+        "#C2B7AA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-graphic-poster-001",
+    "url": "/style-image/style5-graphic1.webp",
+    "title": "大地有機人文海報平面設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#A59B91",
+        "#C9C0B7",
+        "#DCD5CE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-graphic-brand-001",
+    "url": "/style-image/style5-graphic2.webp",
+    "title": "大地有機人文品牌識別平面設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#C5B8AA",
+        "#DBD1C9",
+        "#E9E4DE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-graphic-packaging-001",
+    "url": "/style-image/style5-graphic3.webp",
+    "title": "大地有機人文包裝平面設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#251B11",
+        "#43382B",
+        "#6F6152"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-graphic-editorial-001",
+    "url": "/style-image/style5-graphic4.webp",
+    "title": "大地有機人文編輯版面平面設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#7A6D61",
+        "#9A8E84",
+        "#D2CDCA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-outfit-001",
+    "url": "/style-image/style5-outfit.webp",
+    "title": "大地有機人文穿搭代表圖",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+        "#352210",
+        "#5F4E3A",
+        "#B1A08C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-outfit-bottom-001",
+    "url": "/style-image/style5-outfit1.webp",
+    "title": "大地有機人文下身單品穿搭",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#948772",
+        "#A59A87",
+        "#E3DDD4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-outfit-accessory-001",
+    "url": "/style-image/style5-outfit2.webp",
+    "title": "大地有機人文配件穿搭",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#5D3613",
+        "#A6917B",
+        "#BDA993"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-outfit-top-001",
+    "url": "/style-image/style5-outfit3.webp",
+    "title": "大地有機人文上身單品穿搭",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#856E4F",
+        "#9C8D79",
+        "#B0A597"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-outfit-dress-001",
+    "url": "/style-image/style5-outfit4.webp",
+    "title": "大地有機人文洋裝穿搭",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress Focus",
+    "colorPalette": [
+        "#7B6B55",
+        "#9B8F81",
+        "#B1A69A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-interior-001",
+    "url": "/style-image/style5-interior.webp",
+    "title": "大地有機人文室內設計代表圖",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+        "#604931",
+        "#7F6A55",
+        "#A5917D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-interior-chair-001",
+    "url": "/style-image/style5-interior1.webp",
+    "title": "大地有機藝術塗漆",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#836F58",
+        "#9D8B78",
+        "#B7A898"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-interior-lighting-001",
+    "url": "/style-image/style5-interior2.webp",
+    "title": "大地有機人文燈光室內設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#261304",
+        "#432B13",
+        "#63482F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-interior-table-001",
+    "url": "/style-image/style5-interior3.webp",
+    "title": "大地有機人文桌几室內設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+        "#351C09",
+        "#5E4328",
+        "#82664A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-interior-chair-002",
+    "url": "/style-image/style5-interior4.webp",
+    "title": "大地有機人文椅款室內設計",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+        "#867259",
+        "#A89883",
+        "#C4B5A6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-architecture-001",
+    "url": "/style-image/style5-architecture.webp",
+    "title": "大地有機人文建築代表圖",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+        "#3A2812",
+        "#64543E",
+        "#B8AA9E"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-architecture-facade-001",
+    "url": "/style-image/style5-architecture1.webp",
+    "title": "大地有機人文立面建築",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#352717",
+        "#645140",
+        "#8B7D71"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-architecture-entrance-001",
+    "url": "/style-image/style5-architecture2.webp",
+    "title": "大地有機人文入口建築",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#1C1708",
+        "#3D351D",
+        "#5E513B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-architecture-staircase-001",
+    "url": "/style-image/style5-architecture3.webp",
+    "title": "大地有機人文樓梯建築",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+        "#4E3B27",
+        "#6B5744",
+        "#8D7B6A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-architecture-window-001",
+    "url": "/style-image/style5-architecture4.webp",
+    "title": "大地有機人文窗景建築",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+        "#3E2D16",
+        "#61543E",
+        "#867563"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-main-001",
+    "url": "/style-image/style6-main.webp",
+    "title": "浪漫田園生活系列主視覺",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+        "#7E654A",
+        "#A58B6F",
+        "#C1A88F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-main-002",
+    "url": "/style-image/style6-main-1.webp",
+    "title": "浪漫田園生活概念主視覺 1",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+        "#BA9D82",
+        "#D5BDA6",
+        "#E8D9C8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-main-003",
+    "url": "/style-image/style6-main-2.webp",
+    "title": "浪漫田園生活概念主視覺 2",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+        "#8D795E",
+        "#B69D87",
+        "#D1C1B3"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-main-004",
+    "url": "/style-image/style6-main-3.webp",
+    "title": "浪漫田園生活概念主視覺 3",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+        "#B09B80",
+        "#C9B8A4",
+        "#E2DCD6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-main-005",
+    "url": "/style-image/style6-main-4.webp",
+    "title": "浪漫田園生活概念主視覺 4",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "colorPalette": [
+        "#2D2011",
+        "#AF8B6A",
+        "#CEB092"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-001",
+    "url": "/style-image/style6-graphic.webp",
+    "title": "浪漫田園生活平面設計代表圖",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+        "#836F57",
+        "#AA9786",
+        "#CEBCAE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-poster-001",
+    "url": "/style-image/style6-graphic1.webp",
+    "title": "浪漫田園生活海報平面設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#CDBA9F",
+        "#DED1C2",
+        "#F0E7DD"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-brand-001",
+    "url": "/style-image/style6-graphic2.webp",
+    "title": "浪漫田園生活品牌識別平面設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#83786B",
+        "#C2B8AE",
+        "#D3CCC6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-packaging-001",
+    "url": "/style-image/style6-graphic3.webp",
+    "title": "浪漫田園生活包裝平面設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#33240A",
+        "#887960",
+        "#B09D89"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-editorial-001",
+    "url": "/style-image/style6-graphic4.webp",
+    "title": "浪漫田園生活編輯版面平面設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Grandmillennial"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#977A63",
+        "#B49E8B",
+        "#CAB9AD"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-outfit-001",
+    "url": "/style-image/style6-outfit.webp",
+    "title": "浪漫田園生活穿搭代表圖",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+        "#5F5845",
+        "#8E7E6C",
+        "#B7A799"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-outfit-bottom-001",
+    "url": "/style-image/style6-outfit1.webp",
+    "title": "浪漫田園生活下身單品穿搭",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#352D17",
+        "#A08569",
+        "#C2A890"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-outfit-top-001",
+    "url": "/style-image/style6-outfit2.webp",
+    "title": "浪漫田園生活上身單品穿搭",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#8D7A64",
+        "#A4917E",
+        "#BDAD9F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-outfit-accessory-001",
+    "url": "/style-image/style6-outfit3.webp",
+    "title": "浪漫田園生活配件穿搭",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#8E7559",
+        "#B19B86",
+        "#D0C4B7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-outfit-dress-001",
+    "url": "/style-image/style6-outfit4.webp",
+    "title": "浪漫田園生活洋裝穿搭",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress Focus",
+    "colorPalette": [
+        "#947D68",
+        "#A5927E",
+        "#C3B19F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-interior-001",
+    "url": "/style-image/style6-interior.webp",
+    "title": "浪漫田園生活室內設計代表圖",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+        "#281408",
+        "#78624C",
+        "#A08B78"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-interior-lighting-001",
+    "url": "/style-image/style6-interior1.webp",
+    "title": "浪漫田園生活燈光設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#907B62",
+        "#AC9479",
+        "#E3C49C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-interior-wall-paint-001",
+    "url": "/style-image/style6-interior2.webp",
+    "title": "浪漫田園生活壁紙",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#6B5A3C",
+        "#7B7159",
+        "#8E866F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-interior-chair-001",
+    "url": "/style-image/style6-interior3.webp",
+    "title": "浪漫田園生活椅款",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+        "#B49B83",
+        "#C5B5A7",
+        "#D5CABF"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-interior-table-001",
+    "url": "/style-image/style6-interior4.webp",
+    "title": "浪漫田園生活桌几",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Grandmillennial",
+      "Cottagecore",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+        "#412709",
+        "#6B573A",
+        "#8D7E68"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-architecture-001",
+    "url": "/style-image/style6-architecture.webp",
+    "title": "浪漫田園生活建築代表圖",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+        "#2D2B0D",
+        "#5C5333",
+        "#897C5F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-architecture-facade-001",
+    "url": "/style-image/style6-architecture1.webp",
+    "title": "浪漫田園生活立面建築",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#655342",
+        "#8C7767",
+        "#B59D8D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-architecture-entrance-001",
+    "url": "/style-image/style6-architecture2.webp",
+    "title": "浪漫田園生活入口建築",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#33290C",
+        "#5B4C29",
+        "#7D6E4F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-architecture-staircase-001",
+    "url": "/style-image/style6-architecture3.webp",
+    "title": "浪漫田園生活樓梯建築",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+        "#816C55",
+        "#A1927F",
+        "#B8AB9C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-architecture-window-001",
+    "url": "/style-image/style6-architecture4.webp",
+    "title": "浪漫田園生活窗景建築",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+        "#6A5B47",
+        "#867B6A",
+        "#ADA99B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-main-001",
+    "url": "/style-image/style7-main.webp",
+    "title": "復古懷舊系列主視覺",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+        "#162120",
+        "#43382F",
+        "#765C48"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-main-002",
+    "url": "/style-image/style7-main-1.webp",
+    "title": "復古懷舊概念主視覺 1",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+        "#884B1B",
+        "#B77842",
+        "#DCA05F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-main-003",
+    "url": "/style-image/style7-main-2.webp",
+    "title": "復古懷舊概念主視覺 2",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+        "#48372B",
+        "#83523A",
+        "#DDB58E"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-main-004",
+    "url": "/style-image/style7-main-3.webp",
+    "title": "復古懷舊概念主視覺 3",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+        "#282627",
+        "#5A4133",
+        "#936B47"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-main-005",
+    "url": "/style-image/style7-main-4.webp",
+    "title": "復古懷舊概念主視覺 4",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "colorPalette": [
+        "#102037",
+        "#914A40",
+        "#D3BDA4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-graphic-001",
+    "url": "/style-image/style7-graphic.webp",
+    "title": "復古懷舊平面設計代表圖",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+        "#2E271A",
+        "#5B4D37",
+        "#DCD2C5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-graphic-poster-001",
+    "url": "/style-image/style7-graphic1.webp",
+    "title": "復古懷舊海報平面設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#664828",
+        "#927656",
+        "#AA9579"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-graphic-brand-001",
+    "url": "/style-image/style7-graphic2.webp",
+    "title": "復古懷舊品牌識別",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#C46A29",
+        "#CDB799",
+        "#DED0BD"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-graphic-packaging-001",
+    "url": "/style-image/style7-graphic3.webp",
+    "title": "復古懷舊包裝設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#53371A",
+        "#83623A",
+        "#AC8A63"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-graphic-editorial-001",
+    "url": "/style-image/style7-graphic4.webp",
+    "title": "復古懷舊書籍編排設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#594C3A",
+        "#7E715E",
+        "#BEB1A1"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-outfit-001",
+    "url": "/style-image/style7-outfit.webp",
+    "title": "復古懷舊穿搭代表圖",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+        "#703E22",
+        "#8B674D",
+        "#D3BFA4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-outfit-top-001",
+    "url": "/style-image/style7-outfit1.webp",
+    "title": "復古懷舊上衣",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#382616",
+        "#55615F",
+        "#AC987D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-outfit-bottom-001",
+    "url": "/style-image/style7-outfit2.webp",
+    "title": "復古懷舊褲裝",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#4C2A12",
+        "#B69979",
+        "#D6BFA5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-outfit-dress-001",
+    "url": "/style-image/style7-outfit3.webp",
+    "title": "復古懷舊洋裝穿搭",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress Focus",
+    "colorPalette": [
+        "#C2B19C",
+        "#CFC4B6",
+        "#E0E1DE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-outfit-accessory-001",
+    "url": "/style-image/style7-outfit4.webp",
+    "title": "復古懷舊配件穿搭",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Americana"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#88583D",
+        "#CCB191",
+        "#E4CFB6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-interior-001",
+    "url": "/style-image/style7-interior.webp",
+    "title": "復古懷舊室內設計代表圖",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+        "#1D120A",
+        "#4B2E15",
+        "#6D5131"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-interior-lighting-001",
+    "url": "/style-image/style7-interior1.webp",
+    "title": "復古懷舊燈光設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#210C04",
+        "#6D492D",
+        "#976741"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-interior-wall-paint-001",
+    "url": "/style-image/style7-interior2.webp",
+    "title": "復古懷舊牆面色彩設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#2A1B06",
+        "#4D3A19",
+        "#A1855A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-interior-table-001",
+    "url": "/style-image/style7-interior3.webp",
+    "title": "復古懷舊桌几",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+        "#21170C",
+        "#493019",
+        "#6E5135"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-interior-chair-001",
+    "url": "/style-image/style7-interior4.webp",
+    "title": "復古懷舊椅款室內設計",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Vintage",
+      "Mid-Century Modern"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+        "#573C20",
+        "#7A6246",
+        "#A79070"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-architecture-001",
+    "url": "/style-image/style7-architecture.webp",
+    "title": "復古懷舊建築代表圖",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+        "#4A3E2D",
+        "#927B63",
+        "#BBC4C7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-architecture-facade-001",
+    "url": "/style-image/style7-architecture1.webp",
+    "title": "復古懷舊建築立面",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#3B3832",
+        "#766D62",
+        "#EBDECC"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-architecture-staircase-001",
+    "url": "/style-image/style7-architecture2.webp",
+    "title": "復古懷舊樓梯",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+        "#261D13",
+        "#463623",
+        "#63523B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-architecture-entrance-001",
+    "url": "/style-image/style7-architecture3.webp",
+    "title": "復古懷舊入口",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#261709",
+        "#633E21",
+        "#866349"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-architecture-window-001",
+    "url": "/style-image/style7-architecture4.webp",
+    "title": "復古懷舊窗景",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+        "#534739",
+        "#948B7D",
+        "#B4BDC7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-main-001",
+    "url": "/style-image/style8-main.webp",
+    "title": "實驗前衛系列主視覺",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#0F1013",
+        "#2D2F31",
+        "#8B8988"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-main-002",
+    "url": "/style-image/style8-main-1.webp",
+    "title": "實驗前衛概念主視覺 1",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#13171E",
+        "#706D71",
+        "#BCB4B5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-main-003",
+    "url": "/style-image/style8-main-2.webp",
+    "title": "實驗前衛概念主視覺 2",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#0E151E",
+        "#40454A",
+        "#BCB9BA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-main-004",
+    "url": "/style-image/style8-main-3.webp",
+    "title": "實驗前衛概念主視覺 3",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#191B1E",
+        "#383C40",
+        "#5D6165"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-main-005",
+    "url": "/style-image/style8-main-4.webp",
+    "title": "實驗前衛概念主視覺 4",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#898179",
+        "#A6A19B",
+        "#C1BDBA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-graphic-001",
+    "url": "/style-image/style8-graphic.webp",
+    "title": "實驗前衛平面設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+        "#302F30",
+        "#A9A7A5",
+        "#CDCAC7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-graphic-brand-001",
+    "url": "/style-image/style8-graphic1.webp",
+    "title": "實驗前衛品牌識別設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#535355",
+        "#7B7979",
+        "#D5D3D1"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-graphic-editorial-001",
+    "url": "/style-image/style8-graphic2.webp",
+    "title": "實驗前衛編輯版面平面設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#393734",
+        "#878484",
+        "#B0ACAC"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-graphic-packaging-001",
+    "url": "/style-image/style8-graphic3.webp",
+    "title": "實驗前衛包裝設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#1B1915",
+        "#5B554D",
+        "#C0B6AC"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-graphic-poster-001",
+    "url": "/style-image/style8-graphic4.webp",
+    "title": "實驗前衛海報設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Experimental Typography",
+      "Brutalism",
+      "Avant-Garde"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#161210",
+        "#56362F",
+        "#CDC8C3"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-001",
+    "url": "/style-image/style8-outfit.webp",
+    "title": "實驗前衛穿搭代表圖",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+        "#141313",
+        "#8B857E",
+        "#C2BEBA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-top-001",
+    "url": "/style-image/style8-outfit1.webp",
+    "title": "實驗前衛上衣",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#867C72",
+        "#B3AAA1",
+        "#D5CEC7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-bottom-001",
+    "url": "/style-image/style8-outfit2.webp",
+    "title": "實驗前衛褲裝",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#110F0F",
+        "#2F2B29",
+        "#7E7B77"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-dress-001",
+    "url": "/style-image/style8-outfit3.webp",
+    "title": "實驗前衛洋裝",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress Focus",
+    "colorPalette": [
+        "#383735",
+        "#4C4A48",
+        "#ACABAD"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-accessory-001",
+    "url": "/style-image/style8-outfit4.webp",
+    "title": "實驗前衛配件",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Avant-Garde",
+      "Deconstructivism",
+      "Anti-Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#7E7870",
+        "#918C87",
+        "#C7C1BC"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-001",
+    "url": "/style-image/style8-interior.webp",
+    "title": "實驗前衛室內設計代表圖",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+        "#211D18",
+        "#4B433A",
+        "#796D5F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-wall-paint-001",
+    "url": "/style-image/style8-interior1.webp",
+    "title": "實驗前衛牆面色彩設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#2A241C",
+        "#907C69",
+        "#AE9E8F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-lighting-001",
+    "url": "/style-image/style8-interior2.webp",
+    "title": "實驗前衛燈光",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#8A7F77",
+        "#ACA39C",
+        "#D7D3D0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-table-001",
+    "url": "/style-image/style8-interior3.webp",
+    "title": "實驗前衛桌几",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+        "#54483C",
+        "#7D7165",
+        "#A89D92"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-chair-001",
+    "url": "/style-image/style8-interior4.webp",
+    "title": "實驗前衛椅款",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+        "#2F2A25",
+        "#695147",
+        "#B2A69B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-001",
+    "url": "/style-image/style8-architecture.webp",
+    "title": "實驗前衛建築代表圖",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+        "#807F80",
+        "#A2A3A6",
+        "#C3C7CE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-staircase-001",
+    "url": "/style-image/style8-architecture1.webp",
+    "title": "實驗前衛樓梯建築",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+        "#323336",
+        "#525355",
+        "#9EA2AA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-facade-001",
+    "url": "/style-image/style8-architecture2.webp",
+    "title": "實驗前衛窗戶設計",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+        "#19130C",
+        "#3F3224",
+        "#6C6054"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-entrance-001",
+    "url": "/style-image/style8-architecture3.webp",
+    "title": "實驗前衛入口建築",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#847B74",
+        "#9FA2A6",
+        "#D0D7E0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-facade-002",
+    "url": "/style-image/style8-architecture4.webp",
+    "title": "實驗前衛立面建築",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#201C17",
+        "#7E7D7B",
+        "#D0D4DA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-main-001",
+    "url": "/style-image/style9-main.webp",
+    "title": "街頭青年文化系列主視覺",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#0E1116",
+        "#2D363B",
+        "#B1B9B8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-main-002",
+    "url": "/style-image/style9-main-1.webp",
+    "title": "街頭青年文化概念主視覺 1",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#0F1E1C",
+        "#B7B5B0",
+        "#E2E5E4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-main-003",
+    "url": "/style-image/style9-main-2.webp",
+    "title": "街頭青年文化概念主視覺 2",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#17151B",
+        "#34333F",
+        "#A5989D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-main-004",
+    "url": "/style-image/style9-main-3.webp",
+    "title": "街頭青年文化概念主視覺 3",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#2B3239",
+        "#7A7C86",
+        "#B9CAE1"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-main-005",
+    "url": "/style-image/style9-main-4.webp",
+    "title": "街頭青年文化概念主視覺 4",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#0C131A",
+        "#B29991",
+        "#D5CECE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-graphic-001",
+    "url": "/style-image/style9-graphic.webp",
+    "title": "街頭青年文化平面設計代表圖",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "colorPalette": [
+        "#1B1B16",
+        "#B3866A",
+        "#CBC4C0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-graphic-poster-001",
+    "url": "/style-image/style9-graphic1.webp",
+    "title": "街頭青年文化海報設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#DDFF19",
+        "#000000",
+        "#5D5E54"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-graphic-brand-001",
+    "url": "/style-image/style9-graphic2.webp",
+    "title": "街頭青年文化品牌識別設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#383A3B",
+        "#9E9A96",
+        "#C8C9CB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-graphic-packaging-001",
+    "url": "/style-image/style9-graphic3.webp",
+    "title": "街頭青年文化包裝設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#151513",
+        "#3A3632",
+        "#706760"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-graphic-editorial-001",
+    "url": "/style-image/style9-graphic4.webp",
+    "title": "街頭青年文化編輯版面設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#4A453E",
+        "#A59E97",
+        "#D6D1CE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-outfit-001",
+    "url": "/style-image/style9-outfit.webp",
+    "title": "街頭青年文化穿搭代表圖",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "colorPalette": [
+        "#151713",
+        "#3F3E37",
+        "#61615C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-outfit-top-001",
+    "url": "/style-image/style9-outfit1.webp",
+    "title": "街頭青年文化上身",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#222222",
+        "#3B3B3A",
+        "#515151"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-outfit-bottom-001",
+    "url": "/style-image/style9-outfit2.webp",
+    "title": "街頭青年文化褲裝",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#747270",
+        "#A39E9B",
+        "#C1BDB7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-outfit-dress-001",
+    "url": "/style-image/style9-outfit3.webp",
+    "title": "街頭青年文化洋裝",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Dress Focus",
+    "colorPalette": [
+        "#AAA6A0",
+        "#CBC9C6",
+        "#E6E6E5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-outfit-accessory-001",
+    "url": "/style-image/style9-outfit4.webp",
+    "title": "街頭青年文化配件",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#232225",
+        "#545254",
+        "#F6F6F6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-interior-001",
+    "url": "/style-image/style9-interior.webp",
+    "title": "街頭青年文化室內設計代表圖",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture",
+      "Hypebeast"
+    ],
+    "medium": "Interior Design",
+    "colorPalette": [
+        "#4C4132",
+        "#786551",
+        "#96867A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-interior-table-001",
+    "url": "/style-image/style9-interior1.webp",
+    "title": "街頭青年文化桌几",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Hypebeast",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Table",
+    "colorPalette": [
+        "#4F4943",
+        "#6F6962",
+        "#89837D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-interior-chair-001",
+    "url": "/style-image/style9-interior2.webp",
+    "title": "街頭青年文化椅款",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Hypebeast",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Chair",
+    "colorPalette": [
+        "#45403B",
+        "#6E6963",
+        "#908D8B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-interior-lighting-001",
+    "url": "/style-image/style9-interior3.webp",
+    "title": "街頭青年文化落地燈",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#17120D",
+        "#362E26",
+        "#574C41"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-interior-wall-paint-001",
+    "url": "/style-image/style9-interior4.webp",
+    "title": "街頭青年文化牆面設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Wall Paint",
+    "colorPalette": [
+        "#1A1510",
+        "#393028",
+        "#5F4C3C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-architecture-001",
+    "url": "/style-image/style9-architecture.webp",
+    "title": "街頭青年文化建築代表圖",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "colorPalette": [
+        "#1F1911",
+        "#6A625F",
+        "#CCD3DE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-architecture-facade-001",
+    "url": "/style-image/style9-architecture1.webp",
+    "title": "街頭青年文化建築立面",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#232319",
+        "#878582",
+        "#BED5E9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-architecture-entrance-001",
+    "url": "/style-image/style9-architecture2.webp",
+    "title": "街頭青年文化建築入口",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#181310",
+        "#2E2B2B",
+        "#666062"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-architecture-staircase-001",
+    "url": "/style-image/style9-architecture3.webp",
+    "title": "街頭青年文化樓梯設計",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Staircase",
+    "colorPalette": [
+        "#1E1B15",
+        "#46433A",
+        "#66645C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-architecture-window-001",
+    "url": "/style-image/style9-architecture4.webp",
+    "title": "街頭青年文化窗景建築",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Urban Contemporary",
+      "Graffiti",
+      "Hypebeast"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Window",
+    "colorPalette": [
+        "#191715",
+        "#38383A",
+        "#D3CBC5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-full-look-101",
+    "url": "/style-image/y2k-outfit-full-look-101.webp",
+    "title": "銀粉虹彩未來感套裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Full Look",
+    "colorPalette": [
+        "#D9DDF1",
+        "#F4A7D8",
+        "#9BE6F5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-top-101",
+    "url": "/style-image/y2k-outfit-top-101.webp",
+    "title": "虹彩水晶馬甲上衣",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#B9EAF2",
+        "#F2B3DE",
+        "#D8E0ED"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-bottom-101",
+    "url": "/style-image/y2k-outfit-bottom-101.webp",
+    "title": "銀色虹彩工裝褲",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#D9E5F0",
+        "#F1B7D9",
+        "#A8DDF0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-full-look-102",
+    "url": "/style-image/y2k-outfit-full-look-102.webp",
+    "title": "粉銀虹彩晚宴洋裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Full Look",
+    "colorPalette": [
+        "#F5B7D9",
+        "#D9D1EE",
+        "#E9EFF6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-outfit-accessory-101",
+    "url": "/style-image/y2k-outfit-accessory-101.webp",
+    "title": "鑽飾星芒銀色手提包",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#E6E8F2",
+        "#AEB2C1",
+        "#4D5261"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-living-101",
+    "url": "/style-image/y2k-interior-living-101.webp",
+    "title": "粉綠鏡面夢幻客餐廳",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+        "#F4C6D5",
+        "#A5D8C6",
+        "#D487B5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-living-102",
+    "url": "/style-image/y2k-interior-living-102.webp",
+    "title": "薄荷玻璃流線客廳",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+        "#EAF0E8",
+        "#A9D9D3",
+        "#BACCC2"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-bedroom-101",
+    "url": "/style-image/y2k-interior-bedroom-101.webp",
+    "title": "霓虹絨毛粉紅臥室",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Bubblegum Futurism",
+      "Chrome Design"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+        "#C77D93",
+        "#E4B7AF",
+        "#964D75"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-lighting-101",
+    "url": "/style-image/y2k-interior-lighting-101.webp",
+    "title": "水晶泡泡吊燈",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#E8F2F0",
+        "#99DDE1",
+        "#B4BCC5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-decor-101",
+    "url": "/style-image/y2k-interior-decor-101.webp",
+    "title": "粉紅玻璃花器擺飾",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Decor Detail",
+    "colorPalette": [
+        "#E8B5B4",
+        "#D57283",
+        "#A87168"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-facade-101",
+    "url": "/style-image/y2k-architecture-facade-101.webp",
+    "title": "流線玻璃未來商場立面",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#F0F4F6",
+        "#2AA7D1",
+        "#79B6DE"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-entrance-101",
+    "url": "/style-image/y2k-architecture-entrance-101.webp",
+    "title": "粉銀光環商場入口",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#D5C1D0",
+        "#ED9CB7",
+        "#8998C5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-passage-101",
+    "url": "/style-image/y2k-architecture-passage-101.webp",
+    "title": "柔光玻璃中庭廊道",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+        "#D9E9EF",
+        "#F0B9D6",
+        "#7BC6E2"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-building-exterior-101",
+    "url": "/style-image/y2k-architecture-building-exterior-101.webp",
+    "title": "環形窗景未來建築",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#F2F1E9",
+        "#97D7E7",
+        "#D6B0B6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-building-exterior-102",
+    "url": "/style-image/y2k-architecture-building-exterior-102.webp",
+    "title": "公園中的流線白色建築",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#EEF5F4",
+        "#8BCFE4",
+        "#769B73"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-main-101",
+    "url": "/style-image/ftdp-graphic-main-101.webp",
+    "title": "Neo Kyoto 2049 視覺識別套組",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#10131D",
+        "#2548CC",
+        "#C32B9A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-poster-101",
+    "url": "/style-image/ftdp-graphic-poster-101.webp",
+    "title": "Neo Tokyo 故障藝術海報",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#101123",
+        "#0067DD",
+        "#D51DAB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-brand-101",
+    "url": "/style-image/ftdp-graphic-brand-101.webp",
+    "title": "NK-2049 黑色品牌識別",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#10131B",
+        "#313447",
+        "#4D47E8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-packaging-101",
+    "url": "/style-image/ftdp-graphic-packaging-101.webp",
+    "title": "NK-2077 霓虹黑色包裝",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#0B0E17",
+        "#2622B9",
+        "#2D98D5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-editorial-101",
+    "url": "/style-image/ftdp-graphic-editorial-101.webp",
+    "title": "Neo Kyoto 未來城市編輯設計",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#0D1120",
+        "#2A2D82",
+        "#8653B5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-main-102",
+    "url": "/style-image/ftdp-graphic-main-102.webp",
+    "title": "Techwear 概念視覺套組",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#121315",
+        "#B71937",
+        "#E9E4DF"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-poster-102",
+    "url": "/style-image/ftdp-graphic-poster-102.webp",
+    "title": "未來式故障排版海報",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#141218",
+        "#2827BF",
+        "#E423C5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-brand-102",
+    "url": "/style-image/ftdp-graphic-brand-102.webp",
+    "title": "02X Techwear 品牌系統",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Techwear",
+      "Neo-Tokyo"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#18191C",
+        "#F1F0EC",
+        "#48BACB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-packaging-102",
+    "url": "/style-image/ftdp-graphic-packaging-102.webp",
+    "title": "科技機能紅黑包裝",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#08090B",
+        "#C71724",
+        "#C0C0BD"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-graphic-editorial-102",
+    "url": "/style-image/ftdp-graphic-editorial-102.webp",
+    "title": "機能服飾實驗雜誌版面",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Techwear"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#111114",
+        "#E3E0D9",
+        "#D10E24"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-main-101",
+    "url": "/style-image/y2k-graphic-main-101.webp",
+    "title": "Studio Play 未來感設計套組",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#E5E8E5",
+        "#7BA7D7",
+        "#ECADD0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-poster-101",
+    "url": "/style-image/y2k-graphic-poster-101.webp",
+    "title": "Digital Dreams 流體海報系列",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#F1D6DF",
+        "#8EC4E8",
+        "#D674AA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-brand-101",
+    "url": "/style-image/y2k-graphic-brand-101.webp",
+    "title": "Orbita 數位體驗品牌識別",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#EDF5F6",
+        "#6BD2E2",
+        "#B4DA48"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-packaging-101",
+    "url": "/style-image/y2k-graphic-packaging-101.webp",
+    "title": "Glow Hub 虹彩保養品包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#DD91D2",
+        "#8AD7E7",
+        "#B9C0F1"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-editorial-101",
+    "url": "/style-image/y2k-graphic-editorial-101.webp",
+    "title": "未來感介面雜誌編輯設計",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#E7EFF4",
+        "#ABCBE9",
+        "#EC9EB9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-main-102",
+    "url": "/style-image/y2k-graphic-main-102.webp",
+    "title": "Orbit 98 懷舊數位視覺套組",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#B49AD8",
+        "#E49CCD",
+        "#B7D0ED"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-poster-102",
+    "url": "/style-image/y2k-graphic-poster-102.webp",
+    "title": "Orbit 98 數位記憶海報",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#BE8FDA",
+        "#E697C9",
+        "#D1C9E7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-brand-102",
+    "url": "/style-image/y2k-graphic-brand-102.webp",
+    "title": "Orbit 98 虹彩品牌識別",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#B8A7DD",
+        "#E4A0CA",
+        "#B6C5ED"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-packaging-102",
+    "url": "/style-image/y2k-graphic-packaging-102.webp",
+    "title": "Orbit 98 未來懷舊產品包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#A286D1",
+        "#EEA4D0",
+        "#DCD0F0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-editorial-102",
+    "url": "/style-image/y2k-graphic-editorial-102.webp",
+    "title": "Orbit 98 網路文化雜誌",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#E5D8F1",
+        "#A6B4E4",
+        "#E399C1"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-main-103",
+    "url": "/style-image/y2k-graphic-main-103.webp",
+    "title": "Pixel Bloom 糖果未來視覺套組",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#F1D6E5",
+        "#F29AB7",
+        "#A5C5EF"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-poster-103",
+    "url": "/style-image/y2k-graphic-poster-103.webp",
+    "title": "Neon Daze 千禧巡演海報",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#E7B7C8",
+        "#EE8CA9",
+        "#E7E4E5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-brand-103",
+    "url": "/style-image/y2k-graphic-brand-103.webp",
+    "title": "Velvet Byte 柔光科技識別",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#F1E8E8",
+        "#EDAAC3",
+        "#D6C1EC"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-packaging-103",
+    "url": "/style-image/y2k-graphic-packaging-103.webp",
+    "title": "Candy Socket 紫色糖果包裝",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#7252B1",
+        "#C98CE1",
+        "#F0A3C1"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-graphic-editorial-103",
+    "url": "/style-image/y2k-graphic-editorial-103.webp",
+    "title": "Hyper Crush 網路戀愛雜誌",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#C9DBF0",
+        "#86B9E5",
+        "#E990B4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-poster-101",
+    "url": "/style-image/rpl-graphic-poster-101.webp",
+    "title": "Garden in Verse 花園詩歌節海報",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#E9DDC5",
+        "#A97B78",
+        "#748253"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-packaging-101",
+    "url": "/style-image/rpl-graphic-packaging-101.webp",
+    "title": "Willow & Meadow 花園禮盒包裝",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#F0E1D2",
+        "#B78983",
+        "#829270"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-editorial-101",
+    "url": "/style-image/rpl-graphic-editorial-101.webp",
+    "title": "Forest Journal 鄉居生活雜誌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#D9CEB4",
+        "#897961",
+        "#6E6C51"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-main-101",
+    "url": "/style-image/rpl-graphic-main-101.webp",
+    "title": "浪漫田園生活視覺套組",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#E5DBCB",
+        "#A98A80",
+        "#82907C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-brand-101",
+    "url": "/style-image/rpl-graphic-brand-101.webp",
+    "title": "Bellefleur 花園茶館品牌識別",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#D3C4B1",
+        "#61707A",
+        "#A65C5B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-poster-102",
+    "url": "/style-image/rpl-graphic-poster-102.webp",
+    "title": "Flowers & Poetry 花藝詩歌節海報",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Poster Design",
+    "colorPalette": [
+        "#E7DCC7",
+        "#9D7470",
+        "#A3A07C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-brand-102",
+    "url": "/style-image/rpl-graphic-brand-102.webp",
+    "title": "La Vie en Rose 茶館品牌識別",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Brand Identity",
+    "colorPalette": [
+        "#D8CABE",
+        "#7B3B40",
+        "#8B8D9B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-graphic-packaging-102",
+    "url": "/style-image/rpl-graphic-packaging-102.webp",
+    "title": "Meadow & Vine 花卉禮盒包裝",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#E9DDC1",
+        "#B88986",
+        "#79865C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-building-exterior-102",
+    "url": "/style-image/msm-architecture-building-exterior-102.webp",
+    "title": "暮光玻璃藝文建築",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#AEBBC8",
+        "#D8D1C8",
+        "#5A4A3E"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-facade-101",
+    "url": "/style-image/msm-architecture-facade-101.webp",
+    "title": "白石框景立面",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#D8D6D2",
+        "#77777A",
+        "#342E29"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-building-exterior-101",
+    "url": "/style-image/msm-architecture-building-exterior-101.webp",
+    "title": "懸浮露台現代宅",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury",
+      "Scandinavian"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#AFC6D7",
+        "#D8D1C5",
+        "#4D493B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-passage-101",
+    "url": "/style-image/msm-architecture-passage-101.webp",
+    "title": "柔光木框長廊",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury",
+      "Scandinavian"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+        "#EEEAE0",
+        "#C8B69D",
+        "#8D806E"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-architecture-entrance-101",
+    "url": "/style-image/msm-architecture-entrance-101.webp",
+    "title": "夜色庭院入口",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#285B8F",
+        "#55504B",
+        "#D6A15C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-top-102",
+    "url": "/style-image/eag-outfit-top-102.webp",
+    "title": "解構拼布斗篷上衣",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism",
+      "Experimental Typography"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#151719",
+        "#555452",
+        "#70432B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-decor-detail-101",
+    "url": "/style-image/eag-interior-design-decor-detail-101.webp",
+    "title": "黑紅幾何陳設",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Decor Detail",
+    "colorPalette": [
+        "#111111",
+        "#9B9993",
+        "#A70F24"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-bedroom-102",
+    "url": "/style-image/eag-interior-design-bedroom-102.webp",
+    "title": "洞穴感混凝土臥室",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+        "#292622",
+        "#5D554B",
+        "#9A9286"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-lighting-101",
+    "url": "/style-image/eag-interior-design-lighting-101.webp",
+    "title": "黑色構成懸吊燈",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#0B0B0B",
+        "#4A413B",
+        "#D9C4AC"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-bottom-101",
+    "url": "/style-image/eag-outfit-bottom-101.webp",
+    "title": "解構拼接闊腿褲",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#121316",
+        "#414247",
+        "#8A4028"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-living-dining-space-103",
+    "url": "/style-image/eag-interior-design-living-dining-space-103.webp",
+    "title": "雕塑混凝土客餐廳",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+        "#252421",
+        "#77716A",
+        "#B4ADA3"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-entrance-101",
+    "url": "/style-image/eag-architecture-entrance-101.webp",
+    "title": "折板金屬門廊",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#1B1A1B",
+        "#686765",
+        "#8A5940"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-bedroom-101",
+    "url": "/style-image/eag-interior-design-bedroom-101.webp",
+    "title": "黑紅切面臥室",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+        "#111112",
+        "#66625D",
+        "#B30E2B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-living-dining-space-102",
+    "url": "/style-image/eag-interior-design-living-dining-space-102.webp",
+    "title": "黑白紅幾何客餐廳",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+        "#171717",
+        "#B4B2AD",
+        "#A30E26"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-lighting-102",
+    "url": "/style-image/eag-interior-design-lighting-102.webp",
+    "title": "環線幾何吊燈",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#171513",
+        "#5F5A55",
+        "#E2D2BC"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-facade-101",
+    "url": "/style-image/eag-architecture-facade-101.webp",
+    "title": "字形巨構混凝土立面",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism",
+      "Experimental Typography"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#16171A",
+        "#777778",
+        "#CBC9C5"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-building-exterior-101",
+    "url": "/style-image/eag-architecture-building-exterior-101.webp",
+    "title": "懸挑巨構混凝土藝館",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#17181B",
+        "#77777A",
+        "#B51F2E"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-building-exterior-102",
+    "url": "/style-image/eag-architecture-building-exterior-102.webp",
+    "title": "紅線切割混凝土藝館",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#202226",
+        "#92918E",
+        "#8C2830"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-architecture-passage-101",
+    "url": "/style-image/eag-architecture-passage-101.webp",
+    "title": "深邃混凝土光廊",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+        "#171614",
+        "#4D4944",
+        "#A29C92"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-accessory-101",
+    "url": "/style-image/eag-outfit-accessory-101.webp",
+    "title": "工業拼布機能包",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+        "#171719",
+        "#5D5D5B",
+        "#ADADAA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-fulllook-101",
+    "url": "/style-image/eag-outfit-fulllook-101.webp",
+    "title": "層疊解構工裝造型",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Full Look",
+    "colorPalette": [
+        "#17191B",
+        "#6C6B66",
+        "#C7C3B9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-top-101",
+    "url": "/style-image/eag-outfit-top-101.webp",
+    "title": "灰黑拼接解構上衣",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Top Focus",
+    "colorPalette": [
+        "#171719",
+        "#5A595A",
+        "#9A4B32"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-living-dining-space-101",
+    "url": "/style-image/eag-interior-design-living-dining-space-101.webp",
+    "title": "黑白構成挑高客餐廳",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+        "#151515",
+        "#77736C",
+        "#C7C3BA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-interior-design-living-dining-space-104",
+    "url": "/style-image/eag-interior-design-living-dining-space-104.webp",
+    "title": "斜切光影雕塑客廳",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+        "#28231F",
+        "#71685E",
+        "#B6AA9C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-architecture-buildingexterior-001",
+    "url": "/style-image/y2k-architecture-buildingexterior-001.webp",
+    "title": "未來感建築外觀",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#AED4EB",
+        "#B3C7D2",
+        "#D2E5EF"
+      ]
+  },
+  {
+    "id": "y2k-architecture-buildingexterior-002",
+    "url": "/style-image/y2k-architecture-buildingexterior-002.webp",
+    "title": "藍色科技建築外觀",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#02AECB",
+        "#EDF1F2",
+        "#D1E6EC"
+      ]
+  },
+  {
+    "id": "y2k-architecture-entrance-201",
+    "url": "/style-image/y2k-architecture-entrance-201.webp",
+    "title": "科技感建築入口",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#6A7790",
+        "#556D8A",
+        "#2C2D34"
+      ]
+  },
+  {
+    "id": "y2k-architecture-facade-201",
+    "url": "/style-image/y2k-architecture-facade-201.webp",
+    "title": "暖色建築立面",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#FBEAD4",
+        "#D2CBD0",
+        "#EBD6CC"
+      ]
+  },
+  {
+    "id": "y2k-architecture-passage-001",
+    "url": "/style-image/y2k-architecture-passage-001.webp",
+    "title": "粉紅通道空間",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+        "#CEAEB8",
+        "#CCC8D2",
+        "#D1B9C7"
+      ]
+  },
+  {
+    "id": "y2k-graphic-packagingdesign-001",
+    "url": "/style-image/y2k-graphic-packagingdesign-001.webp",
+    "title": "Y2K風格包裝設計",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "McBling",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#CDD0D2",
+        "#D7E7E7",
+        "#B7CDCC"
+      ]
+  },
+  {
+    "id": "y2k-interior-bedroom-001",
+    "url": "/style-image/y2k-interior-bedroom-001.webp",
+    "title": "Y2K風格臥室",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+        "#91938D",
+        "#ADADAF",
+        "#AC948E"
+      ]
+  },
+  {
+    "id": "y2k-interior-lighting-001",
+    "url": "/style-image/y2k-interior-lighting-001.webp",
+    "title": "Y2K風格燈具",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#EEEBED",
+        "#8EB0C7",
+        "#D3CED5"
+      ]
+  },
+  {
+    "id": "y2k-interior-livingdining-001",
+    "url": "/style-image/y2k-interior-livingdining-001.webp",
+    "title": "Y2K客餐廳空間",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+        "#B2AFAE",
+        "#CFCBCD",
+        "#C6B7B5"
+      ]
+  },
+  {
+    "id": "y2k-interior-livingdining-002",
+    "url": "/style-image/y2k-interior-livingdining-002.webp",
+    "title": "暖色客餐廳空間",
+    "attribution": "Asterism",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+        "#B3958A",
+        "#91756D",
+        "#AE566A"
+      ]
+  },
+  {
+    "id": "street-architecture-buildingexterior-001",
+    "url": "/style-image/street-architecture-buildingexterior-001.webp",
+    "title": "街頭建築外觀",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#B0CDE6",
+        "#94B8DA",
+        "#6D7173"
+      ]
+  },
+  {
+    "id": "street-architecture-facade-001",
+    "url": "/style-image/street-architecture-facade-001.webp",
+    "title": "街頭建築立面",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#4F5050",
+        "#FAF3E9",
+        "#2D3031"
+      ]
+  },
+  {
+    "id": "street-graphic-packagingdesign-001",
+    "url": "/style-image/street-graphic-packagingdesign-001.webp",
+    "title": "街頭風格包裝設計",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#EAECED",
+        "#D1B295",
+        "#D9C5AF"
+      ]
+  },
+  {
+    "id": "street-graphic-packagingdesign-002",
+    "url": "/style-image/street-graphic-packagingdesign-002.webp",
+    "title": "暗色街頭包裝設計",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Graffiti",
+      "Urban Contemporary"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+        "#2B2C2F",
+        "#4B4E51",
+        "#D2B08C"
+      ]
+  },
+  {
+    "id": "street-interior-lighting-001",
+    "url": "/style-image/street-interior-lighting-001.webp",
+    "title": "街頭風格燈具",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+        "#4B5152",
+        "#111416",
+        "#6D7072"
+      ]
+  },
+  {
+    "id": "street-outfit-bottom-001",
+    "url": "/style-image/street-outfit-bottom-001.webp",
+    "title": "街頭下身穿搭",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#8D8675",
+        "#90958A",
+        "#B2A794"
+      ]
+  },
+  {
+    "id": "street-outfit-bottom-002",
+    "url": "/style-image/street-outfit-bottom-002.webp",
+    "title": "淺色街頭下身穿搭",
+    "attribution": "Asterism",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+        "#EFECE7",
+        "#D8D3CC",
+        "#101010"
+      ]
+  },
+  {
+    "id": "msm-architecture-entrance-201",
+    "url": "/style-image/msm-architecture-entrance-201.webp",
+    "title": "極簡建築入口",
+    "attribution": "Asterism",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#EAE8E7",
+        "#969189",
+        "#B8B1A8"
+      ]
+  },
+  {
+    "id": "msm-architecture-entrance-002",
+    "url": "/style-image/msm-architecture-entrance-002.webp",
+    "title": "對比極簡入口",
+    "attribution": "Asterism",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Swiss Design"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+        "#EFEBE7",
+        "#11130F",
+        "#31332A"
+      ]
+  },
+  {
+    "id": "future-architecture-passage-001",
+    "url": "/style-image/future-architecture-passage-001.webp",
+    "title": "未來科技通道",
+    "attribution": "Asterism",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Passage",
+    "colorPalette": [
+        "#0B1011",
+        "#2F2C31",
+        "#4E4752"
+      ]
+  },
+  {
+    "id": "decorate-architecture-buildingexterior-001",
+    "url": "/style-image/decorate-architecture-buildingexterior-001.webp",
+    "title": "裝飾風格建築外觀",
+    "attribution": "Asterism",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Building Exterior",
+    "colorPalette": [
+        "#3078B1",
+        "#312D2B",
+        "#4C94C9"
+      ]
+  },
+  {
+    "id": "decorate-architecture-facade-001",
+    "url": "/style-image/decorate-architecture-facade-001.webp",
+    "title": "裝飾風格建築立面",
+    "attribution": "Asterism",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Facade",
+    "colorPalette": [
+        "#92AFCD",
+        "#0E1313",
+        "#53504B"
+      ]
+  },
+  {
+    "id": "decorate-graphic-editorialdesign-001",
+    "url": "/style-image/decorate-graphic-editorialdesign-001.webp",
+    "title": "裝飾風格編輯設計",
+    "attribution": "Asterism",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Editorial Design",
+    "colorPalette": [
+        "#0B0C09",
+        "#2A160D",
+        "#312516"
+      ]
+  },
+  {
+    "id": "ftdp-concept-001",
+    "url": "/style-image/ftdp-concept-001.webp",
+    "title": "霓虹東京未來城市",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#050912",
+        "#12365F",
+        "#D414A9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-002",
+    "url": "/style-image/ftdp-concept-002.webp",
+    "title": "雨夜高樓霓虹街谷",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#07101A",
+        "#244C63",
+        "#C015A8"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-003",
+    "url": "/style-image/ftdp-concept-003.webp",
+    "title": "垂直都市藍光天井",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#050B12",
+        "#1C415B",
+        "#5D9FCB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-004",
+    "url": "/style-image/ftdp-concept-004.webp",
+    "title": "紫藍雨巷數位街景",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Glitch Art",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#040713",
+        "#132E58",
+        "#B916C9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-005",
+    "url": "/style-image/ftdp-concept-005.webp",
+    "title": "巨構塔樓科技中庭",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#060D12",
+        "#173D4E",
+        "#6BB4C6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-006",
+    "url": "/style-image/ftdp-concept-006.webp",
+    "title": "高速資料流城市光軌",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Glitch Art",
+      "Cyberpunk",
+      "Futurism",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#050715",
+        "#154DAA",
+        "#E21DB7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "ftdp-concept-007",
+    "url": "/style-image/ftdp-concept-007.webp",
+    "title": "冷光高架未來都會",
+    "styleGroup": "Future Tech & Digital Psychedelia",
+    "style": [
+      "Cyberpunk",
+      "Futurism",
+      "Glitch Art",
+      "Neo-Tokyo"
+    ],
+    "colorPalette": [
+        "#070C12",
+        "#1A3C50",
+        "#7AB7CF"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-001",
+    "url": "/style-image/y2k-concept-001.webp",
+    "title": "銀色鉻感流線裝置",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#E8F5FF",
+        "#94B9D8",
+        "#A1A7B9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-002",
+    "url": "/style-image/y2k-concept-002.webp",
+    "title": "透明玻璃水岸未來城",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#DDF7FF",
+        "#7CC9E7",
+        "#B6DDE4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-003",
+    "url": "/style-image/y2k-concept-003.webp",
+    "title": "粉藍未來室內中庭",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#F1D7F1",
+        "#A9D6F4",
+        "#D49BCB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-004",
+    "url": "/style-image/y2k-concept-004.webp",
+    "title": "水晶透明科技庭園",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#EAF9FF",
+        "#7BC5E9",
+        "#B5E7E4"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-005",
+    "url": "/style-image/y2k-concept-005.webp",
+    "title": "虹彩果凍玻璃材質",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Chrome Design"
+    ],
+    "colorPalette": [
+        "#F5D5F1",
+        "#B9D6F9",
+        "#D3B3E6"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-006",
+    "url": "/style-image/y2k-concept-006.webp",
+    "title": "綠藍泡泡未來介面",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "Bubblegum Futurism",
+      "Chrome Design"
+    ],
+    "colorPalette": [
+        "#DDFBFF",
+        "#82E7D4",
+        "#A6E968"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-concept-007",
+    "url": "/style-image/y2k-concept-007.webp",
+    "title": "紫藍透明數位配件",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Chrome Design",
+      "Bubblegum Futurism"
+    ],
+    "colorPalette": [
+        "#D9D7FF",
+        "#A5A7F3",
+        "#B987E9"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-001",
+    "url": "/style-image/doa-concept-001.webp",
+    "title": "黑金巴洛克階梯大廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#080604",
+        "#3A2417",
+        "#B48A55"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-002",
+    "url": "/style-image/doa-concept-002.webp",
+    "title": "金白洛可可旋梯大廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#F2E6D4",
+        "#C9A66D",
+        "#80684A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-003",
+    "url": "/style-image/doa-concept-003.webp",
+    "title": "金飾弧形宮廷客廳",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#EFE0C8",
+        "#B6915E",
+        "#274036"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-004",
+    "url": "/style-image/doa-concept-004.webp",
+    "title": "洛可可鏡廳梳妝室",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#EBD5BE",
+        "#B88A61",
+        "#6C3F2D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-005",
+    "url": "/style-image/doa-concept-005.webp",
+    "title": "金色穹頂巴洛克天井",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Baroque",
+      "Rococo",
+      "Maximalism",
+      "Art Deco"
+    ],
+    "colorPalette": [
+        "#21130D",
+        "#8A5427",
+        "#E0B66F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-006",
+    "url": "/style-image/doa-concept-006.webp",
+    "title": "粉金洛可可天花壁飾",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Art Deco",
+      "Maximalism"
+    ],
+    "colorPalette": [
+        "#EAD7C8",
+        "#C9A074",
+        "#DAB0A0"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-concept-007",
+    "url": "/style-image/doa-concept-007.webp",
+    "title": "粉金洛可可浮雕天頂",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Rococo",
+      "Baroque",
+      "Art Deco",
+      "Maximalism"
+    ],
+    "colorPalette": [
+        "#E9D2C1",
+        "#C49460",
+        "#F0B8A7"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-001",
+    "url": "/style-image/msm-concept-001.webp",
+    "title": "光影極簡挑高入口",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Scandinavian"
+    ],
+    "colorPalette": [
+        "#E7E2D8",
+        "#B9B2A5",
+        "#4C493F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-002",
+    "url": "/style-image/msm-concept-002.webp",
+    "title": "木石材質極簡細節",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+        "#D8D1C4",
+        "#B9AD9B",
+        "#5B554C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-003",
+    "url": "/style-image/msm-concept-003.webp",
+    "title": "柔光石材極簡階梯",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Modernism"
+    ],
+    "colorPalette": [
+        "#E8E0D3",
+        "#C6BCA8",
+        "#817768"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-004",
+    "url": "/style-image/msm-concept-004.webp",
+    "title": "曲面石台",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Scandinavian"
+    ],
+    "colorPalette": [
+        "#E6E1D7",
+        "#C7BDAF",
+        "#6C665E"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-005",
+    "url": "/style-image/msm-concept-005.webp",
+    "title": "靜謐光井極簡室內",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Modernism",
+      "Scandinavian"
+    ],
+    "colorPalette": [
+        "#EDE8DE",
+        "#C8C0B4",
+        "#6E675E"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-006",
+    "url": "/style-image/msm-concept-006.webp",
+    "title": "木格柵極簡工作角落",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Quiet Luxury",
+      "Scandinavian",
+      "Swiss Design"
+    ],
+    "colorPalette": [
+        "#ECE6DB",
+        "#B8A994",
+        "#4F4940"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-concept-007",
+    "url": "/style-image/msm-concept-007.webp",
+    "title": "灰階極簡玻璃牆面",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Swiss Design",
+      "Quiet Luxury"
+    ],
+    "colorPalette": [
+        "#E4E2DC",
+        "#A5A49E",
+        "#474842"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-001",
+    "url": "/style-image/eoh-concept-001.webp",
+    "title": "日光有機曲線庭院",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Biophilic Design",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+        "#CFC1A8",
+        "#8E7050",
+        "#566043"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-002",
+    "url": "/style-image/eoh-concept-002.webp",
+    "title": "原土肌理靜物光影",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "colorPalette": [
+        "#C7B09A",
+        "#815F43",
+        "#51483D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-003",
+    "url": "/style-image/eoh-concept-003.webp",
+    "title": "侘寂陶器自然角落",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Japandi",
+      "Organic Modern"
+    ],
+    "colorPalette": [
+        "#D3C5AC",
+        "#87715A",
+        "#4C453C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-004",
+    "url": "/style-image/eoh-concept-004.webp",
+    "title": "綠意木構水岸空間",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Biophilic Design",
+      "Japandi",
+      "Organic Modern",
+      "Wabi-Sabi"
+    ],
+    "colorPalette": [
+        "#B9B089",
+        "#665844",
+        "#49513A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-005",
+    "url": "/style-image/eoh-concept-005.webp",
+    "title": "曲面石材靜謐空間",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Japandi",
+      "Organic Modern",
+      "Wabi-Sabi"
+    ],
+    "colorPalette": [
+        "#D9CCB4",
+        "#9B8265",
+        "#605346"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-006",
+    "url": "/style-image/eoh-concept-006.webp",
+    "title": "晨光石膏圓弧角落",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "colorPalette": [
+        "#D6C6AE",
+        "#A58C70",
+        "#574F42"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eoh-concept-007",
+    "url": "/style-image/eoh-concept-007.webp",
+    "title": "石灰牆侘寂壁龕",
+    "styleGroup": "Earth & Organic Humanism",
+    "style": [
+      "Wabi-Sabi",
+      "Biophilic Design",
+      "Organic Modern",
+      "Japandi"
+    ],
+    "colorPalette": [
+        "#918C82",
+        "#5C5A54",
+        "#242424"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-001",
+    "url": "/style-image/rpl-concept-001.webp",
+    "title": "花園午後復古餐桌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "colorPalette": [
+        "#D9D1B5",
+        "#82906A",
+        "#A7785A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-002",
+    "url": "/style-image/rpl-concept-002.webp",
+    "title": "粉花復古茶室",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Vintage Floral",
+      "Grandmillennial",
+      "Cottagecore",
+      "Romanticism"
+    ],
+    "colorPalette": [
+        "#D9C6B4",
+        "#B98182",
+        "#6E6A58"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-003",
+    "url": "/style-image/rpl-concept-003.webp",
+    "title": "褪色花牆柔光一隅",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Vintage Floral",
+      "Romanticism",
+      "Cottagecore"
+    ],
+    "colorPalette": [
+        "#D5CEBC",
+        "#9C8A9A",
+        "#B87969"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-004",
+    "url": "/style-image/rpl-concept-004.webp",
+    "title": "玫瑰花影復古梳妝室",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Romanticism",
+      "Vintage Floral",
+      "Grandmillennial",
+      "Cottagecore"
+    ],
+    "colorPalette": [
+        "#C8B29C",
+        "#A66F62",
+        "#6B5543"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-005",
+    "url": "/style-image/rpl-concept-005.webp",
+    "title": "藤蔓花窗閱讀角",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "colorPalette": [
+        "#C7B58C",
+        "#798158",
+        "#996B52"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-006",
+    "url": "/style-image/rpl-concept-006.webp",
+    "title": "花卉信箋復古書桌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Vintage Floral",
+      "Grandmillennial",
+      "Cottagecore",
+      "Romanticism"
+    ],
+    "colorPalette": [
+        "#D4C4A5",
+        "#A7756A",
+        "#6E8062"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rpl-concept-007",
+    "url": "/style-image/rpl-concept-007.webp",
+    "title": "燭光花園寫作桌",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Vintage Floral",
+      "Romanticism",
+      "Grandmillennial"
+    ],
+    "colorPalette": [
+        "#BCA779",
+        "#7A6A42",
+        "#A56B59"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-001",
+    "url": "/style-image/eag-concept-001.webp",
+    "title": "紅黑混凝土反設計空間",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Anti-Design",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#222426",
+        "#797775",
+        "#9D241D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-002",
+    "url": "/style-image/eag-concept-002.webp",
+    "title": "幾何混凝土前衛構築",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde",
+      "Anti-Design"
+    ],
+    "colorPalette": [
+        "#242426",
+        "#7C7A74",
+        "#C1C0BB"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-003",
+    "url": "/style-image/eag-concept-003.webp",
+    "title": "紅黑實驗幾何視覺",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Experimental Typography",
+      "Anti-Design",
+      "Avant-Garde",
+      "Deconstructivism"
+    ],
+    "colorPalette": [
+        "#171717",
+        "#E5E0D5",
+        "#D4432B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-004",
+    "url": "/style-image/eag-concept-004.webp",
+    "title": "黑白解構混凝土巨構",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde",
+      "Anti-Design"
+    ],
+    "colorPalette": [
+        "#17191A",
+        "#777672",
+        "#8D2F29"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-005",
+    "url": "/style-image/eag-concept-005.webp",
+    "title": "黑紅解構字體拼貼",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Experimental Typography",
+      "Deconstructivism",
+      "Anti-Design",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#1D1D1D",
+        "#D7D2C8",
+        "#A32A23"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-006",
+    "url": "/style-image/eag-concept-006.webp",
+    "title": "藍黑實驗字體構成",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Experimental Typography",
+      "Anti-Design",
+      "Avant-Garde",
+      "Deconstructivism"
+    ],
+    "colorPalette": [
+        "#191A1A",
+        "#DFDDD5",
+        "#2B4F9B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-concept-007",
+    "url": "/style-image/eag-concept-007.webp",
+    "title": "巨構混凝土光影走廊",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Brutalism",
+      "Deconstructivism",
+      "Avant-Garde"
+    ],
+    "colorPalette": [
+        "#202123",
+        "#777672",
+        "#C9C5BA"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-001",
+    "url": "/style-image/syc-concept-001.webp",
+    "title": "貼紙塗鴉水泥階梯",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#5E5C58",
+        "#272727",
+        "#C34D2C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-002",
+    "url": "/style-image/syc-concept-002.webp",
+    "title": "暗色機能街頭穿搭",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Urban Contemporary"
+    ],
+    "colorPalette": [
+        "#242729",
+        "#5F655E",
+        "#0E1011"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-003",
+    "url": "/style-image/syc-concept-003.webp",
+    "title": "螢光單車街頭裝備",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Hypebeast",
+      "Urban Contemporary",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#1E2224",
+        "#9BCF2B",
+        "#455A75"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-004",
+    "url": "/style-image/syc-concept-004.webp",
+    "title": "滑板場塗鴉牆面",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Skate Culture",
+      "Graffiti",
+      "Urban Contemporary"
+    ],
+    "colorPalette": [
+        "#242322",
+        "#88827A",
+        "#5B7999"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-005",
+    "url": "/style-image/syc-concept-005.webp",
+    "title": "地下街頭塗鴉中庭",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Urban Contemporary",
+      "Streetwear",
+      "Skate Culture"
+    ],
+    "colorPalette": [
+        "#252728",
+        "#B73E25",
+        "#817564"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-006",
+    "url": "/style-image/syc-concept-006.webp",
+    "title": "塗鴉水泥滑板場",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Skate Culture",
+      "Urban Contemporary"
+    ],
+    "colorPalette": [
+        "#292827",
+        "#8E8371",
+        "#AF3F27"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-concept-007",
+    "url": "/style-image/syc-concept-007.webp",
+    "title": "雨後城市滑板廣場",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Graffiti",
+      "Skate Culture",
+      "Urban Contemporary",
+      "Streetwear"
+    ],
+    "colorPalette": [
+        "#242527",
+        "#A82820",
+        "#77808B"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-001",
+    "url": "/style-image/retro-concept-001.webp",
+    "title": "胡桃木幾何復古客廳",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Mid-Century Modern",
+      "Retro",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#5A2F19",
+        "#C69A4A",
+        "#62643A"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-002",
+    "url": "/style-image/retro-concept-002.webp",
+    "title": "幾何織物材質拼貼",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#6E351F",
+        "#C69A4C",
+        "#284844"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-003",
+    "url": "/style-image/retro-concept-003.webp",
+    "title": "綠色轉盤電話靜物",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern"
+    ],
+    "colorPalette": [
+        "#264A3C",
+        "#B47B32",
+        "#6A321D"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-004",
+    "url": "/style-image/retro-concept-004.webp",
+    "title": "暖光玻璃磚石材角落",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Mid-Century Modern",
+      "Retro",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#5B321D",
+        "#B4773A",
+        "#C4A276"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-005",
+    "url": "/style-image/retro-concept-005.webp",
+    "title": "藍綠色塊水磨石吧台",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Retro",
+      "Mid-Century Modern",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#33585A",
+        "#9D4D32",
+        "#5B321F"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-006",
+    "url": "/style-image/retro-concept-006.webp",
+    "title": "暖陽壁爐中世紀客廳",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Mid-Century Modern",
+      "Retro",
+      "Vintage"
+    ],
+    "colorPalette": [
+        "#6A351F",
+        "#D2B98D",
+        "#5C6135"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-concept-007",
+    "url": "/style-image/retro-concept-007.webp",
+    "title": "柚木家具復古客廳",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Mid-Century Modern",
+      "Vintage",
+      "Retro"
+    ],
+    "colorPalette": [
+        "#6D351E",
+        "#A9692D",
+        "#55502C"
+      ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "y2k-interior-design-living-dining-space-501",
+    "url": "/style-image/y2k-interior-design-living-dining-space-501.webp",
+    "title": "Y2K粉彩客餐廳空間",
+    "styleGroup": "Y2K & Internet Aesthetics",
+    "style": [
+      "Y2K",
+      "Frutiger Aero",
+      "McBling",
+      "Bubblegum Futurism"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Living & Dining Space",
+    "colorPalette": [
+      "#D4C5C2",
+      "#B0B8C8",
+      "#D8A8B8"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "street-interior-bedroom-501",
+    "url": "/style-image/street-interior-design-bedroom-501.webp",
+    "title": "街頭風格臥室空間",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#1A1C1E",
+      "#5C5E60",
+      "#C8A882"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "rom-interior-design-lighting-501",
+    "url": "/style-image/rom-interior-design-lighting-501.webp",
+    "title": "浪漫風格燈光設計",
+    "styleGroup": "Romantic & Pastoral Living",
+    "style": [
+      "Cottagecore",
+      "Romanticism",
+      "Grandmillennial",
+      "Vintage Floral"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Lighting",
+    "colorPalette": [
+      "#2C1810",
+      "#D4A574",
+      "#F5E6D3"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "msm-outfit-accessory-focus-501",
+    "url": "/style-image/msm-outfit-accessory-focus-501.webp",
+    "title": "極簡風格配件細節",
+    "styleGroup": "Minimal & Structured Modern",
+    "style": [
+      "Minimalism",
+      "Modernism",
+      "Quiet Luxury"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+      "#F0EDE8",
+      "#2F2F2F",
+      "#9C8B72"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "experimental-architecture-entrance-501",
+    "url": "/style-image/experimental-architecture-entrance-501.webp",
+    "title": "實驗性建築入口空間",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Architecture",
+    "subMedium": "Entrance",
+    "colorPalette": [
+      "#0B0E1A",
+      "#3D7EBF",
+      "#D6DCE4"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-interior-design-bedroom-502",
+    "url": "/style-image/syc-interior-design-bedroom-502.webp",
+    "title": "霓虹塗鴉街頭臥室",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#191315",
+      "#7C6553",
+      "#D24C7A"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "syc-interior-design-bedroom-503",
+    "url": "/style-image/syc-interior-design-bedroom-503.webp",
+    "title": "滑板坡道街頭臥室",
+    "styleGroup": "Street & Youth Culture",
+    "style": [
+      "Streetwear",
+      "Urban Contemporary",
+      "Graffiti",
+      "Skate Culture"
+    ],
+    "medium": "Interior Design",
+    "subMedium": "Bedroom",
+    "colorPalette": [
+      "#2C2B27",
+      "#8E9175",
+      "#C6BEAE"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-bottom-101",
+    "url": "/style-image/doa-outfit-bottom-101.webp",
+    "title": "酒紅金繡宮廷長褲",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#3A1420",
+      "#A9834D",
+      "#E8DCC3"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-bottom-102",
+    "url": "/style-image/doa-outfit-bottom-102.webp",
+    "title": "香檳金繡魚尾長裙",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#6E5540",
+      "#C9A98A",
+      "#E9DAC6"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "doa-outfit-bottom-103",
+    "url": "/style-image/doa-outfit-bottom-103.webp",
+    "title": "立體花繡宮廷蓬裙",
+    "styleGroup": "Decorative & Opulent Art",
+    "style": [
+      "Art Deco",
+      "Baroque",
+      "Rococo",
+      "Maximalism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#6A5540",
+      "#CBA982",
+      "#E9D9C1"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-accessory-102",
+    "url": "/style-image/eag-outfit-accessory-102.webp",
+    "title": "工業鉚接金屬腰包",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+      "#2E2C29",
+      "#8A8681",
+      "#C9C4BC"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-accessory-103",
+    "url": "/style-image/eag-outfit-accessory-103.webp",
+    "title": "解構鐵板塗鴉肩包",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Accessory Focus",
+    "colorPalette": [
+      "#1C1C1E",
+      "#7C7B79",
+      "#BDB9B2"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-bottom-102",
+    "url": "/style-image/eag-outfit-bottom-102.webp",
+    "title": "拼接雙色解構寬褲",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#2A2724",
+      "#8C8073",
+      "#C6BBA9"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-bottom-103",
+    "url": "/style-image/eag-outfit-bottom-103.webp",
+    "title": "拼板解構闊腿褲",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Bottom Focus",
+    "colorPalette": [
+      "#2C2B29",
+      "#7E7A72",
+      "#B4AFA4"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "eag-outfit-fulllook-102",
+    "url": "/style-image/eag-outfit-fulllook-102.webp",
+    "title": "解構寬版丹寧全身造型",
+    "styleGroup": "Experimental & Avant-Garde",
+    "style": [
+      "Anti-Design",
+      "Avant-Garde",
+      "Brutalism",
+      "Deconstructivism"
+    ],
+    "medium": "Outfit",
+    "subMedium": "Full Look",
+    "colorPalette": [
+      "#232120",
+      "#6E6B66",
+      "#A7A29A"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-graphic-packaging-101",
+    "url": "/style-image/retro-graphic-packaging-101.webp",
+    "title": "復古櫻桃可樂包裝",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#4A2622",
+      "#B23A2E",
+      "#D9C6A2"
+    ],
+    "attribution": "Asterism"
+  },
+  {
+    "id": "retro-graphic-packaging-102",
+    "url": "/style-image/retro-graphic-packaging-102.webp",
+    "title": "懷舊藥房風保養罐裝",
+    "styleGroup": "Retro & Nostalgia",
+    "style": [
+      "Vintage",
+      "Retro",
+      "Mid-Century Modern",
+      "Americana"
+    ],
+    "medium": "Graphic Design",
+    "subMedium": "Packaging Design",
+    "colorPalette": [
+      "#5A6B4F",
+      "#C6733E",
+      "#D3A445"
+    ],
+    "attribution": "Asterism"
+  }
+]

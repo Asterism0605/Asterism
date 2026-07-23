@@ -25,6 +25,21 @@ dist-ssr
 
 # Plan
 Asterism_30Day_Plan.md
+vue3-team-guideline.md
 
 # TypeScript
 *.tsbuildinfo
+
+# Superpowers 工作筆記／設計文件（不進版控）
+.superpowers/
+docs/superpowers/
+
+# Env
+.env
+
+# 手動 review 用的暫存圖檔
+tmp_review/
+
+# 暫存後端資料
+tmp_b2e/
+.worktrees/

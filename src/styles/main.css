@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Noto+Sans+TC:wght@100;200;300;400;500;600;700&family=JetBrains+Mono&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&display=swap');
 @import 'tailwindcss';
 
@@ -8,20 +8,24 @@
   --color-deep: #0e0e12;
   --color-elevated: #17171d;
   --color-overlay: #222228;
+  --color-dropdown: #1e1e1e;
   --color-text-primary: #f0ede6;
   --color-text-secondary: #8a8880;
   --color-stellar-red: #c45c3a;
   --color-gold-dim: #a8893a;
+  --color-cta: #d96643;
+  --color-cta-hover: #e67550;
 
   /* 字體族群 */
   --font-family-title: 'Fustat', 'Noto Sans TC', sans-serif;
   --font-family-body: 'Inter', 'Noto Sans TC', sans-serif;
-  --font-family-mono: 'JetBrains Mono', monospace;
+  --font-family-mono: 'JetBrains Mono', 'Noto Sans TC', monospace;
 
   /* 排版階層 (使用 clamp 提升響應性) */
   --text-display: clamp(3.5rem, 8vw, 8rem); /* 56px → 128px */
   --text-h1: clamp(2rem, 5vw, 2.75rem); /* 32px → 44px */
   --text-h2: clamp(1.5rem, 4vw, 2.25rem); /* 24px → 36px */
+  --text-h3: clamp(1.125rem, 3vw, 1.25rem); /* 18px → 20px */
   --text-body: 1rem; /* 16px */
   --text-caption: 0.875rem; /* 14px */
   --text-mono: 0.75rem; /* 12px */
@@ -30,7 +34,22 @@
   --leading-normal: 1.5;
 }
 
+@keyframes tourArrow {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(0.35rem);
+  }
+}
+
 @layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
   html,
   body {
     background: linear-gradient(135deg, #060608 0%, #0e0e12 50%, #17171d 100%);
@@ -41,6 +60,20 @@
     min-height: 100vh;
     overflow-x: hidden;
     line-height: 1.5;
+  }
+
+  /* 首頁只隱藏 scrollbar 外觀，保留滾輪、觸控與鍵盤捲動。 */
+  html.home-scrollbar-hidden,
+  html.home-scrollbar-hidden body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  html.home-scrollbar-hidden::-webkit-scrollbar,
+  html.home-scrollbar-hidden body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
   }
 
   /* 自訂深色系滾動條 */
@@ -91,6 +124,11 @@
   }
 }
 
+/* 中文字距 */
+html:lang(zh-Hant) .zh-heading-spacing {
+  letter-spacing: 1px;
+}
+
 @layer components {
   /* ========== 字體系統 ========== */
   .text-display {
@@ -107,6 +145,10 @@
     line-height: var(--leading-tight);
   }
 
+  html:lang(zh-Hant) .text-h1 {
+    font-weight: 100;
+  }
+
   .text-h2 {
     font-size: var(--text-h2);
     font-family: var(--font-family-title);
@@ -114,8 +156,27 @@
     line-height: var(--leading-tight);
   }
 
+  html:lang(zh-Hant) .text-h2 {
+    font-weight: 200;
+  }
+
+  .text-h3 {
+    font-size: var(--text-h3);
+    font-family: var(--font-family-title);
+    font-weight: 300;
+    line-height: var(--leading-tight);
+  }
+
+  html:lang(zh-Hant) .text-h3 {
+    font-weight: 200;
+  }
+
   .text-body {
     font-size: var(--text-body);
+  }
+
+  html:lang(zh-Hant) .text-body {
+    font-weight: 300;
   }
   .text-caption {
     font-size: var(--text-caption);
@@ -143,8 +204,8 @@
       rgba(255, 255, 255, 0.02) 60%,
       rgba(255, 255, 255, 0) 100%
     );
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(21px);
+    backdrop-filter: blur(21px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow:
       inset 1px 1px 1px rgba(255, 255, 255, 0.2),
@@ -160,6 +221,211 @@
       box-shadow:
         inset 1px 1px 1px rgba(255, 255, 255, 0.2),
         0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  /* ========== Overlay ========== */
+  .overlay-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background:
+      radial-gradient(circle at center, rgb(240 237 230 / 0.12), transparent 38%),
+      linear-gradient(180deg, rgb(6 6 8 / 0.84), rgb(6 6 8 / 0.94));
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  .overlay-panel {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    padding: 56px 48px 52px;
+    text-align: center;
+    color: var(--color-text-primary);
+    transform-origin: center;
+  }
+
+  .overlay-panel--wide {
+    max-width: 640px;
+    padding: 72px 64px 68px;
+  }
+
+  .overlay-title {
+    max-width: 100%;
+    margin-inline: auto;
+    font-family: var(--font-family-title);
+    font-size: var(--text-h1);
+    font-weight: 300;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    letter-spacing: 0.01em;
+  }
+
+  .overlay-form .overlay-title {
+    margin-bottom: 36px;
+  }
+
+  .overlay-description {
+    max-width: 100%;
+    margin: 1.5rem auto 0;
+    font-size: var(--text-body);
+    line-height: var(--leading-normal);
+    color: rgb(240 237 230 / 0.75);
+  }
+
+  .overlay-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .overlay-input {
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.07);
+    font-family: var(--font-family-body);
+    font-size: var(--text-caption);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    letter-spacing: 0.1em;
+    outline: none;
+    transition: background 200ms ease;
+  }
+
+  .overlay-input::placeholder {
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .overlay-input:focus {
+    background: rgba(255, 255, 255, 0.11);
+  }
+
+  .overlay-actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .overlay-actions--stackable {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .overlay-submit button {
+    padding-right: 48px;
+    padding-left: 48px;
+    border: none;
+    background: var(--color-text-secondary);
+    color: var(--color-deep);
+    letter-spacing: 0.1em;
+  }
+
+  .overlay-submit button:hover {
+    background: var(--color-text-secondary);
+    opacity: 0.85;
+  }
+
+  .overlay-helper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .overlay-link {
+    padding: 4px 0;
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    font-family: var(--font-family-body);
+    font-size: var(--text-caption);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: color 200ms ease;
+  }
+
+  .overlay-link:hover {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+  }
+
+  .overlay-close.overlay-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    display: flex;
+    width: 2.25rem;
+    height: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 0.15);
+    border-radius: 0.375rem;
+    color: var(--color-text-secondary);
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .overlay-close.overlay-close:hover {
+    border-color: rgb(255 255 255 / 0.3);
+    background: rgb(255 255 255 / 0.1);
+    color: var(--color-text-primary);
+  }
+
+  .overlay-close.overlay-close:focus-visible {
+    outline: 2px solid var(--color-text-primary);
+    outline-offset: 2px;
+  }
+
+  .overlay-enter-active,
+  .overlay-leave-active {
+    transition: opacity 240ms ease;
+  }
+
+  .overlay-enter-active .overlay-panel,
+  .overlay-leave-active .overlay-panel {
+    transition:
+      opacity 240ms ease,
+      transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .overlay-enter-from,
+  .overlay-leave-to {
+    opacity: 0;
+  }
+
+  .overlay-enter-from .overlay-panel,
+  .overlay-leave-to .overlay-panel {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+
+  @media (max-width: 640px) {
+    .overlay-backdrop {
+      padding-inline: 1.5rem;
+    }
+
+    .overlay-panel {
+      padding: 48px 32px 40px;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .overlay-backdrop {
+      padding-inline: 1.5rem;
+    }
+
+    .overlay-actions--stackable {
+      flex-direction: row;
     }
   }
 

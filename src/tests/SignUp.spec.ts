@@ -1,0 +1,242 @@
+import { flushPromises, mount } from '@vue/test-utils';
+import { createPinia } from 'pinia';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createMemoryHistory, createRouter, type Router } from 'vue-router';
+import SignUp from '@/pages/SignUp.vue';
+
+const supaAuth = { signUp: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn(), resend: vi.fn() };
+const single = vi.fn();
+const maybeSingle = vi.fn();
+const from = vi.fn((table: string) =>
+  table === 'consultants'
+    ? { select: () => ({ eq: () => ({ maybeSingle }) }) }
+    : { select: () => ({ eq: () => ({ single }) }) }
+);
+const reconcileWithServer = vi.fn().mockResolvedValue(undefined);
+vi.mock('@/api/supabaseClient', () => ({ getSupabase: () => ({ auth: supaAuth, from }) }));
+vi.mock('@/stores/style-dna.store', () => ({
+  useStyleDnaStore: () => ({ reconcileWithServer })
+}));
+
+const fakeSession = {
+  access_token: 'tok',
+  expires_at: 1000,
+  user: { id: 'u1', email: 'new-user@example.com', created_at: '2026-01-01T00:00:00Z' }
+};
+
+function createTestRouter(): Router {
+  return createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/', name: 'home', component: { template: '<div />' } },
+      { path: '/sign-up', name: 'sign-up', component: { template: '<div />' } },
+      { path: '/login', name: 'login', component: { template: '<div />' } },
+      { path: '/discover-dna', name: 'discover-dna', component: { template: '<div />' } }
+    ]
+  });
+}
+
+function mountSignUp(router: Router) {
+  return mount(SignUp, {
+    global: {
+      plugins: [router, createPinia()],
+      stubs: { ConstellationBackground: true, AppHeader: true }
+    }
+  });
+}
+
+// mock auth API resolves on a setTimeout(0) macrotask; let it run, then drain microtasks.
+async function flushAuth(): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  await flushPromises();
+}
+
+async function fillForm(
+  wrapper: ReturnType<typeof mountSignUp>,
+  email: string,
+  password: string
+): Promise<void> {
+  await wrapper.find('input[type="email"]').setValue(email);
+  await wrapper.find('input[type="password"]').setValue(password);
+}
+
+describe('SignUp', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    reconcileWithServer.mockReset();
+    reconcileWithServer.mockResolvedValue(undefined);
+    single.mockResolvedValue({ data: { display_name: 'New User', username: null, is_admin: false }, error: null });
+    maybeSingle.mockResolvedValue({ data: null, error: null });
+    supaAuth.signUp.mockResolvedValue({ data: { session: fakeSession }, error: null });
+    supaAuth.signInWithPassword.mockResolvedValue({ data: { session: fakeSession }, error: null });
+  });
+
+  it('registers and redirects to a safe next path on success', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up?next=/login');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountSignUp(router);
+    await fillForm(wrapper, 'new-user@example.com', 'password123');
+    await wrapper.find('form').trigger('submit');
+    await flushAuth();
+
+    expect(push).toHaveBeenCalledWith('/login');
+    expect(reconcileWithServer).toHaveBeenCalledWith('u1');
+    expect(supaAuth.signUp).toHaveBeenCalledWith({
+      email: 'new-user@example.com',
+      password: 'password123',
+      options: {
+        data: { display_name: '' },
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=%2Flogin`
+      }
+    });
+  });
+
+  it('still redirects when Style DNA reconcile fails after registration', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+    reconcileWithServer.mockRejectedValueOnce(new Error('network down'));
+
+    const wrapper = mountSignUp(router);
+    await fillForm(wrapper, 'new-user@example.com', 'password123');
+    await wrapper.find('form').trigger('submit');
+    await flushAuth();
+
+    expect(push).toHaveBeenCalledWith('/discover-dna');
+  });
+
+  it('redirects to /discover-dna when next is missing', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountSignUp(router);
+    await fillForm(wrapper, 'new-user@example.com', 'password123');
+    await wrapper.find('form').trigger('submit');
+    await flushAuth();
+
+    expect(push).toHaveBeenCalledWith('/discover-dna');
+  });
+
+  it('ignores an external next and falls back to /discover-dna', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up?next=http://evil.com');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountSignUp(router);
+    await fillForm(wrapper, 'new-user@example.com', 'password123');
+    await wrapper.find('form').trigger('submit');
+    await flushAuth();
+
+    expect(push).toHaveBeenCalledWith('/discover-dna');
+  });
+
+  it('routes existing users to login with the safe next path', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up?next=/consultant?sourceImageId=rpl-interior-lighting-001');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountSignUp(router);
+    await wrapper
+      .findAll('button')
+      .find((button) => button.text().includes('ALREADY HAVE AN ACCOUNT.'))!
+      .trigger('click');
+
+    expect(push).toHaveBeenCalledWith({
+      name: 'login',
+      query: { next: '/consultant?sourceImageId=rpl-interior-lighting-001' }
+    });
+  });
+
+  it('shows an error and does not redirect when registration fails', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountSignUp(router);
+    supaAuth.signUp.mockResolvedValue({ data: { session: null }, error: { message: 'Password should be at least 6 characters' } });
+    await fillForm(wrapper, 'new-user@example.com', 'short');
+    await wrapper.find('form').trigger('submit');
+    await flushAuth();
+
+    expect(wrapper.find('[data-testid="auth-error"]').exists()).toBe(true);
+    expect(push).not.toHaveBeenCalled();
+  });
+
+  it('shows the verification-sent screen when email confirmation is required', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up');
+    await router.isReady();
+    const push = vi.spyOn(router, 'push');
+
+    const wrapper = mountSignUp(router);
+    // Confirm email 開啟：signUp 成功但不回 session、無 error。
+    supaAuth.signUp.mockResolvedValue({ data: { session: null }, error: null });
+    await fillForm(wrapper, 'new-user@example.com', 'password123');
+    await wrapper.find('form').trigger('submit');
+    await flushAuth();
+
+    const panel = wrapper.find('[data-testid="verification-sent"]');
+    expect(panel.exists()).toBe(true);
+    expect(panel.text()).toContain('new-user@example.com');
+    expect(wrapper.find('[data-testid="auth-error"]').exists()).toBe(false);
+    expect(push).not.toHaveBeenCalled();
+  });
+
+  it('starts cooldown immediately, then resends after it expires', async () => {
+    vi.useFakeTimers();
+    try {
+      const router = createTestRouter();
+      router.push('/sign-up');
+      await router.isReady();
+
+      const wrapper = mountSignUp(router);
+      supaAuth.signUp.mockResolvedValue({ data: { session: null }, error: null });
+      supaAuth.resend.mockResolvedValue({ error: null });
+      await wrapper.find('input[type="email"]').setValue('new-user@example.com');
+      await wrapper.find('input[type="password"]').setValue('password123');
+      await wrapper.find('form').trigger('submit');
+      await vi.advanceTimersByTimeAsync(0);
+
+      // 註冊那封信已佔用 rate-limit 窗 → 重寄按鈕一開始就停用（避免立刻撞限流報錯）。
+      expect(wrapper.find('[data-testid="resend-button"]').attributes('disabled')).toBeDefined();
+      expect(supaAuth.resend).not.toHaveBeenCalled();
+
+      // 推過 60s cooldown 後才可重寄。
+      await vi.advanceTimersByTimeAsync(60_000);
+      await wrapper.find('[data-testid="resend-button"]').trigger('click');
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(supaAuth.resend).toHaveBeenCalledWith({
+        type: 'signup',
+        email: 'new-user@example.com',
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=%2Fdiscover-dna` }
+      });
+      expect(wrapper.find('[data-testid="resend-message"]').text()).toContain('resent');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('disables the submit button while submitting', async () => {
+    const router = createTestRouter();
+    router.push('/sign-up');
+    await router.isReady();
+
+    const wrapper = mountSignUp(router);
+    await fillForm(wrapper, 'new-user@example.com', 'password123');
+    await wrapper.find('form').trigger('submit');
+
+    expect(wrapper.find('[data-testid="auth-submit"]').attributes('disabled')).toBeDefined();
+
+    await flushAuth();
+  });
+});

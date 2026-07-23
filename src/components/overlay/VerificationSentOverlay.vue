@@ -1,0 +1,83 @@
+<script setup lang="ts">
+import Button from '@/components/ui/Button.vue';
+
+withDefaults(
+  defineProps<{
+    email: string;
+    resendMessage: string;
+    countdown: number;
+    title?: string;
+    leadText?: string;
+    detailText?: string;
+  }>(),
+  {
+    title: undefined,
+    leadText: undefined,
+    detailText: undefined
+  }
+);
+
+defineEmits<{ resend: [] }>();
+</script>
+
+<template>
+  <section
+    class="overlay-panel overlay-panel--wide glass-panel"
+    data-testid="verification-sent"
+    role="main"
+    :aria-label="$t('auth.verificationEmailSent')"
+  >
+    <h2 class="overlay-title">{{ title ?? $t('auth.verificationEmailTitle') }}</h2>
+    <p class="overlay-description">
+      {{ leadText ?? $t('auth.verificationEmailLead') }} <strong>{{ email }}</strong>.
+      <span class="verification-sent__detail">
+        {{ detailText ?? $t('auth.verificationEmailDetail') }}
+      </span>
+    </p>
+
+    <p class="overlay-description verification-sent__hint">
+      {{ $t('auth.verificationEmailHint') }}
+    </p>
+
+    <div class="overlay-actions overlay-actions--stackable">
+      <span class="overlay-submit">
+        <Button
+          variant="secondary"
+          type="button"
+          data-testid="resend-button"
+          :disabled="countdown > 0"
+          @click="$emit('resend')"
+        >
+          {{ countdown > 0 ? $t('auth.resendIn', { countdown }) : $t('auth.resendEmail') }}
+        </Button>
+      </span>
+      <RouterLink :to="{ name: 'login' }" class="overlay-link">{{ $t('auth.backToLogin') }}</RouterLink>
+    </div>
+
+    <p
+      v-if="resendMessage"
+      class="overlay-description verification-sent__status"
+      role="status"
+      data-testid="resend-message"
+    >
+      {{ resendMessage }}
+    </p>
+  </section>
+</template>
+
+<style scoped>
+.verification-sent__detail {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.verification-sent__hint {
+  margin-top: 1.25rem;
+  font-size: 14px;
+}
+
+.verification-sent__status {
+  margin-top: 1rem;
+  font-size: 13px;
+}
+</style>

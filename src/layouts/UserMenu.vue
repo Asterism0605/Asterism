@@ -1,0 +1,169 @@
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { CalendarCheck, ChevronDown, ClipboardList, LayoutDashboard, LogOut, Sparkles } from '@lucide/vue';
+import DropdownMenu from '@/components/ui/DropdownMenu.vue';
+
+const props = withDefaults(
+  defineProps<{
+    displayName: string;
+    initials: string;
+    disabled?: boolean;
+    /** 顧問帳號才顯示「被指派的諮詢」入口(#208)。 */
+    isConsultant?: boolean;
+  }>(),
+  { disabled: false, isConsultant: false }
+);
+
+const emit = defineEmits<{
+  moodboard: [];
+  consultations: [];
+  consultantBookings: [];
+  styleDna: [];
+  logout: [];
+}>();
+
+const menuOpen = ref(false);
+const menuRef = ref<HTMLElement | null>(null);
+
+function toggleMenu() {
+  if (props.disabled) return;
+  menuOpen.value = !menuOpen.value;
+}
+
+function closeMenu() {
+  menuOpen.value = false;
+}
+
+function handleClickOutside(event: MouseEvent) {
+  if (menuRef.value && !menuRef.value.contains(event.target as Node)) {
+    closeMenu();
+  }
+}
+
+function handleMoodboard() {
+  closeMenu();
+  emit('moodboard');
+}
+
+function handleStyleDna() {
+  closeMenu();
+  emit('styleDna');
+}
+
+function handleConsultations() {
+  closeMenu();
+  emit('consultations');
+}
+
+function handleConsultantBookings() {
+  closeMenu();
+  emit('consultantBookings');
+}
+
+function handleLogout() {
+  closeMenu();
+  emit('logout');
+}
+
+watch(
+  () => props.disabled,
+  (disabled) => {
+    if (disabled) closeMenu();
+  }
+);
+
+onMounted(() => document.addEventListener('click', handleClickOutside, true));
+onUnmounted(() => document.removeEventListener('click', handleClickOutside, true));
+</script>
+
+<template>
+  <div ref="menuRef" class="relative">
+    <button
+      type="button"
+      :disabled="props.disabled"
+      :aria-disabled="props.disabled"
+      class="flex items-center gap-2 rounded-full cursor-pointer transition-opacity duration-200 hover:opacity-80"
+      :aria-expanded="menuOpen"
+      aria-haspopup="true"
+      @click.stop="toggleMenu"
+    >
+      <div
+        class="flex size-8 shrink-0 items-center justify-center rounded-full bg-gold-dim text-xs font-semibold text-text-primary select-none ring-2 ring-transparent transition-all duration-200"
+        :class="menuOpen ? 'ring-gold-dim/60' : ''"
+        :title="displayName"
+      >
+        {{ initials }}
+      </div>
+      <span class="hidden sm:block text-sm text-text-secondary truncate max-w-[120px]">
+        {{ displayName }}
+      </span>
+      <ChevronDown class="size-4 shrink-0 opacity-60" :class="menuOpen ? 'rotate-180' : ''" />
+    </button>
+
+    <DropdownMenu :open="menuOpen" panel-class="w-44">
+      <div class="px-4 py-3 border-b border-white/8">
+        <p class="text-xs text-text-secondary truncate">{{ $t('userMenu.signedInAs') }}</p>
+        <p class="text-sm font-medium text-text-primary truncate mt-0.5">
+          {{ displayName }}
+        </p>
+      </div>
+
+      <ul class="py-1.5">
+        <li>
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleMoodboard"
+          >
+            <LayoutDashboard class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.moodboard') }}
+          </button>
+        </li>
+
+        <li>
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleStyleDna"
+          >
+            <Sparkles class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.styleDna') }}
+          </button>
+        </li>
+
+        <li>
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleConsultations"
+          >
+            <CalendarCheck class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.myConsultations') }}
+          </button>
+        </li>
+
+        <li v-if="isConsultant">
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleConsultantBookings"
+          >
+            <ClipboardList class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.consultantBookings') }}
+          </button>
+        </li>
+
+        <li class="mt-1 border-t border-white/8">
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-stellar-red hover:bg-stellar-red/8 transition-colors duration-150 cursor-pointer text-left"
+            @click="handleLogout"
+          >
+            <LogOut class="size-4 shrink-0 opacity-60" />
+            {{ $t('userMenu.logout') }}
+          </button>
+        </li>
+      </ul>
+    </DropdownMenu>
+  </div>
+</template>

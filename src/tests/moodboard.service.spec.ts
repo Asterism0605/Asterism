@@ -1,0 +1,313 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { MoodboardFolder } from '@/types/moodboard';
+
+const {
+  addMoodboardItem,
+  countMoodboardItems,
+  createMoodboardFolder,
+  deleteMoodboardFolder,
+  deleteMoodboardItems,
+  fetchMoodboardFolders
+} = vi.hoisted(() => ({
+  addMoodboardItem: vi.fn(),
+  countMoodboardItems: vi.fn(),
+  createMoodboardFolder: vi.fn(),
+  deleteMoodboardFolder: vi.fn(),
+  deleteMoodboardItems: vi.fn(),
+  fetchMoodboardFolders: vi.fn()
+}));
+
+vi.mock('@/api/moodboard.api', () => ({
+  addMoodboardItem,
+  countMoodboardItems,
+  createMoodboardFolder,
+  deleteMoodboardFolder,
+  deleteMoodboardItems,
+  fetchMoodboardFolders
+}));
+
+vi.mock('@/services/image.service', () => ({
+  getImageById: (id: string) => ({
+    id,
+    src: `/style-image/${id}.webp`,
+    title: `Image ${id}`,
+    styleGroup: 'minimal',
+    style: ['Minimalism'],
+    medium: 'Interior Design'
+  })
+}));
+
+import {
+  addItem,
+  createFolder,
+  deleteFolder,
+  deleteItems,
+  getMoodboardViewModel,
+  isImageSaved
+} from '@/services/moodboard.service';
+
+const existingFolders: MoodboardFolder[] = [];
+
+describe('moodboard.service', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('maps nested Data API rows into the existing UI view model', async () => {
+    fetchMoodboardFolders.mockResolvedValue([
+      {
+        id: 'folder-1',
+        profile_id: 'user-1',
+        name: 'Studio',
+        created_at: '2026-07-05T00:00:00.000Z',
+        updated_at: '2026-07-05T00:00:00.000Z',
+        moodboard_items: [
+          {
+            id: 'item-1',
+            folder_id: 'folder-1',
+            image_id: 'image-1',
+            created_at: '2026-07-05T00:00:00.000Z',
+            images: {
+              id: 'image-1',
+              url: '/image-1.webp',
+              title: 'Image 1',
+              style_group: 'minimal',
+              style: ['Minimalism'],
+              medium: 'Interior Design'
+            }
+          }
+        ]
+      }
+    ]);
+
+    const viewModel = await getMoodboardViewModel('user-1');
+
+    expect(viewModel.totalFolderCount).toBe(1);
+    expect(viewModel.totalSavedItemCount).toBe(1);
+    expect(viewModel.folders[0].images[0]).toMatchObject({
+      itemId: 'item-1',
+      id: 'image-1',
+      src: '/image-1.webp',
+      styleGroup: 'minimal',
+      medium: 'Interior Design'
+    });
+  });
+
+  it('maps a null medium through as-is', async () => {
+    fetchMoodboardFolders.mockResolvedValue([
+      {
+        id: 'folder-1',
+        profile_id: 'user-1',
+        name: 'Studio',
+        created_at: '2026-07-05T00:00:00.000Z',
+        updated_at: '2026-07-05T00:00:00.000Z',
+        moodboard_items: [
+          {
+            id: 'item-1',
+            folder_id: 'folder-1',
+            image_id: 'image-1',
+            created_at: '2026-07-05T00:00:00.000Z',
+            images: {
+              id: 'image-1',
+              url: '/image-1.webp',
+              title: 'Image 1',
+              style_group: 'minimal',
+              style: ['Minimalism'],
+              medium: null
+            }
+          }
+        ]
+      }
+    ]);
+
+    const viewModel = await getMoodboardViewModel('user-1');
+
+    expect(viewModel.folders[0].images[0].medium).toBeNull();
+  });
+
+  it('keeps only the newest fetched item for each image id', async () => {
+    const image = {
+      id: 'image-1',
+      url: '/image-1.webp',
+      title: 'Image 1',
+      style_group: 'minimal',
+      style: ['Minimalism']
+    };
+    fetchMoodboardFolders.mockResolvedValue([
+      {
+        id: 'folder-1',
+        profile_id: 'user-1',
+        name: 'Studio',
+        created_at: '2026-07-05T00:00:00.000Z',
+        updated_at: '2026-07-05T00:00:00.000Z',
+        moodboard_items: [
+          {
+            id: 'new-item',
+            folder_id: 'folder-1',
+            image_id: 'image-1',
+            created_at: '2026-07-06T00:00:00.000Z',
+            images: image
+          },
+          {
+            id: 'old-item',
+            folder_id: 'folder-1',
+            image_id: 'image-1',
+            created_at: '2026-07-05T00:00:00.000Z',
+            images: image
+          }
+        ]
+      }
+    ]);
+
+    const viewModel = await getMoodboardViewModel('user-1');
+
+    expect(viewModel.folders[0].images).toHaveLength(1);
+    expect(viewModel.folders[0].images[0].itemId).toBe('new-item');
+  });
+
+  it('creates a trimmed folder through the Data API', async () => {
+    createMoodboardFolder.mockResolvedValue({
+      id: 'folder-1',
+      profile_id: 'user-1',
+      name: 'Studio',
+      created_at: '2026-07-05T00:00:00.000Z',
+      updated_at: '2026-07-05T00:00:00.000Z'
+    });
+
+    const result = await createFolder('user-1', '  Studio  ', existingFolders);
+
+    expect(createMoodboardFolder).toHaveBeenCalledWith({
+      profileId: 'user-1',
+      name: 'Studio'
+    });
+    expect(result).toEqual({
+      id: 'folder-1',
+      name: 'Studio',
+      createdAt: '2026-07-05T00:00:00.000Z',
+      images: []
+    });
+  });
+
+  it('rejects folder names longer than 15 characters before writing', async () => {
+    await expect(
+      createFolder('user-1', 'This name is way too long', existingFolders)
+    ).rejects.toThrow('Folder name must be 15 characters or fewer.');
+    expect(createMoodboardFolder).not.toHaveBeenCalled();
+  });
+
+  it('accepts 15 emoji even though their UTF-16 length is 30', async () => {
+    createMoodboardFolder.mockResolvedValue({
+      id: 'folder-1',
+      profile_id: 'user-1',
+      name: '😀'.repeat(15),
+      created_at: '2026-07-05T00:00:00.000Z',
+      updated_at: '2026-07-05T00:00:00.000Z'
+    });
+
+    await createFolder('user-1', '😀'.repeat(15), existingFolders);
+
+    expect(createMoodboardFolder).toHaveBeenCalledWith({
+      profileId: 'user-1',
+      name: '😀'.repeat(15)
+    });
+  });
+
+  it('rejects 16 emoji as longer than 15 characters', async () => {
+    await expect(
+      createFolder('user-1', '😀'.repeat(16), existingFolders)
+    ).rejects.toThrow('Folder name must be 15 characters or fewer.');
+    expect(createMoodboardFolder).not.toHaveBeenCalled();
+  });
+
+  it('rejects duplicate folder names before writing', async () => {
+    const folders = [
+      {
+        id: 'folder-1',
+        name: 'Studio',
+        createdAt: '2026-07-05T00:00:00.000Z',
+        images: []
+      }
+    ];
+
+    await expect(createFolder('user-1', ' Studio ', folders)).rejects.toThrow(
+      'A folder with this name already exists.'
+    );
+    expect(createMoodboardFolder).not.toHaveBeenCalled();
+  });
+
+  it('adds an image through the Data API and returns an immediate UI item', async () => {
+    countMoodboardItems.mockResolvedValue(0);
+    addMoodboardItem.mockResolvedValue({
+      id: 'item-1',
+      folder_id: 'folder-1',
+      image_id: 'image-1',
+      created_at: '2026-07-05T00:00:00.000Z'
+    });
+
+    const item = await addItem('folder-1', 'image-1');
+
+    expect(addMoodboardItem).toHaveBeenCalledWith({
+      folderId: 'folder-1',
+      imageId: 'image-1'
+    });
+    expect(item).toMatchObject({
+      itemId: 'item-1',
+      id: 'image-1',
+      src: '/style-image/image-1.webp',
+      medium: 'Interior Design'
+    });
+  });
+
+  it('rejects adding an image when the folder already has 20 images', async () => {
+    countMoodboardItems.mockResolvedValue(20);
+
+    await expect(addItem('folder-1', 'image-1')).rejects.toThrow(
+      'Each folder can hold up to 20 images.'
+    );
+    expect(addMoodboardItem).not.toHaveBeenCalled();
+  });
+
+  it('deletes a folder through the Data API', async () => {
+    deleteMoodboardFolder.mockResolvedValue(undefined);
+
+    await deleteFolder('folder-1', 'user-1');
+
+    expect(deleteMoodboardFolder).toHaveBeenCalledWith('folder-1', 'user-1');
+  });
+
+  it('deletes multiple items through the Data API', async () => {
+    deleteMoodboardItems.mockResolvedValue(undefined);
+
+    await deleteItems({ folderId: 'folder-1', itemIds: ['item-1', 'item-2'] });
+
+    expect(deleteMoodboardItems).toHaveBeenCalledWith({
+      itemIds: ['item-1', 'item-2'],
+      folderId: 'folder-1'
+    });
+  });
+
+  it('checks saved state from the passed store snapshot', () => {
+    const folders = [
+      {
+        id: 'folder-1',
+        name: 'Studio',
+        createdAt: '2026-07-05T00:00:00.000Z',
+        images: [
+          {
+            itemId: 'item-1',
+            id: 'image-1',
+            src: '/image-1.webp',
+            title: 'Image 1',
+            styleGroup: 'minimal',
+            style: [],
+            medium: null,
+            createdAt: '2026-07-05T00:00:00.000Z'
+          }
+        ]
+      }
+    ];
+
+    expect(isImageSaved(folders, 'image-1')).toBe(true);
+    expect(isImageSaved(folders, 'image-2')).toBe(false);
+  });
+});

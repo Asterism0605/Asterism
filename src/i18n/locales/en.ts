@@ -1,0 +1,496 @@
+// 英文語系。新增頁面時在對應 namespace 下加 key；zh.ts 要有相同結構。
+export default {
+  nav: {
+    login: 'Log in',
+    signup: 'Sign up'
+  },
+  auth: {
+    loginTitle: 'Login',
+    signupTitle: 'Sign up',
+    signupSubtitle: 'Sign up to start building your Style DNA.',
+    email: 'EMAIL',
+    password: 'PASSWORD',
+    forgotPassword: 'FORGOT PASSWORD?',
+    alreadyHaveAccount: 'ALREADY HAVE AN ACCOUNT.',
+    send: 'SEND',
+    sending: 'SENDING…',
+    or: 'or',
+    genericError: 'Something went wrong. Please try again.',
+    continueWithGoogle: 'Continue with Google',
+    continueWithLine: 'Continue with LINE',
+    googleFailed: 'Google sign-in failed. Please try again.',
+    lineFailed: 'LINE sign-in failed. Please try again.',
+    signingIn: 'Signing you in…',
+    signInFailed: 'Sign-in failed',
+    signInFailedDesc: "We couldn't complete your sign-in. Please try again.",
+    backToLogin: 'Back to login',
+    verificationEmailSent: 'Verification email sent',
+    verificationEmailTitle: 'Check your email',
+    verificationEmailLead: 'We sent a verification link to',
+    verificationEmailDetail: 'Open it to activate your account and finish signing up.',
+    verificationEmailHint: "Didn't get it? Check your spam folder, or resend below.",
+    resendIn: 'RESEND IN {countdown}S',
+    resendEmail: 'RESEND EMAIL',
+    forgotPasswordTitle: 'Forgot password',
+    forgotPasswordDesc: "Enter your email and we'll send you a reset link.",
+    sendResetLink: 'SEND RESET LINK',
+    resetEmailTitle: 'Check your email',
+    resetEmailLead: 'We sent a password reset link to',
+    resetEmailDetail: 'Open it to choose a new password.',
+    resetEmailResent: 'Reset email resent.',
+    resetEmailResendFailed: "Couldn't resend right now. Please try again.",
+    resetLinkInvalid: 'Reset link invalid',
+    resetLinkExpiredTitle: 'Link expired',
+    resetLinkExpiredDesc: 'This reset link is invalid or has expired. Please request a new one.',
+    requestNewLink: 'Request new link',
+    resetPasswordTitle: 'Set new password',
+    resetPasswordDesc: 'Choose a new password for your account.',
+    newPassword: 'NEW PASSWORD',
+    saving: 'SAVING…',
+    updatePassword: 'UPDATE PASSWORD'
+  },
+  common: {
+    language: 'Language',
+    closeDialog: 'Close dialog',
+    themeTags: 'Theme Tags',
+    colorPalette: 'Color Palette',
+    follow: '+ Follow'
+  },
+  legalLinks: {
+    ariaLabel: 'Legal links',
+    privacy: 'Privacy Policy',
+    terms: 'Terms of Service'
+  },
+  toast: {
+    saveContactSupport: 'Something went wrong. Please contact support.',
+    saveFailed: 'Failed to save. Please try again.',
+    folderLimit: 'You have reached the maximum of 10 folders.',
+    folderImageLimit: 'Each folder can hold up to 20 images.',
+    folderCleanupFailed:
+      'Image failed to save and folder cleanup failed. Please delete the folder manually from your moodboard.',
+    folderCreatedAndSaved: 'Folder created and image saved.',
+    deleteFolderFailed: 'Failed to delete the folder. Please try again.',
+    deleteImageFailed: 'Failed to delete the image. Please try again.',
+    folderNameTooLong: '@:moodboard.folderNameTooLong'
+  },
+  userMenu: {
+    signedInAs: 'Signed in as',
+    moodboard: 'Moodboard',
+    styleDna: 'Style DNA',
+    myConsultations: 'Consultation',
+    consultantBookings: 'Assigned consultations',
+    logout: 'Log out'
+  },
+  accountConsultations: {
+    emptyDescription: 'Start to build up your first consultation.',
+    bookConsultation: 'Book consultation',
+    youHave: 'You have',
+    upcoming: 'upcoming',
+    new: 'new',
+    consultations: 'consultations',
+    allConsultations: 'All consultations',
+    upcomingDates: 'Upcoming consultation dates',
+    viewAll: 'View all',
+    back: 'Back',
+    viewAllAria: 'View all consultations',
+    backToSelectedAria: 'Back to selected consultation',
+    loading: 'Loading your consultations…',
+    loadError: "We couldn't load your consultations.",
+    retry: 'Try again',
+    sampleNotes: {
+      brand: 'I would like help defining the visual direction for a new brand identity.',
+      homeMaterials: 'I need advice on natural finishes and a calm material palette for my home.',
+      studio: 'I want to create a warm and quiet atmosphere for a small studio renovation.',
+      editorial: 'I would like to refine the color direction for an upcoming editorial shoot.',
+      livingRoom: 'I need help selecting furniture that works with the scale of my living room.'
+    }
+  },
+  consultantBookings: {
+    youHave: 'You have',
+    upcoming: 'assigned',
+    consultations: 'consultations',
+    upcomingDates: 'Assigned consultation dates',
+    viewAll: 'View all',
+    back: 'Back',
+    viewAllAria: 'View all assigned consultations',
+    backToSelectedAria: 'Back to selected consultation',
+    emptyDescription: 'No consultations are assigned to you yet.',
+    loading: 'Loading assigned consultations…',
+    loadError: "We couldn't load your assigned consultations.",
+    retry: 'Try again',
+    contact: 'Client contact',
+    statusLabel: 'Status',
+    status: {
+      pending_payment: 'Pending payment',
+      confirmed: 'Confirmed',
+      payment_failed: 'Payment failed',
+      canceled: 'Canceled',
+      completed: 'Completed'
+    }
+  },
+  consult: {
+    eyebrow: 'Style DNA translation',
+    title: 'Consultation Booking',
+    intro1: 'Your aesthetic coordinates have been mapped.',
+    intro2:
+      "We've matched you with a consultant to help translate your Style DNA into a real design direction.",
+    matchedConsultant: 'Matched consultant',
+    matchedConsultantPreview: 'Possible match',
+    matchedConsultantPending: 'Matched once you pick a design field',
+    matchedConsultantNone: 'No consultant available yet',
+    matchedConsultantLoadError: "Couldn't load consultants, please try again.",
+    matchedConsultantUnavailable: 'Consultant info is temporarily unavailable.',
+    savingLocation: 'Saving…',
+    needDna: 'We need a Style DNA result before matching a consultant.',
+    retakeQuiz: 'Take Style DNA quiz',
+    skip: 'Skip',
+    method: 'Consultation Method',
+    online: 'Online',
+    inPerson: 'In-Person',
+    locationPending: 'Location to be provided by your consultant',
+    locationOnlineLabel: 'Meeting link',
+    locationInPersonLabel: 'Meeting address',
+    locationOnlinePlaceholder: 'Paste a Google Meet or similar link',
+    locationInPersonPlaceholder: 'Enter the in-person address',
+    saveLocation: 'Save location',
+    locationInvalidUrl: 'Enter a valid http/https link',
+    locationSaveFailed: 'Failed to save. Please try again.',
+    timeSlot: 'Time Slot',
+    timeSlotPlaceholder: 'AM / PM',
+    chooseTimeSlot: 'Choose time slot',
+    designField: 'Design Field',
+    selectField: 'Select a field',
+    chooseField: 'Choose design field',
+    designFocus: 'Design Focus',
+    selectFocus: 'Select a focus',
+    chooseFocus: 'Choose design focus',
+    fieldStyling: 'Styling Design',
+    fieldGraphic: 'Graphic Design',
+    fieldInterior: 'Interior Design',
+    fieldArchitecture: 'Architecture',
+    focusSpatial: 'Spatial Mood',
+    focusMaterial: 'Material Palette',
+    focusColor: 'Color Direction',
+    focusFurniture: 'Furniture Selection',
+    focusVisual: 'Visual Concept',
+    name: 'Name',
+    namePlaceholder: 'Your name',
+    email: 'Email',
+    contactPhone: 'Contact Phone',
+    notes: 'Additional Notes',
+    notesPlaceholder: 'Tell us about your project or questions.',
+    fee: 'Consultation Fee',
+    feeAmount: 'NT$500 deposit',
+    feeCopy: 'A consultation deposit is required to submit your request.',
+    paymentConfirm: 'I understand and agree to continue to payment.',
+    preparingCheckout: 'Preparing checkout...',
+    confirmPay: 'Confirm & Pay',
+    reset: 'Reset',
+    checkoutError400: 'Please check your booking details and try again.',
+    checkoutError401: 'Please sign in to continue booking.',
+    checkoutError409: 'This time slot is no longer available. Please choose another time.',
+    checkoutError429: 'Too many attempts. Please try again later.',
+    checkoutErrorGeneric: 'Something went wrong. Please try again later.',
+    checkoutErrorSlotUnavailable:
+      'This time slot is no longer available. Please choose another time.',
+    checkoutErrorProfileEmailRequired: 'Please add an email address before booking.',
+    checkoutErrorProfileNotFound: 'Please sign in to continue booking.',
+    checkoutErrorSourceImageNotFound: 'We could not find the selected source image.',
+    checkoutErrorIdempotencyKeyReused: 'This checkout request has expired. Please try again.',
+    checkoutErrorAlreadyCompleted: 'This booking has already been paid.',
+    checkoutErrorExpired: 'This checkout session has expired. Please start again.',
+    checkoutErrorProvider: 'The payment provider is unavailable. Please try again later.',
+    checkoutErrorConfiguration: 'Checkout is temporarily unavailable. Please try again later.',
+    paymentConfirmingTitle: 'Confirming payment',
+    paymentConfirmingDescription: 'We are checking the latest payment status.',
+    paymentProcessingTitle: 'Payment is processing',
+    paymentProcessingDescription: 'Your payment is still being confirmed. Please wait a moment.',
+    paymentTimeoutTitle: 'Payment is still processing',
+    paymentTimeoutDescription:
+      'We could not confirm the final status yet. Please check again later or start a new booking.',
+    paymentUnauthenticatedTitle: 'Sign in required',
+    paymentUnauthenticatedDescription: 'Please sign in to check this payment status.',
+    paymentPaidTitle: 'Booking confirmed',
+    paymentPaidDescription: 'Your consultation booking and payment are confirmed.',
+    paymentFailedTitle: 'Payment failed',
+    paymentFailedDescription: 'The payment could not be completed. You can start a new booking.',
+    paymentCanceledTitle: 'Payment canceled',
+    paymentCanceledDescription: 'The checkout was canceled. You can start a new booking.',
+    paymentMissingTitle: 'Booking not found',
+    paymentMissingDescription: 'We could not find this booking. Please start a new booking.',
+    paymentErrorTitle: 'Unable to check payment',
+    paymentErrorDescription: 'Please try again later or start a new booking.',
+    bookAgain: 'Book again',
+    viewMyBookings: 'My bookings',
+    errDate: 'Date is required.',
+    errTimeSlot: 'Time slot is required.',
+    errDesignField: 'Design field is required.',
+    errDesignFocus: 'Design focus is required.',
+    errName: 'Name is required.',
+    errEmail: 'A valid email is required.',
+    errPhoneRequired: 'Contact phone is required.',
+    errPhoneInvalid: 'A valid phone number is required.',
+    errPayment: 'Please confirm the consultation deposit before continuing.',
+    dateLabel: 'Date',
+    selectDate: 'Select a date',
+    chooseDateAria: 'Choose consultation date',
+    prevMonth: 'Previous month',
+    nextMonth: 'Next month',
+    requestReceived:
+      "Request received. We'll contact {name} at {email} with the next available consultation details."
+  },
+  dna: {
+    discoverTitle1: 'Discover',
+    discoverTitle2: 'Your Style DNA',
+    introDesc: 'A quick visual quiz that learns your design taste.',
+    participate: 'PARTICIPATE',
+    skip: 'SKIP',
+    loadingLine1: 'Forming',
+    loadingLine2: 'Your Style DNA',
+    pickerHint: 'Click one image to continue',
+    pickerProgress: '{current} / {total}',
+    quizProgress: 'Quiz progress',
+    complete: 'Style DNA Complete',
+    resultYour: 'Your',
+    homepagePersonalized: 'Your homepage is now personalized based on your Style DNA.',
+    startExploring: 'Start Exploring',
+    retakeQuiz: 'Retake Quiz',
+    sampleResultNotice: 'We do not have quiz result yet, so this is a sample Style DNA result.',
+    viewTagDetails: 'View {tag} description',
+    close: 'Close'
+  },
+  image: {
+    back: 'Back',
+    info: 'Info',
+    photoShared: 'Photo shared',
+    photoOn: 'on {date}',
+    photoBy: 'by',
+    consultStylist: 'CONSULT STYLIST',
+    consultStylistBracket: 'Consult Stylist',
+    addToMoodboard: 'ADD TO MOODBOARD',
+    addToMoodboardSpread: 'Add to Moodboard',
+    createNewFolder: 'Create New Folder',
+    saveToFolder: 'SAVE TO FOLDER',
+    saveToFolderMenu: 'Save to Folder',
+    similar: 'Similar',
+    return: 'Return',
+    notFoundEyebrow: 'Image not found',
+    notFoundTitle: 'This inspiration point is outside the current map.',
+    notFoundDesc: 'Return home and choose another visual path from the exploration field.',
+    returnHome: 'Return home'
+  },
+  moodboard: {
+    back: 'Back',
+    emptyEyebrow: 'MOODBOARD',
+    emptyTitle1: 'Your moodboard is',
+    emptyTitle2: 'still empty.',
+    emptyDesc:
+      "You haven't saved any images yet. Explore the homepage to discover and collect inspiration that fits your style constellation.",
+    loading: 'Loading your moodboard...',
+    loadError: "We couldn't load your moodboard.",
+    retry: 'Try again',
+    startExploring: 'Start Exploring',
+    createFolderTitle: 'SAVE TO NEW FOLDER',
+    folderNamePlaceholder: 'Folder name',
+    folderNameTooLong: 'Folder name must be {max} characters or fewer.',
+    send: 'SEND',
+    goToMoodboard: 'Go to Moodboard',
+    deleteFolderTitle: 'Delete {name} and All Images',
+    deleteConfirm: 'Delete',
+    deleteCancel: 'Close',
+    deleteFolderAria: 'Delete folder',
+    deleteImageTitle: 'Delete Image from Folder',
+    deleteImageAria: 'Delete image',
+    openFolderAria: 'Open folder',
+    folderSelected: 'My Folders',
+    folderEmptySuffix: '(Empty)',
+    openImageDetailAria: 'View image detail',
+    folderDeleteToggleAria: 'Toggle folder delete icons',
+    imageDeleteToggleAria: 'Toggle image select mode',
+    selectImagesDone: "I'm done selecting",
+    selectImageAria: 'Select image',
+    deselectImageAria: 'Deselect image',
+    selectAllImages: 'Select all',
+    deselectAllImages: 'Deselect all',
+    filterByStyles: 'Filter by Styles',
+    filterByFields: 'Filter by Fields',
+    filterByHeading: 'Filter by',
+    filterGroupStyles: 'Styles',
+    filterGroupFields: 'Fields',
+    resetFilters: 'Reset'
+  },
+  userTour: {
+    progress: '{current} / {total}',
+    control: {
+      open: 'Open guided tour menu',
+      title: 'Guided tour',
+      start: 'Start tour',
+      startDescription: 'Start from the beginning and discover Asterism.',
+      resume: 'Resume tour',
+      resumeDescription: 'Continue where you left off.',
+      restart: 'Restart tour',
+      replay: 'Replay tour',
+      lastProgress: 'Last progress: {progress}',
+      progress: {
+        home: 'Homepage exploration',
+        spread: 'Image exploration',
+        detail: 'Image detail',
+        moodboard: 'Moodboard'
+      }
+    },
+    actions: {
+      previous: 'Previous',
+      next: 'Next',
+      close: 'Close tour',
+      resume: 'Resume tour',
+      done: 'Done'
+    },
+    pauseConfirmation: {
+      title: 'Pause the website tour?',
+      description:
+        'After pausing, tours on other pages will not appear automatically. You can continue anytime from the tour entry in the top-right corner.',
+      continue: 'Continue tour',
+      confirm: 'Pause tour'
+    },
+    steps: {
+      homeOverview: {
+        title: 'Explore the inspiration map',
+        description:
+          'The homepage is an inspiration map. Every image can open a new path to explore.'
+      },
+      homeImage: {
+        title: 'Open an inspiration image',
+        description:
+          'Select the highlighted image to see how its style extends across everyday settings.'
+      },
+      spreadRelatedGroup: {
+        title: 'One style, across different areas of life',
+        description:
+          'These four mediums show how the same style appears across different areas of life.'
+      },
+      spreadRelatedImage: {
+        title: 'Explore more deeply',
+        description:
+          'Select the highlighted image to explore a more specific theme and similar ideas.'
+      },
+      detailThumbnail: {
+        title: 'Switch related images',
+        description: 'Select a thumbnail to view another image from the same style.'
+      },
+      detailStyleTag: {
+        title: 'Understand style tags',
+        description: 'Style tags reveal the background, visual traits, and common uses of a style.'
+      },
+      detailConsult: {
+        title: 'Bring inspiration to life',
+        description:
+          'Beyond saving, you can book a professional consultant for the styles you like and get more concrete guidance.'
+      },
+      detailSave: {
+        title: 'Save to a Moodboard',
+        description: 'Open the save menu to use an existing folder or create a new Moodboard.'
+      },
+      moodboardImages: {
+        title: 'Your saved inspiration',
+        description: 'Your saved images come together here as a personal inspiration collection.'
+      },
+      moodboardDirectory: {
+        title: 'Browse all folders',
+        description:
+          'Use this directory to see every saved folder. Hover over a folder to preview its 3D image sphere, then select it to open the folder.',
+        mobileDescription:
+          'Use this directory to see every saved folder. Tap a folder to preview it, then tap it again to open the folder.'
+      },
+      moodboardOrbit: {
+        title: 'Move through your folders',
+        description: 'Drag the orbit to browse the folders around your inspiration collection.'
+      },
+      moodboardFolder: {
+        title: 'Open a folder',
+        description: 'Select a folder that contains saved images to view its collection.'
+      },
+      moodboardFilters: {
+        title: 'Refine your collection',
+        description:
+          'Inside a folder, you can filter saved images by fields or style. Apply either filter in any order, or combine both to see images that match both conditions.'
+      },
+      moodboardTourControl: {
+        title: 'Your tour is always within reach',
+        description: 'Use this icon anytime to pause, continue, or restart the website tour.'
+      }
+    },
+    transition: {
+      title: 'Exploration complete',
+      description:
+        'You now know how to explore images, understand styles, save inspiration, and find further professional guidance.',
+      nextDescription:
+        'Next, see how the inspiration you saved can become your own visual direction in Moodboard.',
+      proceed: 'Go to Moodboard',
+      later: 'Continue later'
+    },
+    moodboardCompletion: {
+      title: 'Your Moodboard tour is complete',
+      description: 'You now know how to browse, organize, and refine your saved inspiration.',
+      nextDescription: 'You can revisit the tour anytime, or keep shaping this collection.',
+      exploreStyleDna: 'Explore my style DNA',
+      stay: 'Continue organizing inspiration'
+    }
+  },
+  home: {
+    guestHint: 'Sign up or log in to keep exploring',
+    tour: {
+      description:
+        'uses visual exploration to organize your inspiration and turn it into practical style directions.',
+      startTour: 'Start Tour',
+      exploreOnMyOwn: 'Explore on my own'
+    },
+    guide: {
+      imageClick: 'Click an image to explore'
+    },
+    limitTitle: 'Your daily inspiration limit has been reached.',
+    limitDesc:
+      'Create a free account to unlock endless scrolling, save your favorite pieces to boards, and define your aesthetic DNA.',
+    createAccount: 'Create Free Account',
+    login: 'Log In'
+  },
+  imageSearch: {
+    eyebrow: 'Style Navigator',
+    title: 'Style Star Map',
+    subtitle: 'Upload a photo to see where it lands on our aesthetic star map.',
+    downloadHint: 'First use requires downloading a ~150MB AI model — Wi-Fi recommended.',
+    downloading: 'Downloading… {progress}%',
+    finalizing: 'Finalizing, almost there…',
+    downloadModel: 'Download Model',
+    retryDownload: 'Retry Download',
+    chooseFile: 'Choose Photo',
+    chooseFileHint: 'JPG, PNG, or WebP — up to 10MB',
+    noFileChosen: 'No file chosen',
+    search: 'Search',
+    searching: 'Searching…',
+    uploadedAlt: 'Your uploaded photo',
+    yourPhoto: 'Your Photo',
+    noMatch:
+      'No sufficiently similar style found. Try a photo of an outfit, interior space, building exterior, or graphic design piece instead.',
+    invalidFileType: 'Please upload a JPG, PNG, or WebP image.',
+    fileTooLarge: 'Image must be under 10MB.',
+    modelDownloadFailed: 'Model download failed. Please check your connection and try again.',
+    searchFailed: 'Search failed. Please try again later.'
+  },
+  playground: {
+    eyebrow: 'Component Playground',
+    title: 'Asterism overlay and constellation effects',
+    description:
+      'Hover the image tiles to reveal the constellation background, then open the modal to check the glass dialog layer in context.',
+    openLimitModal: 'Open Limit Modal',
+    previewOverlay: 'Preview Overlay',
+    ghostButton: 'Ghost Button',
+    activeSelection: 'Active selection',
+    activeDescription:
+      'The active card feeds the shared profile preview and keeps the palette and tag examples mounted with realistic neighboring content.',
+    photographerRole: 'Photographer / Object studies',
+    itemOneTitle: 'Chrome noir chair',
+    itemOneCategory: 'Object',
+    itemTwoTitle: 'Shadow editorial',
+    itemTwoCategory: 'Style'
+  }
+};
